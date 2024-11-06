@@ -10,6 +10,7 @@ import { useRouter, useParams } from "next/navigation";
 interface FormValue {
     id: string;
     nama_lembaga: string;
+    kode_lembaga: string;
     id_lembaga: number;
 }
 
@@ -29,7 +30,7 @@ export const FormMasterLembaga = () => {
         const formData = {
             //key : value
             nama_lembaga : data.nama_lembaga,
-            // kode_lembaga : data.kode_lembaga,
+            kode_lembaga : data.kode_lembaga,
         };
         // console.log(formData);
         try{
@@ -95,7 +96,7 @@ export const FormMasterLembaga = () => {
                         )}
                     />
                 </div>
-                {/* <div className="flex flex-col py-3">
+                <div className="flex flex-col py-3">
                     <label
                         className="uppercase text-xs font-bold text-gray-700 my-2"
                         htmlFor="kode_lembaga"
@@ -130,7 +131,7 @@ export const FormMasterLembaga = () => {
                             </>
                         )}
                     />
-                </div> */}
+                </div>
                 
                 <ButtonGreen
                     type="submit"
@@ -198,7 +199,7 @@ export const FormEditMasterLembaga = () => {
       const formData = {
           //key : value
           nama_lembaga : data.nama_lembaga,
-        //   kode_lembaga : data.kode_lembaga,
+          kode_lembaga : data.kode_lembaga,
       };
     //   console.log(formData);
         try{
@@ -286,7 +287,7 @@ export const FormEditMasterLembaga = () => {
                             )}
                         />
                     </div>
-                    {/* <div className="flex flex-col py-3">
+                    <div className="flex flex-col py-3">
                         <label
                             className="uppercase text-xs font-bold text-gray-700 my-2"
                             htmlFor="kode_lembaga"
@@ -321,7 +322,7 @@ export const FormEditMasterLembaga = () => {
                                 </>
                             )}
                         />
-                    </div> */}
+                    </div>
                     <ButtonGreen
                         type="submit"
                         className="my-4"

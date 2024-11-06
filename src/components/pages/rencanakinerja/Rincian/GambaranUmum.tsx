@@ -86,7 +86,7 @@ const GambaranUmum: React.FC<id> = (id) => {
                                     </tr>
                                 :
                                     gambaran.map((data, index) => (
-                                        <tr>
+                                        <tr key={data.id}>
                                             <td className="border px-6 py-3">{index + 1}</td>
                                             <td className="border px-6 py-3">{data.gambaran_umum}</td>
                                             <td className="border px-6 py-3">

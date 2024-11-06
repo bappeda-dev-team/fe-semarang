@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react"
 import {FiAperture} from "react-icons/fi"
 import Select from "react-select"
-import { setCookie, getOpdTahun, getUser } from "../lib/Cookie"
+import { getOpdTahun, getUser } from "../lib/Cookie"
+import { AlertNotification } from "./Alert"
 
 interface OptionType {
     value: number;
@@ -19,6 +20,13 @@ const Header = () => {
     const [Tahun, setTahun] = useState<OptionType | null>(null);
     const [SelectedOpd, setSelectedOpd] = useState<OptionTypeString | null>(null);
     const [user, setUser] = useState<any>(null);
+    const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
+    const [IsLoading, setIsLoading] = useState<boolean>(false);
+
+    // Fungsi untuk menyimpan nilai ke cookies
+    const setCookie = (name: string, value: any) => {
+        document.cookie = `${name}=${value}; path=/;`;
+    };
 
     useEffect(() => {
        const data = getOpdTahun();
@@ -44,34 +52,60 @@ const Header = () => {
     }
     },[])
 
+    const fetchOpd = async() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        setIsLoading(true);
+        try{ 
+          const response = await fetch(`${API_URL}/opd/findall`,{
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if(!response.ok){
+            throw new Error('cant fetch data opd');
+          }
+          const data = await response.json();
+          const opd = data.data.map((item: any) => ({
+            value : item.kode_opd,
+            label : item.nama_opd,
+          }));
+          setOpdOption(opd);
+        } catch (err){
+          console.log('gagal mendapatkan data opd');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
     const handleTahun = (selectedOption: { value: number, label: string } | null) => {
       if (selectedOption) {
         const year = {label : selectedOption.label, value: selectedOption.value};
         setCookie('tahun', JSON.stringify(year)); // Simpan value dan label ke cookies
-        alert("berhasil mengganti tahun")
+        AlertNotification("Berhasil", "Berhasil Mengganti Tahun", "success", 1000);
         setTimeout(() => {
-          window.location.reload();
+            window.location.reload();
         }, 1000); //reload halaman dengan delay 1 detik
-      }
+        }
     };
     const handleOpd = (selectedOption: { value: string, label: string } | null) => {
-      if (selectedOption) {
+    if (selectedOption) {
         const opd = {label : selectedOption.label, value: selectedOption.value};
         setCookie('opd', JSON.stringify(opd)); // Simpan value dan label ke cookies
-        alert("berhasil mengganti OPD")
+        AlertNotification("Berhasil", "Berhasil Mengganti Perangkat Daerah", "success", 1000);
         setTimeout(() => {
           window.location.reload();
         }, 1000); //reload halaman dengan delay 1 detik
       }
     };
 
-    const OpdOption = [
-        {label: "Badan Perencanaan, penelitian dan pengembangan daerah", value: "Badan Perencanaan, penelitian dan pengembangan daerah"},
-        {label: "Dinas Komunikasi dan informasi", value: "Dinas Komunikasi dan informasi"},
-        {label: "Dinas Pariwisata, Pemuda dan Olahraga", value: "Dinas Pariwisata, Pemuda dan Olahraga"},
-        {label: "Dinas Pendidikan", value: "Dinas Pendidikan"},
-        {label: "Badan Pengelolaan Keuangan Daerah", value: "Badan Pengelolaan Keuangan Daerah"},
-    ];
+    // const OpdOption = [
+    //     {label: "Badan Perencanaan, penelitian dan pengembangan daerah", value: "Badan Perencanaan, penelitian dan pengembangan daerah"},
+    //     {label: "Dinas Komunikasi dan informasi", value: "Dinas Komunikasi dan informasi"},
+    //     {label: "Dinas Pariwisata, Pemuda dan Olahraga", value: "Dinas Pariwisata, Pemuda dan Olahraga"},
+    //     {label: "Dinas Pendidikan", value: "Dinas Pendidikan"},
+    //     {label: "Badan Pengelolaan Keuangan Daerah", value: "Badan Pengelolaan Keuangan Daerah"},
+    // ];
     const TahunOption = [
         {label: "Tahun 2019", value: 2019},
         {label: "Tahun 2020", value: 2020},
@@ -88,15 +122,15 @@ const Header = () => {
     ];
 
     return(
-        <div className="flex justify-between items-center border-b bg-gray-800 py-4 pr-2 pl-3">
+        <div className="flex flex-wrap gap-2 justify-between items-center border-b bg-gray-800 py-4 pr-2 pl-3">
             <div className="flex items-center justify-center pl-3 text-white">
                 <FiAperture className="w-9 h-9 mr-2"/>
                 <div className="flex flex-col">
-                    <h1 className="font-normal">{SelectedOpd ? SelectedOpd?.label : "Pilih OPD"}</h1>
-                    <h1 className="font-normal">{Tahun ? Tahun?.value : "Pilih Tahun"} - Kab. Madiun</h1>
+                    <h1 className="font-light text-sm">{SelectedOpd ? SelectedOpd?.label : "Pilih OPD"}</h1>
+                    <h1 className="font-light text-sm">{Tahun ? Tahun?.value : "Pilih Tahun"} - Kab. Madiun</h1>
                 </div>
             </div>
-            <div className="flex flex-wrap items-center">
+            <div className="flex flex-wrap items-center gap-2">
                 <Select
                     styles={{
                         control: (baseStyles) => ({
@@ -105,14 +139,20 @@ const Header = () => {
                         marginLeft: '4px',
                         marginRight: '4px',
                         minWidth: '157.562px',
-                        maxWidth: '200px',
+                        maxWidth: '160px',
                         })
                     }}
                     onChange={(option) => handleOpd(option)}
                     options={OpdOption}
                     placeholder="Pilih OPD ..."
                     value={SelectedOpd}
+                    isLoading={IsLoading}
                     isSearchable
+                    onMenuOpen={() => {
+                        if(OpdOption.length == 0){
+                            fetchOpd();
+                        }
+                    }}
                 />
                 <Select
                     styles={{
@@ -122,7 +162,7 @@ const Header = () => {
                         marginLeft: '4px',
                         marginRight: '4px',
                         minWidth: '157.562px',
-                        maxWidth: '200px',
+                        maxWidth: '160px',
                         })
                     }}
                     options={TahunOption}

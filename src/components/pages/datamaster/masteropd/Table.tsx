@@ -115,7 +115,7 @@ const Table = () => {
                         </tr>
                     :
                         Opd.map((data, index) => (
-                        <tr>
+                        <tr key={data.id}>
                             <td className="border-r border-b px-6 py-4">{index + 1}</td>
                             <td className="border-r border-b px-6 py-4">{data.kode_opd ? data.kode_opd : "-"}</td>
                             <td className="border-r border-b px-6 py-4">{data.nama_opd ? data.nama_opd : "-"}</td>

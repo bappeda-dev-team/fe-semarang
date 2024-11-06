@@ -87,7 +87,7 @@ const Inovasi: React.FC<id> = (id) => {
                                     </tr>
                                 :
                                     inovasi.map((data: any) => (
-                                    <tr>
+                                    <tr key={data.id}>
                                         <td className="border px-6 py-3">{data.judul_inovasi}</td>
                                         <td className="border px-6 py-3">{data.jenis_inovasi}</td>
                                         <td className="border px-6 py-3">{data.gambaran_nilia_kebaruan}</td>

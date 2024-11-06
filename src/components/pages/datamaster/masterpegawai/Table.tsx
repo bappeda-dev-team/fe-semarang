@@ -85,7 +85,7 @@ const Table = () => {
                             <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Nama</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">NIP</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Kode Perangkata Daerah</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Perangkata Daerah</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Roles</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Aksi</th>
                         </tr>

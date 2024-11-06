@@ -21,7 +21,7 @@ interface musrenbang {
     permasalahan : string;
 }
 
-const rincianRencanaKinerja = () => {
+const RincianRencanaKinerja = () => {
 
     const params = useParams();
     const pegawai_id = params.id as string;
@@ -154,4 +154,4 @@ const rincianRencanaKinerja = () => {
     )
 }
 
-export default rincianRencanaKinerja;
+export default RincianRencanaKinerja;

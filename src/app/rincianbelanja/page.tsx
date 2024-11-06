@@ -5,7 +5,7 @@ import { FiHome } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { getOpdTahun } from '@/components/lib/Cookie';
 
-const rincianbelanja = () => {
+const RincianBelanja = () => {
 
     const [Tahun, setTahun] = useState<any>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
@@ -56,4 +56,4 @@ const rincianbelanja = () => {
     )
 }
 
-export default rincianbelanja;
+export default RincianBelanja;

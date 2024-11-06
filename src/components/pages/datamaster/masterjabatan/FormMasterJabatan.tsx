@@ -6,12 +6,17 @@ import { ButtonGreen, ButtonRedBorder, ButtonSkyBorder, ButtonRed } from "@/comp
 import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 import { useParams, useRouter } from "next/navigation";
+import Select from 'react-select'
 
+interface OptionTypeString {
+    value: string;
+    label: string;
+}
 interface FormValue {
     id: string;
     nama_jabatan: string;
     kode_jabatan: number;
-    kode_opd: string;
+    kode_opd: OptionTypeString;
 }
 
 export const FormMasterJabatan = () => {
@@ -23,16 +28,44 @@ export const FormMasterJabatan = () => {
     } = useForm<FormValue>();
     const [NamaJabatan, setNamaJabatan] = useState<string>('');
     const [KodeJabatan, setKodeJabatan] = useState<string>('');
-    const [KodeOpd, setKodeOpd] = useState<string>('');
+    const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
+    const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
+    const [IsLoading, setIsLoading] = useState<boolean>(false);
     const router = useRouter();
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+    const fetchOpd = async() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        setIsLoading(true);
+        try{ 
+          const response = await fetch(`${API_URL}/opd/findall`,{
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if(!response.ok){
+            throw new Error('cant fetch data opd');
+          }
+          const data = await response.json();
+          const opd = data.data.map((item: any) => ({
+            value : item.kode_opd,
+            label : item.nama_opd,
+          }));
+          setOpdOption(opd);
+        } catch (err){
+          console.log('gagal mendapatkan data opd');
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
       const formData = {
           //key : value
           nama_jabatan : data.nama_jabatan,
           kode_jabatan : data.kode_jabatan,
-          kode_opd : data.kode_opd,
+          kode_opd : data.kode_opd?.value,
       };
       // console.log(formData);
       try{
@@ -139,34 +172,49 @@ export const FormMasterJabatan = () => {
                         className="uppercase text-xs font-bold text-gray-700 my-2"
                         htmlFor="kode_opd"
                     >
-                        Kode Perangkat Daerah :
+                        Perangkat Daerah:
                     </label>
                     <Controller
                         name="kode_opd"
                         control={control}
-                        rules={{ required: "Kode Perangkat Daerah harus terisi" }}
+                        rules={{required : "Perangkat Daerah Harus Terisi"}}
                         render={({ field }) => (
-                            <>
-                                <input
-                                    {...field}
-                                    className="border px-4 py-2 rounded-lg"
-                                    id="kode_opd"
-                                    type="text"
-                                    placeholder="masukkan Kode Perangkat Daerah"
-                                    value={field.value || KodeOpd}
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        setKodeOpd(e.target.value);
-                                    }}
-                                />
-                                {errors.kode_opd ?
-                                    <h1 className="text-red-500">
+                        <>
+                            <Select
+                                {...field}
+                                placeholder="Masukkan Perangkat Daerah"
+                                value={KodeOpd}
+                                options={OpdOption}
+                                isLoading={IsLoading}
+                                isSearchable
+                                isClearable
+                                onMenuOpen={() => {
+                                    if (OpdOption.length === 0) {
+                                    fetchOpd();
+                                    }
+                                }}
+                                onMenuClose={() => {
+                                    setOpdOption([]);
+                                }}
+                                onChange={(option) => {
+                                    field.onChange(option);
+                                    setKodeOpd(option);
+                                }}
+                                styles={{
+                                    control: (baseStyles) => ({
+                                    ...baseStyles,
+                                    borderRadius: '8px',
+                                    })
+                                }}
+                            />
+                            {errors.kode_opd ?
+                                <h1 className="text-red-500">
                                     {errors.kode_opd.message}
-                                    </h1>
-                                    :
-                                    <h1 className="text-slate-300 text-xs">*Kode Perangkat Daerah Harus Terisi</h1>
-                                }
-                            </>
+                                </h1>
+                            :
+                                <h1 className="text-slate-300 text-xs">*Perangkat Daerah Harus Terisi</h1>
+                            }
+                        </>
                         )}
                     />
                 </div>
@@ -194,19 +242,47 @@ export const FormEditMasterJabatan = () => {
     } = useForm<FormValue>();
     const [NamaJabatan, setNamaJabatan] = useState<string>('');
     const [KodeJabatan, setKodeJabatan] = useState<string>('');
-    const [KodeOpd, setKodeOpd] = useState<string>('');
+    const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
+    const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
+    const [IsLoading, setIsLoading] = useState<boolean>(false);
     const [idNull, setIdNull] = useState<boolean | null>(null);
     const router = useRouter();
     const {id} = useParams();
 
+    const fetchOpd = async() => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      setIsLoading(true);
+      try{ 
+        const response = await fetch(`${API_URL}/opd/findall`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if(!response.ok){
+          throw new Error('cant fetch data opd');
+        }
+        const data = await response.json();
+        const opd = data.data.map((item: any) => ({
+          value : item.kode_opd,
+          label : item.nama_opd,
+        }));
+        setOpdOption(opd);
+      } catch (err){
+        console.log('gagal mendapatkan data opd');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     useEffect(() => {
-        const fetchIdOpd = async() => {
+        const fetchIdJabatan = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/lorem`);
+                const response = await fetch(`${API_URL}/jabatan/detail/${id}`);
                 if(!response.ok){
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
@@ -223,9 +299,13 @@ export const FormEditMasterJabatan = () => {
                         setKodeJabatan(data.kode_jabatan);
                         reset((prev) => ({ ...prev, kode_jabatan: result.kode_jabatan }))
                     }
-                    if(data.kode_opd){
-                        setKodeOpd(data.kode_opd);
-                        reset((prev) => ({ ...prev, kode_opd: result.kode_opd }))
+                    if(data.operasional_daerah){
+                        const opd = {
+                            value: data.operasional_daerah.kode_opd,
+                            label: data.operasional_daerah.nama_opd,
+                        }
+                        setKodeOpd(opd);
+                        reset((prev) => ({ ...prev, kode_opd: opd }))
                     }
                 }
             } catch(err) {
@@ -234,7 +314,7 @@ export const FormEditMasterJabatan = () => {
                 setLoading(false);
             }
         }
-        fetchIdOpd();
+        fetchIdJabatan();
     },[]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
@@ -242,7 +322,7 @@ export const FormEditMasterJabatan = () => {
           //key : value
           nama_jabatan : data.nama_jabatan,
           kode_jabatan : data.kode_jabatan,
-          kode_opd : data.kode_opd,
+          kode_opd : data.kode_opd?.value,
       };
     //   console.log(formData);
         try{
@@ -371,34 +451,49 @@ export const FormEditMasterJabatan = () => {
                             className="uppercase text-xs font-bold text-gray-700 my-2"
                             htmlFor="kode_opd"
                         >
-                            Kode Perangkat Daerah :
+                            Perangkat Daerah:
                         </label>
                         <Controller
                             name="kode_opd"
                             control={control}
-                            rules={{ required: "Kode Perangkata Daerah harus terisi" }}
+                            rules={{required : "Perangkat Daerah Harus Terisi"}}
                             render={({ field }) => (
-                                <>
-                                    <input
-                                        {...field}
-                                        className="border px-4 py-2 rounded-lg"
-                                        id="kode_opd"
-                                        type="text"
-                                        placeholder="masukkan Kode Perangkat Daerah"
-                                        value={field.value || KodeOpd}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            setKodeOpd(e.target.value);
-                                        }}
-                                    />
-                                    {errors.kode_opd ?
-                                        <h1 className="text-red-500">
+                            <>
+                                <Select
+                                    {...field}
+                                    placeholder="Masukkan Perangkat Daerah"
+                                    value={KodeOpd}
+                                    options={OpdOption}
+                                    isLoading={IsLoading}
+                                    isSearchable
+                                    isClearable
+                                    onMenuOpen={() => {
+                                        if (OpdOption.length === 0) {
+                                        fetchOpd();
+                                        }
+                                    }}
+                                    onMenuClose={() => {
+                                        setOpdOption([]);
+                                    }}
+                                    onChange={(option) => {
+                                        field.onChange(option);
+                                        setKodeOpd(option);
+                                    }}
+                                    styles={{
+                                        control: (baseStyles) => ({
+                                        ...baseStyles,
+                                        borderRadius: '8px',
+                                        })
+                                    }}
+                                />
+                                {errors.kode_opd ?
+                                    <h1 className="text-red-500">
                                         {errors.kode_opd.message}
-                                        </h1>
-                                        :
-                                        <h1 className="text-slate-300 text-xs">*Kode Perangkat Daerah Harus Terisi</h1>
-                                    }
-                                </>
+                                    </h1>
+                                :
+                                    <h1 className="text-slate-300 text-xs">*Perangkat Daerah Harus Terisi</h1>
+                                }
+                            </>
                             )}
                         />
                     </div>

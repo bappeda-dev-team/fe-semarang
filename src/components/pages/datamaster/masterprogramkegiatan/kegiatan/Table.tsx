@@ -102,7 +102,7 @@ const Table = () => {
                         </tr>
                     :
                         Kegiatan.map((data, index) => (
-                        <tr>
+                        <tr key={data.id}>
                             <td className="border-r border-b px-6 py-4">{index + 1}</td>
                             <td className="border-r border-b px-6 py-4">{data.nama_kegiatan ? data.nama_kegiatan : "-"}</td>
                             <td className="border-r border-b px-6 py-4">{data.kode_kegiatan ? data.kode_kegiatan : "-"}</td>

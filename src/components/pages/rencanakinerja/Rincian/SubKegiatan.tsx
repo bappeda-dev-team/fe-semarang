@@ -96,7 +96,7 @@ const SubKegiatan: React.FC<id> = (id) => {
                                     </tr>
                                 :
                                     subKegiatan.map((data: any) => (
-                                        <tr>
+                                        <tr key={data.id}>
                                             <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.nama_sub_kegiatan}</td>
                                             <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.indikator}</td>
                                             <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.pagu_ranwal}</td>

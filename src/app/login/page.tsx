@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertNotification } from "@/components/global/Alert";
 
-const login = () => {
+const Login = () => {
 
     const [SelectedUser, setSelectedUser] = useState<any>("");
     const router = useRouter();
@@ -74,4 +74,4 @@ const login = () => {
     )
 }
 
-export default login;
+export default Login;

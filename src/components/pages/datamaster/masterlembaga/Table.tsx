@@ -83,7 +83,7 @@ const Table = () => {
                             <th className="border-r border-b px-6 py-3 max-w-[50px]">No</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Id Lembaga</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Nama Lembaga</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">ID Lembaga</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Kode Lembaga</th>
                             <th className="border-l border-b px-6 py-3 min-w-[100px]">Aksi</th>
                         </tr>
                     </thead>

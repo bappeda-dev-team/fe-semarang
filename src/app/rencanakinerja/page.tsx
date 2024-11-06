@@ -6,8 +6,9 @@ import { TablePerencanaan } from '@/components/pages/rencanakinerja/Table';
 import { FiHome } from 'react-icons/fi';
 import { ButtonSky } from "@/components/global/Button";
 import { TbCirclePlus } from "react-icons/tb";
+import Maintenance from '@/components/global/Maintenance';
 
-const rencanakinerja = () => {
+const RencanaKinerja = () => {
 
     const [Tahun, setTahun] = useState<any>(null);
 
@@ -26,7 +27,7 @@ const rencanakinerja = () => {
 
     return(
         <>
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
                 <a href="/" className="mr-1"><FiHome /></a>
                 <p className="mr-1">/ Perencanaan</p>
                 <p>/ Rencana Kinerja</p>
@@ -50,9 +51,10 @@ const rencanakinerja = () => {
                     </div>
                 </div>
             <TablePerencanaan />
-            </div>
+            </div> */}
+            <Maintenance />
         </>
     )
 }
 
-export default rencanakinerja;
+export default RencanaKinerja;

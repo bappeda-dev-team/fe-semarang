@@ -1,11 +1,12 @@
-import { FormEditRencanaKinerja } from "@/components/pages/rencanakinerja/FormRencanaKinerja";
+// import { FormEditRencanaKinerja } from "@/components/pages/rencanakinerja/FormRencanaKinerja";
+import Maintenance from "@/components/global/Maintenance";
 
-const editRencanaKinerja = () => {
+const EditRencanaKinerja = () => {
     return(
         <>
-            <FormEditRencanaKinerja />
+            <Maintenance />
         </>
     )
 }
 
-export default editRencanaKinerja;
+export default EditRencanaKinerja;

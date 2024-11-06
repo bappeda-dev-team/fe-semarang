@@ -91,7 +91,7 @@ const Mandatori: React.FC<id> = (id) => {
                                     </tr>
                                 :
                                     mandatori.map((data, index) => (
-                                        <tr>
+                                        <tr key={data.id}>
                                             <td className="border-r border-b px-6 py-3 min-w-[50px]">{index + 1}</td>
                                             <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.usulan}</td>
                                             <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.peraturan_terkait}</td>

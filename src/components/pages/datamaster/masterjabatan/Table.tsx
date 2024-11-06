@@ -5,12 +5,17 @@ import { useState, useEffect } from "react";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { LoadingClip } from "@/components/global/Loading";
 import { getOpdTahun } from "@/components/lib/Cookie";
+import { OpdTahunNull } from "@/components/global/OpdTahunNull";
 
 interface jabatan {
     id: string;
     nama_jabatan: string;
     kode_jabatan: string;
+    operasional_daerah: opd;
+}
+interface opd {
     kode_opd: string;
+    nama_opd: string;
 }
 
 const Table = () => {
@@ -19,38 +24,36 @@ const Table = () => {
     const [Error, setError] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [Tahun, setTahun] = useState<any>(null);
-
+    
     useEffect(() => {
         const data = getOpdTahun();
-        if(data){
-         if(data.tahun){
-             const valueTahun = {
-                 value: data.tahun.value,
-                 label: data.tahun.label
-             }
-             setTahun(valueTahun);
-         } 
-         if(data.opd){
-             const valueOpd = {
-                 value: data.opd.value,
-                 label: data.opd.label
-             }
-             setSelectedOpd(valueOpd);
-         }
-     }
-     },[])
-
-    useEffect(() => {
+        if(data.opd){
+            const valueOpd = {
+                value: data.opd.value,
+                label: data.opd.label
+            }
+            setSelectedOpd(valueOpd);
+        }
+        if(data.tahun){
+            const valuetahun = {
+                value: data.tahun.value,
+                label: data.tahun.label
+            }
+            setTahun(valuetahun);
+        }
+     },[]);
+     
+     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchJabatan = async() => {
             setLoading(true)
             try{
-                const response = await fetch(`${API_URL}/jabatan/findall/${SelectedOpd?.value}/${Tahun?.value}`);
+                const response = await fetch(`${API_URL}/jabatan/findall/${SelectedOpd?.value}`);
                 const result = await response.json();
                 const data = result.data;
-                if(data.length == 0){
+                if(data == null){
                     setDataNull(true);
                     setJabatan([]);
                 } else {
@@ -58,6 +61,7 @@ const Table = () => {
                     setJabatan(data);
                 }
                 setJabatan(data);
+                console.log(`${SelectedOpd?.value}`)
             } catch(err){
                 setError(true);
                 console.error(err)
@@ -65,8 +69,10 @@ const Table = () => {
                 setLoading(false);
             }
         }
-        fetchJabatan();
-    }, []);
+        if(SelectedOpd?.value != undefined){
+            fetchJabatan();
+        }
+    }, [SelectedOpd]);
 
     const hapusJabatan = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -96,6 +102,8 @@ const Table = () => {
                 <h1 className="text-red-500 mx-5 py-5">Periksa koneksi internet atau database server</h1>
             </div>
         )
+    } else if(SelectedOpd == (undefined)){
+        return <OpdTahunNull />
     }
 
     return(
@@ -106,7 +114,7 @@ const Table = () => {
                         <tr className="bg-[#99CEF5] text-white">
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Nama jabatan</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Kode Jabatan</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Kode Perangkat Daerah</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Perangkat Daerah</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Aksi</th>
                         </tr>
                     </thead>
@@ -122,11 +130,12 @@ const Table = () => {
                         <tr key={data.id}>
                             <td className="border-r border-b px-6 py-4">{data.nama_jabatan ? data.nama_jabatan : "-"}</td>
                             <td className="border-r border-b px-6 py-4">{data.kode_jabatan ? data.kode_jabatan : "-"}</td>
-                            <td className="border-r border-b px-6 py-4">{data.kode_opd ? data.kode_opd : "-"}</td>
+                            <td className="border-r border-b px-6 py-4">{data.operasional_daerah ? data.operasional_daerah.nama_opd : "-"}</td>
                             <td className="border-r border-b px-6 py-4">
                                 <div className="flex flex-col jutify-center items-center gap-2">
-                                    <ButtonGreen 
-                                        className="w-full" halaman_url={`/DataMaster/masterjabatan/1`}
+                                    <ButtonGreen  halaman_url={`/DataMaster/masterjabatan/${data.id}`} className="w-full">Edit</ButtonGreen>
+                                    <ButtonRed 
+                                        className="w-full"
                                         onClick={() => {
                                             AlertQuestion("Hapus?", "Hapus Jabatan yang dipilih?", "question", "Hapus", "Batal").then((result) => {
                                                 if(result.isConfirmed){
@@ -135,9 +144,8 @@ const Table = () => {
                                             });
                                         }}
                                     >
-                                        Edit
-                                    </ButtonGreen>
-                                    <ButtonRed className="w-full">Hapus</ButtonRed>
+                                        Hapus
+                                    </ButtonRed>
                                 </div>
                             </td>
                         </tr>

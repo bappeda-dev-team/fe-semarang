@@ -16,9 +16,9 @@ const Login = () => {
         setCookie('user', JSON.stringify(SelectedUser));
         AlertNotification("Berhasil Login", "", "success", 1000);
         router.push("/");
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
     }
 
     return(

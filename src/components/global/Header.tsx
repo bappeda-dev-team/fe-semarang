@@ -98,14 +98,7 @@ const Header = () => {
         }, 1000); //reload halaman dengan delay 1 detik
       }
     };
-
-    // const OpdOption = [
-    //     {label: "Badan Perencanaan, penelitian dan pengembangan daerah", value: "Badan Perencanaan, penelitian dan pengembangan daerah"},
-    //     {label: "Dinas Komunikasi dan informasi", value: "Dinas Komunikasi dan informasi"},
-    //     {label: "Dinas Pariwisata, Pemuda dan Olahraga", value: "Dinas Pariwisata, Pemuda dan Olahraga"},
-    //     {label: "Dinas Pendidikan", value: "Dinas Pendidikan"},
-    //     {label: "Badan Pengelolaan Keuangan Daerah", value: "Badan Pengelolaan Keuangan Daerah"},
-    // ];
+    
     const TahunOption = [
         {label: "Tahun 2019", value: 2019},
         {label: "Tahun 2020", value: 2020},
@@ -130,30 +123,32 @@ const Header = () => {
                     <h1 className="font-light text-sm">{Tahun ? Tahun?.value : "Pilih Tahun"} - Kab. Madiun</h1>
                 </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-                <Select
-                    styles={{
-                        control: (baseStyles) => ({
-                        ...baseStyles,
-                        borderRadius: '8px',
-                        marginLeft: '4px',
-                        marginRight: '4px',
-                        minWidth: '157.562px',
-                        maxWidth: '160px',
-                        })
-                    }}
-                    onChange={(option) => handleOpd(option)}
-                    options={OpdOption}
-                    placeholder="Pilih OPD ..."
-                    value={SelectedOpd}
-                    isLoading={IsLoading}
-                    isSearchable
-                    onMenuOpen={() => {
-                        if(OpdOption.length == 0){
-                            fetchOpd();
-                        }
-                    }}
-                />
+                <div className="flex flex-wrap items-center gap-2">
+                {user == 'super_admin' &&
+                    <Select
+                        styles={{
+                            control: (baseStyles) => ({
+                            ...baseStyles,
+                            borderRadius: '8px',
+                            marginLeft: '4px',
+                            marginRight: '4px',
+                            minWidth: '157.562px',
+                            maxWidth: '160px',
+                            })
+                        }}
+                        onChange={(option) => handleOpd(option)}
+                        options={OpdOption}
+                        placeholder="Pilih OPD ..."
+                        value={SelectedOpd}
+                        isLoading={IsLoading}
+                        isSearchable
+                        onMenuOpen={() => {
+                            if(OpdOption.length == 0){
+                                fetchOpd();
+                            }
+                        }}
+                    />
+                }
                 <Select
                     styles={{
                         control: (baseStyles) => ({

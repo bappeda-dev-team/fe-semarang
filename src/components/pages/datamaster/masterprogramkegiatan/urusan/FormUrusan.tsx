@@ -141,7 +141,7 @@ export const FormUrusan = () => {
                 >
                     Simpan
                 </ButtonGreen>
-                <ButtonRed type="button" halaman_url="/DataMaster/masterpegawai">
+                <ButtonRed type="button" halaman_url="/DataMaster/masterprogramkegiatan/urusan">
                     Kembali
                 </ButtonRed>
             </form>
@@ -181,11 +181,11 @@ export const FormEditUrusan = () => {
                     const data = result.data;
                     if(data.nama_urusan){
                         setNamaUrusan(data.nama_urusan);
-                        reset((prev) => ({ ...prev, nama_urusan: result.nama_urusan }))
+                        reset((prev) => ({ ...prev, nama_urusan: data.nama_urusan }))
                     }
                     if(data.kode_urusan){
                         setKodeUrusan(data.kode_urusan);
-                        reset((prev) => ({ ...prev, kode_urusan: result.kode_urusan }))
+                        reset((prev) => ({ ...prev, kode_urusan: data.kode_urusan }))
                     }
                 }
             } catch(err) {
@@ -332,7 +332,7 @@ export const FormEditUrusan = () => {
                 >
                     Simpan
                 </ButtonGreen>
-                <ButtonRed type="button" halaman_url="/DataMaster/masterpegawai">
+                <ButtonRed type="button" halaman_url="/DataMaster/masterprogramkegiatan/urusan">
                     Kembali
                 </ButtonRed>
             </form>

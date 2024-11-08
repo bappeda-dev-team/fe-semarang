@@ -15,6 +15,21 @@ export const getCookie = (name: string): string | null => {
   return null;
 };
 
+export const logout = () => {
+  // Hapus token dari localStorage
+  localStorage.removeItem('opd');
+  localStorage.removeItem('user');
+  localStorage.removeItem('tahun');
+
+  // Hapus semua cookie yang terkait
+  document.cookie = 'user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+  document.cookie = 'tahun=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+  document.cookie = 'opd=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+
+  // Redirect ke halaman login
+  window.location.href = '/login';
+};
+
 export const getUser = () => {
   const get_user = getCookie("user");
   if(get_user){

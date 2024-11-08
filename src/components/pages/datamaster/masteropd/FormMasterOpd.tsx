@@ -428,23 +428,23 @@ export const FormEditMasterOpd = () => {
                     const data = result.data;
                     if(data.kode_opd){
                         setKodeOpd(data.kode_opd);
-                        reset((prev) => ({ ...prev, kode_opd: result.kode_opd }))
+                        reset((prev) => ({ ...prev, kode_opd: data.kode_opd }))
                     }
                     if(data.nama_opd){
                         setNamaOpd(data.nama_opd);
-                        reset((prev) => ({ ...prev, nama_opd: result.nama_opd }))
+                        reset((prev) => ({ ...prev, nama_opd: data.nama_opd }))
                     }
                     if(data.nama_kepala_opd){
                         setNamaKepalaOpd(data.nama_kepala_opd);
-                        reset((prev) => ({ ...prev, nama_kepala_opd: result.nama_kepala_opd }))
+                        reset((prev) => ({ ...prev, nama_kepala_opd: data.nama_kepala_opd }))
                     }
                     if(data.pangkat_kepala){
                         setPangkatKepalaOpd(data.pangkat_kepala);
-                        reset((prev) => ({ ...prev, pangkat_kepala: result.pangkat_kepala }))
+                        reset((prev) => ({ ...prev, pangkat_kepala: data.pangkat_kepala }))
                     }
                     if(data.nip_kepala_opd){
                         setNipKepalaOpd(data.nip_kepala_opd);
-                        reset((prev) => ({ ...prev, nip_kepala_opd: result.nip_kepala_opd }))
+                        reset((prev) => ({ ...prev, nip_kepala_opd: data.nip_kepala_opd }))
                     }
                     if(data.id_lembaga){
                         const lembaga = {
@@ -476,7 +476,7 @@ export const FormEditMasterOpd = () => {
       };
       console.log(formData);
       try{
-        const response = await fetch(`${API_URL}/opd/update`, {
+        const response = await fetch(`${API_URL}/opd/update/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type" : "application/json",

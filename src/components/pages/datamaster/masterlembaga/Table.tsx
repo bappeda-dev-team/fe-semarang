@@ -20,7 +20,7 @@ const Table = () => {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
-        const fetchPegawai = async() => {
+        const fetchLembaga = async() => {
             setLoading(true)
             try{
                 const response = await fetch(`${API_URL}/lembaga/findall`);
@@ -28,6 +28,9 @@ const Table = () => {
                 const data = result.data;
                 if(data.length == 0){
                     setDataNull(true);
+                    setLembaga([]);
+                } else if(data.code == 500){
+                    setError(true);
                     setLembaga([]);
                 } else {
                     setDataNull(false);
@@ -41,7 +44,7 @@ const Table = () => {
                 setLoading(false);
             }
         }
-        fetchPegawai();
+        fetchLembaga();
     }, []);
 
     const hapusLembaga = async(id: any) => {

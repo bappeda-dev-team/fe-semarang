@@ -19,6 +19,7 @@ const Header = () => {
 
     const [Tahun, setTahun] = useState<OptionType | null>(null);
     const [SelectedOpd, setSelectedOpd] = useState<OptionTypeString | null>(null);
+    const [Opd, setOpd] = useState<OptionTypeString | null>(null);
     const [user, setUser] = useState<any>(null);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
@@ -44,7 +45,7 @@ const Header = () => {
                 value: data.opd.value,
                 label: data.opd.label
             }
-            setSelectedOpd(valueOpd);
+            setOpd(valueOpd);
         } 
         if(fetchUser){
             setUser(fetchUser.user);
@@ -82,7 +83,7 @@ const Header = () => {
       if (selectedOption) {
         const year = {label : selectedOption.label, value: selectedOption.value};
         setCookie('tahun', JSON.stringify(year)); // Simpan value dan label ke cookies
-        AlertNotification("Berhasil", "Berhasil Mengganti Tahun", "success", 1000);
+        AlertNotification("Berhasil", "Berhasil Mengganti Perangkat Daerah & Tahun", "success", 1000);
         setTimeout(() => {
             window.location.reload();
         }, 1000); //reload halaman dengan delay 1 detik
@@ -116,30 +117,26 @@ const Header = () => {
 
     return(
         <div className="flex flex-wrap gap-2 justify-between items-center border-b bg-gray-800 py-4 pr-2 pl-3">
-            <div className="flex items-center justify-center pl-3 text-white">
-                <FiAperture className="w-9 h-9 mr-2"/>
-                <div className="flex flex-col">
-                    <h1 className="font-light text-sm">{SelectedOpd ? SelectedOpd?.label : "Pilih OPD"}</h1>
-                    <h1 className="font-light text-sm">{Tahun ? Tahun?.value : "Pilih Tahun"} - Kab. Madiun</h1>
-                </div>
+            <div className="flex flex-col text-white max-w-[400px]">
+                <h1 className="font-light text-sm">{Opd ? Opd?.label : "Pilih OPD"}</h1>
+                <h1 className="font-light text-sm">{Tahun ? Tahun?.value : "Pilih Tahun"} - Kab. Madiun</h1>
             </div>
-                <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center">
                 {user == 'super_admin' &&
                     <Select
                         styles={{
                             control: (baseStyles) => ({
                             ...baseStyles,
                             borderRadius: '8px',
-                            marginLeft: '4px',
-                            marginRight: '4px',
                             minWidth: '157.562px',
                             maxWidth: '160px',
+                            minHeight: '38px'
                             })
                         }}
-                        onChange={(option) => handleOpd(option)}
+                        onChange={(option) => setSelectedOpd(option)}
                         options={OpdOption}
                         placeholder="Pilih OPD ..."
-                        value={SelectedOpd}
+                        value={SelectedOpd || Opd}
                         isLoading={IsLoading}
                         isSearchable
                         onMenuOpen={() => {
@@ -153,30 +150,43 @@ const Header = () => {
                     styles={{
                         control: (baseStyles) => ({
                         ...baseStyles,
-                        borderRadius: '8px',
+                        borderTopRightRadius: '0px',
+                        borderBottomRightRadius: '0px',
+                        borderTopLeftRadius: '8px',
+                        borderBottomLeftRadius: '8px',
                         marginLeft: '4px',
-                        marginRight: '4px',
+                        // marginRight: '4px',
                         minWidth: '157.562px',
                         maxWidth: '160px',
+                        minHeight: '38px'
                         })
                     }}
                     options={TahunOption}
                     placeholder="Pilih Tahun ..."
-                    onChange={(option) => handleTahun(option)}
+                    onChange={(option) => setTahun(option)}
                     value={Tahun}
                     isSearchable
                 />
+                <button 
+                    className="border border-white text-white px-3 py-2 min-w-20 max-h-[37.5px] rounded-br-lg rounded-tr-lg hover:bg-white hover:text-gray-800"
+                    onClick={() => {
+                        handleOpd(SelectedOpd);
+                        handleTahun(Tahun);
+                    }}
+                >
+                    Aktifkan
+                </button>
                 {user == "super_admin" && 
-                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 rounded-lg hover:bg-white hover:text-gray-800">Super Admin</button>
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">Super Admin</button>
                 }
                 {user == "admin_opd" && 
-                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 rounded-lg hover:bg-white hover:text-gray-800">Admin Opd</button>
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">Admin Opd</button>
                 }
                 {user == "asn" && 
-                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 rounded-lg hover:bg-white hover:text-gray-800">ASN</button>
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">ASN</button>
                 }
                 {user == undefined && 
-                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 rounded-lg hover:bg-white hover:text-gray-800">Loading</button>
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">Loading</button>
                 }
             </div>
         </div>

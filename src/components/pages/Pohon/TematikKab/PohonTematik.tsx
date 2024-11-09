@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { LoadingBeat } from '@/components/global/Loading';
 import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder } from '@/components/global/Button';
 import { TbCirclePlus, TbPencil, TbTrash } from 'react-icons/tb';
+import { getOpdTahun } from '@/components/lib/Cookie';
+import { OpdTahunNull } from '@/components/global/OpdTahunNull';
 
 interface pohontematik {
     id: number;
@@ -28,7 +30,7 @@ interface subtematik {
 const PohonTematik = ({id} : pohontematik) => {
 
     const [Pokin, setPokin] = useState<tematik[]>([]);
-    const [Loading, setLoading] = useState<boolean>(true);
+    const [Loading, setLoading] = useState<boolean | null>(null);
     const [error, setError] = useState<string>('');
 
     useEffect(() => {
@@ -78,7 +80,7 @@ const PohonTematik = ({id} : pohontematik) => {
                         {Pokin.map((data: any) => (
                         <li key={data.id}>
                             {/* 1 KOTAK */}
-                            <div className="tf-nc tf flex flex-col w-[700px] rounded-lg">
+                            <div className="tf-nc tf flex flex-col w-[600px] rounded-lg">
                                 {/* HEADER */}
                                 <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black">
                                     <h1>Tematik Kabupaten</h1>
@@ -121,7 +123,7 @@ const PohonTematik = ({id} : pohontematik) => {
                                 <ul>
                                     {data.sub_tematiks.map((item: any) => (
                                     <li key={item.id}>
-                                        <div className="tf-nc tf flex flex-col w-[700px] rounded-lg">
+                                        <div className="tf-nc tf flex flex-col w-[600px] rounded-lg">
                                             <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black">
                                                 <h1>Sub-Tematik Kabupaten</h1>
                                             </div>

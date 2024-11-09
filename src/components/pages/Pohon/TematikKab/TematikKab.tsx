@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import Select from 'react-select'
 import { ButtonSky } from '@/components/global/Button';
 import PohonTematik from './PohonTematik';
+import { OpdTahunNull } from '@/components/global/OpdTahunNull';
 
 interface OptionType {
     value: number;
@@ -17,6 +18,7 @@ const TematikKab = () => {
     const [TematikOption, setTematikOption] = useState<OptionType[]>([]);
     const [Tematik, setTematik] = useState<OptionType | null>(null);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
 
     useEffect(() => {
         const data = getOpdTahun();
@@ -26,6 +28,13 @@ const TematikKab = () => {
                 label: data.tahun.label,
             }
             setTahun(tahun);
+        }
+        if(data.opd){
+            const opd = {
+                value: data.opd.value,
+                label: data.opd.label,
+            }
+            setSelectedOpd(opd);
         }
     },[]);
 
@@ -54,6 +63,10 @@ const TematikKab = () => {
           setIsLoading(false);
         }
       };
+
+    if(Tahun?.value == undefined || SelectedOpd?.value == undefined){
+        return <OpdTahunNull />
+    }
 
     return(
         <>

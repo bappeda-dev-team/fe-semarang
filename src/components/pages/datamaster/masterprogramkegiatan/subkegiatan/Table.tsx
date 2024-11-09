@@ -7,18 +7,18 @@ import { LoadingClip } from "@/components/global/Loading";
 
 interface subkegiatan {
     id: string;
-    nama_subkegiatan: string;
-    kode_subkegiatan: string;
+    nama_sub_kegiatan: string;
+    tahun: string;
     indikator_subkegiatan: string;
     target_subkegiatan: string;
     satuan_target_subkegiatan: string;
-    kode_opd: opd;
+    kode_opd: string;
 }
 
-interface opd {
-    kode_opd: string;
-    nama_opd: string;
-}
+// interface opd {
+//     kode_opd: string;
+//     nama_opd: string;
+// }
 
 const Table = () => {
 
@@ -63,9 +63,10 @@ const Table = () => {
                 alert("cant fetch data")
             }
             setSubKegiatan(SubKegiatan.filter((data) => (data.id !== id)))
-            AlertNotification("Berhasil", "Data Perangkat Daerah Berhasil Dihapus", "success", 1000);
+            AlertNotification("Berhasil", "Data sub kegiatan Berhasil Dihapus", "success", 1000);
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+            console.error(err)
         }
     };
 
@@ -91,7 +92,7 @@ const Table = () => {
                         <tr className="bg-[#99CEF5] text-white">
                             <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
                             <th className="border-r border-b px-6 py-3 min-w-[500px]">Nama Sub Kegiatan</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Kode Sub Kegiatan</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Tahun</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Perangkat Daerah</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</th>
                         </tr>
@@ -107,9 +108,9 @@ const Table = () => {
                         SubKegiatan.map((data, index) => (
                         <tr key={data.id}>
                             <td className="border-r border-b px-6 py-4">{index + 1}</td>
-                            <td className="border-r border-b px-6 py-4">{data.nama_subkegiatan ? data.nama_subkegiatan : "-"}</td>
-                            <td className="border-r border-b px-6 py-4">{data.kode_subkegiatan ? data.kode_subkegiatan : "-"}</td>
-                            <td className="border-r border-b px-6 py-4">{data.kode_opd ? data.kode_opd.nama_opd : "-"}</td>
+                            <td className="border-r border-b px-6 py-4">{data.nama_sub_kegiatan ? data.nama_sub_kegiatan : "-"}</td>
+                            <td className="border-r border-b px-6 py-4">{data.tahun ? data.tahun : "-"}</td>
+                            <td className="border-r border-b px-6 py-4">{data.kode_opd ? data.kode_opd : "-"}</td>
                             <td className="border-r border-b px-6 py-4">
                                 <div className="flex flex-col jutify-center items-center gap-2">
                                     <ButtonGreen className="w-full" halaman_url={`/DataMaster/masterprogramkegiatan/subkegiatan/${data.id}`}>Edit</ButtonGreen>

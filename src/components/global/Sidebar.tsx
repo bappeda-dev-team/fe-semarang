@@ -866,15 +866,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
             {PerencanaanOPD && 
             <div className="flex flex-col border-l-2 border-white rounded-b-xl px-3 py-2 ml-2 duration-200">
               <Link href="#">
-                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${OpdPohonKinerjaKota ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
-                  <TbBinaryTree className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja Kabupaten</span>
-                </li>
-              </Link>
-              <Link href="#">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PohonKinerja ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
                   <TbBinaryTree className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja</span>
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja OPD</span>
                 </li>
               </Link>
               <Link href="/pohoncascading">

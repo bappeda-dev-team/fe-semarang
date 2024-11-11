@@ -32,10 +32,9 @@ export const FormSubTematikKab = () => {
     const [Keterangan, setKeterangan] = useState<string>('');
     const [Tahun, setTahun] = useState<OptionTypeString | null>(null);
     const router = useRouter();
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const params = useParams();
     const id = Number(params.id);
-
+    
     const TahunOption = [
         {label: "Tahun 2019", value: "2019"},
         {label: "Tahun 2020", value: "2020"},
@@ -50,9 +49,10 @@ export const FormSubTematikKab = () => {
         {label: "Tahun 2029", value: "2029"},
         {label: "Tahun 2030", value: "2030"},
     ];
-
+    
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
-      const formData = {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const formData = {
           //key : value
           nama_pohon : data.nama_pohon,
           Keterangan : data.keterangan,

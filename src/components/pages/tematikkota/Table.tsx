@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { getOpdTahun } from "@/components/lib/Cookie";
-import { OpdTahunNull } from "@/components/global/OpdTahunNull";
+import { TahunNull } from "@/components/global/OpdTahunNull";
 
 interface tematik {
     id: number;
@@ -23,8 +23,7 @@ const Table = () => {
     const [DataNull, setDataNull] = useState<boolean | null>(null);
     const [Tahun, setTahun] = useState<any>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
+    
     useEffect(() => {
         const data = getOpdTahun();
         if(data.tahun){
@@ -42,8 +41,9 @@ const Table = () => {
             setSelectedOpd(opd);
         }
     },[]);
-
+    
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchTematik = async() => {
             setLoading(true)
             try{
@@ -101,8 +101,8 @@ const Table = () => {
                 <h1 className="text-red-500 mx-5 py-5">Periksa koneksi internet atau database server</h1>
             </div>
         )
-    } else if(Tahun?.value == undefined || SelectedOpd?.value == undefined){
-        return <OpdTahunNull />
+    } else if(Tahun?.value == undefined){
+        return <TahunNull />
     }
 
     
@@ -138,7 +138,7 @@ const Table = () => {
                                     <ButtonRed 
                                         className="w-full"
                                         onClick={() => {
-                                            AlertQuestion("Hapus?", "Hapus tematik kabupaten yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                            AlertQuestion("Hapus?", "Hapus tematik pemda yang dipilih?", "question", "Hapus", "Batal").then((result) => {
                                                 if(result.isConfirmed){
                                                     hapusTematik(data.id);
                                                 }

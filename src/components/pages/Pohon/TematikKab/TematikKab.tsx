@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Select from 'react-select'
 import { ButtonSky } from '@/components/global/Button';
 import PohonTematik from './PohonTematik';
-import { OpdTahunNull } from '@/components/global/OpdTahunNull';
+import { TahunNull } from '@/components/global/OpdTahunNull';
 
 interface OptionType {
     value: number;
@@ -64,15 +64,15 @@ const TematikKab = () => {
         }
       };
 
-    if(Tahun?.value == undefined || SelectedOpd?.value == undefined){
-        return <OpdTahunNull />
+    if(Tahun?.value == undefined){
+        return <TahunNull />
     }
 
     return(
         <>
             <div className="flex flex-col p-5 border-2 rounded-xl mt-3">
                 <div className="flex flex-wrap">
-                    <h1 className='text-lg font-bold'>Pohon Kinerja Kabupaten</h1>
+                    <h1 className='text-lg font-bold'>Pohon Kinerja Pemda</h1>
                     <h1 className='text-lg font-bold ml-1'>{Tahun?.label}</h1>
                 </div>
                 <div className="flex flex-col py-3">

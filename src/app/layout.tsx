@@ -53,6 +53,11 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
   if(loginPage){
     return (
       <html lang="en" className={font.className}>
+        <head>
+          <title>KAK Pemda Madiun</title>
+          <meta name="description" content="Aplikasi KAK Pemda Madiun" />
+          <link rel="icon" href="/logo.png" />
+        </head>
         <body>
           <NextTopLoader 
             color="linear-gradient(to right, rgb(134, 239, 172), rgb(59, 130, 246), rgb(147, 51, 234))"
@@ -65,6 +70,11 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
 
   return (
     <html lang="en" className={font.className}>
+      <head>
+        <title>KAK Pemda Madiun</title>
+        <meta name="description" content="Aplikasi KAK Pemda Madiun" />
+        <link rel="icon" href="/logo.png" />
+      </head>
       <body className="flex">
         <NextTopLoader 
           color="linear-gradient(to right, rgb(134, 239, 172), rgb(59, 130, 246), rgb(147, 51, 234))"

@@ -122,7 +122,7 @@ const Header = () => {
                 <h1 className="font-light text-sm">{Tahun ? Tahun?.value : "Pilih Tahun"} - Kab. Madiun</h1>
             </div>
             <div className="flex flex-wrap items-center">
-                {user == 'super_admin' &&
+                {/* {user == 'super_admin' && */}
                     <Select
                         styles={{
                             control: (baseStyles) => ({
@@ -145,7 +145,7 @@ const Header = () => {
                             }
                         }}
                     />
-                }
+                {/* } */}
                 <Select
                     styles={{
                         control: (baseStyles) => ({

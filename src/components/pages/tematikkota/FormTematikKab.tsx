@@ -67,7 +67,7 @@ export const FormTematikKab = () => {
               body: JSON.stringify(formData),
           });
           if(response.ok){
-              AlertNotification("Berhasil", "Berhasil menambahkan data tematik kabupaten", "success", 1000);
+              AlertNotification("Berhasil", "Berhasil menambahkan data tematik pemda", "success", 1000);
               router.push("/tematikkota");
           } else {
               AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
@@ -80,7 +80,7 @@ export const FormTematikKab = () => {
     return(
     <>
         <div className="border p-5 rounded-xl shadow-xl">
-            <h1 className="uppercase font-bold">Form Tambah Tematik Kabupaten :</h1>
+            <h1 className="uppercase font-bold">Form Tambah Tematik Pemda :</h1>
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col mx-5 py-5"
@@ -223,13 +223,12 @@ export const FormEditTematikKab = () => {
     const [NamaPohon, setNamaPohon] = useState<string>('');
     const [Keterangan, setKeterangan] = useState<string>('');
     const [Tahun, setTahun] = useState<OptionTypeString | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [idNull, setIdNull] = useState<boolean | null>(null);
     const router = useRouter();
     const {id} = useParams();
-
+    
     const TahunOption = [
         {label: "Tahun 2019", value: "2019"},
         {label: "Tahun 2020", value: "2020"},
@@ -244,8 +243,9 @@ export const FormEditTematikKab = () => {
         {label: "Tahun 2029", value: "2029"},
         {label: "Tahun 2030", value: "2030"},
     ];
-
+    
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchTematikKab = async() => {
             setLoading(true);
             try{
@@ -283,8 +283,9 @@ export const FormEditTematikKab = () => {
         }
         fetchTematikKab();
     },[]);
-
+    
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_pohon : data.nama_pohon,

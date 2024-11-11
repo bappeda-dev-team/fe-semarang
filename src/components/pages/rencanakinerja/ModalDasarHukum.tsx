@@ -31,9 +31,9 @@ export const ModalDasarHukum: React.FC<modal> = ({isOpen, onClose, className}) =
 
     return(
         <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="fixed inset-0 bg-black opacity-30" onClick={onClose}></div>
-            <div className={`bg-white rounded-lg p-8 z-10 w-4/5`}>
-                <div className="w-max-[500px] py-2 border-b">
+            <div className={`fixed inset-0 bg-black opacity-30`} onClick={onClose}></div>
+            <div className={`bg-white rounded-lg p-8 z-10 w-4/5 text-start`}>
+                <div className="w-max-[500px] py-2 border-b text-center">
                     <h1 className="text-xl uppercase">Tambah Dasar Hukum</h1>
                 </div>
                 <div className="flex flex-col py-3">

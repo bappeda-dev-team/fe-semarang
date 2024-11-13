@@ -2,10 +2,8 @@ import '@/components/pages/Pohon/treeflex.css'
 import { useState, useEffect } from 'react';
 import { LoadingBeat } from '@/components/global/Loading';
 import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder } from '@/components/global/Button';
-import { TbCirclePlus, TbPencil, TbTrash } from 'react-icons/tb';
+import { TbArrowGuide, TbCirclePlus, TbPencil, TbTrash } from 'react-icons/tb';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
-import { getOpdTahun } from '@/components/lib/Cookie';
-import { OpdTahunNull } from '@/components/global/OpdTahunNull';
 import {ModalAddStrategic, ModalEditStrategic} from '../ModalStrategic';
 
 interface pohontematik {
@@ -20,50 +18,24 @@ interface tematik {
     id: number;
     parent: number;
     tema: string;
-    taget: string;
+    target: string;
     satuan: string;
     keterangan: string;
     indikators: string; 
-    sub_tematiks: subtematik[];
+    childs: subtematik[];
 }
 interface subtematik {
     id: number;
     parent: number;
-    tema_sub_tematik: string;
+    tema: string;
     keterangan: string;
     indikators: string;
-    strategics: strategics[];
-}
-interface strategics {
-    id: number;
-    parent: number;
-    strategi: string;
-    keterangan: string;
-    indikators: string;
-    perangkat_daerah: opd;
-    tacticals: tacticals[];
-}
-interface tacticals {
-    id: number;
-    parent: number;
-    strategi: string;
-    keterangan: string;
-    indikators: string;
-    kode_perangkat_daerah: opd;
-    operationals: operationals[];
-}
-interface operationals {
-    id: number;
-    parent: number;
-    strategi: string;
-    keterangan: string;
-    indikators: string;
-    kode_perangkat_daerah: opd;
+    childs: subtematik[];
 }
 
 const PohonTematik = ({id} : pohontematik) => {
 
-    const [Pokin, setPokin] = useState<tematik[]>([]);
+    const [Pokin, setPokin] = useState<tematik | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [error, setError] = useState<string>('');
     const [ModalStrategic, setModalStrategic] = useState<boolean>(false);
@@ -73,6 +45,13 @@ const PohonTematik = ({id} : pohontematik) => {
     const [EditTactical, setEditTactical] = useState<boolean>(false);
     const [EditOperational, setEditOperational] = useState<boolean>(false);
     const [StrategicId, setStrategicId] = useState<number | null>(null);
+
+    const [Deleted, setDeleted] = useState<boolean>(false);
+    const [fetchTrigger, setFetchTrigger] = useState<boolean>(false);
+
+    const handleFetchUpdate = () => {
+        setFetchTrigger((prev) => !prev);
+    };
 
     //Handle Modal Strategic
     const openModalStrategic = (ids: number) => {
@@ -136,7 +115,7 @@ const PohonTematik = ({id} : pohontematik) => {
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
                 const result = await response.json();
-                const data = result.data?.tematiks || [];
+                const data = result.data;
                 setPokin(data);
             } catch(err) {
                 setError('gagal mendapatkan data, terdapat kesalahan backend/server saat mengambil data pohon kinerja tematik');
@@ -147,7 +126,7 @@ const PohonTematik = ({id} : pohontematik) => {
         if(id != undefined){
             fetchTematikKab();
         }
-    },[id]);
+    },[id, fetchTrigger, Deleted]);
 
     const hapusSubTematik = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -158,10 +137,8 @@ const PohonTematik = ({id} : pohontematik) => {
             if(!response.ok){
                 alert("cant fetch data")
             }
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-            AlertNotification("Berhasil", "Data lembaga Berhasil Dihapus", "success", 1000);
+            AlertNotification("Berhasil", "Data Pohon Berhasil Dihapus", "success", 1000);
+            setDeleted((prev) => !prev);
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
             console.error(err);
@@ -176,10 +153,8 @@ const PohonTematik = ({id} : pohontematik) => {
             if(!response.ok){
                 alert("cant fetch data")
             }
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
             AlertNotification("Berhasil", "Data pohon Berhasil Dihapus", "success", 1000);
+            setDeleted((prev) => !prev);
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
             console.error(err);
@@ -206,8 +181,8 @@ const PohonTematik = ({id} : pohontematik) => {
             <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
                 <div className="tf-tree text-center mt-3">
                     <ul>
-                        {Pokin.map((data: any) => (
-                        <li key={data.id}>
+                        {Pokin ? (
+                        <li key={Pokin.id}>
                             {/* 1 KOTAK */}
                             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
                                 {/* HEADER */}
@@ -220,37 +195,37 @@ const PohonTematik = ({id} : pohontematik) => {
                                         <tbody>
                                             <tr>
                                                 <td className="min-w-[100px] border px-2 py-3 border-black text-start">Tema</td>
-                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{data.tema? data.tema : "-"}</td>
+                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{Pokin.tema? Pokin.tema : "-"}</td>
                                             </tr>
                                             <tr>
                                                 <td className="min-w-[100px] border px-2 py-3 border-black text-start">Target/Satuan</td>
-                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{data.target ? data.target : "-"}{data.satuan ? data.satuan : ""}</td>
+                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{Pokin.target ? Pokin.target : "-"}{Pokin.satuan ? Pokin.satuan : ""}</td>
                                             </tr>
                                             <tr>
                                                 <td className="min-w-[100px] border px-2 py-3 border-black text-start">Keterangan</td>
-                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{data.keterangan ? data.keterangan : "-"}</td>
+                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{Pokin.keterangan ? Pokin.keterangan : "-"}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 {/* button */}
                                 <div className="flex justify-center border my-3 py-3 border-black">
-                                    <ButtonSkyBorder halaman_url={`/tematikkota/${data.id}`}>
+                                    <ButtonSkyBorder halaman_url={`/tematikkota/${Pokin.id}`}>
                                         <TbPencil className="mr-1"/>
                                         Edit
                                     </ButtonSkyBorder>
                                 </div>
                                 {/* footer */}
                                 <div className="flex justify-center my-3 py-3">
-                                    <ButtonGreenBorder halaman_url={`/subtematik/${data.id}/tambah`}>
+                                    <ButtonGreenBorder halaman_url={`/subtematik/${Pokin.id}/tambah`}>
                                         <TbCirclePlus className='mr-1'/>
                                         Sub Tema
                                     </ButtonGreenBorder>
                                 </div>
                             </div>
-                            {data.sub_tematiks ? (
+                            {Pokin.childs ? (
                                 <ul>
-                                    {data.sub_tematiks.map((item: any) => (
+                                    {Pokin.childs.map((item: any) => (
                                     <li key={item.id}>
                                         <div className="tf-nc tf flex flex-col w-[600px] rounded-lg bg-white shadow-lg shadow-slate-500">
                                             <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black">
@@ -261,7 +236,7 @@ const PohonTematik = ({id} : pohontematik) => {
                                                     <tbody>
                                                         <tr>
                                                             <td className="min-w-[100px] border px-2 py-1 border-black text-start rounded-tl-lg">Sub Tema</td>
-                                                            <td className="min-w-[300px] border px-2 py-1 border-black text-start rounded-tr-lg">{item.tema_sub_tematik ? item.tema_sub_tematik : "-"}</td>
+                                                            <td className="min-w-[300px] border px-2 py-1 border-black text-start rounded-tr-lg">{item.tema ? item.tema : "-"}</td>
                                                         </tr>
                                                         <tr>
                                                             <td className="min-w-[100px] border px-2 py-1 border-black text-start">Target/Satuan</td>
@@ -275,7 +250,7 @@ const PohonTematik = ({id} : pohontematik) => {
                                                 </table>
                                             </div>
                                             <div className="flex justify-evenly border my-3 py-2 border-black">
-                                                <ButtonSkyBorder halaman_url={`/subtematik/${data.id}/edit`}>
+                                                <ButtonSkyBorder halaman_url={`/subtematik/${Pokin.id}/edit`}>
                                                     <TbPencil className="mr-1"/>
                                                     Edit
                                                 </ButtonSkyBorder>
@@ -302,10 +277,11 @@ const PohonTematik = ({id} : pohontematik) => {
                                                         onClose={closeModalStrategic}
                                                         id={StrategicId}
                                                         level={1}
+                                                        onSuccess={handleFetchUpdate}
                                                     />
                                                 <ButtonGreenBorder>
-                                                    <TbCirclePlus className="mr-1"/>
-                                                    Sub Sub Tematik
+                                                    <TbArrowGuide className="mr-1"/>
+                                                    Ambil Strategic
                                                 </ButtonGreenBorder>
                                             </div>
                                         </div>
@@ -322,7 +298,7 @@ const PohonTematik = ({id} : pohontematik) => {
                                                                 <tbody>
                                                                     <tr>
                                                                         <td className="min-w-[100px] border px-2 py-1 border-red-700 bg-white text-start rounded-tl-lg">Strategic</td>
-                                                                        <td className="min-w-[300px] border px-2 py-1 border-red-700 bg-white text-start rounded-tr-lg">{s.strategi ? s.strategi : "-"}</td>
+                                                                        <td className="min-w-[300px] border px-2 py-1 border-red-700 bg-white text-start rounded-tr-lg">{s.tema ? s.tema : "-"}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td className="min-w-[100px] border px-2 py-1 border-red-700 bg-white text-start">Indikator</td>
@@ -353,6 +329,7 @@ const PohonTematik = ({id} : pohontematik) => {
                                                                     onClose={() => closeModalEditStrategic()}
                                                                     id={StrategicId}
                                                                     level={1}
+                                                                    onSuccess={handleFetchUpdate}
                                                                 />
                                                             <ButtonRedBorder
                                                                 onClick={() => {
@@ -380,12 +357,13 @@ const PohonTematik = ({id} : pohontematik) => {
                                                                     onClose={closeModalTactical}
                                                                     id={StrategicId}
                                                                     level={2}
+                                                                    onSuccess={handleFetchUpdate}
                                                                 />
                                                         </div>
                                                     </div>
-                                                    {s.tacticals ? (
+                                                    {s.childs ? (
                                                         <ul>
-                                                            {s.tacticals.map((t: any) => (
+                                                            {s.childs.map((t: any) => (
                                                             <li key={s.id}>
                                                                 <div className="tf-nc tf flex flex-col w-[600px] rounded-lg bg-blue-500 shadow-lg shadow-blue-500">
                                                                     <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-blue-500 bg-white rounded-lg">
@@ -396,7 +374,7 @@ const PohonTematik = ({id} : pohontematik) => {
                                                                             <tbody>
                                                                                 <tr>
                                                                                     <td className="min-w-[100px] border px-2 py-1 border-blue-500 bg-white text-start rounded-tl-lg">Tactical</td>
-                                                                                    <td className="min-w-[300px] border px-2 py-1 border-blue-500 bg-white text-start rounded-tr-lg">{t.strategi ? t.strategi : "-"}</td>
+                                                                                    <td className="min-w-[300px] border px-2 py-1 border-blue-500 bg-white text-start rounded-tr-lg">{t.tema ? t.tema : "-"}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td className="min-w-[100px] border px-2 py-1 border-blue-500 bg-white text-start">Indikator</td>
@@ -427,6 +405,7 @@ const PohonTematik = ({id} : pohontematik) => {
                                                                                 onClose={() => closeModalEditTactical()}
                                                                                 id={StrategicId}
                                                                                 level={2}
+                                                                                onSuccess={handleFetchUpdate}
                                                                             />
                                                                         <ButtonRedBorder
                                                                             onClick={() => {
@@ -454,12 +433,13 @@ const PohonTematik = ({id} : pohontematik) => {
                                                                                 onClose={closeModalOperational}
                                                                                 id={StrategicId}
                                                                                 level={3}
+                                                                                onSuccess={handleFetchUpdate}
                                                                             />
                                                                     </div>
                                                                 </div>
-                                                                {t.operationals ? (
+                                                                {t.childs ? (
                                                                     <ul>
-                                                                        {t.operationals.map((o: any) => (
+                                                                        {t.childs.map((o: any) => (
                                                                         <li key={s.id}>
                                                                             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg bg-green-500 shadow-lg shadow-green-500">
                                                                                 <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-green-500 bg-white rounded-lg">
@@ -470,7 +450,7 @@ const PohonTematik = ({id} : pohontematik) => {
                                                                                         <tbody>
                                                                                             <tr>
                                                                                                 <td className="min-w-[100px] border px-2 py-1 border-green-500 bg-white text-start rounded-tl-lg">Operational</td>
-                                                                                                <td className="min-w-[300px] border px-2 py-1 border-green-500 bg-white text-start rounded-tr-lg">{o.strategi ? o.strategi : "-"}</td>
+                                                                                                <td className="min-w-[300px] border px-2 py-1 border-green-500 bg-white text-start rounded-tr-lg">{o.tema ? o.tema : "-"}</td>
                                                                                             </tr>
                                                                                             <tr>
                                                                                                 <td className="min-w-[100px] border px-2 py-1 border-green-500 bg-white text-start">Indikator</td>
@@ -501,6 +481,7 @@ const PohonTematik = ({id} : pohontematik) => {
                                                                                             onClose={() => closeModalEditOperational()}
                                                                                             id={StrategicId}
                                                                                             level={3}
+                                                                                            onSuccess={handleFetchUpdate}
                                                                                         />
                                                                                     <ButtonRedBorder
                                                                                         onClick={() => {
@@ -541,7 +522,7 @@ const PohonTematik = ({id} : pohontematik) => {
                                 <></>
                             )}
                         </li>
-                        ))}
+                        ) : (<></>)}
                     </ul>
                 </div>
             </div>

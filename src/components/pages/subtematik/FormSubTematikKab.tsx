@@ -72,7 +72,7 @@ export const FormSubTematikKab = () => {
           });
           if(response.ok){
               AlertNotification("Berhasil", "Berhasil menambahkan data sub tematik kabupaten", "success", 1000);
-              router.push("/subtematik");
+              router.push("/pohonkinerjakota");
           } else {
               AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
           }
@@ -315,7 +315,7 @@ export const FormEditSubTematikKab = () => {
             });
             if(response.ok){
                 AlertNotification("Berhasil", "Berhasil edit data tematik kabupaten", "success", 1000);
-                router.push("/subtematik");
+                router.push("/pohonkinerjakota");
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }

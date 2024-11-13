@@ -604,7 +604,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterLembaga(false);
       setTematikKota(false);
       setSubTematik(false);
-      setPerencanaanKota(true);
+      setPerencanaanKota(false);
+      setLaporan(true);
       setUsulan(true);
       setRencanaKinerjaKAK(false);
       setRincianBelanja(false);
@@ -869,30 +870,32 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
           }
           {/* PERENCANAAN KOTA */}
           {User == 'super_admin'&& 
+          <>
             <li 
               className={`flex font-medium items-center gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-gray-700`}
               onClick={() => setPerencanaanKota(PerencanaanKota ? false : true)}
-            >
+              >
               <TbBuildingFortress className="text-xl" />
               <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Perencanaan Pemda</span>
             </li>
-          }
-          {PerencanaanKota &&
-          <div className="flex flex-col border-l-2 border-white rounded-b-xl px-3 py-2 ml-2 duration-200">
-            {/* submenu */}
-            <Link href="/tematikkota">
-              <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${TematikKota ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
-                <TbArrowUpFromArc className="text-xl" />
-                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Tematik Pemda</span>
-              </li>
-            </Link>
-            <Link href="/pohonkinerjakota">
-              <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${KotaPohonKinerjaKota ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
-                <TbBinaryTree className="text-xl" />
-                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja Pemda</span>
-              </li>
-            </Link>
-          </div>
+            {PerencanaanKota &&
+            <div className="flex flex-col border-l-2 border-white rounded-b-xl px-3 py-2 ml-2 duration-200">
+              {/* submenu */}
+              <Link href="/tematikkota">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${TematikKota ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <TbArrowUpFromArc className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Tematik Pemda</span>
+                </li>
+              </Link>
+              <Link href="/pohonkinerjakota">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${KotaPohonKinerjaKota ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <TbBinaryTree className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja Pemda</span>
+                </li>
+              </Link>
+            </div>
+            }
+          </>
           }
           {/* PERENCANAAN OPD */}
           {(User == 'super_admin' || User == 'admin_opd') && 

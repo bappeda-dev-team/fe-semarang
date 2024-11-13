@@ -27,7 +27,7 @@ const RencanaKinerja = () => {
 
     return(
         <>
-            {/* <div className="flex items-center">
+            <div className="flex items-center">
                 <a href="/" className="mr-1"><FiHome /></a>
                 <p className="mr-1">/ Perencanaan</p>
                 <p>/ Rencana Kinerja</p>
@@ -51,8 +51,8 @@ const RencanaKinerja = () => {
                     </div>
                 </div>
             <TablePerencanaan />
-            </div> */}
-            <Maintenance />
+            </div>
+            {/* <Maintenance /> */}
         </>
     )
 }

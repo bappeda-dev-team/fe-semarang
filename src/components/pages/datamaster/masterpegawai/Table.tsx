@@ -28,7 +28,7 @@ const Table = () => {
                 const response = await fetch(`${API_URL}/pegawai/findall`);
                 const result = await response.json();
                 const data = result.data;
-                if(data.length == 0){
+                if(data == null){
                     setDataNull(true);
                     setPegawai([]);
                 } else {

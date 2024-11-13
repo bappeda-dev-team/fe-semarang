@@ -16,6 +16,7 @@ interface modal {
     onClose: () => void;
     id?: number | null;
     level: number;
+    onSuccess: () => void;
 }
 interface FormValue {
     id: number;
@@ -27,7 +28,7 @@ interface FormValue {
     kode_opd: OptionTypeString;
 }
 
-export const ModalAddStrategic: React.FC<modal> = ({isOpen, onClose, id, level}) => {
+export const ModalAddStrategic: React.FC<modal> = ({isOpen, onClose, id, level, onSuccess}) => {
 
     const {
       control,
@@ -92,9 +93,8 @@ export const ModalAddStrategic: React.FC<modal> = ({isOpen, onClose, id, level})
             });
             if(response.ok){
                 AlertNotification("Berhasil", "Berhasil menambahkan strategic", "success", 1000);
-                setTimeout(() => {
-                  window.location.reload();
-                }, 1000);
+                onClose();
+                onSuccess();
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }
@@ -116,14 +116,30 @@ export const ModalAddStrategic: React.FC<modal> = ({isOpen, onClose, id, level})
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <div className="w-max-[500px] py-2 border-b text-center">
-                        <h1 className="text-xl uppercase">Tambah Strategic</h1>
+                        {level == 1 && 
+                            <h1 className="text-xl uppercase">Tambah Strategic</h1>
+                        } 
+                        {level == 2 && 
+                            <h1 className="text-xl uppercase">Tambah Tactical</h1>
+                        } 
+                        {level == 3 && 
+                            <h1 className="text-xl uppercase">Tambah Operational</h1>
+                        } 
                     </div>
                     <div className="flex flex-col py-3">
                         <label
                             className="uppercase text-xs font-bold text-gray-700 my-2"
                             htmlFor="nama_pohon"
                         >
-                            Strategic:
+                            {level == 1 && 
+                                "Strategic"
+                            } 
+                            {level == 2 && 
+                                "Tactical"
+                            } 
+                            {level == 3 && 
+                                "Operational"
+                            }
                         </label>
                         <Controller
                             name="nama_pohon"
@@ -134,7 +150,7 @@ export const ModalAddStrategic: React.FC<modal> = ({isOpen, onClose, id, level})
                                     className="border px-4 py-2 rounded-lg"
                                     id="nama_pohon"
                                     type="text"
-                                    placeholder="masukkan Strategic"
+                                    placeholder="masukkan Pohon"
                                     value={field.value || NamaPohon}
                                     onChange={(e) => {
                                         field.onChange(e);
@@ -182,7 +198,7 @@ export const ModalAddStrategic: React.FC<modal> = ({isOpen, onClose, id, level})
     }
 }
 
-export const ModalEditStrategic: React.FC<modal> = ({isOpen, onClose, id, level}) => {
+export const ModalEditStrategic: React.FC<modal> = ({isOpen, onClose, id, level, onSuccess}) => {
 
     const {
       control,
@@ -257,7 +273,7 @@ export const ModalEditStrategic: React.FC<modal> = ({isOpen, onClose, id, level}
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
             //key : value
-            nama_pohon : data.nama_pohon,
+            tema : data.nama_pohon,
             Keterangan : data.keterangan,
             jenis_pohon:    level === 1 ? "Strategic" :
                             level === 2 ? "Tactical" :
@@ -280,9 +296,8 @@ export const ModalEditStrategic: React.FC<modal> = ({isOpen, onClose, id, level}
             });
             if(response.ok){
                 AlertNotification("Berhasil", "Berhasil edit strategic", "success", 1000);
-                setTimeout(() => {
-                  window.location.reload();
-                }, 1000);
+                onClose();
+                onSuccess();
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }
@@ -304,14 +319,30 @@ export const ModalEditStrategic: React.FC<modal> = ({isOpen, onClose, id, level}
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <div className="w-max-[500px] py-2 border-b text-center">
-                        <h1 className="text-xl uppercase">Edit Strategic {id}</h1>
+                    {level == 1 && 
+                        <h1 className="text-xl uppercase">Edit Strategic</h1>
+                    } 
+                    {level == 2 && 
+                        <h1 className="text-xl uppercase">Edit Tactical</h1>
+                    } 
+                    {level == 3 && 
+                        <h1 className="text-xl uppercase">Edit Operational</h1>
+                    }
                     </div>
                     <div className="flex flex-col py-3">
                         <label
                             className="uppercase text-xs font-bold text-gray-700 my-2"
                             htmlFor="nama_pohon"
                         >
-                            Strategic:
+                            {level == 1 && 
+                                "Strategic"
+                            } 
+                            {level == 2 && 
+                                "Tactical"
+                            } 
+                            {level == 3 && 
+                                "Operational"
+                            }
                         </label>
                         <Controller
                             name="nama_pohon"
@@ -323,7 +354,7 @@ export const ModalEditStrategic: React.FC<modal> = ({isOpen, onClose, id, level}
                                     className="border px-4 py-2 rounded-lg"
                                     id="nama_pohon"
                                     type="text"
-                                    placeholder="masukkan Strategic"
+                                    placeholder="masukkan Nama Pohon"
                                     // value={field.value || NamaPohon}
                                     onChange={(e) => {
                                         field.onChange(e);

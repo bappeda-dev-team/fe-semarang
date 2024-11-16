@@ -34,7 +34,6 @@ export const FormSubKegiatan = () => {
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const router = useRouter();
 
     const TahunOption = [
@@ -79,6 +78,7 @@ export const FormSubKegiatan = () => {
     };
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
             //key : value
             nama_subkegiatan : data.nama_subkegiatan,
@@ -269,7 +269,6 @@ export const FormEditSubKegiatan = () => {
     const [Tahun, setTahun] = useState<OptionTypeString | null>(null);
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
@@ -293,6 +292,7 @@ export const FormEditSubKegiatan = () => {
     ];
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchIdSubKegiatan = async() => {
             setLoading(true);
             try{
@@ -341,7 +341,7 @@ export const FormEditSubKegiatan = () => {
             }
         }
         fetchIdSubKegiatan();
-    },[]);
+    },[id, reset]);
 
     const fetchOpd = async() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -370,6 +370,7 @@ export const FormEditSubKegiatan = () => {
     };
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_subkegiatan : data.nama_subkegiatan,

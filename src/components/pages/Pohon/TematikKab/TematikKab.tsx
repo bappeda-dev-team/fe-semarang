@@ -42,7 +42,7 @@ const TematikKab = () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try{ 
-          const response = await fetch(`${API_URL}/pohon_kinerja_admin/findall/${Tahun?.value}`,{
+          const response = await fetch(`${API_URL}/pohon_kinerja/tematik/${Tahun?.value}`,{
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -52,9 +52,9 @@ const TematikKab = () => {
             throw new Error('cant fetch data opd');
           }
           const data = await response.json();
-          const tema = data.data.tematiks.map((item: any) => ({
+          const tema = data.data.map((item: any) => ({
             value : item.id,
-            label : item.tema,
+            label : item.nama_pohon,
           }));
           setTematikOption(tema);
         } catch (err){

@@ -23,10 +23,10 @@ export const FormMasterLembaga = () => {
     } = useForm<FormValue>();
     const [NamaLembaga, setNamaLembaga] = useState<string>('');
     const [KodeLembaga, setKodeLembaga] = useState<string>('');
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const router = useRouter();
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
             //key : value
             nama_lembaga : data.nama_lembaga,
@@ -157,7 +157,6 @@ export const FormEditMasterLembaga = () => {
     } = useForm<FormValue>();
     const [NamaLembaga, setNamaLembaga] = useState<string>('');
     const [KodeLembaga, setKodeLembaga] = useState<string>('');
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [idNull, setIdNull] = useState<boolean | null>(null);
@@ -165,6 +164,7 @@ export const FormEditMasterLembaga = () => {
     const router = useRouter();
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchLembagaId = async() => {
             setLoading(true);
             try{
@@ -193,9 +193,10 @@ export const FormEditMasterLembaga = () => {
             }
         }
         fetchLembagaId();
-    },[]);
+    },[id, reset]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_lembaga : data.nama_lembaga,

@@ -26,13 +26,13 @@ export const FormMasterPegawai = () => {
       formState: { errors },
     } = useForm<FormValue>();
     const router = useRouter();
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [NamaPegawai, setNamaPegawai] = useState<string>('');
     const [KodeOpd, setKodeOpd] = useState<string>('');
     const [Nip, setNip] = useState<string>('');
     const [Role, setRole] = useState<string>('');
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_pegawai : data.nama_pegawai,
@@ -238,7 +238,6 @@ export const FormEditMasterPegawai = () => {
     const [KodeOpd, setKodeOpd] = useState<string>('');
     const [Nip, setNip] = useState<string>('');
     const [Role, setRole] = useState<string>('');
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const {id} = useParams();
     const router = useRouter();
     const [error, setError] = useState<string | null>(null);
@@ -246,6 +245,7 @@ export const FormEditMasterPegawai = () => {
     const [idNull, setIdNull] = useState<boolean | null>(null);
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchIdOpd = async() => {
             setLoading(true);
             try{
@@ -274,9 +274,10 @@ export const FormEditMasterPegawai = () => {
             }
         }
         fetchIdOpd();
-    },[]);
+    },[id, reset]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_pegawai : data.nama_pegawai,

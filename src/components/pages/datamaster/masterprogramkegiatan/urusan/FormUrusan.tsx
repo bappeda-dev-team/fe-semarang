@@ -26,10 +26,10 @@ export const FormUrusan = () => {
     } = useForm<FormValue>();
     const [NamaUrusan, setNamaUrusan] = useState<string>('');
     const [KodeUrusan, setKodeUrusan] = useState<string>('');
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const router = useRouter();
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
             //key : value
             nama_urusan : data.nama_urusan,
@@ -159,7 +159,6 @@ export const FormEditUrusan = () => {
     } = useForm<FormValue>();
     const [NamaUrusan, setNamaUrusan] = useState<string>('');
     const [KodeUrusan, setKodeUrusan] = useState<string>('');
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [idNull, setIdNull] = useState<boolean | null>(null);
@@ -167,6 +166,7 @@ export const FormEditUrusan = () => {
     const router = useRouter();
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchIdUrusan = async() => {
             setLoading(true);
             try{
@@ -195,9 +195,10 @@ export const FormEditUrusan = () => {
             }
         }
         fetchIdUrusan();
-    },[]);
+    },[id, reset]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_urusan : data.nama_urusan,

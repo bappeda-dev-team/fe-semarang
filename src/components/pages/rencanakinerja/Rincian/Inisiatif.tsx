@@ -19,9 +19,9 @@ const Inisiatif: React.FC<id> = (id) => {
     const [inisiatif, setInisiatif] = useState<mandatori[]>([]);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchInisiatif = async() => {
             setLoading(true);
             try{

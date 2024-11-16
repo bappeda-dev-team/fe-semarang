@@ -449,7 +449,7 @@ export const FormEditMusrenbang = () => {
             }
         }
         fetchIdMusrenbang();
-    },[]);
+    },[id, reset]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
       const formData = {

@@ -17,9 +17,9 @@ const Table = () => {
     const [Error, setError] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchUrusan = async() => {
             setLoading(true)
             try{

@@ -31,10 +31,10 @@ export const FormKegiatan = () => {
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const router = useRouter();
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
             //key : value
             nama_kegiatan : data.nama_kegiatan,
@@ -244,7 +244,6 @@ export const FormEditKegiatan = () => {
     const [KodeKegiatan, setKodeKegiatan] = useState<string>('');
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
@@ -253,6 +252,7 @@ export const FormEditKegiatan = () => {
     const {id} = useParams();
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fecthIdKegiatan = async() => {
             setLoading(true);
             try{
@@ -289,7 +289,7 @@ export const FormEditKegiatan = () => {
             }
         }
         fecthIdKegiatan();
-    },[]);
+    },[id, reset]);
 
     const fetchOpd = async() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -318,6 +318,7 @@ export const FormEditKegiatan = () => {
     };
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_kegiatan : data.nama_kegiatan,

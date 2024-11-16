@@ -133,12 +133,12 @@ export const FormEditLevelPohon = () => {
     } = useForm<FormValue>();
     const [NamaPohon, setNamaPohon] = useState<string>('');
     const [LevelPohon, setLevelPohon] = useState<string>('');
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [idNull, setIdNull] = useState<boolean | null>(null);
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchIdOpd = async() => {
             setLoading(true);
             try{

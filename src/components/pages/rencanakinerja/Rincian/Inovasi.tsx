@@ -20,9 +20,9 @@ const Inovasi: React.FC<id> = (id) => {
     const [inovasi, setInovasi] = useState<type_inovasi[]>([]);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchInovasi = async() => {
             setLoading(true);
             try{

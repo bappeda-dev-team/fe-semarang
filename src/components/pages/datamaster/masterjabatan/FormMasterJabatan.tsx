@@ -32,7 +32,6 @@ export const FormMasterJabatan = () => {
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const router = useRouter();
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     const fetchOpd = async() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -61,6 +60,7 @@ export const FormMasterJabatan = () => {
       };
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_jabatan : data.nama_jabatan,
@@ -244,7 +244,6 @@ export const FormEditMasterJabatan = () => {
     const [KodeJabatan, setKodeJabatan] = useState<string>('');
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
@@ -279,6 +278,7 @@ export const FormEditMasterJabatan = () => {
     };
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchIdJabatan = async() => {
             setLoading(true);
             try{
@@ -315,9 +315,10 @@ export const FormEditMasterJabatan = () => {
             }
         }
         fetchIdJabatan();
-    },[]);
+    },[id, reset]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_jabatan : data.nama_jabatan,

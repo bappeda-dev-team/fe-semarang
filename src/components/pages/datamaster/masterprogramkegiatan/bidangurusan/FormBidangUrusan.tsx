@@ -26,10 +26,10 @@ export const FormBidangUrusan = () => {
     } = useForm<FormValue>();
     const [NamaBidangUrusan, setNamaBidangUrusan] = useState<string>('');
     const [KodeBidangUrusan, setKodeBidangUrusan] = useState<string>('');
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const router = useRouter();
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
             //key : value
             nama_bidang_urusan : data.nama_bidang_urusan,
@@ -159,7 +159,6 @@ export const FormEditBidangUrusan = () => {
     } = useForm<FormValue>();
     const [NamaBidangUrusan, setNamaBidangUrusan] = useState<string>('');
     const [KodeBidangUrusan, setKodeBidangUrusan] = useState<string>('');
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [idNull, setIdNull] = useState<boolean | null>(null);
@@ -167,6 +166,7 @@ export const FormEditBidangUrusan = () => {
     const {id} = useParams();
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchIdOpd = async() => {
             setLoading(true);
             try{
@@ -195,9 +195,10 @@ export const FormEditBidangUrusan = () => {
             }
         }
         fetchIdOpd();
-    },[]);
+    },[id, reset]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_bidang_urusan : data.nama_bidang_urusan,

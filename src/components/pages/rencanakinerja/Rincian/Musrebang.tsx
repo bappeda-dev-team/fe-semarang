@@ -18,12 +18,12 @@ interface musrenbang {
 
 const Musrebang: React.FC<id> = ({id}) => {
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [musrebang, setMusrebang] = useState<musrenbang[]>([]);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchMusrebang = async() => {
             setLoading(true);
             try{

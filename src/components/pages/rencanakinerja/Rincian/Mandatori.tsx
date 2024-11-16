@@ -19,9 +19,9 @@ const Mandatori: React.FC<id> = (id) => {
     const [mandatori, setMandatori] = useState<mandatori[]>([]);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchMandatori = async() => {
             setLoading(true);
             try{

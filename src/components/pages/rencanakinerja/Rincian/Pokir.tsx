@@ -20,9 +20,9 @@ const Pokir: React.FC<id> = (id) => {
     const [pokir, setPokir] = useState<pokir[]>([]);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchMusrebang = async() => {
             setLoading(true);
             try{

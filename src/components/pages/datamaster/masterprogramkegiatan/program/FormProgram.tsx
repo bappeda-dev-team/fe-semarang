@@ -32,7 +32,6 @@ export const FormProgram = () => {
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const router = useRouter();
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     const fetchOpd = async() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -61,6 +60,7 @@ export const FormProgram = () => {
     };
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_program : data.nama_program,
@@ -244,7 +244,6 @@ export const FormEditProgram = () => {
     const [KodeProgram, setKodeProgram] = useState<string>('');
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
@@ -253,6 +252,7 @@ export const FormEditProgram = () => {
     const router = useRouter();
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchProgram = async() => {
             setLoading(true);
             try{
@@ -289,7 +289,7 @@ export const FormEditProgram = () => {
             }
         }
         fetchProgram();
-    },[]);
+    },[id, reset]);
 
     const fetchOpd = async() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -318,6 +318,7 @@ export const FormEditProgram = () => {
       };
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           nama_program : data.nama_program,

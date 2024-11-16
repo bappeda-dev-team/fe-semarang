@@ -19,9 +19,9 @@ const DasarHukum: React.FC<id> = (id) => {
     const [dasarHukum, setDasarHukum] = useState<dasar_hukum[]>([]);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchDasarHukum = async() => {
             setLoading(true);
             try{

@@ -29,9 +29,9 @@ export const TablePerencanaan = () => {
     const [loading, setLoading] = useState<boolean | null>(null);
     const [rekin, setRekin] = useState<type_rekin[]>([]);
     const [Error, setError] = useState<boolean | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchRekin = async() => {
             setLoading(true)
             try{

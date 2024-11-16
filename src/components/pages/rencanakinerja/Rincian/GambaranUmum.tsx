@@ -18,9 +18,9 @@ const GambaranUmum: React.FC<id> = (id) => {
     const [gambaran, setGambaran] = useState<gambaran_umum[]>([]);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchGambaranUmum = async() => {
             setLoading(true);
             try{

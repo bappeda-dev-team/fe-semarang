@@ -282,7 +282,7 @@ export const FormEditTematikKab = () => {
             }
         }
         fetchTematikKab();
-    },[]);
+    },[id, reset]);
     
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -290,7 +290,7 @@ export const FormEditTematikKab = () => {
           //key : value
           nama_pohon : data.nama_pohon,
           jenis_pohon : "Tematik",
-          level_pohom : 0,
+          level_pohon : 0,
           keterangan: data.keterangan,
           tahun: data.tahun?.value,
       };

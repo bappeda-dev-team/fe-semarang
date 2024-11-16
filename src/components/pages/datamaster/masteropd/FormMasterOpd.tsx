@@ -52,9 +52,9 @@ export const FormMasterOpd = () => {
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const router = useRouter();
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           kode_opd : data.kode_opd,
@@ -378,7 +378,6 @@ export const FormEditMasterOpd = () => {
     const [NipKepalaOpd, setNipKepalaOpd] = useState<string>('');
     const [PangkatKepalaOpd, setPangkatKepalaOpd] = useState<string>('');
     const [KodeLembaga, setKodeLembaga] = useState<OptionTypeString | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
@@ -414,6 +413,7 @@ export const FormEditMasterOpd = () => {
     };
 
     useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchIdOpd = async() => {
             setLoading(true);
             try{
@@ -462,9 +462,10 @@ export const FormEditMasterOpd = () => {
             }
         }
         fetchIdOpd();
-    },[]);
+    },[id, reset]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
             //key : value
             kode_opd : data.kode_opd,

@@ -1,9 +1,9 @@
-import PohonOpd from "@/components/pages/Pohon/PokinOpd/PohonOpd";
+import PokinOpd from "@/components/pages/Pohon/PokinOpd/PokinOpd";
 
 const PohonKinerjaOpd = () => {
     return(
         <>
-            <PohonOpd />
+            <PokinOpd />
         </>
     )
 }

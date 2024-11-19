@@ -9,6 +9,7 @@ import { LoadingBeat } from '@/components/global/Loading';
 import { ModalDasarHukum } from '../../rencanakinerja/ModalDasarHukum';
 import { OpdTahunNull } from '@/components/global/OpdTahunNull';
 import { PohonOpd } from '@/components/lib/Pohon/PohonOpd';
+import { FormPohon } from '@/components/lib/Pohon/FormPohon';
 
 interface opd {
     kode_opd: string;
@@ -18,9 +19,9 @@ interface pokin {
     kode_opd: string;
     nama_opd: string;
     tahun: string;
-    strategic: strategics[]
+    childs: childs[]
 }
-interface strategics {
+interface childs {
     id: number;
     parent: number;
     strategi: string;
@@ -28,34 +29,18 @@ interface strategics {
     satuan: string;
     keterangan: string;
     indikators: string; 
-    tacticals: tacticals[];
-}
-interface tacticals {
-    id: number;
-    parent: number;
-    strategi: string;
-    keterangan: string;
-    indikators: string;
-    kode_perangkat_daerah: opd;
-    operational: operational[];
-}
-interface operational {
-    id: number;
-    parent: number;
-    strategi: string;
-    keterangan: string;
-    indikators: string;
-    kode_perangkat_daerah: opd;
+    childs: childs[];
 }
 
 const PokinOpd = () => {
 
     const [Tahun, setTahun] = useState<any>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
-    const [Pokin, setPokin] = useState<pokin[]>([]);
+    const [Pokin, setPokin] = useState<pokin | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [error, setError] = useState<string>('');
 
+    const [formList, setFormList] = useState<number[]>([]); // List of form IDs
     const [NewStrategic, setNewStrategic] = useState<boolean>(false);
     const [Deleted, setDeleted] = useState<boolean>(false);
 
@@ -81,6 +66,10 @@ const PokinOpd = () => {
         setDeleted((prev) => !prev);
     };
 
+    // Adds a new form entry
+    const newChild = () => {
+        setFormList([...formList, Date.now()]); // Using unique IDs
+    };
 
     useEffect(() => {
         const fetchPokinOpd = async() => {
@@ -160,33 +149,45 @@ const PokinOpd = () => {
                                         <tbody>
                                             <tr>
                                                 <td className="min-w-[100px] border px-2 py-3 border-black text-start">Perangkat Daerah</td>
-                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{SelectedOpd?.label}</td>
+                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{Pokin?.nama_opd}</td>
                                             </tr>
                                             <tr>
                                                 <td className="min-w-[100px] border px-2 py-3 border-black text-start">Kode OPD</td>
-                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{SelectedOpd?.value}</td>
+                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{Pokin?.kode_opd}</td>
                                             </tr>
                                             <tr>
                                                 <td className="min-w-[100px] border px-2 py-3 border-black text-start">Tahun</td>
-                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{Tahun?.value}</td>
+                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{Pokin?.tahun}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 {/* button */}
                                 <div className="flex justify-center border my-3 py-3 border-black">
-                                    <ButtonGreenBorder onClick={() => setNewStrategic(true)}>
+                                    <ButtonGreenBorder onClick={newChild}>
                                         <TbCirclePlus />
                                         Strategic
                                     </ButtonGreenBorder>
                                 </div>
                                 <ModalDasarHukum isOpen={NewStrategic} onClose={() => {setNewStrategic(false)}}/>
                             </div>
-                            {Pokin ? (
+                            {Pokin?.childs ? (
                             <ul>
-                                <li>
-                                    <PohonOpd tema={Pokin} deleteTrigger={handleFetchDelete}/>
-                                </li>
+                                {Pokin.childs.map((data: any) => (
+                                    <li key={data.id}>
+                                        <PohonOpd tema={data} deleteTrigger={handleFetchDelete}/>
+                                    </li>
+                                ))}
+                                {formList.map((formId) => (
+                                    <FormPohon
+                                        level={3}
+                                        id={null}
+                                        key={formId}
+                                        formId={formId}
+                                        pokin={'opd'}
+                                        onCancel={() => setFormList(formList.filter((id) => id !== formId))}
+                                    />
+                                ))}
                             </ul>
                             ) : (
                                 <></>

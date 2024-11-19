@@ -86,6 +86,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                     key={tema.id}
                     formId={tema.id}
                     onSave={addNewItem}
+                    pokin={'pemda'}
                     onCancel={() => setEdit(false)}
                 />
             :
@@ -199,6 +200,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         key={formId}
                         formId={formId}
                         onSave={addNewItem}
+                        pokin={'pemda'}
                         onCancel={() => setFormList(formList.filter((id) => id !== formId))}
                     />
                 ))}
@@ -406,6 +408,8 @@ export const tambahPohonName = (jenis: string): string => {
       return 'Strategic';
     case 'Strategic':
       return 'Tactical';
+    case 'StrategicKota':
+      return 'Tactical';
     case 'Tactical':
       return 'Opertional';
     default:
@@ -423,6 +427,8 @@ export const ambilPohonName = (jenis: string): string => {
     case 'SuperSubTematik':
       return 'Strategic';
     case 'Strategic':
+      return 'Tactical';
+    case 'StrategicKota':
       return 'Tactical';
     case 'Tactical':
       return 'Opertional';

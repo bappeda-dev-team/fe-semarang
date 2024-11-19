@@ -24,6 +24,7 @@ interface FormValue {
     keterangan: string;
     tahun: OptionTypeString;
     kode_opd: OptionTypeString;
+    pelaksana: OptionTypeString[];
     pohon?: OptionType;
 }
 interface form {
@@ -35,7 +36,15 @@ interface form {
     onCancle: () => void;
 }
 
-export const FormPohon: React.FC<{ formId: number; id: number; level: number; onSave: (data: any, id: number) => void; onCancel: () => void }> = ({ id, level, formId, onSave, onCancel }) => {
+export const FormPohon: React.FC<{ 
+    formId: number; 
+    id: number | null; 
+    level: number; 
+    onSave?: (data: any, id: number) => void; 
+    onCancel?: () => void 
+    pokin: 'pemda' | 'opd';
+}> = ({ id, level, formId, onSave, onCancel, pokin }) => {
+
     const {
       control,
       handleSubmit,
@@ -46,7 +55,9 @@ export const FormPohon: React.FC<{ formId: number; id: number; level: number; on
     const [NamaPohon, setNamaPohon] = useState<string>('');
     const [Keterangan, setKeterangan] = useState<string>('');
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
+    const [Pelaksana, setPelaksana] = useState<OptionTypeString[]>([]);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
+    const [PelaksanaOption, setPelaksanaOption] = useState<OptionTypeString[]>([]);
     const [Tahun, setTahun] = useState<any>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -94,9 +105,37 @@ export const FormPohon: React.FC<{ formId: number; id: number; level: number; on
         setIsLoading(false);
       }
     };
+    const fetchPelaksana = async() => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      setIsLoading(true);
+      try{ 
+        const response = await fetch(`${API_URL}/pegawai/findall`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if(!response.ok){
+          throw new Error('cant fetch data opd');
+        }
+        const data = await response.json();
+        const opd = data.data.map((item: any) => ({
+          value : item.id,
+          label : item.nama_pegawai,
+        }));
+        setPelaksanaOption(opd);
+      } catch (err){
+        console.log('gagal mendapatkan data opd');
+      } finally {
+        setIsLoading(false);
+      }
+    };
     
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const pelaksanaIds = Pelaksana?.map((pelaksana) => ({
+            pegawai_id: pelaksana.value, // Ubah `value` menjadi `pegawai_id`
+        })) || [];
         const formData = {
             //key : value
             nama_pohon : data.nama_pohon,
@@ -114,6 +153,7 @@ export const FormPohon: React.FC<{ formId: number; id: number; level: number; on
                             level === 4 ? 5 :
                             level === 5 ? 6 : "Unknown",
             parent: id,
+            pelaksana: pelaksanaIds,
             tahun: Tahun?.value?.toString(),
             kode_opd: data.kode_opd?.value,
         };
@@ -129,7 +169,6 @@ export const FormPohon: React.FC<{ formId: number; id: number; level: number; on
             });
             if(response.ok){
                 AlertNotification("Berhasil", "Berhasil menambahkan pohon", "success", 1000);
-                onCancel();
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }
@@ -144,22 +183,22 @@ export const FormPohon: React.FC<{ formId: number; id: number; level: number; on
         <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
             <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
                 {level == 0 && 
-                    <h1>Tambah SubTematik Baru {id} level : {level}</h1>
+                    <h1>Tambah SubTematik Baru </h1>
                 } 
                 {level == 1 && 
-                    <h1>Tambah SubSubTematik Baru {id} level : {level}</h1>
+                    <h1>Tambah SubSubTematik Baru </h1>
                 } 
                 {level == 2 && 
-                    <h1>Tambah SuperSubTematik Baru {id} level : {level}</h1>
+                    <h1>Tambah SuperSubTematik Baru </h1>
                 } 
                 {level == 3 && 
-                    <h1>Tambah Strategic Baru {id} level : {level}</h1>
+                    <h1>Tambah Strategic Baru </h1>
                 } 
                 {level == 4 && 
-                    <h1>Tambah Tactical Baru {id} level : {level}</h1>
+                    <h1>Tambah Tactical Baru </h1>
                 } 
                 {level == 5 && 
-                    <h1>Tambah Operational Baru {id} level : {level}</h1>
+                    <h1>Tambah Operational Baru </h1>
                 }
             </div>
             <div className="flex justify-center my-3 w-full">
@@ -259,6 +298,50 @@ export const FormPohon: React.FC<{ formId: number; id: number; level: number; on
                             )}
                         />
                     </div>
+                    {pokin === 'opd' && 
+                        <div className="flex flex-col py-3">
+                            <label
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
+                                htmlFor="pelaksana"
+                            >
+                                Pelaksana
+                            </label>
+                            <Controller
+                                name="pelaksana"
+                                control={control}
+                                render={({ field }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        placeholder="Pilih Pelaksana (bisa lebih dari satu)"
+                                        value={Pelaksana}
+                                        options={PelaksanaOption}
+                                        isLoading={isLoading}
+                                        isSearchable
+                                        isClearable
+                                        isMulti
+                                        onMenuOpen={() => {
+                                            if (PelaksanaOption.length === 0) {
+                                                fetchPelaksana();
+                                            }
+                                        }}
+                                        onChange={(option) => {
+                                            field.onChange(option || []);
+                                            setPelaksana(option as OptionTypeString[]);
+                                        }}
+                                        styles={{
+                                            control: (baseStyles) => ({
+                                            ...baseStyles,
+                                            borderRadius: '8px',
+                                            textAlign: 'start',
+                                            })
+                                        }}
+                                    />
+                                </>
+                                )}
+                            />
+                        </div>
+                    }
                     <div className="flex flex-col py-3">
                         <label
                             className="uppercase text-xs font-bold text-gray-700 my-2"
@@ -512,8 +595,15 @@ export const FormPohonStrategic: React.FC<{ formId: number; id: number; onSave: 
         </li>
     );
 };
-export const FormAmbilPohon: React.FC<{ formId: number; id: number; level: number; onSave: (data: any, id: number) => void; onCancel: () => void }> = ({ id, level, formId, onSave, onCancel }) => {
-    const {
+export const FormAmbilPohon: React.FC<{ 
+    formId: number; 
+    id: number; 
+    level: number; 
+    onSave: (data: any, id: number) => void; 
+    onCancel: () => void 
+}> = ({ id, level, formId, onSave, onCancel }) => {
+    
+        const {
       control,
       handleSubmit,
       formState: { errors },
@@ -593,7 +683,7 @@ export const FormAmbilPohon: React.FC<{ formId: number; id: number; level: numbe
             throw new Error('cant fetch data opd');
           }
           const data = await response.json();
-          if (level === 1) {
+          if (level === 0 || level === 1 || level === 2 || level === 3) {
             const pohon = data.data.map((item: any) => ({
               value: item.id,
               label: item.strategi,
@@ -649,13 +739,13 @@ export const FormAmbilPohon: React.FC<{ formId: number; id: number; level: numbe
         <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
             <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
                 {(level === 0 || level === 1 || level === 2 || level === 3) && 
-                    <h1>Ambil Strategic {id} level : {level}</h1>
+                    <h1>Ambil Strategic </h1>
                 }
                 {level === 4 && 
-                    <h1>Ambil Tactical {id} level : {level}</h1>
+                    <h1>Ambil Tactical </h1>
                 }
                 {level === 5 && 
-                    <h1>Ambil Operational {id} level : {level}</h1>
+                    <h1>Ambil Operational </h1>
                 }
             </div>
             <div className="flex justify-center my-3 w-full">
@@ -785,7 +875,15 @@ export const FormAmbilPohon: React.FC<{ formId: number; id: number; level: numbe
     );
 };
 
-export const FormEditPohon: React.FC<{ formId: number; id: number; level: number; onSave: (data: any, id: number) => void; onCancel: () => void }> = ({ id, level, formId, onSave, onCancel }) => {
+export const FormEditPohon: React.FC<{ 
+    formId: number; 
+    id: number; 
+    level: number; 
+    onSave: (data: any, id: number) => void; 
+    onCancel: () => void 
+    pokin: 'pemda' | 'opd';
+}> = ({ id, level, formId, onSave, onCancel, pokin }) => {
+    
     const {
       control,
       handleSubmit,
@@ -796,7 +894,10 @@ export const FormEditPohon: React.FC<{ formId: number; id: number; level: number
     const [Keterangan, setKeterangan] = useState<string>('');
     const [Parent, setParent] = useState<number | null>(null);
     const [Tahun, setTahun] = useState<any>(null);
+    const [Pelaksana, setPelaksana] = useState<OptionTypeString[]>([]);
+    const [PelaksanaOption, setPelaksanaOption] = useState<OptionTypeString[]>([]);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     
     useEffect(() => {
         const data = getOpdTahun();
@@ -816,6 +917,32 @@ export const FormEditPohon: React.FC<{ formId: number; id: number; level: number
         }
     },[]);
 
+    const fetchPelaksana = async() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        setIsLoading(true);
+        try{ 
+          const response = await fetch(`${API_URL}/pegawai/findall`,{
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if(!response.ok){
+            throw new Error('cant fetch data opd');
+          }
+          const data = await response.json();
+          const opd = data.data.map((item: any) => ({
+            value : item.id,
+            label : item.nama_pegawai,
+          }));
+          setPelaksanaOption(opd);
+        } catch (err){
+          console.log('gagal mendapatkan data opd');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchStrategic = async() => {
@@ -832,8 +959,18 @@ export const FormEditPohon: React.FC<{ formId: number; id: number; level: number
                 reset({
                     nama_pohon: data.nama_pohon || '',
                     keterangan: data.keterangan || '',
-                    parent: data.parent || ''
+                    parent: data.parent || '',
+                    pelaksana: data.pelaksana?.map((item: any) => ({
+                        value: item.pegawai_id,
+                        label: item.nama_pegawai,
+                    })) || [],
                 });
+                setPelaksana(
+                    data.pelaksana?.map((item: any) => ({
+                        value: item.pegawai_id,
+                        label: item.nama_pegawai,
+                    })) || []
+                );
             } catch(err) {
                 console.error(err, 'gagal mengambil data sesuai id pohon')
             }
@@ -843,6 +980,9 @@ export const FormEditPohon: React.FC<{ formId: number; id: number; level: number
     
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const pelaksanaIds = Pelaksana?.map((pelaksana) => ({
+            pegawai_id: pelaksana.value, // Ubah `value` menjadi `pegawai_id`
+        })) || [];
         const formData = {
             //key : value
             nama_pohon : data.nama_pohon,
@@ -853,6 +993,7 @@ export const FormEditPohon: React.FC<{ formId: number; id: number; level: number
                             level === 6 ? "Operational" : "Unknown",
             level_pohon :   level,
             parent: Number(Parent),
+            pelaksana: pelaksanaIds,
             tahun: Tahun?.value?.toString(),
             kode_opd: SelectedOpd?.value,
         };
@@ -882,16 +1023,16 @@ export const FormEditPohon: React.FC<{ formId: number; id: number; level: number
         <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
             <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
                 {level == 1 && 
-                    <h1>Edit Sub Tematik {id} level : {level}</h1>
+                    <h1>Edit Sub Tematik </h1>
                 } 
                 {level == 4 && 
-                    <h1>Edit Strategic {id} level : {level}</h1>
+                    <h1>Edit Strategic </h1>
                 } 
                 {level == 5 && 
-                    <h1>Edit Tactical {id} level : {level}</h1>
+                    <h1>Edit Tactical </h1>
                 }
                 {level == 6 && 
-                    <h1>Edit Operational {id} level : {level}</h1>
+                    <h1>Edit Operational </h1>
                 }
             </div>
             <div className="flex justify-center my-3 w-full">
@@ -936,6 +1077,50 @@ export const FormEditPohon: React.FC<{ formId: number; id: number; level: number
                             )}
                         />
                     </div>
+                    {pokin === 'opd' && 
+                        <div className="flex flex-col py-3">
+                            <label
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
+                                htmlFor="pelaksana"
+                            >
+                                Pelaksana
+                            </label>
+                            <Controller
+                                name="pelaksana"
+                                control={control}
+                                render={({ field }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        placeholder="Pilih Pelaksana (bisa lebih dari satu)"
+                                        value={Pelaksana}
+                                        options={PelaksanaOption}
+                                        isLoading={isLoading}
+                                        isSearchable
+                                        isClearable
+                                        isMulti
+                                        onMenuOpen={() => {
+                                            if (PelaksanaOption.length === 0) {
+                                                fetchPelaksana();
+                                            }
+                                        }}
+                                        onChange={(option) => {
+                                            field.onChange(option || []);
+                                            setPelaksana(option as OptionTypeString[]);
+                                        }}
+                                        styles={{
+                                            control: (baseStyles) => ({
+                                            ...baseStyles,
+                                            borderRadius: '8px',
+                                            textAlign: 'start',
+                                            })
+                                        }}
+                                    />
+                                </>
+                                )}
+                            />
+                        </div>
+                    }
                     <div className="flex flex-col py-3">
                         <label
                             className="uppercase text-xs font-bold text-gray-700 my-2"

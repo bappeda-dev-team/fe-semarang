@@ -116,7 +116,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             ${tema.jenis_pohon === "Operational" && 'border-green-500 text-green-500'}
                             `}
                             >
-                        <h1>{tema.jenis_pohon}</h1>
+                        <h1>{tema.jenis_pohon === 'StrategicKota' ? 'StrategicPemda' : tema.jenis_pohon}</h1>
                     </div>
                     {/* BODY */}
                     <div className="flex justify-center my-3">

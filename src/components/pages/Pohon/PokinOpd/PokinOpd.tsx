@@ -190,7 +190,18 @@ const PokinOpd = () => {
                                 ))}
                             </ul>
                             ) : (
-                                <></>
+                                <ul>
+                                    {formList.map((formId) => (
+                                        <FormPohon
+                                            level={3}
+                                            id={null}
+                                            key={formId}
+                                            formId={formId}
+                                            pokin={'opd'}
+                                            onCancel={() => setFormList(formList.filter((id) => id !== formId))}
+                                        />
+                                    ))}
+                                </ul>
                             )}
                         </li>
                     </ul>

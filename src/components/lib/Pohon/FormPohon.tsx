@@ -476,7 +476,7 @@ export const FormPohonStrategic: React.FC<{ formId: number; id: number; onSave: 
         <li>
         <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
             <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
-                Tambah Strategic Kota
+                Tambah Strategic
             </div>
             <div className="flex justify-center my-3 w-full">
                 <form

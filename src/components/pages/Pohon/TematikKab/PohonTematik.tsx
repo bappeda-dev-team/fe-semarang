@@ -38,11 +38,6 @@ const PohonTematik = ({id} : pohontematik) => {
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [error, setError] = useState<string>('');
     const [Deleted, setDeleted] = useState<boolean>(false);
-    const [fetchTrigger, setFetchTrigger] = useState<boolean>(false);
-
-    const handleFetchDelete = () => {
-        setDeleted((prev) => !prev);
-    };
 
     useEffect(() => {
         const fetchTematikKab = async() => {
@@ -65,7 +60,7 @@ const PohonTematik = ({id} : pohontematik) => {
         if(id != undefined){
             fetchTematikKab();
         }
-    },[id, fetchTrigger, Deleted]);
+    },[id, Deleted]);
 
     if(error){
         return(
@@ -88,7 +83,7 @@ const PohonTematik = ({id} : pohontematik) => {
                 <div className="tf-tree text-center mt-3">
                     <ul>
                         <li>
-                            <Pohon tema={Pokin} deleteTrigger={handleFetchDelete}/>
+                            <Pohon tema={Pokin} deleteTrigger={() => setDeleted((prev) => !prev)}/>
                         </li>
                     </ul>
                 </div>

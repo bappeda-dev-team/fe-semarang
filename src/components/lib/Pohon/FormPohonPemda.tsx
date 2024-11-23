@@ -51,7 +51,6 @@ export const FormPohonPemda: React.FC<{
       formState: { errors },
       reset
     } = useForm<FormValue>();
-    const [formData, setFormData] = useState({ tema: '', keterangan: '' });
     const [NamaPohon, setNamaPohon] = useState<string>('');
     const [Keterangan, setKeterangan] = useState<string>('');
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
@@ -397,9 +396,8 @@ export const FormAmbilPohon: React.FC<{
     formId: number; 
     id: number; 
     level: number; 
-    onSave: (data: any, id: number) => void; 
     onCancel: () => void 
-}> = ({ id, level, formId, onSave, onCancel }) => {
+}> = ({ id, level, formId, onCancel }) => {
     
         const {
       control,
@@ -407,7 +405,6 @@ export const FormAmbilPohon: React.FC<{
       formState: { errors },
       reset
     } = useForm<FormValue>();
-    const [formData, setFormData] = useState({ tema: '', keterangan: '' });
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
     const [Pohon, setPohon] = useState<OptionType | null>(null);
     const [Tahun, setTahun] = useState<any>(null);
@@ -487,7 +484,7 @@ export const FormAmbilPohon: React.FC<{
           if (level === 0 || level === 1 || level === 2 || level === 3) {
             const pohon = data.data.map((item: any) => ({
               value: item.id,
-              label: item.strategi,
+              label: item.nama_pohon,
             }));
             setPohonOption(pohon);
         } else if (level === 4 || level === 5) {
@@ -687,10 +684,10 @@ export const FormEditPohon: React.FC<{
     formId: number; 
     id: number; 
     level: number; 
-    onSave?: (data: any, id: number) => void; 
     onCancel: () => void 
     pokin: 'pemda' | 'opd';
-}> = ({ id, level, formId, onSave, onCancel, pokin }) => {
+    EditBerhasil : (data: any) => void;
+}> = ({ id, level, formId, EditBerhasil, onCancel, pokin }) => {
     
     const {
       control,
@@ -706,6 +703,9 @@ export const FormEditPohon: React.FC<{
     const [PelaksanaOption, setPelaksanaOption] = useState<OptionTypeString[]>([]);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [IsEdited, setIsEdited] = useState<boolean>(false);
+    const [DataEdit, setDataEdit] = useState<any>(null);
+    const [Deleted, setDeleted] = useState<boolean>(false);
     
     useEffect(() => {
         const data = getOpdTahun();
@@ -796,9 +796,11 @@ export const FormEditPohon: React.FC<{
             nama_pohon : data.nama_pohon,
             Keterangan : data.keterangan,
             jenis_pohon:    level === 1 ? "SubTematik" :
-                            level === 4 ? "Strategic" :
-                            level === 5 ? "Tactical" :
-                            level === 6 ? "Operational" : "Unknown",
+                            level === 2 ? "SubSubTematik" :
+                            level === 3 ? "SuperSubTematik" :
+                            level === 4 ? "StrategicPemda" :
+                            level === 5 ? "TacticalPemda" :
+                            level === 6 ? "OperationalPemda" : "Unknown",
             level_pohon :   level,
             parent: Number(Parent),
             pelaksana: pelaksanaIds,
@@ -817,7 +819,12 @@ export const FormEditPohon: React.FC<{
             });
             if(response.ok){
                 AlertNotification("Berhasil", "Berhasil edit pohon", "success", 1000);
-                onCancel();
+                const berhasil = true;
+                const result = await response.json();
+                const data = result.data;
+                if(berhasil){
+                    EditBerhasil(data);
+                }
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }
@@ -828,6 +835,10 @@ export const FormEditPohon: React.FC<{
     };
 
     return (
+        <>
+        {IsEdited && DataEdit ?
+            <PohonEdited tema={DataEdit} deleteTrigger={() => setDeleted((prev) => !prev)}/>
+        :
         <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
             <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
                 {level == 1 && 
@@ -963,5 +974,7 @@ export const FormEditPohon: React.FC<{
                 </form>
             </div>
         </div>
+        }
+        </>
     );
-};
+    };

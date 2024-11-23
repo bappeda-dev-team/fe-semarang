@@ -18,6 +18,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [FormStrategic, setFormStrategic] = useState<number[]>([]); // List of form IDs
     const [strategicPohons, setStrategicPohons] = useState(tema.strategics || []);
     const [edit, setEdit] = useState<boolean>(false);
+    const [Edited, setEdited] = useState<any | null>(null);
     
     // Adds a new form entry
     const newChild = () => {
@@ -29,14 +30,9 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const newStrategic = () => {
         setFormStrategic([...PutList, Date.now()]); // Using unique IDs
     };
-    // Add new item and remove form entry
-    const addNewItem = (newItem: any, formId: number) => {
-        setChildPohons([...childPohons, newItem]);
-        setFormList(formList.filter((id) => id !== formId)); // Remove form entry
-    };
-    const putNewItem = (newItem: any, formId: number) => {
-        setPutPohons([...PutPohons, newItem]);
-        setFormList(formList.filter((id) => id !== formId)); // Remove form entry
+    const handleEditSuccess = (data: any) => {
+      setEdited(data);
+      setEdit(false);
     };
 
     const hapusSubTematik = async(id: any) => {
@@ -80,9 +76,9 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                     id={tema.id}
                     key={tema.id}
                     formId={tema.id}
-                    onSave={addNewItem}
                     pokin={'pemda'}
                     onCancel={() => setEdit(false)}
+                    EditBerhasil={handleEditSuccess}
                 />
             :
             <>
@@ -119,7 +115,11 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                     </div>
                     {/* BODY */}
                     <div className="flex justify-center my-3">
-                        <TablePohon item={tema} />
+                        {Edited ? 
+                            <TablePohonEdited item={Edited}/>
+                        :
+                            <TablePohon item={tema} />
+                        }
                     </div>
                     {/* BUTTON ACTION INSIDE BOX */}
                     <div 
@@ -129,10 +129,12 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             ${tema.jenis_pohon === "Operational" && 'border-white'}
                         `}
                     >
+                        {!['Strategic', 'Tactical', 'Operational'].includes(tema.jenis_pohon) &&
                         <ButtonSkyBorder onClick={() => setEdit(true)}>
                             <TbPencil className="mr-1"/>
                             Edit
                         </ButtonSkyBorder>
+                        }
                         {tema.jenis_pohon !== 'Tematik' && 
                             <ButtonRedBorder
                             onClick={() => {
@@ -196,7 +198,6 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         id={tema.id}
                         key={formId}
                         formId={formId}
-                        onSave={addNewItem}
                         pokin={'pemda'}
                         onCancel={() => setFormList(formList.filter((id) => id !== formId))}
                     />
@@ -207,7 +208,6 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         id={tema.id}
                         key={formId}
                         formId={formId}
-                        onSave={addNewItem}
                         pokin={'pemda'}
                         onCancel={() => setFormStrategic(FormStrategic.filter((id) => id !== formId))}
                     />
@@ -218,7 +218,6 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         id={tema.id}
                         key={formId}
                         formId={formId}
-                        onSave={putNewItem}
                         onCancel={() => setPutList(PutList.filter((id) => id !== formId))}
                     />
                 ))}
@@ -235,6 +234,7 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [FormStrategic, setFormStrategic] = useState<number[]>([]); // List of form IDs
     const [strategicPohons, setStrategicPohons] = useState(tema.strategics || []);
     const [edit, setEdit] = useState<boolean>(false);
+    const [Edited, setEdited] = useState<any | null>(null);
     
     // Adds a new form entry
     const newChild = () => {
@@ -246,15 +246,10 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const newStrategic = () => {
         setFormStrategic([...PutList, Date.now()]); // Using unique IDs
     };
-    // Add new item and remove form entry
-    const addNewItem = (newItem: any, formId: number) => {
-        setChildPohons([...childPohons, newItem]);
-        setFormList(formList.filter((id) => id !== formId)); // Remove form entry
-    };
-    const putNewItem = (newItem: any, formId: number) => {
-        setPutPohons([...PutPohons, newItem]);
-        setFormList(formList.filter((id) => id !== formId)); // Remove form entry
-    };
+    const handleEditSuccess = (data: any) => {
+        setEdited(data);
+        setEdit(false);
+      };
 
     const hapusSubTematik = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -266,7 +261,10 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                 alert("cant fetch data")
             }
             AlertNotification("Berhasil", "Data Pohon Berhasil Dihapus", "success", 1000);
-            deleteTrigger();
+            // deleteTrigger();
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000); // Reload setelah 3 detik
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
             console.error(err);
@@ -282,7 +280,10 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                 alert("cant fetch data")
             }
             AlertNotification("Berhasil", "Data pohon Berhasil Dihapus", "success", 1000);
-            deleteTrigger();
+            // deleteTrigger();
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000); // Reload setelah 3 detik
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
             console.error(err);
@@ -297,9 +298,9 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                     id={tema.id}
                     key={tema.id}
                     formId={tema.id}
-                    onSave={addNewItem}
                     pokin={'pemda'}
                     onCancel={() => setEdit(false)}
+                    EditBerhasil={handleEditSuccess}
                 />
             :
             <>
@@ -336,182 +337,11 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                     </div>
                     {/* BODY */}
                     <div className="flex justify-center my-3">
-                    <table className='w-full'>
-                            <tbody>
-                                <tr>
-                                    <td 
-                                        className={`min-w-[100px] border px-2 py-3 bg-white text-start rounded-tl-lg
-                                            ${tema.jenis_pohon === "Tematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SuperSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "StrategicPemda" && 'border-black text-red-700'}
-                                            ${tema.jenis_pohon === "TacticalPemda" && 'border-black text-blue-500'}
-                                            ${tema.jenis_pohon === "OperationalPemda" && 'border-black text-green-500'}    
-                                            ${tema.jenis_pohon === "Strategic" && 'border-red-700'}
-                                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500'}
-                                            ${tema.jenis_pohon === "Operational" && 'border-green-500'}    
-                                        `}
-                                    >
-                                        Tema
-                                    </td>
-                                    <td 
-                                        className={`min-w-[300px] border px-2 py-3 bg-white text-start rounded-tr-lg
-                                            ${tema.jenis_pohon === "Tematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SuperSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "StrategicPemda" && 'border-black text-red-700'}
-                                            ${tema.jenis_pohon === "TacticalPemda" && 'border-black text-blue-500'}
-                                            ${tema.jenis_pohon === "OperationalPemda" && 'border-black text-green-500'}    
-                                            ${tema.jenis_pohon === "Strategic" && 'border-red-700'}
-                                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500'}
-                                            ${tema.jenis_pohon === "Operational" && 'border-green-500'}    
-                                        `}
-                                    >
-                                        {tema.nama_pohon ? tema.nama_pohon : "-"}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td 
-                                        className={`min-w-[100px] border px-2 py-3 bg-white text-start
-                                            ${tema.jenis_pohon === "Tematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SuperSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "StrategicPemda" && 'border-black text-red-700'}
-                                            ${tema.jenis_pohon === "TacticalPemda" && 'border-black text-blue-500'}
-                                            ${tema.jenis_pohon === "OperationalPemda" && 'border-black text-green-500'}    
-                                            ${tema.jenis_pohon === "Strategic" && 'border-red-700'}
-                                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500'}
-                                            ${tema.jenis_pohon === "Operational" && 'border-green-500'}    
-                                        `}
-                                    >
-                                        Indikator
-                                    </td>
-                                    <td 
-                                        className={`min-w-[300px] border px-2 py-3 bg-white text-start
-                                            ${tema.jenis_pohon === "Tematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SuperSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "StrategicPemda" && 'border-black text-red-700'}
-                                            ${tema.jenis_pohon === "TacticalPemda" && 'border-black text-blue-500'}
-                                            ${tema.jenis_pohon === "OperationalPemda" && 'border-black text-green-500'}    
-                                            ${tema.jenis_pohon === "Strategic" && 'border-red-700'}
-                                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500'}
-                                            ${tema.jenis_pohon === "Operational" && 'border-green-500'}    
-                                        `}
-                                    >
-                                        {tema.indikator ? tema.indikator : "-"}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td 
-                                        className={`min-w-[100px] border px-2 py-3 bg-white text-start
-                                            ${tema.jenis_pohon === "Tematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SuperSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "StrategicPemda" && 'border-black text-red-700'}
-                                            ${tema.jenis_pohon === "TacticalPemda" && 'border-black text-blue-500'}
-                                            ${tema.jenis_pohon === "OperationalPemda" && 'border-black text-green-500'}    
-                                            ${tema.jenis_pohon === "Strategic" && 'border-red-700'}
-                                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500'}
-                                            ${tema.jenis_pohon === "Operational" && 'border-green-500'}    
-                                        `}
-                                    >
-                                        Target/Satuan
-                                    </td>
-                                    <td 
-                                        className={`min-w-[300px] border px-2 py-3 bg-white text-start
-                                            ${tema.jenis_pohon === "Tematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SuperSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "StrategicPemda" && 'border-black text-red-700'}
-                                            ${tema.jenis_pohon === "TacticalPemda" && 'border-black text-blue-500'}
-                                            ${tema.jenis_pohon === "OperationalPemda" && 'border-black text-green-500'}    
-                                            ${tema.jenis_pohon === "Strategic" && 'border-red-700'}
-                                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500'}
-                                            ${tema.jenis_pohon === "Operational" && 'border-green-500'}    
-                                        `}
-                                    >
-                                        {tema.target ? tema.target : "-"} {tema.satuan ? tema.satuan : ""}
-                                    </td>
-                                </tr>
-                                {tema.kode_opd &&
-                                <tr>
-                                    <td 
-                                        className={`min-w-[100px] border px-2 py-3 bg-white text-start
-                                            ${tema.jenis_pohon === "Tematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SuperSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "StrategicPemda" && 'border-black text-red-700'}
-                                            ${tema.jenis_pohon === "TacticalPemda" && 'border-black text-blue-500'}
-                                            ${tema.jenis_pohon === "OperationalPemda" && 'border-black text-green-500'}    
-                                            ${tema.jenis_pohon === "Strategic" && 'border-red-700'}
-                                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500'}
-                                            ${tema.jenis_pohon === "Operational" && 'border-green-500'}    
-                                        `}
-                                    >
-                                        Perangkat Daerah
-                                    </td>
-                                    <td 
-                                        className={`min-w-[300px] border px-2 py-3 bg-white text-start
-                                            ${tema.jenis_pohon === "Tematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SuperSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "StrategicPemda" && 'border-black text-red-700'}
-                                            ${tema.jenis_pohon === "TacticalPemda" && 'border-black text-blue-500'}
-                                            ${tema.jenis_pohon === "OperationalPemda" && 'border-black text-green-500'}    
-                                            ${tema.jenis_pohon === "Strategic" && 'border-red-700'}
-                                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500'}
-                                            ${tema.jenis_pohon === "Operational" && 'border-green-500'}    
-                                        `}
-                                    >
-                                        {tema.kode_opd ? tema.kode_opd : "-"}
-                                    </td>
-                                </tr>
-                                }
-                                <tr>
-                                    <td 
-                                        className={`min-w-[100px] border px-2 py-3 bg-white text-start rounded-bl-lg
-                                            ${tema.jenis_pohon === "Tematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SuperSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "StrategicPemda" && 'border-black text-red-700'}
-                                            ${tema.jenis_pohon === "TacticalPemda" && 'border-black text-blue-500'}
-                                            ${tema.jenis_pohon === "OperationalPemda" && 'border-black text-green-500'}    
-                                            ${tema.jenis_pohon === "Strategic" && 'border-red-700'}
-                                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500'}
-                                            ${tema.jenis_pohon === "Operational" && 'border-green-500'}    
-                                        `}
-                                    >
-                                        Keterangan
-                                    </td>
-                                    <td 
-                                        className={`min-w-[300px] border px-2 py-3 bg-white text-start rounded-br-lg
-                                            ${tema.jenis_pohon === "Tematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SubSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "SuperSubTematik" && 'border-black'}
-                                            ${tema.jenis_pohon === "StrategicPemda" && 'border-black text-red-700'}
-                                            ${tema.jenis_pohon === "TacticalPemda" && 'border-black text-blue-500'}
-                                            ${tema.jenis_pohon === "OperationalPemda" && 'border-black text-green-500'}    
-                                            ${tema.jenis_pohon === "Strategic" && 'border-red-700'}
-                                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500'}
-                                            ${tema.jenis_pohon === "Operational" && 'border-green-500'}    
-                                        `}
-                                    >
-                                        {tema.keterangan ? tema.keterangan : "-"}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        {Edited ? 
+                            <TablePohonEdited item={Edited}/>
+                        :
+                            <TablePohonEdited item={tema} />
+                        }
                     </div>
                     {/* BUTTON ACTION INSIDE BOX */}
                     <div 
@@ -528,10 +358,12 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             ${tema.jenis_pohon === "Operational" && 'border-green-500'}    
                         `}
                     >
-                        <ButtonSkyBorder onClick={() => setEdit(true)}>
-                            <TbPencil className="mr-1"/>
-                            Edit
-                        </ButtonSkyBorder>
+                        {!['Strategic', 'Tactical', 'Operational'].includes(tema.jenis_pohon) &&
+                            <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                <TbPencil className="mr-1"/>
+                                Edit
+                            </ButtonSkyBorder>
+                        }
                         {tema.jenis_pohon !== 'Tematik' && 
                             <ButtonRedBorder
                             onClick={() => {
@@ -595,7 +427,6 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         id={tema.id}
                         key={formId}
                         formId={formId}
-                        onSave={addNewItem}
                         pokin={'pemda'}
                         onCancel={() => setFormList(formList.filter((id) => id !== formId))}
                     />
@@ -606,7 +437,6 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         id={tema.id}
                         key={formId}
                         formId={formId}
-                        onSave={addNewItem}
                         pokin={'pemda'}
                         onCancel={() => setFormStrategic(FormStrategic.filter((id) => id !== formId))}
                     />
@@ -617,7 +447,6 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         id={tema.id}
                         key={formId}
                         formId={formId}
-                        onSave={putNewItem}
                         onCancel={() => setPutList(PutList.filter((id) => id !== formId))}
                     />
                 ))}
@@ -813,6 +642,153 @@ export const TablePohon = (props: any) => {
     </table>
   )
 }
+export const TablePohonEdited = (props: any) => {
+    const tema = props.item.nama_pohon;
+    const keterangan = props.item.keterangan;
+    const opd = props.item.kode_opd;
+    const jenis = props.item.jenis_pohon;
+    const indikator = props.item.indikator;
+    const target = props.item.target;
+    const satuan = props.item.satuan;
+    return (
+      <table className='w-full'>
+        <tbody>
+          <tr>
+              <td 
+                  className={`min-w-[100px] border px-2 py-3 bg-white text-start rounded-tl-lg
+                      ${jenis === "Strategic" && "border-red-700"}
+                      ${jenis === "Tactical" && "border-blue-500"}
+                      ${jenis === "Operational" && "border-green-500"}
+                      ${jenis === "StrategicPemda" && "border-black"}
+                      ${jenis === "TacticalPemda" && "border-black"}
+                      ${jenis === "OperationalPemda" && "border-black"}
+                  `}
+              >
+                  Tema
+              </td>
+              <td 
+                  className={`min-w-[300px] border px-2 py-3 bg-white text-start rounded-tr-lg
+                      ${jenis === "Strategic" && "border-red-700"}
+                      ${jenis === "Tactical" && "border-blue-500"}
+                      ${jenis === "Operational" && "border-green-500"}
+                      ${jenis === "StrategicPemda" && "border-black"}
+                      ${jenis === "TacticalPemda" && "border-black"}
+                      ${jenis === "OperationalPemda" && "border-black"}
+                  `}
+              >
+                  {tema ? tema : "-"}
+              </td>
+          </tr>
+          <tr>
+              <td 
+                  className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                      ${jenis === "Strategic" && "border-red-700"}
+                      ${jenis === "Tactical" && "border-blue-500"}
+                      ${jenis === "Operational" && "border-green-500"}
+                      ${jenis === "StrategicPemda" && "border-black"}
+                      ${jenis === "TacticalPemda" && "border-black"}
+                      ${jenis === "OperationalPemda" && "border-black"}
+                  `}
+              >
+                  Indikator
+              </td>
+              <td 
+                  className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                      ${jenis === "Strategic" && "border-red-700"}
+                      ${jenis === "Tactical" && "border-blue-500"}
+                      ${jenis === "Operational" && "border-green-500"}
+                      ${jenis === "StrategicPemda" && "border-black"}
+                      ${jenis === "TacticalPemda" && "border-black"}
+                      ${jenis === "OperationalPemda" && "border-black"}
+                  `}
+              >
+                  {indikator ? indikator : "-"}
+              </td>
+          </tr>
+          <tr>
+              <td 
+                  className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                      ${jenis === "Strategic" && "border-red-700"}
+                      ${jenis === "Tactical" && "border-blue-500"}
+                      ${jenis === "Operational" && "border-green-500"}
+                      ${jenis === "StrategicPemda" && "border-black"}
+                      ${jenis === "TacticalPemda" && "border-black"}
+                      ${jenis === "OperationalPemda" && "border-black"}    
+                  `}
+              >
+                  Target/Satuan
+              </td>
+              <td 
+                  className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                      ${jenis === "Strategic" && "border-red-700"}
+                      ${jenis === "Tactical" && "border-blue-500"}
+                      ${jenis === "Operational" && "border-green-500"}
+                      ${jenis === "StrategicPemda" && "border-black"}
+                      ${jenis === "TacticalPemda" && "border-black"}
+                      ${jenis === "OperationalPemda" && "border-black"}    
+                  `}
+              >
+                  {target ? target : "-"} {satuan ? satuan : "-"}
+              </td>
+          </tr>
+          {opd && 
+          <tr>
+              <td 
+                  className={`min-w-[100px] border px-2 py-1 bg-white text-start
+                      ${jenis === "Strategic" && "border-red-700"}
+                      ${jenis === "Tactical" && "border-blue-500"}
+                      ${jenis === "Operational" && "border-green-500"}
+                      ${jenis === "StrategicPemda" && "border-black"}
+                      ${jenis === "TacticalPemda" && "border-black"}
+                      ${jenis === "OperationalPemda" && "border-black"}    
+                  `}
+              >
+                  Perangkat Daerah
+              </td>
+              <td 
+                  className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                      ${jenis === "Strategic" && "border-red-700"}
+                      ${jenis === "Tactical" && "border-blue-500"}
+                      ${jenis === "Operational" && "border-green-500"}
+                      ${jenis === "StrategicPemda" && "border-black"}
+                      ${jenis === "TacticalPemda" && "border-black"}
+                      ${jenis === "OperationalPemda" && "border-black"}    
+                  `}
+              >
+                  {opd ? opd : "-"}
+              </td>
+          </tr>
+          }
+          <tr>
+              <td 
+                  className={`min-w-[100px] border px-2 py-1 bg-white text-start rounded-bl-lg
+                      ${jenis === "Strategic" && "border-red-700"}
+                      ${jenis === "Tactical" && "border-blue-500"}
+                      ${jenis === "Operational" && "border-green-500"}
+                      ${jenis === "StrategicPemda" && "border-black"}
+                      ${jenis === "TacticalPemda" && "border-black"}
+                      ${jenis === "OperationalPemda" && "border-black"}    
+                  `}
+              >
+                  Keterangan
+              </td>
+              <td 
+                  className={`min-w-[300px] border px-2 py-3 bg-white text-start rounded-br-lg
+                      ${jenis === "Strategic" && "border-red-700"}
+                      ${jenis === "Tactical" && "border-blue-500"}
+                      ${jenis === "Operational" && "border-green-500"}
+                      ${jenis === "StrategicPemda" && "border-black"}
+                      ${jenis === "TacticalPemda" && "border-black"}
+                      ${jenis === "OperationalPemda" && "border-black"}    
+                  `}
+              >
+                  {keterangan ? keterangan : "-"}
+              </td>
+          </tr>
+        </tbody>
+      </table>
+    )
+  }
 
 export const tambahPohonName = (jenis: string): string => {
   switch (jenis) {

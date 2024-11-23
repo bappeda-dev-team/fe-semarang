@@ -39,11 +39,10 @@ interface form {
 export const FormPohonOpd: React.FC<{ 
     formId: number; 
     id: number | null; 
-    level: number; 
-    onSave?: (data: any, id: number) => void; 
+    level: number;
     onCancel?: () => void 
     pokin: 'pemda' | 'opd';
-}> = ({ id, level, formId, onSave, onCancel, pokin }) => {
+}> = ({ id, level, onCancel, pokin }) => {
 
     const {
       control,
@@ -394,11 +393,11 @@ export const FormPohonOpd: React.FC<{
 export const FormEditPohon: React.FC<{ 
     formId: number; 
     id: number; 
-    level: number; 
-    onSave?: (data: any, id: number) => void; 
+    level: number;
     onCancel: () => void 
     pokin: 'pemda' | 'opd';
-}> = ({ id, level, formId, onSave, onCancel, pokin }) => {
+    EditBerhasil : (data: any) => void;
+}> = ({ id, level, onCancel, pokin, EditBerhasil }) => {
     
     const {
       control,
@@ -414,6 +413,9 @@ export const FormEditPohon: React.FC<{
     const [PelaksanaOption, setPelaksanaOption] = useState<OptionTypeString[]>([]);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [IsEdited, setIsEdited] = useState<boolean>(false);
+    const [DataEdit, setDataEdit] = useState<any>(null);
+    const [Deleted, setDeleted] = useState<boolean>(false);
     
     useEffect(() => {
         const data = getOpdTahun();
@@ -503,8 +505,7 @@ export const FormEditPohon: React.FC<{
             //key : value
             nama_pohon : data.nama_pohon,
             Keterangan : data.keterangan,
-            jenis_pohon:    level === 1 ? "SubTematik" :
-                            level === 4 ? "Strategic" :
+            jenis_pohon:    level === 4 ? "Strategic" :
                             level === 5 ? "Tactical" :
                             level === 6 ? "Operational" : "Unknown",
             level_pohon :   level,
@@ -515,7 +516,7 @@ export const FormEditPohon: React.FC<{
         };
         // console.log(formData);
         try{
-            const url = level == 1 ? `/pohon_kinerja_admin/update/${id}` : `/pohon_kinerja_opd/update/${id}`;
+            const url = `/pohon_kinerja_opd/update/${id}`;
             const response = await fetch(`${API_URL}${url}`, {
                 method: "PUT",
                 headers: {
@@ -525,7 +526,12 @@ export const FormEditPohon: React.FC<{
             });
             if(response.ok){
                 AlertNotification("Berhasil", "Berhasil edit pohon", "success", 1000);
-                onCancel();
+                const berhasil = true;
+                const result = await response.json();
+                const data = result.data;
+                if(berhasil){
+                    EditBerhasil(data);
+                }
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }
@@ -536,140 +542,143 @@ export const FormEditPohon: React.FC<{
     };
 
     return (
-        <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
-            <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
-                {level == 1 && 
-                    <h1>Edit Sub Tematik </h1>
-                } 
-                {level == 4 && 
-                    <h1>Edit Strategic </h1>
-                } 
-                {level == 5 && 
-                    <h1>Edit Tactical </h1>
-                }
-                {level == 6 && 
-                    <h1>Edit Operational </h1>
-                }
-            </div>
-            <div className="flex justify-center my-3 w-full">
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className='w-full'
-                >
-                    <div className="flex flex-col py-3">
-                        <label
-                            className="uppercase text-xs font-bold text-gray-700 my-2"
-                            htmlFor="nama_pohon"
-                        >
-                            {level == 1 && 
-                                "SubTematik"
-                            } 
-                            {level == 4 && 
-                                "Strategic"
-                            } 
-                            {level == 5 && 
-                                "Tactical"
-                            }
-                            {level == 6 && 
-                                "Operational"
-                            }
-                        </label>
-                        <Controller
-                            name="nama_pohon"
-                            control={control}
-                            render={({ field }) => (
-                                <input
-                                    {...field}
-                                    className="border px-4 py-2 rounded-lg"
-                                    id="nama_pohon"
-                                    type="text"
-                                    placeholder="masukkan Pohon"
-                                    value={field.value || NamaPohon}
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        setNamaPohon(e.target.value);
-                                    }}
-                                />
-                            )}
-                        />
-                    </div>
-                    {pokin === 'opd' && 
+        <>
+            {IsEdited && DataEdit ?
+                <PohonOpdEdited tema={DataEdit} deleteTrigger={() => setDeleted((prev) => !prev)}/>
+            :
+            <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
+                <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
+                    {level == 4 && 
+                        <h1>Edit Strategic </h1>
+                    } 
+                    {level == 5 && 
+                        <h1>Edit Tactical </h1>
+                    }
+                    {level == 6 && 
+                        <h1>Edit Operational </h1>
+                    }
+                </div>
+                <div className="flex justify-center my-3 w-full">
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className='w-full'
+                    >
                         <div className="flex flex-col py-3">
                             <label
                                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                                htmlFor="pelaksana"
+                                htmlFor="nama_pohon"
                             >
-                                Pelaksana
+                                {level == 1 && 
+                                    "SubTematik"
+                                } 
+                                {level == 4 && 
+                                    "Strategic"
+                                } 
+                                {level == 5 && 
+                                    "Tactical"
+                                }
+                                {level == 6 && 
+                                    "Operational"
+                                }
                             </label>
                             <Controller
-                                name="pelaksana"
+                                name="nama_pohon"
                                 control={control}
                                 render={({ field }) => (
-                                <>
-                                    <Select
+                                    <input
                                         {...field}
-                                        placeholder="Pilih Pelaksana (bisa lebih dari satu)"
-                                        value={Pelaksana}
-                                        options={PelaksanaOption}
-                                        isLoading={isLoading}
-                                        isSearchable
-                                        isClearable
-                                        isMulti
-                                        onMenuOpen={() => {
-                                            if (PelaksanaOption.length === 0) {
-                                                fetchPelaksana();
-                                            }
-                                        }}
-                                        onChange={(option) => {
-                                            field.onChange(option || []);
-                                            setPelaksana(option as OptionTypeString[]);
-                                        }}
-                                        styles={{
-                                            control: (baseStyles) => ({
-                                            ...baseStyles,
-                                            borderRadius: '8px',
-                                            textAlign: 'start',
-                                            })
+                                        className="border px-4 py-2 rounded-lg"
+                                        id="nama_pohon"
+                                        type="text"
+                                        placeholder="masukkan Pohon"
+                                        value={field.value || NamaPohon}
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            setNamaPohon(e.target.value);
                                         }}
                                     />
-                                </>
                                 )}
                             />
                         </div>
-                    }
-                    <div className="flex flex-col py-3">
-                        <label
-                            className="uppercase text-xs font-bold text-gray-700 my-2"
-                            htmlFor="keterangan"
-                        >
-                            Keterangan:
-                        </label>
-                        <Controller
-                            name="keterangan"
-                            control={control}
-                            render={({ field }) => (
-                                <textarea
-                                    {...field}
-                                    className="border px-4 py-2 rounded-lg"
-                                    id="keterangan"
-                                    placeholder="masukkan keterangan"
-                                    value={field.value || Keterangan}
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        setKeterangan(e.target.value);
-                                    }}
+                        {pokin === 'opd' && 
+                            <div className="flex flex-col py-3">
+                                <label
+                                    className="uppercase text-xs font-bold text-gray-700 my-2"
+                                    htmlFor="pelaksana"
+                                >
+                                    Pelaksana
+                                </label>
+                                <Controller
+                                    name="pelaksana"
+                                    control={control}
+                                    render={({ field }) => (
+                                    <>
+                                        <Select
+                                            {...field}
+                                            placeholder="Pilih Pelaksana (bisa lebih dari satu)"
+                                            value={Pelaksana}
+                                            options={PelaksanaOption}
+                                            isLoading={isLoading}
+                                            isSearchable
+                                            isClearable
+                                            isMulti
+                                            onMenuOpen={() => {
+                                                if (PelaksanaOption.length === 0) {
+                                                    fetchPelaksana();
+                                                }
+                                            }}
+                                            onChange={(option) => {
+                                                field.onChange(option || []);
+                                                setPelaksana(option as OptionTypeString[]);
+                                            }}
+                                            styles={{
+                                                control: (baseStyles) => ({
+                                                ...baseStyles,
+                                                borderRadius: '8px',
+                                                textAlign: 'start',
+                                                })
+                                            }}
+                                        />
+                                    </>
+                                    )}
                                 />
-                            )}
-                        />
-                    </div>
-                    <ButtonSky type="submit" className="w-full my-3">
-                        Simpan
-                    </ButtonSky>
-                    <ButtonRed className="w-full my-3" onClick={onCancel}>
-                        Batal
-                    </ButtonRed>
-                </form>
+                            </div>
+                        }
+                        <div className="flex flex-col py-3">
+                            <label
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
+                                htmlFor="keterangan"
+                            >
+                                Keterangan:
+                            </label>
+                            <Controller
+                                name="keterangan"
+                                control={control}
+                                render={({ field }) => (
+                                    <textarea
+                                        {...field}
+                                        className="border px-4 py-2 rounded-lg"
+                                        id="keterangan"
+                                        placeholder="masukkan keterangan"
+                                        value={field.value || Keterangan}
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            setKeterangan(e.target.value);
+                                        }}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <ButtonSky type="submit" className="w-full my-3">
+                            Simpan
+                        </ButtonSky>
+                        <ButtonRed className="w-full my-3" onClick={onCancel}>
+                            Batal
+                        </ButtonRed>
+                    </form>
+                </div>
             </div>
-        </div>
+            }
+        </>
     );
 };

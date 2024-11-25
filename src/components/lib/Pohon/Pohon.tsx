@@ -479,9 +479,7 @@ export const TablePohon = (props: any) => {
   const keterangan = props.item.keterangan;
   const opd = props.item.perangkat_daerah?.nama_opd;
   const jenis = props.item.jenis_pohon;
-  const indikator = props.item.indikator;
-  const target = props.item.target;
-  const satuan = props.item.satuan;
+  const indikator = props.item.indikators;
   return (
     <table className='w-full'>
       <tbody>
@@ -519,74 +517,153 @@ export const TablePohon = (props: any) => {
                 {tema ? tema : "-"}
             </td>
         </tr>
-        <tr>
-            <td 
-                className={`min-w-[100px] border px-2 py-3 bg-white text-start
-                    ${jenis === "Tematik" && "border-black"}
-                    ${jenis === "SubTematik" && "border-black"}
-                    ${jenis === "SubSubTematik" && "border-black"}
-                    ${jenis === "SuperSubTematik" && "border-black"}
-                    ${jenis === "StrategicPemda" && "border-black"}
-                    ${jenis === "Strategic" && "border-red-700"}
-                    ${jenis === "TacticalPemda" && "border-black"}
-                    ${jenis === "Tactical" && "border-blue-500"}
-                    ${jenis === "OperationalPemda" && "border-black"}
-                    ${jenis === "Operational" && "border-green-500"}
-                `}
-            >
-                Indikator
-            </td>
-            <td 
-                className={`min-w-[300px] border px-2 py-3 bg-white text-start
-                    ${jenis === "Tematik" && "border-black"}
-                    ${jenis === "SubTematik" && "border-black"}
-                    ${jenis === "SubSubTematik" && "border-black"}
-                    ${jenis === "SuperSubTematik" && "border-black"}
-                    ${jenis === "StrategicPemda" && "border-black"}
-                    ${jenis === "Strategic" && "border-red-700"}
-                    ${jenis === "TacticalPemda" && "border-black"}
-                    ${jenis === "Tactical" && "border-blue-500"}
-                    ${jenis === "OperationalPemda" && "border-black"}
-                    ${jenis === "Operational" && "border-green-500"}
-                `}
-            >
-                {indikator ? indikator : "-"}
-            </td>
-        </tr>
-        <tr>
-            <td 
-                className={`min-w-[100px] border px-2 py-3 bg-white text-start
-                    ${jenis === "Tematik" && "border-black"}
-                    ${jenis === "SubTematik" && "border-black"}
-                    ${jenis === "SubSubTematik" && "border-black"}
-                    ${jenis === "SuperSubTematik" && "border-black"}
-                    ${jenis === "StrategicPemda" && "border-black"}
-                    ${jenis === "Strategic" && "border-red-700"}
-                    ${jenis === "TacticalPemda" && "border-black"}
-                    ${jenis === "Tactical" && "border-blue-500"}
-                    ${jenis === "OperationalPemda" && "border-black"}
-                    ${jenis === "Operational" && "border-green-500"}    
-                `}
-            >
-                Target/Satuan
-            </td>
-            <td 
-                className={`min-w-[300px] border px-2 py-3 bg-white text-start
-                    ${jenis === "Tematik" && "border-black"}
-                    ${jenis === "SubTematik" && "border-black"}
-                    ${jenis === "SubSubTematik" && "border-black"}
-                    ${jenis === "SuperSubTematik" && "border-black"}
-                    ${jenis === "StrategicPemda" && "border-black"}
-                    ${jenis === "Strategic" && "border-red-700"}
-                    ${jenis === "TacticalPemda" && "border-black"}
-                    ${jenis === "Tactical" && "border-blue-500"}
-                    ${jenis === "OperationalPemda" && "border-black"}
-                    ${jenis === "Operational" && "border-green-500"}    
-                `}
-            >
-                {target ? target : "-"} {satuan ? satuan : "-"}
-            </td>
-        </tr>
+        {indikator ?
+            indikator.map((data: any) => (
+                <>
+                    <tr key={data.id_indikator}>
+                        <td 
+                            className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                                ${jenis === "Tematik" && "border-black"}
+                                ${jenis === "SubTematik" && "border-black"}
+                                ${jenis === "SubSubTematik" && "border-black"}
+                                ${jenis === "SuperSubTematik" && "border-black"}
+                                ${jenis === "StrategicPemda" && "border-black"}
+                                ${jenis === "Strategic" && "border-red-700"}
+                                ${jenis === "TacticalPemda" && "border-black"}
+                                ${jenis === "Tactical" && "border-blue-500"}
+                                ${jenis === "OperationalPemda" && "border-black"}
+                                ${jenis === "Operational" && "border-green-500"}
+                            `}
+                        >
+                            Indikator
+                        </td>
+                        <td 
+                            className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                                ${jenis === "Tematik" && "border-black"}
+                                ${jenis === "SubTematik" && "border-black"}
+                                ${jenis === "SubSubTematik" && "border-black"}
+                                ${jenis === "SuperSubTematik" && "border-black"}
+                                ${jenis === "StrategicPemda" && "border-black"}
+                                ${jenis === "Strategic" && "border-red-700"}
+                                ${jenis === "TacticalPemda" && "border-black"}
+                                ${jenis === "Tactical" && "border-blue-500"}
+                                ${jenis === "OperationalPemda" && "border-black"}
+                                ${jenis === "Operational" && "border-green-500"}
+                            `}
+                        >
+                            {data.nama_indikator ? data.nama_indikator : "-"}
+                        </td>
+                    </tr>
+                    {data.targets.map((data: any, index: number) => (
+                        <tr key={data.id_target}>
+                            <td 
+                                className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                                    ${jenis === "Tematik" && "border-black"}
+                                    ${jenis === "SubTematik" && "border-black"}
+                                    ${jenis === "SubSubTematik" && "border-black"}
+                                    ${jenis === "SuperSubTematik" && "border-black"}
+                                    ${jenis === "StrategicPemda" && "border-black"}
+                                    ${jenis === "Strategic" && "border-red-700"}
+                                    ${jenis === "TacticalPemda" && "border-black"}
+                                    ${jenis === "Tactical" && "border-blue-500"}
+                                    ${jenis === "OperationalPemda" && "border-black"}
+                                    ${jenis === "Operational" && "border-green-500"}    
+                                `}
+                            >
+                                Target/Satuan
+                            </td>
+                            <td 
+                                className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                                    ${jenis === "Tematik" && "border-black"}
+                                    ${jenis === "SubTematik" && "border-black"}
+                                    ${jenis === "SubSubTematik" && "border-black"}
+                                    ${jenis === "SuperSubTematik" && "border-black"}
+                                    ${jenis === "StrategicPemda" && "border-black"}
+                                    ${jenis === "Strategic" && "border-red-700"}
+                                    ${jenis === "TacticalPemda" && "border-black"}
+                                    ${jenis === "Tactical" && "border-blue-500"}
+                                    ${jenis === "OperationalPemda" && "border-black"}
+                                    ${jenis === "Operational" && "border-green-500"}    
+                                `}
+                            >
+                                {data.target ? data.target : "-"} / {data.satuan ? data.satuan : "-"}
+                            </td>
+                        </tr>
+                    ))}
+                </>
+            ))
+            :
+                <>
+                    <tr>
+                        <td 
+                            className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                                ${jenis === "Tematik" && "border-black"}
+                                ${jenis === "SubTematik" && "border-black"}
+                                ${jenis === "SubSubTematik" && "border-black"}
+                                ${jenis === "SuperSubTematik" && "border-black"}
+                                ${jenis === "StrategicPemda" && "border-black"}
+                                ${jenis === "Strategic" && "border-red-700"}
+                                ${jenis === "TacticalPemda" && "border-black"}
+                                ${jenis === "Tactical" && "border-blue-500"}
+                                ${jenis === "OperationalPemda" && "border-black"}
+                                ${jenis === "Operational" && "border-green-500"}
+                            `}
+                        >
+                            Indikator
+                        </td>
+                        <td 
+                            className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                                ${jenis === "Tematik" && "border-black"}
+                                ${jenis === "SubTematik" && "border-black"}
+                                ${jenis === "SubSubTematik" && "border-black"}
+                                ${jenis === "SuperSubTematik" && "border-black"}
+                                ${jenis === "StrategicPemda" && "border-black"}
+                                ${jenis === "Strategic" && "border-red-700"}
+                                ${jenis === "TacticalPemda" && "border-black"}
+                                ${jenis === "Tactical" && "border-blue-500"}
+                                ${jenis === "OperationalPemda" && "border-black"}
+                                ${jenis === "Operational" && "border-green-500"}
+                            `}
+                        >
+                            -
+                        </td>
+                    </tr>
+                    <tr>
+                        <td 
+                            className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                                ${jenis === "Tematik" && "border-black"}
+                                ${jenis === "SubTematik" && "border-black"}
+                                ${jenis === "SubSubTematik" && "border-black"}
+                                ${jenis === "SuperSubTematik" && "border-black"}
+                                ${jenis === "StrategicPemda" && "border-black"}
+                                ${jenis === "Strategic" && "border-red-700"}
+                                ${jenis === "TacticalPemda" && "border-black"}
+                                ${jenis === "Tactical" && "border-blue-500"}
+                                ${jenis === "OperationalPemda" && "border-black"}
+                                ${jenis === "Operational" && "border-green-500"}    
+                            `}
+                        >
+                            Target/Satuan
+                        </td>
+                        <td 
+                            className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                                ${jenis === "Tematik" && "border-black"}
+                                ${jenis === "SubTematik" && "border-black"}
+                                ${jenis === "SubSubTematik" && "border-black"}
+                                ${jenis === "SuperSubTematik" && "border-black"}
+                                ${jenis === "StrategicPemda" && "border-black"}
+                                ${jenis === "Strategic" && "border-red-700"}
+                                ${jenis === "TacticalPemda" && "border-black"}
+                                ${jenis === "Tactical" && "border-blue-500"}
+                                ${jenis === "OperationalPemda" && "border-black"}
+                                ${jenis === "Operational" && "border-green-500"}    
+                            `}
+                        >
+                            -
+                        </td>
+                    </tr>
+                </>
+        }
         {opd && 
         <tr>
             <td 

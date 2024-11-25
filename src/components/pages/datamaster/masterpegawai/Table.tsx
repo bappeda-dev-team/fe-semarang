@@ -99,6 +99,7 @@ const Table = () => {
                             <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Nama</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">NIP</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">ID</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Kode OPD</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Perangkat Daerah</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Aksi</th>
@@ -117,6 +118,7 @@ const Table = () => {
                                     <td className="border-r border-b px-6 py-4">{index + 1}</td>
                                     <td className="border-r border-b px-6 py-4">{data.nama_pegawai ? data.nama_pegawai : "-"}</td>
                                     <td className="border-r border-b px-6 py-4">{data.nip ? data.nip : "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{data.id ? data.id : "-"}</td>
                                     <td className="border-r border-b px-6 py-4">{data.kode_opd ? data.kode_opd : "-"}</td>
                                     <td className="border-r border-b px-6 py-4">{data.nama_opd ? data.nama_opd : "-"}</td>
                                     <td className="border-r border-b px-6 py-4">

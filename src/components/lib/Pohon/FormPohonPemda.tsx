@@ -274,7 +274,6 @@ export const FormPohonPemda: React.FC<{
                             <Controller
                                 name="kode_opd"
                                 control={control}
-                                rules={{required : "Perangkat Daerah Harus Terisi"}}
                                 render={({ field }) => (
                                 <>
                                     <Select
@@ -302,13 +301,6 @@ export const FormPohonPemda: React.FC<{
                                             })
                                         }}
                                     />
-                                    {errors.kode_opd ?
-                                        <h1 className="text-red-500">
-                                            {errors.kode_opd.message}
-                                        </h1>
-                                    :
-                                        <h1 className="text-slate-300 text-xs">*Perangkat Daerah Harus Terisi</h1>
-                                    }
                                 </>
                                 )}
                             />
@@ -576,7 +568,6 @@ export const FormAmbilPohon: React.FC<{
                             <Controller
                                 name="kode_opd"
                                 control={control}
-                                rules={{required : "Perangkat Daerah Harus Terisi"}}
                                 render={({ field }) => (
                                 <>
                                     <Select
@@ -604,13 +595,6 @@ export const FormAmbilPohon: React.FC<{
                                             })
                                         }}
                                     />
-                                    {errors.kode_opd ?
-                                        <h1 className="text-red-500">
-                                            {errors.kode_opd.message}
-                                        </h1>
-                                    :
-                                        <h1 className="text-slate-300 text-xs">*Perangkat Daerah Harus Terisi</h1>
-                                    }
                                 </>
                                 )}
                             />

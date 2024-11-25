@@ -657,15 +657,18 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setSubTematik(false);
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
+      setPerencanaan(true);
       setUsulan(false);
       setMusrenbang(false);
       setPokokPikiran(false);
       setMandatori(false);
-      setManajemenResiko(false);
+      setInisiatif(false);
       setPohonCascading(false);
-      setLaporan(false);
-      setRencanaKinerjaKAK(true);
+      setRencanaKinerja(true);
       setRincianBelanja(false);
+      setManajemenResiko(false);
+      setLaporan(false);
+      setRencanaKinerjaKAK(false);
     }
     if(url == "/rincianbelanja"){
       setDashboard(false);

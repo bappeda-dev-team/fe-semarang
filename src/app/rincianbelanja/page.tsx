@@ -4,6 +4,7 @@ import { TableLaporan, TablePerencanaan } from '@/components/pages/rincianbelanj
 import { FiHome } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { getOpdTahun } from '@/components/lib/Cookie';
+import Maintenance from '@/components/global/Maintenance';
 
 const RincianBelanja = () => {
 
@@ -32,7 +33,7 @@ const RincianBelanja = () => {
 
     return(
         <>
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
                 <a href="/" className="mr-1"><FiHome /></a>
                 <p className="mr-1">/ Laporan</p>
                 <p>/ Rincian Belanja</p>
@@ -43,15 +44,14 @@ const RincianBelanja = () => {
                         <h1 className="font-bold text-2xl uppercase">Rincian Belanja {Tahun?.label}</h1>
                     </div>
                     <p>{SelectedOpd?.label}</p>
-                    {/* <div className="flex flex-col items-end">
+                    <div className="flex flex-col items-end">
                         <p>Nama Lengkap Pegawai</p>
                         <p>192730187240817204</p>
                         <p>Roles: Eselon 3</p>
-                    </div> */}
+                    </div>
                 </div>
-                {/* <TableLaporan /> */}
-                <TablePerencanaan />
-            </div>
+            </div> */}
+            <Maintenance />
         </>
     )
 }

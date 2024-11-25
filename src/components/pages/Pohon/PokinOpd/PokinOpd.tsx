@@ -3,10 +3,9 @@
 import '@/components/pages/Pohon/treeflex.css'
 import { getOpdTahun } from '@/components/lib/Cookie';
 import { useState, useEffect } from 'react';
-import { TbCirclePlus, TbPencil, TbTrash } from 'react-icons/tb';
-import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder } from '@/components/global/Button';
+import { TbCirclePlus } from 'react-icons/tb';
+import { ButtonGreenBorder } from '@/components/global/Button';
 import { LoadingBeat } from '@/components/global/Loading';
-import { ModalDasarHukum } from '../../rencanakinerja/ModalDasarHukum';
 import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
 import { PohonOpd } from '@/components/lib/Pohon/PohonOpd';
 import { FormPohonOpd } from '@/components/lib/Pohon/FormPohonOpd';
@@ -168,7 +167,10 @@ const PokinOpd = () => {
                 {User?.roles == 'super_admin' ? 
                     <h1 className="font-bold">Pohon Kinerja {SelectedOpd?.label}</h1>
                 :
-                    <h1 className="font-bold">Pohon Cascading</h1>
+                User?.roles == 'admin_opd' ?
+                    <h1 className="font-bold">Pohon Kinerja {Pokin?.nama_opd}</h1>
+                :
+                    <h1 className="font-bold">Pohon Cascading {Pokin?.nama_opd}</h1>
                 }
             </div>
             <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
@@ -177,7 +179,7 @@ const PokinOpd = () => {
                         <li>
                             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg">
                                 <div className="header flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black">
-                                {User?.roles == 'super_admin' ?
+                                {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') ?
                                     <h1>Pohon Kinerja OPD</h1>
                                     :
                                     <h1>Pohon Cascading OPD</h1>
@@ -202,7 +204,7 @@ const PokinOpd = () => {
                                     </table>
                                 </div>
                                 {/* button */}
-                                {User?.roles == 'admin_opd'|| User?.roles == 'super_admin' &&
+                                {(User?.roles == 'admin_opd'|| User?.roles == 'super_admin') &&
                                     <div className="flex justify-center border my-3 py-3 border-black">
                                         <ButtonGreenBorder onClick={newChild}>
                                             <TbCirclePlus />

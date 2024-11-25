@@ -2,25 +2,39 @@
 
 import { ButtonGreenBorder, ButtonRedBorder, ButtonSky, ButtonSkyBorder } from "@/components/global/Button";
 import { useState, useEffect } from "react";
-import { getOpdTahun } from "@/components/lib/Cookie";
+import { getOpdTahun, getUser, getToken } from "@/components/lib/Cookie";
 import { TbCirclePlus, TbPencil, TbPencilDown, TbTrash } from "react-icons/tb";
 import { LoadingSync } from "@/components/global/Loading";
+import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 
 interface type_rekin {
     id_rencana_kinerja : string;
+    id_pohon: number;
+    nama_pohon: string;
     nama_rencana_kinerja : string;
     tahun : string;
     status_rencana_kinerja : string;
     catatan : string;
-    kode_opd : string;
+    operational_daerah : opd[];
     pegawai_id : string;
+    nama_pegawai: string;
     indikator : indikator[];
 }
 interface indikator {
     id_indikator : string,
     rencana_kinerja_id : string,
     nama_indikator : string,
-    // targets : []
+    targets : target[]
+}
+interface target {
+    id_target: string;
+    indikator_id: string;
+    target: string;
+    satuan: string;
+}
+interface opd {
+    kode_opd: string;
+    nama_opd: string;
 }
 
 export const TablePerencanaan = () => {
@@ -29,28 +43,16 @@ export const TablePerencanaan = () => {
     const [loading, setLoading] = useState<boolean | null>(null);
     const [rekin, setRekin] = useState<type_rekin[]>([]);
     const [Error, setError] = useState<boolean | null>(null);
-
+    const [DataNull, setDataNull] = useState<boolean | null>(null);
+    const token = getToken();
+    const [user, setUser] = useState<any>(null);
+    
     useEffect(() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchRekin = async() => {
-            setLoading(true)
-            try{
-                const response = await fetch(`${API_URL}/get_rencana_kinerja/pegawai/123`);
-                const result = await response.json();
-                const data = result.rencana_kinerja;
-                setRekin(data);
-            } catch(err){
-                setError(true);
-                console.error(err)
-            } finally{
-                setLoading(false);
-            }
-        }
-        fetchRekin();
-    }, []);
-
-    useEffect(() => {
+        const fetchUser = getUser();
         const data = getOpdTahun();
+        if(fetchUser){
+            setUser(fetchUser.user);
+        }
         if(data){
             if(data.tahun){
                 const tahun_value = {
@@ -60,7 +62,60 @@ export const TablePerencanaan = () => {
                 setTahun(tahun_value);
             }
         }
-    },[])
+    },[]);
+
+    useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const fetchRekin = async() => {
+            setLoading(true)
+            try{
+                const response = await fetch(`${API_URL}/get_rencana_kinerja/pegawai/${user?.pegawai_id}?tahun=${Tahun?.value}`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
+                const result = await response.json();
+                const data = result.rencana_kinerja;
+                if(data == null){
+                    setDataNull(true);
+                    setRekin([]);
+                } else {
+                    setDataNull(false);
+                    setRekin(data);
+                }
+            } catch(err){
+                setError(true);
+                console.error(err)
+            } finally{
+                setLoading(false);
+            }
+        }
+        if(user?.pegawai_id != undefined){   
+            fetchRekin();
+        }
+    }, [user, token, Tahun]);
+
+    const hapusRekin = async(id: any) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        try{
+            const response = await fetch(`${API_URL}/rencana_kinerja/delete/${id}`, {
+                method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
+            })
+            if(!response.ok){
+                alert("cant fetch data")
+            }
+            setRekin(rekin.filter((data) => (data.id_rencana_kinerja !== id)))
+            AlertNotification("Berhasil", "Data jabatan Berhasil Dihapus", "success", 1000);
+        } catch(err){
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
+    };
+
 
     if(loading){
         return <LoadingSync />
@@ -74,38 +129,63 @@ export const TablePerencanaan = () => {
                 <thead>
                     <tr className="bg-[#99CEF5] text-white">
                         <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
-                        {/* <th className="border-r border-b px-6 py-3 min-w-[200px]">Pohon Kinerja</th> */}
+                        <th className="border-r border-b px-6 py-3 min-w-[200px]">Pohon Kinerja</th>
                         <th className="border-r border-b px-6 py-3 min-w-[200px]">Rencana Kinerja</th>
                         <th className="border-r border-b px-6 py-3 min-w-[200px]">Tahun</th>
+                        <th className="border-r border-b px-6 py-3 min-w-[200px]">Indikator</th>
+                        <th className="border-r border-b px-6 py-3 min-w-[200px]">target / Satuan</th>
                         <th className="border-r border-b px-6 py-3 min-w-[200px]">Status Rencana Kinerja</th>
                         <th className="border-r border-b px-6 py-3 min-w-[200px]">Catatan</th>
-                        <th className="border-r border-b px-6 py-3 min-w-[200px]">Nama Indikator</th>
-                        <th className="border-r border-b px-6 py-3 min-w-[200px]">target</th>
-                        <th className="border-r border-b px-6 py-3 min-w-[300px]">Status</th>
                         <th className="border-l border-b px-6 py-3 min-w-[200px]">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {rekin.map((data, index) => (
+                {DataNull ? 
+                        <tr>
+                            <td className="px-6 py-3 uppercase" colSpan={13}>
+                                Data Kosong / Belum Ditambahkan
+                            </td>
+                        </tr>
+                    :
+                    rekin.map((data, index) => (
                     <tr key={data.id_rencana_kinerja}>
                         <td className="border-r border-b px-6 py-4">{index + 1}</td>
-                        {/* <td className="border-r border-b px-6 py-4">Penyusunan dokumen perencanaan sesuai SOP</td> */}
-                        <td className="border-r border-b px-6 py-4">{data.nama_rencana_kinerja}</td>
-                        <td className="border-r border-b px-6 py-4">{data.tahun}</td>
-                        <td className="border-r border-b px-6 py-4">{data.status_rencana_kinerja}</td>
-                        <td className="border-r border-b px-6 py-4">{data.catatan}</td>
-                        {data.indikator.map((item: any) => ( 
-                            <>
-                            <td className="border-r border-b px-6 py-4 text-center">{item.nama_indikator}</td>
-                            <td className="border-r border-b px-6 py-4">-</td>
-                            </>   
-                        ))}
-                        <td className="border-r border-b px-6 py-4">
+                        <td className="border-r border-b px-6 py-4">{data.nama_pohon ? data.nama_pohon : "-"}</td>
+                        <td className="border-r border-b px-6 py-4">{data.nama_rencana_kinerja ? data.nama_rencana_kinerja : "-"}</td>
+                        <td className="border-r border-b px-6 py-4 text-center">{data.tahun ? data.tahun : "-"}</td>
+                        {data.indikator != null ? 
+                        <>
+                            <td className="border-r border-b px-6 py-4 text-center">
+                                {data.indikator.map((item: any) => ( 
+                                    <p key={item.id_indikator}>
+                                        {item.nama_indikator ? item.nama_indikator : "-"}
+                                    </p>
+                                ))}
+                            </td>
+                            <td className="border-r border-b px-6 py-4 text-center">
+                                {data.indikator.map((item: any) => ( 
+                                    item.targets.map((t: any) => (
+                                        <p key={t.id_target}>
+                                            {t.target ? t.target : "-"} / {t.satuan ? t.satuan : "-"}
+                                        </p>
+                                    ))
+                                ))}
+                            </td>
+                        </>
+                        :
+                        <>
+                            <td className="border-r border-b px-6 py-4 text-center">-</td>
+                            <td className="border-r border-b px-6 py-4 text-center">-</td>
+                        </>
+                        }
+                        <td className="border-r border-b px-6 py-4 text-center">{data.status_rencana_kinerja ? data.status_rencana_kinerja : "-"}</td>
+                        <td className="border-r border-b px-6 py-4">{data.catatan ? data.catatan : "-"}</td>
+                        {/* <td className="border-r border-b px-6 py-4">
                             <div className="flex flex-col justify-center items-center gap-2">
                                 <button className="w-full rounded-lg bg-green-600 py-1 font-semibold">SIAP DITARIK SKP</button>
                                 <button className="w-full rounded-lg bg-green-600 py-1 font-semibold">MANRISK SIAP DIVERIFIKASI</button>
                             </div>
-                        </td>
+                        </td> */}
                         <td className="border-r border-b px-6 py-4">
                             <div className="flex flex-col justify-center items-center gap-2">
                                 <ButtonGreenBorder 
@@ -119,14 +199,23 @@ export const TablePerencanaan = () => {
                                     <TbPencil className="mr-1"/>
                                     Edit Rekin
                                 </ButtonSkyBorder>
-                                <ButtonRedBorder className="w-full">
+                                <ButtonRedBorder className="w-full"
+                                    onClick={() => {
+                                        AlertQuestion("Hapus?", "Hapus Jabatan yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                            if(result.isConfirmed){
+                                                hapusRekin(data.id_rencana_kinerja);
+                                            }
+                                        });
+                                    }}
+                                >
                                     <TbTrash className="mr-1"/>
                                     Hapus
                                 </ButtonRedBorder>
                             </div>
                         </td>
                     </tr>
-                    ))}
+                    ))
+                }
                 </tbody>
             </table>
         </div>

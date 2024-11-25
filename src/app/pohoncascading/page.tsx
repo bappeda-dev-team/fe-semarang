@@ -1,10 +1,10 @@
 // import Maintenance from "@/components/global/Maintenance";
-import PohonCascading from "@/components/pages/Pohon/pohoncascading";
+import PokinOpd from "@/components/pages/Pohon/PokinOpd/PokinOpd";
 
 const pohoncascading = () => {
     return(
         <>
-            <PohonCascading />
+            <PokinOpd />
         </>
     )
 }

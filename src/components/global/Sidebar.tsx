@@ -16,7 +16,9 @@ import {
   TbArrowUpFromArc,
   TbSquareRoundedLetterO,
   TbSquareRoundedLetterT,
-  TbSquareRoundedLetterS
+  TbSquareRoundedLetterS,
+  TbUser,
+  TbHexagonLetterR
 } from "react-icons/tb";
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -42,13 +44,15 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
     const [MasterPegawai, setMasterPegawai] = useState<boolean | null>(null);
     const [LevelPohon, setLevelPohon] = useState<boolean | null>(null);
     const [MasterProgramKegiatan, setMasterProgramKegiatan] = useState<boolean | null>(null);
+    const [MasterJabatan, setMasterJabatan] = useState<boolean | null>(null);
       const [MasterUrusan, setMasterUrusan] = useState<boolean | null>(null);
       const [MasterBidangUrusan, setMasterBidangUrusan] = useState<boolean | null>(null);
       const [MasterProgram, setMasterProgram] = useState<boolean | null>(null);
       const [MasterKegiatan, setMasterKegiatan] = useState<boolean | null>(null);
       const [MasterSubKegiatan, setMasterSubKegiatan] = useState<boolean | null>(null);
       const [MasterLembaga, setMasterLembaga] = useState<boolean | null>(null);
-    const [MasterJabatan, setMasterJabatan] = useState<boolean | null>(null);
+    const [MasterUser, setMasterUser] = useState<boolean | null>(null);
+    const [MasterRole, setMasterRole] = useState<boolean | null>(null);
   const [PerencanaanKota, setPerencanaanKota] = useState<boolean | null>(null);
     const [TematikKota, setTematikKota] = useState<boolean | null>(null);
     const [SubTematik, setSubTematik] = useState<boolean | null>(null);
@@ -57,13 +61,19 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
     const [pohonKinerjaOpd, setPohonKinerjaOpd] = useState<boolean | null>(null);
     const [PohonCascading, setPohonCascading] = useState<boolean | null>(null);
   const [Perencanaan, setPerencanaan] = useState<boolean | null>(null);
-    const [RencanaKinerja, setRencanaKinerja] = useState<boolean | null>(null);
-    const [PerencanaanManajemenResiko, setPerencanaanManajemenResiko] = useState<boolean | null>(null);
-  const [Laporan, setLaporan] = useState<boolean | null>(null);    
     const [Usulan, setUsulan] = useState<boolean | null>(null);
       const [Musrenbang, setMusrenbang] = useState<boolean | null>(null);
       const [PokokPikiran, setPokokPikiran] = useState<boolean | null>(null);
       const [Mandatori, setMandatori] = useState<boolean | null>(null);
+      const [Inisiatif, setInisiatif] = useState<boolean | null>(null);
+    const [RencanaKinerja, setRencanaKinerja] = useState<boolean | null>(null);
+    const [PerencanaanManajemenResiko, setPerencanaanManajemenResiko] = useState<boolean | null>(null);
+  const [Laporan, setLaporan] = useState<boolean | null>(null);    
+    const [LaporanUsulan, setLaporanUsulan] = useState<boolean | null>(null);
+      const [LaporanMusrenbang, setLaporanMusrenbang] = useState<boolean | null>(null);
+      const [LaporanPokokPikiran, setLaporanPokokPikiran] = useState<boolean | null>(null);
+      const [LaporanMandatori, setLaporanMandatori] = useState<boolean | null>(null);
+      const [LaporanInisiatif, setLaporanInisiatif] = useState<boolean | null>(null);
     const [SPIP, setSPIP] = useState<boolean | null>(null);
     const [ManajemenResiko, setManajemenResiko] = useState<boolean | null>(null);
     const [Inovasi, setInovasi] = useState<boolean | null>(null);
@@ -92,6 +102,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -123,6 +136,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -153,6 +168,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -183,6 +200,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -214,6 +233,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -244,6 +265,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -274,6 +297,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -304,6 +329,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -334,6 +361,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(true);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -363,7 +392,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterSubKegiatan(false);
       setMasterUrusan(false);
       setMasterJabatan(true);
-      setMasterLembaga(false);      
+      setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);      
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -393,7 +424,73 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterSubKegiatan(false);
       setMasterUrusan(false);
       setMasterJabatan(false);
-      setMasterLembaga(true);      
+      setMasterLembaga(true);
+      setMasterUser(false);     
+      setTematikKota(false);
+      setSubTematik(false);
+      setPerencanaanKota(false);
+      setKotaPohonKinerjaKota(false);
+      setPerencanaanOPD(false);
+      setPohonKinerjaOpd(false);
+      setLaporan(false);
+      setUsulan(false);
+      setRencanaKinerjaKAK(false);
+      setRincianBelanja(false);
+      setMusrenbang(false);
+      setPokokPikiran(false);
+      setMandatori(false);
+      setManajemenResiko(false);
+      setPohonCascading(false);
+    }
+    if(url == "/DataMaster/masteruser"){
+      setDashboard(false);
+      setDataMaster(true);
+      setMasterOPD(false);
+      setMasterPegawai(false);
+      setLevelPohon(false);
+      setMasterProgramKegiatan(false);
+      setMasterBidangUrusan(false);
+      setMasterKegiatan(false);
+      setMasterProgram(false);
+      setMasterSubKegiatan(false);
+      setMasterUrusan(false);
+      setMasterJabatan(false);
+      setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(true);
+      setMasterRole(false);     
+      setTematikKota(false);
+      setSubTematik(false);
+      setPerencanaanKota(false);
+      setKotaPohonKinerjaKota(false);
+      setPerencanaanOPD(false);
+      setPohonKinerjaOpd(false);
+      setLaporan(false);
+      setUsulan(false);
+      setRencanaKinerjaKAK(false);
+      setRincianBelanja(false);
+      setMusrenbang(false);
+      setPokokPikiran(false);
+      setMandatori(false);
+      setManajemenResiko(false);
+      setPohonCascading(false);
+    }
+    if(url == "/DataMaster/masterrole"){
+      setDashboard(false);
+      setDataMaster(true);
+      setMasterOPD(false);
+      setMasterPegawai(false);
+      setLevelPohon(false);
+      setMasterProgramKegiatan(false);
+      setMasterBidangUrusan(false);
+      setMasterKegiatan(false);
+      setMasterProgram(false);
+      setMasterSubKegiatan(false);
+      setMasterUrusan(false);
+      setMasterJabatan(false);
+      setMasterLembaga(false);
+      setMasterUser(false);  
+      setMasterRole(true);  
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -424,7 +521,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterSubKegiatan(false);
       setMasterUrusan(false);
       setMasterJabatan(false);
-      setMasterLembaga(false);      
+      setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);      
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(true);
@@ -454,7 +553,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterSubKegiatan(false);
       setMasterUrusan(false);
       setMasterJabatan(false);
-      setMasterLembaga(false);      
+      setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);      
       setPerencanaanKota(true);
       setTematikKota(true);
       setSubTematik(false);
@@ -484,7 +585,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterSubKegiatan(false);
       setMasterUrusan(false);
       setMasterJabatan(false);
-      setMasterLembaga(false);      
+      setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);      
       setPerencanaanKota(true);
       setTematikKota(false);
       setSubTematik(true);
@@ -515,7 +618,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterSubKegiatan(false);
       setMasterUrusan(false);
       setMasterJabatan(false);
-      setMasterLembaga(false);      
+      setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);      
       setPerencanaanKota(false);
       setTematikKota(false);
       setSubTematik(false);
@@ -546,6 +651,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
@@ -556,7 +663,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMandatori(false);
       setManajemenResiko(false);
       setPohonCascading(false);
-      setLaporan(true);
+      setLaporan(false);
       setRencanaKinerjaKAK(true);
       setRincianBelanja(false);
     }
@@ -574,12 +681,14 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setRencanaKinerjaKAK(false);
-      setLaporan(true);
+      setLaporan(false);
       setUsulan(false);
       setMusrenbang(false);
       setPokokPikiran(false);
@@ -602,18 +711,22 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
-      setLaporan(true);
+      setPerencanaan(true);
       setUsulan(true);
-      setRencanaKinerjaKAK(false);
-      setRincianBelanja(false);
       setMusrenbang(true);
       setPokokPikiran(false);
       setMandatori(false);
+      setInisiatif(false);
+      setRencanaKinerjaKAK(false);
+      setRincianBelanja(false);
       setManajemenResiko(false);
       setPohonCascading(false);
+      setLaporan(false);
     }
     if(url == "/pokokpikiran"){
       setDashboard(false);
@@ -629,17 +742,21 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(true);
+      setPerencanaan(true);
       setUsulan(true);
-      setRencanaKinerjaKAK(false);
-      setRincianBelanja(false);
       setMusrenbang(false);
       setPokokPikiran(true);
       setMandatori(false);
-      setManajemenResiko(false);
+      setInisiatif(false);
       setPohonCascading(false);
+      setRencanaKinerjaKAK(false);
+      setRincianBelanja(false);
+      setManajemenResiko(false);
     }
     if(url == "/mandatori"){
       setDashboard(false);
@@ -655,17 +772,51 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(true);
       setUsulan(true);
-      setRencanaKinerjaKAK(false);
-      setRincianBelanja(false);
+      setPerencanaan(true);
       setMusrenbang(false);
       setPokokPikiran(false);
       setMandatori(true);
-      setManajemenResiko(false);
+      setInisiatif(false);
       setPohonCascading(false);
+      setRencanaKinerjaKAK(false);
+      setRincianBelanja(false);
+      setManajemenResiko(false);
+    }
+    if(url == "/inisiatif"){
+      setDashboard(false);
+      setDataMaster(false);
+      setMasterOPD(false);
+      setMasterPegawai(false);
+      setLevelPohon(false);
+      setMasterProgramKegiatan(false);
+      setMasterBidangUrusan(false);
+      setMasterKegiatan(false);
+      setMasterProgram(false);
+      setMasterSubKegiatan(false);
+      setMasterUrusan(false);
+      setMasterJabatan(false);
+      setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
+      setTematikKota(false);
+      setSubTematik(false);
+      setPerencanaanKota(true);
+      setUsulan(true);
+      setPerencanaan(true);
+      setMusrenbang(false);
+      setPokokPikiran(false);
+      setMandatori(false);
+      setInisiatif(true);
+      setPohonCascading(false);
+      setRencanaKinerjaKAK(false);
+      setRincianBelanja(false);
+      setManajemenResiko(false);
     }
     if(url == "/manajemenresiko"){
       setDashboard(false);
@@ -681,6 +832,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(true);
@@ -707,11 +860,13 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMasterUrusan(false);
       setMasterJabatan(false);
       setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
       setTematikKota(false);
       setSubTematik(false);
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
-      setPerencanaanOPD(true);
+      setPerencanaanOPD(false);
       setPohonKinerjaOpd(false);
       setUsulan(false);
       setRencanaKinerjaKAK(false);
@@ -720,7 +875,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setPerencanaan(true);
       setPohonCascading(true);
+      setLaporan(false);
     }
   }, [url]);
 
@@ -783,7 +940,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
             </li>
           </Link>
           {/* DATA MASTER */}
-          {User == 'super_admin' && 
+          {User?.roles == 'super_admin' && 
             <li 
               className={`flex items-center font-medium gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-gray-700`}
               onClick={() => setDataMaster(DataMaster ? false : true)}
@@ -807,10 +964,22 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master OPD</span>
                 </li>
               </Link>
+              <Link href="/DataMaster/masterrole">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${MasterRole ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <TbHexagonLetterR className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master Role</span>
+                </li>
+              </Link>
               <Link href="/DataMaster/masterpegawai">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${MasterPegawai ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
                   <TbUsers className="text-xl" />
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master Pegawai</span>
+                </li>
+              </Link>
+              <Link href="/DataMaster/masteruser">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${MasterUser ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <TbUser className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master User</span>
                 </li>
               </Link>
               <Link href="/DataMaster/masterjabatan">
@@ -869,7 +1038,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
             </div>
           }
           {/* PERENCANAAN KOTA */}
-          {User == 'super_admin'&& 
+          {User?.roles == 'super_admin'&& 
           <>
             <li 
               className={`flex font-medium items-center gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-gray-700`}
@@ -898,7 +1067,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
           </>
           }
           {/* PERENCANAAN OPD */}
-          {(User == 'super_admin' || User == 'admin_opd') && 
+          {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') && 
             <li 
               className={`flex font-medium items-center gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-gray-700`}
               onClick={() => setPerencanaanOPD(PerencanaanOPD ? false : true)}
@@ -936,7 +1105,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
               </Link>
             </div>
           }
-          {User == 'asn' && 
+          {/* {['eselon_1', 'eselon_2', 'eselon_3', 'eselon_4'].includes(User?.roles) &&  */}
+          {(User?.roles == 'eselon_1' || User?.roles == 'eselon_2' || User?.roles == 'eselon_3' || User?.roles == 'eselon_4') &&
             <li 
               className={`flex font-medium items-center gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-gray-700`}
               onClick={() => setPerencanaan(Perencanaan ? false : true)}
@@ -976,10 +1146,12 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                       <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Mandatori</span>
                     </li>
                   </Link>
-                  <li className="flex items-center gap-x-2 cursor-pointer p-2 hover:bg-gray-700 rounded-xl">
-                    <TbTooltip className="text-xl" />
-                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Inisiatif Bupati</span>
-                  </li>
+                  <Link href="/inisiatif">
+                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${Inisiatif ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                      <TbTooltip className="text-xl" />
+                      <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Inisiatif Bupati</span>
+                    </li>
+                  </Link>
                 </div>
                 }
               <Link href="/pohoncascading">
@@ -1019,36 +1191,38 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
             <div className="flex flex-col border-l-2 border-white rounded-b-xl px-3 py-2 ml-2 duration-200">
               <li 
                 className="flex items-center gap-x-2 cursor-pointer p-2 hover:bg-gray-700 rounded-xl"
-                onClick={() => setUsulan(Usulan ? false : true)}
+                onClick={() => setLaporanUsulan(LaporanUsulan ? false : true)}
               >
                 <TbApps className="text-xl" />
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Usulan</span>
               </li>
                 {/* subs menu */}
-                {Usulan && 
+                {LaporanUsulan && 
                 <div className="flex flex-col border-l-2 border-white rounded-b-xl px-3 py-2 ml-2 duration-200">
-                  <Link href="/musrenbang">
-                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${Musrenbang ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <Link href="/laporanmusrenbang">
+                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${LaporanMusrenbang ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
                       <TbBook2 className="text-xl" />
                       <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Musrenbang</span>
                     </li>
                   </Link>
-                  <Link href="/pokokpikiran">
-                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PokokPikiran ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <Link href="/laporanpokokpikiran">
+                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${LaporanPokokPikiran ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
                       <TbBulb className="text-xl" />
                       <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pokok Pikiran</span>
                     </li>
                   </Link>
-                  <Link href="/mandatori">
-                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${Mandatori ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <Link href="/laporanmandatori">
+                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${LaporanMandatori ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
                       <TbFileAlert className="text-xl" />
                       <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Mandatori</span>
                     </li>
                   </Link>
-                  <li className="flex items-center gap-x-2 cursor-pointer p-2 hover:bg-gray-700 rounded-xl">
-                    <TbTooltip className="text-xl" />
-                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Inisiatif Bupati</span>
-                  </li>
+                  <Link href="/laporaninisiatif">
+                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${LaporanInisiatif ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                      <TbTooltip className="text-xl" />
+                      <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Inisiatif Bupati</span>
+                    </li>
+                  </Link>
                 </div>
                 }
               <Link href="/rencanakinerja">

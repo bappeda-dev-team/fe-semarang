@@ -3,6 +3,8 @@ import { TbCirclePlus, TbPencil, TbTrash } from 'react-icons/tb';
 import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
 import {FormPohonOpd, FormEditPohon} from './FormPohonOpd';
+import { getToken } from '../Cookie';
+
 interface pohon {
     tema: any;
     deleteTrigger: () => void;
@@ -14,6 +16,7 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
     const [edit, setEdit] = useState<boolean>(false);
     const [Edited, setEdited] = useState<any | null>(null);
+    const token = getToken();
     
     // Adds a new form entry
     const newChild = () => {
@@ -29,6 +32,10 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         try{
             const response = await fetch(`${API_URL}/pohon_kinerja_opd/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")
@@ -154,6 +161,7 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
     const [edit, setEdit] = useState<boolean>(false);
     const [Edited, setEdited] = useState<any | null>(null);
+    const token = getToken();
     
     // Adds a new form entry
     const newChild = () => {
@@ -169,6 +177,10 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         try{
             const response = await fetch(`${API_URL}/pohon_kinerja_opd/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")

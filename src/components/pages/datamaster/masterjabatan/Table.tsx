@@ -6,6 +6,7 @@ import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { LoadingClip } from "@/components/global/Loading";
 import { getOpdTahun } from "@/components/lib/Cookie";
 import { OpdTahunNull } from "@/components/global/OpdTahunNull";
+import { getToken } from "@/components/lib/Cookie";
 
 interface jabatan {
     id: string;
@@ -26,7 +27,8 @@ const Table = () => {
     const [DataNull, setDataNull] = useState<boolean | null>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [Tahun, setTahun] = useState<any>(null);
-    
+    const token = getToken();
+
     useEffect(() => {
         const data = getOpdTahun();
         if(data.opd){
@@ -50,13 +52,21 @@ const Table = () => {
         const fetchJabatan = async() => {
             setLoading(true)
             try{
-                const response = await fetch(`${API_URL}/jabatan/findall/${SelectedOpd?.value}`);
+                const response = await fetch(`${API_URL}/jabatan/findall/${SelectedOpd?.value}`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 const result = await response.json();
                 const data = result.data;
                 if(data == null){
                     setDataNull(true);
                     setJabatan([]);
+                } else if(result.code === 401){
+                    setError(true);
                 } else {
+                    setError(false);
                     setDataNull(false);
                     setJabatan(data);
                 }
@@ -72,13 +82,17 @@ const Table = () => {
         if(SelectedOpd?.value != undefined){
             fetchJabatan();
         }
-    }, [SelectedOpd]);
+    }, [SelectedOpd, token]);
 
     const hapusJabatan = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
             const response = await fetch(`${API_URL}/jabatan/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")

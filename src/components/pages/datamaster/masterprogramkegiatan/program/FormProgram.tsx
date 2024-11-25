@@ -6,7 +6,8 @@ import { ButtonGreen, ButtonRedBorder, ButtonSkyBorder, ButtonRed } from "@/comp
 import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 import { useParams, useRouter } from "next/navigation";
-import Select from "react-select"
+import Select from "react-select";
+import { getToken } from "@/components/lib/Cookie";
 
 interface OptionTypeString {
     value: string;
@@ -32,6 +33,7 @@ export const FormProgram = () => {
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const router = useRouter();
+    const token = getToken();
 
     const fetchOpd = async() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -40,6 +42,7 @@ export const FormProgram = () => {
         const response = await fetch(`${API_URL}/opd/findall`,{
           method: 'GET',
           headers: {
+            Authorization: `${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -72,7 +75,8 @@ export const FormProgram = () => {
           const response = await fetch(`${API_URL}/program_kegiatan/create`, {
               method: "POST",
               headers: {
-                  "Content-Type" : "application/json",
+                Authorization: `${token}`,
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify(formData),
           });
@@ -250,13 +254,19 @@ export const FormEditProgram = () => {
     const [idNull, setIdNull] = useState<boolean | null>(null);
     const {id} = useParams();
     const router = useRouter();
+    const token = getToken();
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchProgram = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/program_kegiatan/detail/${id}`);
+                const response = await fetch(`${API_URL}/program_kegiatan/detail/${id}`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 if(!response.ok){
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
@@ -289,7 +299,7 @@ export const FormEditProgram = () => {
             }
         }
         fetchProgram();
-    },[id, reset]);
+    },[id, reset, token]);
 
     const fetchOpd = async() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -298,6 +308,7 @@ export const FormEditProgram = () => {
           const response = await fetch(`${API_URL}/opd/findall`,{
             method: 'GET',
             headers: {
+              Authorization: `${token}`,
               'Content-Type': 'application/json',
             },
           });
@@ -330,7 +341,8 @@ export const FormEditProgram = () => {
             const response = await fetch(`${API_URL}/program_kegiatan/update/${id}`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type" : "application/json",
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });

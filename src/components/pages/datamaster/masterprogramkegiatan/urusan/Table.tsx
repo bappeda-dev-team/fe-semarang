@@ -4,6 +4,7 @@ import { ButtonGreen, ButtonRed } from "@/components/global/Button";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { LoadingClip } from "@/components/global/Loading";
 import { useState, useEffect } from "react";
+import { getToken } from "@/components/lib/Cookie";
 
 interface urusan {
     id: string;
@@ -17,13 +18,19 @@ const Table = () => {
     const [Error, setError] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
+    const token = getToken();
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchUrusan = async() => {
             setLoading(true)
             try{
-                const response = await fetch(`${API_URL}/urusan/findall`);
+                const response = await fetch(`${API_URL}/urusan/findall`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 const result = await response.json();
                 const data = result.data;
                 if(data == null){
@@ -32,7 +39,10 @@ const Table = () => {
                 } else if(data.code == 500){
                     setError(true);
                     setUrusan([]);
+                } else if(result.code === 401){
+                    setError(true);
                 } else {
+                    setError(false);
                     setDataNull(false);
                     setUrusan(data);
                 }
@@ -45,13 +55,17 @@ const Table = () => {
             }
         }
         fetchUrusan();
-    }, []);
+    }, [token]);
 
     const hapusUrusan = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
             const response = await fetch(`${API_URL}/urusan/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")

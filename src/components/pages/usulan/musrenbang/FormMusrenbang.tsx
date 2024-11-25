@@ -7,7 +7,8 @@ import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 import { useParams, useRouter } from "next/navigation";
 import { getOpdTahun } from "@/components/lib/Cookie";
-import Select from 'react-select'
+import Select from 'react-select';
+import { getToken } from "@/components/lib/Cookie";
 
 interface OptionTypeString {
     value: string;
@@ -41,7 +42,7 @@ export const FormMusrenbang = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [tahun, setTahun] = useState<any>(null);
     const router = useRouter();
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const token = getToken();
 
     useEffect(() => {
         const data = getOpdTahun();
@@ -60,18 +61,19 @@ export const FormMusrenbang = () => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
       setIsLoading(true);
       try{ 
-        const response = await fetch(`${API_URL}/opd/findall`,{
-          method: 'GET',
+          const response = await fetch(`${API_URL}/opd/findall`,{
+              method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
-          },
+              Authorization: `${token}`,
+              'Content-Type': 'application/json',
+            },
         });
         if(!response.ok){
-          throw new Error('cant fetch data opd');
+            throw new Error('cant fetch data opd');
         }
         const data = await response.json();
         const opd = data.data.map((item: any) => ({
-          value : item.kode_opd,
+            value : item.kode_opd,
           label : item.nama_opd,
         }));
         setOpdOption(opd);
@@ -83,6 +85,7 @@ export const FormMusrenbang = () => {
     };
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           usulan : data.usulan,
@@ -99,7 +102,8 @@ export const FormMusrenbang = () => {
           const response = await fetch(`${API_URL}/usulan_musrebang/create`, {
               method: "POST",
               headers: {
-                  "Content-Type" : "application/json",
+                Authorization: `${token}`,
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify(formData),
           });
@@ -353,8 +357,8 @@ export const FormEditMusrenbang = () => {
     const [error, setError] = useState<string>('');
     const [tahun, setTahun] = useState<any>(null);
     const router = useRouter();
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const {id} = useParams();
+    const token = getToken();
 
     useEffect(() => {
         const data = getOpdTahun();
@@ -376,6 +380,7 @@ export const FormEditMusrenbang = () => {
         const response = await fetch(`${API_URL}/opd/findall`,{
           method: 'GET',
           headers: {
+            Authorization: `${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -400,7 +405,12 @@ export const FormEditMusrenbang = () => {
         const fetchIdMusrenbang = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/usulan_musrebang/detail/${id}`);
+                const response = await fetch(`${API_URL}/usulan_musrebang/detail/${id}`, {
+                    headers: {
+                        Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 if(!response.ok){
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
@@ -449,9 +459,10 @@ export const FormEditMusrenbang = () => {
             }
         }
         fetchIdMusrenbang();
-    },[id, reset]);
-
+    },[id, reset, token]);
+    
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
           usulan : data.usulan,
@@ -468,7 +479,8 @@ export const FormEditMusrenbang = () => {
           const response = await fetch(`${API_URL}/usulan_musrebang/update/${id}`, {
               method: "PUT",
               headers: {
-                  "Content-Type" : "application/json",
+                Authorization: `${token}`,
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify(formData),
           });

@@ -1,9 +1,8 @@
 'use client'
 
-import { getOpdTahun } from '@/components/lib/Cookie';
+import { getOpdTahun, getToken } from '@/components/lib/Cookie';
 import { useState, useEffect } from 'react';
 import Select from 'react-select'
-import { ButtonSky } from '@/components/global/Button';
 import PohonTematik from './PohonTematik';
 import { TahunNull } from '@/components/global/OpdTahunNull';
 
@@ -19,6 +18,7 @@ const TematikKab = () => {
     const [Tematik, setTematik] = useState<OptionType | null>(null);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
+    const token = getToken();
 
     useEffect(() => {
         const data = getOpdTahun();
@@ -45,6 +45,7 @@ const TematikKab = () => {
           const response = await fetch(`${API_URL}/pohon_kinerja/tematik/${Tahun?.value}`,{
             method: 'GET',
             headers: {
+              Authorization: `${token}`,
               'Content-Type': 'application/json',
             },
           });

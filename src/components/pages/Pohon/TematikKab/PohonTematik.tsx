@@ -2,7 +2,7 @@ import '@/components/pages/Pohon/treeflex.css'
 import { useState, useEffect } from 'react';
 import { LoadingBeat } from '@/components/global/Loading';
 import {Pohon} from '@/components/lib/Pohon/Pohon';
-import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
+import { getToken } from '@/components/lib/Cookie';
 
 interface pohontematik {
     id: number;
@@ -38,13 +38,19 @@ const PohonTematik = ({id} : pohontematik) => {
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [error, setError] = useState<string>('');
     const [Deleted, setDeleted] = useState<boolean>(false);
+    const token = getToken();
 
     useEffect(() => {
         const fetchTematikKab = async() => {
             const API_URL = process.env.NEXT_PUBLIC_API_URL;
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/pohon_kinerja_admin/tematik/${id}`);
+                const response = await fetch(`${API_URL}/pohon_kinerja_admin/tematik/${id}`, {
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                      },
+                });
                 if(!response.ok){
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
@@ -60,7 +66,7 @@ const PohonTematik = ({id} : pohontematik) => {
         if(id != undefined){
             fetchTematikKab();
         }
-    },[id, Deleted]);
+    },[id, Deleted, token]);
 
     if(error){
         return(

@@ -6,6 +6,7 @@ import { ButtonGreen, ButtonRedBorder, ButtonSkyBorder, ButtonRed } from "@/comp
 import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 import { useRouter, useParams } from "next/navigation";
+import { getToken } from "@/components/lib/Cookie";
 
 interface OptionTypeString {
     value: string;
@@ -27,6 +28,7 @@ export const FormBidangUrusan = () => {
     const [NamaBidangUrusan, setNamaBidangUrusan] = useState<string>('');
     const [KodeBidangUrusan, setKodeBidangUrusan] = useState<string>('');
     const router = useRouter();
+    const token = getToken();
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -40,7 +42,8 @@ export const FormBidangUrusan = () => {
             const response = await fetch(`${API_URL}/bidang_urusan/create`, {
                 method: "POST",
                 headers: {
-                    "Content-Type" : "application/json",
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });
@@ -164,13 +167,19 @@ export const FormEditBidangUrusan = () => {
     const [idNull, setIdNull] = useState<boolean | null>(null);
     const router = useRouter();
     const {id} = useParams();
+    const token = getToken();
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchIdOpd = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/bidang_urusan/detail/${id}`);
+                const response = await fetch(`${API_URL}/bidang_urusan/detail/${id}`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 if(!response.ok){
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
@@ -195,7 +204,7 @@ export const FormEditBidangUrusan = () => {
             }
         }
         fetchIdOpd();
-    },[id, reset]);
+    },[id, reset, token]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -209,7 +218,8 @@ export const FormEditBidangUrusan = () => {
             const response = await fetch(`${API_URL}/bidang_urusan/update/${id}`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type" : "application/json",
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });

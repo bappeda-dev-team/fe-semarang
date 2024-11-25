@@ -4,13 +4,14 @@ import { ButtonGreen, ButtonRed } from "@/components/global/Button";
 import { useState, useEffect } from "react";
 import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
+import { getToken } from "@/components/lib/Cookie";
 
 interface pegawai {
     id : string;
     nama_pegawai : string;
     nip : string;
     kode_opd: string;
-    roles : string;
+    nama_opd : string;
 }
 
 const Table = () => {
@@ -19,21 +20,30 @@ const Table = () => {
     const [Error, setError] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
+    const token = getToken();
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchPegawai = async() => {
             setLoading(true)
             try{
-                const response = await fetch(`${API_URL}/pegawai/findall`);
+                const response = await fetch(`${API_URL}/pegawai/findall`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 const result = await response.json();
                 const data = result.data;
                 if(data == null){
                     setDataNull(true);
                     setPegawai([]);
+                } else if(result.code === 401){
+                    setError(true);
                 } else {
                     setDataNull(false);
                     setPegawai(data);
+                    setError(false);
                 }
                 setPegawai(data);
             } catch(err){
@@ -44,13 +54,17 @@ const Table = () => {
             }
         }
         fetchPegawai();
-    }, []);
+    }, [token]);
 
     const hapusPegawai = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
             const response = await fetch(`${API_URL}/pegawai/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")
@@ -85,8 +99,8 @@ const Table = () => {
                             <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Nama</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">NIP</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Perangkata Daerah</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Roles</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Kode OPD</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Perangkat Daerah</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Aksi</th>
                         </tr>
                     </thead>
@@ -104,7 +118,7 @@ const Table = () => {
                                     <td className="border-r border-b px-6 py-4">{data.nama_pegawai ? data.nama_pegawai : "-"}</td>
                                     <td className="border-r border-b px-6 py-4">{data.nip ? data.nip : "-"}</td>
                                     <td className="border-r border-b px-6 py-4">{data.kode_opd ? data.kode_opd : "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{data.roles ? data.roles : "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{data.nama_opd ? data.nama_opd : "-"}</td>
                                     <td className="border-r border-b px-6 py-4">
                                         <div className="flex flex-col jutify-center items-center gap-2">
                                             <ButtonGreen className="w-full" halaman_url={`/DataMaster/masterpegawai/${data.id}`}>Edit</ButtonGreen>

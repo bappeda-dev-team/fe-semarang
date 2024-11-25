@@ -7,6 +7,7 @@ import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 import { useParams, useRouter } from "next/navigation";
 import Select from 'react-select'
+import { getToken } from "@/components/lib/Cookie";
 
 interface OptionTypeString {
     value: string;
@@ -32,6 +33,7 @@ export const FormMasterJabatan = () => {
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const router = useRouter();
+    const token = getToken();
 
     const fetchOpd = async() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -40,6 +42,7 @@ export const FormMasterJabatan = () => {
           const response = await fetch(`${API_URL}/opd/findall`,{
             method: 'GET',
             headers: {
+              Authorization: `${token}`,
               'Content-Type': 'application/json',
             },
           });
@@ -72,7 +75,8 @@ export const FormMasterJabatan = () => {
           const response = await fetch(`${API_URL}/jabatan/create`, {
               method: "POST",
               headers: {
-                  "Content-Type" : "application/json",
+                Authorization: `${token}`,
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify(formData),
           });
@@ -250,6 +254,7 @@ export const FormEditMasterJabatan = () => {
     const [idNull, setIdNull] = useState<boolean | null>(null);
     const router = useRouter();
     const {id} = useParams();
+    const token = getToken();
 
     const fetchOpd = async() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -258,6 +263,7 @@ export const FormEditMasterJabatan = () => {
         const response = await fetch(`${API_URL}/opd/findall`,{
           method: 'GET',
           headers: {
+            Authorization: `${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -282,7 +288,12 @@ export const FormEditMasterJabatan = () => {
         const fetchIdJabatan = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/jabatan/detail/${id}`);
+                const response = await fetch(`${API_URL}/jabatan/detail/${id}`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 if(!response.ok){
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
@@ -315,7 +326,7 @@ export const FormEditMasterJabatan = () => {
             }
         }
         fetchIdJabatan();
-    },[id, reset]);
+    },[id, reset, token]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -330,7 +341,8 @@ export const FormEditMasterJabatan = () => {
             const response = await fetch(`${API_URL}/jabatan/update/${id}`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type" : "application/json",
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });

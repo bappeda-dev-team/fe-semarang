@@ -7,6 +7,7 @@ import { getOpdTahun } from '../Cookie';
 import { AlertNotification } from '@/components/global/Alert';
 import Select from 'react-select';
 import { PohonOpdEdited } from './PohonOpd';
+import { getToken } from '../Cookie';
 
 interface OptionTypeString {
     value: string;
@@ -63,6 +64,7 @@ export const FormPohonOpd: React.FC<{
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [IsAdded, setIsAdded] = useState<boolean>(false);
     const [Deleted, setDeleted] = useState<boolean>(false);
+    const token = getToken();
     
     useEffect(() => {
         const data = getOpdTahun();
@@ -89,6 +91,7 @@ export const FormPohonOpd: React.FC<{
         const response = await fetch(`${API_URL}/opd/findall`,{
           method: 'GET',
           headers: {
+            Authorization: `${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -114,6 +117,7 @@ export const FormPohonOpd: React.FC<{
         const response = await fetch(`${API_URL}/pegawai/findall`,{
           method: 'GET',
           headers: {
+            Authorization: `${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -165,7 +169,8 @@ export const FormPohonOpd: React.FC<{
             const response = await fetch(`${API_URL}${url}`, {
                 method: "POST",
                 headers: {
-                    "Content-Type" : "application/json",
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });
@@ -416,6 +421,7 @@ export const FormEditPohon: React.FC<{
     const [IsEdited, setIsEdited] = useState<boolean>(false);
     const [DataEdit, setDataEdit] = useState<any>(null);
     const [Deleted, setDeleted] = useState<boolean>(false);
+    const token = getToken();
     
     useEffect(() => {
         const data = getOpdTahun();
@@ -442,6 +448,7 @@ export const FormEditPohon: React.FC<{
           const response = await fetch(`${API_URL}/pegawai/findall`,{
             method: 'GET',
             headers: {
+              Authorization: `${token}`,
               'Content-Type': 'application/json',
             },
           });
@@ -465,7 +472,12 @@ export const FormEditPohon: React.FC<{
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchStrategic = async() => {
             try{
-                const response = await fetch(`${API_URL}/pohon_kinerja_opd/detail/${id}`);
+                const response = await fetch(`${API_URL}/pohon_kinerja_opd/detail/${id}`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 if(!response.ok){
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
@@ -494,7 +506,7 @@ export const FormEditPohon: React.FC<{
             }
         }
         fetchStrategic();
-    },[id, reset]);
+    },[id, reset, token]);
     
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -520,7 +532,8 @@ export const FormEditPohon: React.FC<{
             const response = await fetch(`${API_URL}${url}`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type" : "application/json",
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });

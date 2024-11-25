@@ -6,6 +6,7 @@ import { ButtonGreen, ButtonRedBorder, ButtonSkyBorder, ButtonRed } from "@/comp
 import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 import { useRouter, useParams } from "next/navigation";
+import { getToken } from "@/components/lib/Cookie";
 
 interface FormValue {
     id: string;
@@ -24,6 +25,7 @@ export const FormMasterLembaga = () => {
     const [NamaLembaga, setNamaLembaga] = useState<string>('');
     const [KodeLembaga, setKodeLembaga] = useState<string>('');
     const router = useRouter();
+    const token = getToken();
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -37,8 +39,9 @@ export const FormMasterLembaga = () => {
             const response = await fetch(`${API_URL}/lembaga/create`, {
                 method: "POST",
                 headers: {
-                    "Content-Type" : "application/json",
-                },
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                  },
                 body: JSON.stringify(formData),
             });
             if(response.ok){
@@ -162,13 +165,19 @@ export const FormEditMasterLembaga = () => {
     const [idNull, setIdNull] = useState<boolean | null>(null);
     const {id} = useParams();
     const router = useRouter();
+    const token = getToken();
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchLembagaId = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/lembaga/detail/${id}`);
+                const response = await fetch(`${API_URL}/lembaga/detail/${id}`, {
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                      },
+                });
                 if(!response.ok){
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
@@ -193,7 +202,7 @@ export const FormEditMasterLembaga = () => {
             }
         }
         fetchLembagaId();
-    },[id, reset]);
+    },[id, reset, token]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -207,8 +216,9 @@ export const FormEditMasterLembaga = () => {
             const response = await fetch(`${API_URL}/lembaga/update/${id}`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type" : "application/json",
-                },
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                  },
                 body: JSON.stringify(formData),
             });
             if(response.ok){

@@ -7,9 +7,10 @@ import { TbCirclePlus, TbPencil, TbTrash } from 'react-icons/tb';
 import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder } from '@/components/global/Button';
 import { LoadingBeat } from '@/components/global/Loading';
 import { ModalDasarHukum } from '../../rencanakinerja/ModalDasarHukum';
-import { OpdTahunNull } from '@/components/global/OpdTahunNull';
+import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
 import { PohonOpd } from '@/components/lib/Pohon/PohonOpd';
 import { FormPohonOpd } from '@/components/lib/Pohon/FormPohonOpd';
+import { getUser, getToken } from '@/components/lib/Cookie';
 
 interface opd {
     kode_opd: string;
@@ -34,17 +35,23 @@ interface childs {
 
 const PokinOpd = () => {
 
+    const [User, setUser] = useState<any>(null);
     const [Tahun, setTahun] = useState<any>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [Pokin, setPokin] = useState<pokin | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [error, setError] = useState<string>('');
+    const token = getToken();
 
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
     const [NewStrategic, setNewStrategic] = useState<boolean>(false);
     const [Deleted, setDeleted] = useState<boolean>(false);
 
     useEffect(() => {
+        const fetchUser = getUser();
+        if(fetchUser){
+            setUser(fetchUser.user);
+        }
         const data = getOpdTahun();
         if(data.tahun){
             const tahun = {
@@ -68,11 +75,16 @@ const PokinOpd = () => {
     };
 
     useEffect(() => {
-        const fetchPokinOpd = async() => {
+        const fetchPokinOpd = async(url: string) => {
             const API_URL = process.env.NEXT_PUBLIC_API_URL;
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/pohon_kinerja_opd/findall/${SelectedOpd?.value}/${Tahun?.value}`);
+                const response = await fetch(`${API_URL}/${url}`, {
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                      },
+                });
                 if(!response.ok){
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
@@ -81,15 +93,22 @@ const PokinOpd = () => {
                 setPokin(data);
             } catch(err) {
                 setError('gagal mendapatkan data, terdapat kesalahan backend/server saat mengambil data pohon kinerja perangkat daerah');
+                console.error(err);
             } finally {
                 setLoading(false);
             }
         }
-        if(SelectedOpd?.value != undefined && Tahun?.value != undefined){
-            fetchPokinOpd();
+        if(User?.roles == 'super_admin'){
+            if(SelectedOpd?.value != undefined && Tahun?.value != undefined){
+                fetchPokinOpd(`pohon_kinerja_opd/findall/${SelectedOpd?.value}/${Tahun?.value}`);
+            }
+        } else if(User?.roles != 'super_admin'){
+            if(User?.kode_opd != undefined && Tahun?.value != undefined){
+                fetchPokinOpd(`pohon_kinerja_opd/findall/${User?.kode_opd}/${Tahun?.value}`);
+            }
         }
-    },[SelectedOpd, Tahun, Deleted]);
-
+    },[User, SelectedOpd, Tahun, Deleted, token]);
+    
     if(Loading){
         return(
             <>
@@ -106,7 +125,7 @@ const PokinOpd = () => {
         return(
             <>
                 <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
-                    <h1>Pohon Kinerja {SelectedOpd?.label}</h1>
+                    <h1>Pohon Kinerja</h1>
                 </div>
                 <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
                     {error}
@@ -114,23 +133,43 @@ const PokinOpd = () => {
             </>
         )
     }
-    if(SelectedOpd?.value == undefined || Tahun?.value == undefined){
-        return(
-            <>
-                <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
-                    <h1>Pohon Kinerja {SelectedOpd?.label}</h1>
-                </div>
-                <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
-                    <OpdTahunNull />
-                </div>
-            </>
-        )
+    if(User?.roles == 'super_admin'){
+        if(SelectedOpd?.value == undefined || Tahun?.value == undefined){
+            return(
+                <>
+                    <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
+                        <h1>Pohon Kinerja {SelectedOpd?.label}</h1>
+                    </div>
+                    <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
+                        <OpdTahunNull />
+                    </div>
+                </>
+            )
+        }
+    } 
+    if(User?.roles != 'super_admin'){
+        if(Tahun?.value == undefined){
+            return(
+                <>
+                    <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
+                        <h1>Pohon Kinerja {SelectedOpd?.label}</h1>
+                    </div>
+                    <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
+                        <TahunNull />
+                    </div>
+                </>
+            )
+        }
     }
 
     return(
         <>
             <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
-                <h1>Pohon Kinerja {SelectedOpd?.label}</h1>
+                {User?.roles == 'super_admin' ? 
+                    <h1 className="font-bold">Pohon Kinerja {SelectedOpd?.label}</h1>
+                :
+                    <h1 className="font-bold">Pohon Cascading</h1>
+                }
             </div>
             <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
                 <div className="tf-tree text-center mt-3">
@@ -138,7 +177,11 @@ const PokinOpd = () => {
                         <li>
                             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg">
                                 <div className="header flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black">
+                                {User?.roles == 'super_admin' ?
                                     <h1>Pohon Kinerja OPD</h1>
+                                    :
+                                    <h1>Pohon Cascading OPD</h1>
+                                }
                                 </div>
                                 <div className="body flex justify-center my-3">
                                     <table className="w-full">
@@ -159,13 +202,14 @@ const PokinOpd = () => {
                                     </table>
                                 </div>
                                 {/* button */}
-                                <div className="flex justify-center border my-3 py-3 border-black">
-                                    <ButtonGreenBorder onClick={newChild}>
-                                        <TbCirclePlus />
-                                        Strategic
-                                    </ButtonGreenBorder>
-                                </div>
-                                <ModalDasarHukum isOpen={NewStrategic} onClose={() => {setNewStrategic(false)}}/>
+                                {User?.roles == 'admin_opd'|| User?.roles == 'super_admin' &&
+                                    <div className="flex justify-center border my-3 py-3 border-black">
+                                        <ButtonGreenBorder onClick={newChild}>
+                                            <TbCirclePlus />
+                                            Strategic
+                                        </ButtonGreenBorder>
+                                    </div>
+                                }
                             </div>
                             {Pokin?.childs ? (
                             <ul>

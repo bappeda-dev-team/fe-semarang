@@ -7,6 +7,7 @@ import { AlertNotification } from "@/components/global/Alert";
 import { LoadingClip } from "@/components/global/Loading";
 import { useParams, useRouter } from "next/navigation";
 import Select from "react-select";
+import { getToken } from "@/components/lib/Cookie";
 
 interface OptionTypeString {
     value: string;
@@ -34,8 +35,6 @@ interface lembaga {
     is_active: boolean; 
 }
 
-
-
 export const FormMasterOpd = () => {
 
     const {
@@ -52,6 +51,7 @@ export const FormMasterOpd = () => {
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const router = useRouter();
+    const token = getToken();
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -69,7 +69,8 @@ export const FormMasterOpd = () => {
           const response = await fetch(`${API_URL}/opd/create`, {
               method: "POST",
               headers: {
-                  "Content-Type" : "application/json",
+                Authorization: `${token}`,
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify(formData),
           });
@@ -91,6 +92,7 @@ export const FormMasterOpd = () => {
         const response = await fetch(`${API_URL}/lembaga/findall`,{
           method: 'GET',
           headers: {
+            Authorization: `${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -383,8 +385,9 @@ export const FormEditMasterOpd = () => {
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const [idNull, setIdNull] = useState<boolean | null>(null);
     const {id} = useParams();
-    const router = useRouter();
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
+    const router = useRouter();
+    const token = getToken();
 
     const fetchLembaga = async() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -393,6 +396,7 @@ export const FormEditMasterOpd = () => {
         const response = await fetch(`${API_URL}/lembaga/findall`,{
           method: 'GET',
           headers: {
+            Authorization: `${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -417,7 +421,12 @@ export const FormEditMasterOpd = () => {
         const fetchIdOpd = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/opd/detail/${id}`);
+                const response = await fetch(`${API_URL}/opd/detail/${id}`, {
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                      },
+                });
                 if(!response.ok){
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
@@ -462,7 +471,7 @@ export const FormEditMasterOpd = () => {
             }
         }
         fetchIdOpd();
-    },[id, reset]);
+    },[id, reset, token]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -480,7 +489,8 @@ export const FormEditMasterOpd = () => {
         const response = await fetch(`${API_URL}/opd/update/${id}`, {
             method: "PUT",
             headers: {
-                "Content-Type" : "application/json",
+              Authorization: `${token}`,
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify(formData),
         });

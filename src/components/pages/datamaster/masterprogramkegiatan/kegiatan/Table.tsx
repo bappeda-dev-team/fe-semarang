@@ -4,6 +4,7 @@ import { ButtonGreen, ButtonRed } from "@/components/global/Button";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { useState, useEffect } from "react";
 import { LoadingClip } from "@/components/global/Loading";
+import { getToken } from "@/components/lib/Cookie";
 
 interface kegiatan {
     id: string;
@@ -23,19 +24,28 @@ const Table = () => {
     const [Error, setError] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
+    const token = getToken();
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchOpd = async() => {
             setLoading(true)
             try{
-                const response = await fetch(`${API_URL}/kegiatan/findall`);
+                const response = await fetch(`${API_URL}/kegiatan/findall`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 const result = await response.json();
                 const data = result.data;
                 if(data == null){
                     setDataNull(true);
                     setKegiatan([]);
+                } else if(result.code === 401){
+                    setError(true);
                 } else {
+                    setError(false);
                     setDataNull(false);
                     setKegiatan(data);
                 }
@@ -48,13 +58,17 @@ const Table = () => {
             }
         }
         fetchOpd();
-    }, []);
+    }, [token]);
 
     const hapusKegiatan = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
             const response = await fetch(`${API_URL}/kegiatan/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")

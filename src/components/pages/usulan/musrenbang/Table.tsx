@@ -6,6 +6,7 @@ import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { getOpdTahun } from "@/components/lib/Cookie";
 import { TahunNull } from "@/components/global/OpdTahunNull";
+import { getToken } from "@/components/lib/Cookie";
 
 interface musrenbang {
     id: string;
@@ -27,6 +28,7 @@ const Table = () => {
     const [DataNull, setDataNull] = useState<boolean | null>(null);
     const [Tahun, setTahun] = useState<any>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
+    const token = getToken();
     
     useEffect(() => {
         const data = getOpdTahun();
@@ -51,7 +53,12 @@ const Table = () => {
         const fetchMusrenbang = async() => {
             setLoading(true)
             try{
-                const response = await fetch(`${API_URL}/usulan_musrebang/findall`);
+                const response = await fetch(`${API_URL}/usulan_musrebang/findall`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 const result = await response.json();
                 const data = result.usulan_musrebang;
                 if(data == null){
@@ -72,13 +79,17 @@ const Table = () => {
             }
         }
         fetchMusrenbang();
-    }, []);
+    }, [token]);
 
     const hapusMusrenbang = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
             const response = await fetch(`${API_URL}/usulan_musrebang/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")

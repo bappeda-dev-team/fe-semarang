@@ -2,19 +2,25 @@
 
 import { ButtonGreen, ButtonRed } from "@/components/global/Button";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
-import { useState, useEffect } from "react";
 import { LoadingClip } from "@/components/global/Loading";
+import { useState, useEffect } from "react";
 import { getToken } from "@/components/lib/Cookie";
 
-interface bidangurusan {
+interface User {
     id: string;
-    nama_bidang_urusan: string;
-    kode_bidang_urusan: string;
+    nip: string;
+    email: string;
+    is_active: boolean;
+    role: roles[];
+}
+interface roles {
+    id: string;
+    role: string;
 }
 
 const Table = () => {
 
-    const [BidangUrusan, setBidangUrusan] = useState<bidangurusan[]>([]);
+    const [User, setUser] = useState<User[]>([]);
     const [Error, setError] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
@@ -22,10 +28,10 @@ const Table = () => {
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchOpd = async() => {
+        const fetchUrusan = async() => {
             setLoading(true)
             try{
-                const response = await fetch(`${API_URL}/bidang_urusan/findall`, {
+                const response = await fetch(`${API_URL}/user/findall`, {
                     headers: {
                       Authorization: `${token}`,
                       'Content-Type': 'application/json',
@@ -35,15 +41,18 @@ const Table = () => {
                 const data = result.data;
                 if(data == null){
                     setDataNull(true);
-                    setBidangUrusan([]);
+                    setUser([]);
+                } else if(data.code == 500){
+                    setError(true);
+                    setUser([]);
                 } else if(result.code === 401){
                     setError(true);
                 } else {
                     setError(false);
                     setDataNull(false);
-                    setBidangUrusan(data);
+                    setUser(data);
                 }
-                setBidangUrusan(data);
+                setUser(data);
             } catch(err){
                 setError(true);
                 console.error(err)
@@ -51,13 +60,13 @@ const Table = () => {
                 setLoading(false);
             }
         }
-        fetchOpd();
+        fetchUrusan();
     }, [token]);
 
-    const hapusBidangUrusan = async(id: any) => {
+    const hapusUrusan = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
-            const response = await fetch(`${API_URL}/bidang_urusan/delete/${id}`, {
+            const response = await fetch(`${API_URL}/user/delete/${id}`, {
                 method: "DELETE",
                 headers: {
                   Authorization: `${token}`,
@@ -67,8 +76,8 @@ const Table = () => {
             if(!response.ok){
                 alert("cant fetch data")
             }
-            setBidangUrusan(BidangUrusan.filter((data) => (data.id !== id)))
-            AlertNotification("Berhasil", "Data Perangkat Daerah Berhasil Dihapus", "success", 1000);
+            setUser(User.filter((data) => (data.id !== id)))
+            AlertNotification("Berhasil", "Data User Berhasil Dihapus", "success", 1000);
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
         }
@@ -95,8 +104,10 @@ const Table = () => {
                     <thead>
                         <tr className="bg-[#99CEF5] text-white">
                             <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[500px]">Nama Bidang Urusan</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Kode Bidang Urusan</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">NIP</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Email</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Status</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[300px]">Roles</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</th>
                         </tr>
                     </thead>
@@ -108,20 +119,28 @@ const Table = () => {
                             </td>
                         </tr>
                     :
-                        BidangUrusan.map((data, index) => (
+                        User.map((data, index) => (
                         <tr key={data.id}>
                             <td className="border-r border-b px-6 py-4">{index + 1}</td>
-                            <td className="border-r border-b px-6 py-4">{data.nama_bidang_urusan ? data.nama_bidang_urusan : "-"}</td>
-                            <td className="border-r border-b px-6 py-4 text-center">{data.kode_bidang_urusan ? data.kode_bidang_urusan : "-"}</td>
+                            <td className="border-r border-b px-6 py-4">{data.nip? data.nip : "-"}</td>
+                            <td className="border-r border-b px-6 py-4 text-center">{data.email ? data.email : "-"}</td>
+                            <td className="border-r border-b px-6 py-4 text-center">{data.is_active === true ? 'Aktif' : 'tidak aktif'}</td>
+                            {data.role ? 
+                                <td className="border-r border-b px-6 py-4 text-center">
+                                    {data.role ? data.role.map((r: any) => r.role).join(", ") : "-"}
+                                </td>
+                            :
+                                <td className="border-r border-b px-6 py-4 text-center">-</td>
+                            }
                             <td className="border-r border-b px-6 py-4">
                                 <div className="flex flex-col jutify-center items-center gap-2">
-                                    <ButtonGreen className="w-full" halaman_url={`/DataMaster/masterprogramkegiatan/bidangurusan/${data.id}`}>Edit</ButtonGreen>
+                                    <ButtonGreen className="w-full" halaman_url={`/DataMaster/masteruser/${data.id}`}>Edit</ButtonGreen>
                                     <ButtonRed 
                                         className="w-full"
                                         onClick={() => {
-                                            AlertQuestion("Hapus?", "Hapus Bidang Urusan yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                            AlertQuestion("Hapus?", "Hapus urusan yang dipilih?", "question", "Hapus", "Batal").then((result) => {
                                                 if(result.isConfirmed){
-                                                    hapusBidangUrusan(data.id);
+                                                    hapusUrusan(data.id);
                                                 }
                                             });
                                         }}

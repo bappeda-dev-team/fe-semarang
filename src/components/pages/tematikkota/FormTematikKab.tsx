@@ -6,7 +6,8 @@ import { ButtonGreen, ButtonRedBorder, ButtonSkyBorder, ButtonRed } from "@/comp
 import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 import { useParams, useRouter } from "next/navigation";
-import Select from 'react-select'
+import Select from 'react-select';
+import { getToken } from "@/components/lib/Cookie";
 
 interface OptionTypeString {
     value: string;
@@ -30,8 +31,9 @@ export const FormTematikKab = () => {
     const [NamaPohon, setNamaPohon] = useState<string>('');
     const [Keterangan, setKeterangan] = useState<string>('');
     const [Tahun, setTahun] = useState<OptionTypeString | null>(null);
-    const router = useRouter();
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const router = useRouter();
+    const token = getToken();
 
     const TahunOption = [
         {label: "Tahun 2019", value: "2019"},
@@ -62,7 +64,8 @@ export const FormTematikKab = () => {
           const response = await fetch(`${API_URL}/pohon_kinerja_admin/create`, {
               method: "POST",
               headers: {
-                  "Content-Type" : "application/json",
+                Authorization: `${token}`,
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify(formData),
           });
@@ -228,6 +231,7 @@ export const FormEditTematikKab = () => {
     const [idNull, setIdNull] = useState<boolean | null>(null);
     const router = useRouter();
     const {id} = useParams();
+    const token = getToken();
     
     const TahunOption = [
         {label: "Tahun 2019", value: "2019"},
@@ -249,7 +253,12 @@ export const FormEditTematikKab = () => {
         const fetchTematikKab = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/pohon_kinerja_admin/detail/${id}`);
+                const response = await fetch(`${API_URL}/pohon_kinerja_admin/detail/${id}`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 if(!response.ok){
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
@@ -282,7 +291,7 @@ export const FormEditTematikKab = () => {
             }
         }
         fetchTematikKab();
-    },[id, reset]);
+    },[id, reset, token]);
     
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -299,7 +308,8 @@ export const FormEditTematikKab = () => {
             const response = await fetch(`${API_URL}/pohon_kinerja_admin/update/${id}`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type" : "application/json",
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });

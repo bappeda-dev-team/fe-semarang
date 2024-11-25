@@ -5,6 +5,7 @@ import {FiAperture} from "react-icons/fi"
 import Select from "react-select"
 import { getOpdTahun, getUser } from "../lib/Cookie"
 import { AlertNotification } from "./Alert"
+import { getToken } from "../lib/Cookie"
 
 interface OptionType {
     value: number;
@@ -23,6 +24,7 @@ const Header = () => {
     const [user, setUser] = useState<any>(null);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
+    const token = getToken();
 
     // Fungsi untuk menyimpan nilai ke cookies
     const setCookie = (name: string, value: any) => {
@@ -54,30 +56,31 @@ const Header = () => {
     },[])
 
     const fetchOpd = async() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        setIsLoading(true);
-        try{ 
-          const response = await fetch(`${API_URL}/opd/findall`,{
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          if(!response.ok){
-            throw new Error('cant fetch data opd');
-          }
-          const data = await response.json();
-          const opd = data.data.map((item: any) => ({
-            value : item.kode_opd,
-            label : item.nama_opd,
-          }));
-          setOpdOption(opd);
-        } catch (err){
-          console.log('gagal mendapatkan data opd');
-        } finally {
-          setIsLoading(false);
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      setIsLoading(true);
+      try{ 
+        const response = await fetch(`${API_URL}/opd/findall`,{
+          method: 'GET',
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if(!response.ok){
+          throw new Error('cant fetch data opd');
         }
-      };
+        const data = await response.json();
+        const opd = data.data.map((item: any) => ({
+          value : item.kode_opd,
+          label : item.nama_opd,
+        }));
+        setOpdOption(opd);
+      } catch (err){
+        console.log('gagal mendapatkan data opd');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
     const handleTahun = (selectedOption: { value: number, label: string } | null) => {
       if (selectedOption) {
@@ -118,11 +121,15 @@ const Header = () => {
     return(
         <div className="flex flex-wrap gap-2 justify-between items-center border-b bg-gray-800 py-4 pr-2 pl-3">
             <div className="flex flex-col text-white max-w-[400px]">
-                <h1 className="font-light text-sm">{Opd ? Opd?.label : "Pilih OPD"}</h1>
+                {user?.roles == 'super_admin' ? 
+                    <h1 className="font-light text-sm">{Opd ? Opd?.label : "Pilih OPD"}</h1>
+                    :
+                    <h1 className="font-light text-sm">{user?.email}</h1>
+                }
                 <h1 className="font-light text-sm">{Tahun ? Tahun?.value : "Pilih Tahun"} - Kab. Madiun</h1>
             </div>
             <div className="flex flex-wrap items-center">
-                {/* {user == 'super_admin' && */}
+                {user?.roles == 'super_admin' &&
                     <Select
                         styles={{
                             control: (baseStyles) => ({
@@ -145,7 +152,7 @@ const Header = () => {
                             }
                         }}
                     />
-                {/* } */}
+                }
                 <Select
                     styles={{
                         control: (baseStyles) => ({
@@ -176,16 +183,25 @@ const Header = () => {
                 >
                     Aktifkan
                 </button>
-                {user == "super_admin" && 
+                {user?.roles == "super_admin" && 
                     <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">Super Admin</button>
                 }
-                {user == "admin_opd" && 
+                {user?.roles == "admin_opd" && 
                     <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">Admin Opd</button>
                 }
-                {user == "asn" && 
+                {user?.roles == "eselon_1" && 
                     <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">ASN</button>
                 }
-                {user == undefined && 
+                {user?.roles == "eselon_2" && 
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">ASN</button>
+                }
+                {user?.roles == "eselon_3" && 
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">ASN</button>
+                }
+                {user?.roles == "eselon_4" && 
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">ASN</button>
+                }
+                {user?.roles == undefined && 
                     <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">Loading</button>
                 }
             </div>

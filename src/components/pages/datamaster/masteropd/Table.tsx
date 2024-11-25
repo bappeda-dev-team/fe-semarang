@@ -4,6 +4,7 @@ import { ButtonGreen, ButtonRed } from "@/components/global/Button";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { useState, useEffect } from "react";
 import { LoadingClip } from "@/components/global/Loading";
+import { getToken } from "@/components/lib/Cookie";
 
 interface opd {
     id: string;
@@ -33,21 +34,30 @@ const Table = () => {
     const [Error, setError] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
+    const token = getToken();
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchOpd = async() => {
             setLoading(true)
             try{
-                const response = await fetch(`${API_URL}/opd/findall`);
+                const response = await fetch(`${API_URL}/opd/findall`, {
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                      },
+                });
                 const result = await response.json();
                 const data = result.data;
                 if(data == null){
                     setDataNull(true);
                     setOpd([]);
+                } else if(result.code === 401){
+                    setError(true);
                 } else {
                     setDataNull(false);
                     setOpd(data);
+                    setError(false);
                 }
                 setOpd(data);
             } catch(err){
@@ -58,13 +68,17 @@ const Table = () => {
             }
         }
         fetchOpd();
-    }, []);
+    }, [token]);
 
     const hapusOpd = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
             const response = await fetch(`${API_URL}/opd/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                  },
             })
             if(!response.ok){
                 alert("cant fetch data")

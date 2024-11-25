@@ -3,6 +3,7 @@ import { TbArrowGuide, TbCirclePlus, TbPencil, TbTrash } from 'react-icons/tb';
 import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
 import {FormPohonPemda, FormAmbilPohon, FormEditPohon} from './FormPohonPemda';
+import { getToken } from '../Cookie';
 
 interface pohon {
     tema: any;
@@ -19,6 +20,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [strategicPohons, setStrategicPohons] = useState(tema.strategics || []);
     const [edit, setEdit] = useState<boolean>(false);
     const [Edited, setEdited] = useState<any | null>(null);
+    const token = getToken();
     
     // Adds a new form entry
     const newChild = () => {
@@ -40,6 +42,10 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         try{
             const response = await fetch(`${API_URL}/pohon_kinerja_admin/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")
@@ -56,6 +62,10 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         try{
             const response = await fetch(`${API_URL}/pohon_kinerja_opd/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")
@@ -235,6 +245,7 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [strategicPohons, setStrategicPohons] = useState(tema.strategics || []);
     const [edit, setEdit] = useState<boolean>(false);
     const [Edited, setEdited] = useState<any | null>(null);
+    const token = getToken();
     
     // Adds a new form entry
     const newChild = () => {
@@ -256,6 +267,10 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         try{
             const response = await fetch(`${API_URL}/pohon_kinerja_admin/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")
@@ -275,6 +290,10 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         try{
             const response = await fetch(`${API_URL}/pohon_kinerja_opd/delete/${id}`, {
                 method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
             })
             if(!response.ok){
                 alert("cant fetch data")

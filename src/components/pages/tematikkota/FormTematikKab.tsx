@@ -1,6 +1,6 @@
 'use client'
 
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { ButtonGreen, ButtonRedBorder, ButtonSkyBorder, ButtonRed } from "@/components/global/Button";
 import { LoadingClip } from "@/components/global/Loading";
@@ -19,6 +19,15 @@ interface FormValue {
     jenis_pohon: string;
     keterangan: string;
     tahun: OptionTypeString;
+    indikator: indikator[];
+}
+interface indikator {
+    nama_indikator: string;
+    targets: target[];
+}
+type target = {
+    target: string;
+    satuan: string;
 }
 
 export const FormTematikKab = () => {
@@ -50,6 +59,11 @@ export const FormTematikKab = () => {
         {label: "Tahun 2030", value: "2030"},
     ];
 
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "indikator",
+    });
+
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
       const formData = {
           //key : value
@@ -58,6 +72,15 @@ export const FormTematikKab = () => {
           jenis_pohon : "Tematik",
           level_pohon : 0,
           tahun: data.tahun?.value,
+          ...(data.indikator && {
+            indikator: data.indikator.map((ind) => ({
+                indikator: ind.nama_indikator,
+                target: ind.targets.map((t) => ({
+                    target: t.target,
+                    satuan: t.satuan,
+                })),
+            })),
+        }),
       };
     //   console.log(formData);
       try{
@@ -201,6 +224,85 @@ export const FormTematikKab = () => {
                         )}
                     />
                 </div>
+                <label className="uppercase text-base font-bold text-gray-700 my-2">
+                    indikator sasaran :
+                </label>
+                {fields.map((field, index) => (
+                    <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
+                        <Controller
+                            name={`indikator.${index}.nama_indikator`}
+                            control={control}
+                            defaultValue={field.nama_indikator}
+                            render={({ field }) => (
+                                <div className="flex flex-col py-3">
+                                    <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                        Nama Indikator {index + 1} :
+                                    </label>
+                                    <input
+                                        {...field}
+                                        className="border px-4 py-2 rounded-lg"
+                                        placeholder={`Masukkan nama indikator ${index + 1}`}
+                                    />
+                                </div>
+                            )}
+                        />
+                        {field.targets.map((_, subindex) => (
+                            <>
+                            <Controller
+                                name={`indikator.${index}.targets.${subindex}.target`}
+                                control={control}
+                                defaultValue={_.target}
+                                render={({ field }) => (
+                                    <div className="flex flex-col py-3">
+                                        <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                            Target :
+                                        </label>
+                                        <input
+                                            {...field}
+                                            type="text"
+                                            className="border px-4 py-2 rounded-lg"
+                                            placeholder="Masukkan target"
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <Controller
+                                name={`indikator.${index}.targets.${subindex}.satuan`}
+                                control={control}
+                                defaultValue={_.satuan}
+                                render={({ field }) => (
+                                    <div className="flex flex-col py-3">
+                                        <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                            Satuan :
+                                        </label>
+                                        <input
+                                            {...field}
+                                            className="border px-4 py-2 rounded-lg"
+                                            placeholder="Masukkan satuan"
+                                        />
+                                    </div>
+                                )}
+                            />
+                            </>
+                        ))}
+                        {index >= 0 && (
+                            <ButtonRedBorder
+                                type="button"
+                                onClick={() => remove(index)}
+                                className="w-[200px] my-3"
+                            >
+                                Hapus
+                            </ButtonRedBorder>
+                        )}
+                    </div>
+                ))}
+                <ButtonSkyBorder
+                    className="mb-3 mt-2 w-full"
+                    type="button"
+                    onClick={() => append({ nama_indikator: "", targets: [{ target: "", satuan: "" }] })}
+                >
+                    Tambah Indikator
+                </ButtonSkyBorder>
                 <ButtonGreen
                     type="submit"
                     className="my-4"
@@ -247,6 +349,11 @@ export const FormEditTematikKab = () => {
         {label: "Tahun 2029", value: "2029"},
         {label: "Tahun 2030", value: "2030"},
     ];
+
+    const { fields, append, remove, replace } = useFieldArray({
+        control,
+        name: "indikator",
+    });
     
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -283,25 +390,50 @@ export const FormEditTematikKab = () => {
                         setTahun(tahun);
                         reset((prev) => ({ ...prev, tahun: tahun }))
                     }
+                    if(data.indikators){
+                        reset({
+                            indikator: data.indikators?.map((item: indikator) => ({
+                                nama_indikator: item.nama_indikator,
+                                targets: item.targets.map((t: target) => ({
+                                    target: t.target,
+                                    satuan: t.satuan,
+                                })),
+                            })),
+                        });
+                        replace(data.indikators.map((item: indikator) => ({
+                            indikator: item.nama_indikator,
+                            targets: item.targets,
+                        })));
+                    }
                 }
             } catch(err) {
                 setError('gagal mendapatkan data, periksa koneksi internet atau database server')
+                console.error(err);
             } finally {
                 setLoading(false);
             }
         }
         fetchTematikKab();
-    },[id, reset, token]);
+    },[id, reset, token, replace]);
     
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
-          //key : value
-          nama_pohon : data.nama_pohon,
-          jenis_pohon : "Tematik",
-          level_pohon : 0,
-          keterangan: data.keterangan,
-          tahun: data.tahun?.value,
+            //key : value
+            nama_pohon : data.nama_pohon,
+            jenis_pohon : "Tematik",
+            level_pohon : 0,
+            keterangan: data.keterangan,
+            tahun: data.tahun?.value,
+            ...(data.indikator && {
+                indikator: data.indikator.map((ind) => ({
+                    indikator: ind.nama_indikator,
+                    target: ind.targets.map((t) => ({
+                        target: t.target,
+                        satuan: t.satuan,
+                    })),
+                })),
+            }),
       };
     //   console.log(formData);
         try{
@@ -467,6 +599,85 @@ export const FormEditTematikKab = () => {
                             )}
                         />
                     </div>
+                    <label className="uppercase text-base font-bold text-gray-700 my-2">
+                        indikator sasaran :
+                    </label>
+                    {fields.map((field, index) => (
+                        <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
+                            <Controller
+                                name={`indikator.${index}.nama_indikator`}
+                                control={control}
+                                defaultValue={field.nama_indikator}
+                                render={({ field }) => (
+                                    <div className="flex flex-col py-3">
+                                        <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                            Nama Indikator {index + 1} :
+                                        </label>
+                                        <input
+                                            {...field}
+                                            className="border px-4 py-2 rounded-lg"
+                                            placeholder={`Masukkan nama indikator ${index + 1}`}
+                                        />
+                                    </div>
+                                )}
+                            />
+                            {field.targets.map((_, subindex) => (
+                                <>
+                                <Controller
+                                    name={`indikator.${index}.targets.${subindex}.target`}
+                                    control={control}
+                                    defaultValue={_.target}
+                                    render={({ field }) => (
+                                        <div className="flex flex-col py-3">
+                                            <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                Target :
+                                            </label>
+                                            <input
+                                                {...field}
+                                                type="text"
+                                                className="border px-4 py-2 rounded-lg"
+                                                placeholder="Masukkan target"
+                                            />
+                                        </div>
+                                    )}
+                                />
+                                <Controller
+                                    name={`indikator.${index}.targets.${subindex}.satuan`}
+                                    control={control}
+                                    defaultValue={_.satuan}
+                                    render={({ field }) => (
+                                        <div className="flex flex-col py-3">
+                                            <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                Satuan :
+                                            </label>
+                                            <input
+                                                {...field}
+                                                className="border px-4 py-2 rounded-lg"
+                                                placeholder="Masukkan satuan"
+                                            />
+                                        </div>
+                                    )}
+                                />
+                                </>
+                            ))}
+                            {index >= 0 && (
+                                <ButtonRedBorder
+                                    type="button"
+                                    onClick={() => remove(index)}
+                                    className="w-[200px] my-3"
+                                >
+                                    Hapus
+                                </ButtonRedBorder>
+                            )}
+                        </div>
+                    ))}
+                    <ButtonSkyBorder
+                        className="mb-3 mt-2 w-full"
+                        type="button"
+                        onClick={() => append({ nama_indikator: "", targets: [{ target: "", satuan: "" }] })}
+                    >
+                        Tambah Indikator
+                    </ButtonSkyBorder>
                     <ButtonGreen
                         type="submit"
                         className="my-4"

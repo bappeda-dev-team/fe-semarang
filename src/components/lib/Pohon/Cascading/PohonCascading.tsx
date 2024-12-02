@@ -531,7 +531,7 @@ export const TablePohonEdited = (props: any) => {
   const keterangan = props.item.keterangan;
   const opd = props.item.nama_opd;
   const jenis = props.item.jenis_pohon;
-  const indikator = props.item.indikators;
+  const indikator = props.item.indikator;
   const pelaksana = props.item.pelaksana;
   return (
     <table className='w-full'>

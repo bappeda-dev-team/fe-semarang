@@ -1,7 +1,7 @@
 'use client'
 
 import '@/components/pages/Pohon/treeflex.css'
-import { getOpdTahun } from '@/components/lib/Cookie';
+import { Controller } from "react-hook-form";
 import { useState, useEffect } from 'react';
 import { TbCircleCheckFilled, TbCircleLetterXFilled, TbCirclePlus } from 'react-icons/tb';
 import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder } from '@/components/global/Button';
@@ -9,12 +9,14 @@ import { LoadingBeat } from '@/components/global/Loading';
 import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
 import { PohonOpd } from '@/components/lib/Pohon/Opd/PohonOpd';
 import { FormPohonOpd } from '@/components/lib/Pohon/Opd/FormPohonOpd';
-import { getUser, getToken } from '@/components/lib/Cookie';
+import { getUser, getToken, getOpdTahun } from '@/components/lib/Cookie';
 import Select from 'react-select';
+import { AlertNotification } from '@/components/global/Alert';
 
-interface OptionType {
+interface PokinPemda {
     value: number;
     label: string;
+    jenis: string;
 }
 interface opd {
     kode_opd: string;
@@ -44,14 +46,15 @@ const PokinOpd = () => {
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [Pokin, setPokin] = useState<pokin | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
-    const [IsLoading, setIsLoading] = useState<boolean | null>(null);
-    const [OptionPokinPemda, setOptionPokinPemda] = useState<OptionType[]>([]);
-    const [PokinPemda, setPokinPemda] = useState<OptionType | null>(null);
+    const [IsLoading, setIsLoading] = useState<boolean>(false);
+    const [OptionPokinPemda, setOptionPokinPemda] = useState<PokinPemda[]>([]);
+    const [OptionPohonParent, setOptionPohonParent] = useState<PokinPemda[]>([]);
+    const [PohonPemda, setPohonPemda] = useState<PokinPemda | null>(null);
+    const [PohonParent, setPohonParent] = useState<PokinPemda | null>(null);
     const [error, setError] = useState<string>('');
     const token = getToken();
 
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
-    const [NewStrategic, setNewStrategic] = useState<boolean>(false);
     const [Deleted, setDeleted] = useState<boolean>(false);
 
     useEffect(() => {
@@ -94,7 +97,8 @@ const PokinOpd = () => {
         const data = await response.json();
         const pokinPemda = data.data.map((item: any) => ({
           value : item.id,
-          label : item.nama_pohon,
+          label : `${item.jenis_pohon} - ${item.nama_pohon}`,
+          jenis: item.jenis_pohon,
         }));
         setOptionPokinPemda(pokinPemda);
       } catch (err){
@@ -103,6 +107,109 @@ const PokinOpd = () => {
         setIsLoading(false);
       }
     };
+    const fetchPohonParent = async () => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        let url = ''; // Deklarasikan di luar blok
+        setIsLoading(true);
+        try {
+            if (PohonPemda?.jenis == 'Tactical Pemda') {
+                if (User?.roles == 'super_admin') {
+                    url = `pohon_kinerja/strategic/${SelectedOpd?.value}/${Tahun?.value}`;
+                } else {
+                    url = `pohon_kinerja/strategic/${User?.kode_opd}/${Tahun?.value}`;
+                }
+            } else if (PohonPemda?.jenis == 'Operational Pemda') {
+                if (User?.roles == 'super_admin') {
+                    url = `pohon_kinerja/tactical/${SelectedOpd?.value}/${Tahun?.value}`;
+                } else {
+                    url = `pohon_kinerja/tactical/${User?.kode_opd}/${Tahun?.value}`;
+                }
+            }
+    
+            if (!url) {
+                throw new Error('URL tidak valid.');
+            }
+    
+            const response = await fetch(`${API_URL}/${url}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('cant fetch data opd');
+            }
+            const data = await response.json();
+            const parent = data.data.map((item: any) => ({
+                value: item.id,
+                label: `${item.jenis_pohon} - ${item.nama_pohon}`,
+                jenis: item.jenis_pohon,
+            }));
+            setOptionPohonParent(parent);
+        } catch (err) {
+            console.log('gagal mendapatkan data pohon dari opd', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+
+    const terimaPohonPemda = async(id: number) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const formData = {
+            id: id,
+            parent: PohonParent?.value,
+            jenis_pohon: PohonPemda?.jenis,
+        }
+        // console.log(formData);
+        try{
+            const response = await fetch(`${API_URL}/pohon_kinerja_admin/clone_pokin_pemda/create`, {
+                method: "POST",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+            if(!response.ok){
+                alert("cant fetch data")
+            }
+            AlertNotification("Berhasil", "Pohon dari pemda di terima", "success", 1000);
+            setDeleted((prev) => !prev);
+            setPohonPemda(null);
+        } catch(err){
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+            console.error(err);
+        }
+    }
+    const tolakPohonPemda = async(id: number) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const formData = {
+            id: id,
+        }
+        // console.log(formData);
+        try{
+            const response = await fetch(`${API_URL}/pohon_kinerja_admin/tolak_pokin/${id}`, {
+                method: "PUT",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+            if(!response.ok){
+                alert("cant fetch data")
+            }
+            AlertNotification("Berhasil", "Data pohon berhasil di tolak", "success", 1000);
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 1000);
+        } catch(err){
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+            console.error(err);
+        }
+    }
 
     // Adds a new form entry
     const newChild = () => {
@@ -223,15 +330,20 @@ const PokinOpd = () => {
                             </label>
                             <Select
                                 placeholder="Masukkan Perangkat Daerah"
-                                value={PokinPemda}
+                                value={PohonPemda}
                                 options={OptionPokinPemda}
                                 isSearchable
                                 isClearable
+                                isLoading={IsLoading}
                                 onMenuOpen={() => {
                                     if (OptionPokinPemda.length === 0) {
                                         fetchPohonPemda();
                                     }
                                 }}
+                                onChange={(option) => {
+                                    setPohonPemda(option);
+                                }}
+                                onMenuClose={() => setOptionPokinPemda([])}
                                 styles={{
                                     control: (baseStyles) => ({
                                     ...baseStyles,
@@ -241,29 +353,57 @@ const PokinOpd = () => {
                                 }}
                             />
                         </div>
-                        <div className="mb-3">
-                            <label htmlFor="" className='uppercase text-xs font-bold text-gray-700 my-2 ml-1'>
-                                Strategic
-                            </label>
-                            <Select
-                                placeholder="Pilih Strategic"
-                                isSearchable
-                                isClearable
-                                styles={{
-                                    control: (baseStyles) => ({
-                                    ...baseStyles,
-                                    borderRadius: '8px',
-                                    textAlign: 'start',
-                                    })
-                                }}
-                            />
-                        </div>
+                        {(PohonPemda?.jenis == 'Tactical Pemda' || PohonPemda?.jenis == 'Operational Pemda') &&
+                            <div className="mb-3">
+                                <label htmlFor="" className='uppercase text-xs font-bold text-gray-700 my-2 ml-1'>
+                                    {PohonPemda?.jenis == 'Tactical Pemda' ? 'Strategic':'Tactical'}
+                                </label>
+                                <Select
+                                    placeholder="Masukkan Perangkat Daerah"
+                                    value={PohonParent}
+                                    options={OptionPohonParent}
+                                    isSearchable
+                                    isClearable
+                                    isLoading={IsLoading}
+                                    onMenuOpen={() => fetchPohonParent()}
+                                    onChange={(option) => {
+                                        setPohonParent(option);
+                                    }}
+                                    onMenuClose={() => setOptionPohonParent([])}
+                                    styles={{
+                                        control: (baseStyles) => ({
+                                        ...baseStyles,
+                                        borderRadius: '8px',
+                                        textAlign: 'start',
+                                        })
+                                    }}
+                                />
+                            </div>
+                        }
                         <div className="flex justify-between my-2">
-                            <ButtonRedBorder className='w-full mx-2'>
+                            <ButtonRedBorder 
+                                className='w-full mx-2'
+                                onClick={() => {
+                                    if(PohonPemda?.value == null || undefined){
+                                        AlertNotification("Pilih", "Pilih Pohon dari pemda terlebih dahulu", "warning", 1000);
+                                    } else {
+                                        tolakPohonPemda(PohonPemda?.value);
+                                    }
+                                }} 
+                            >
                                 <TbCircleLetterXFilled className='mr-1'/>
                                 Tolak
                             </ButtonRedBorder>
-                            <ButtonSkyBorder className='w-full mx-2'>
+                            <ButtonSkyBorder
+                                onClick={() => {
+                                    if(PohonPemda?.value == null || undefined){
+                                        AlertNotification("Pilih", "Pilih Pohon dari pemda terlebih dahulu", "warning", 1000);
+                                    } else {
+                                        terimaPohonPemda(PohonPemda?.value);
+                                    }
+                                }} 
+                                className='w-full mx-2'
+                            >
                                 <TbCircleCheckFilled className='mr-1'/>
                                 Terima
                             </ButtonSkyBorder>

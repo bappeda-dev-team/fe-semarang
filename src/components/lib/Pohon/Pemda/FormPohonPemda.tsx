@@ -859,31 +859,31 @@ export const FormEditPohon: React.FC<{
       }
     };
     const fetchPelaksana = async() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        setIsLoading(true);
-        try{ 
-          const response = await fetch(`${API_URL}/pegawai/findall`,{
-            method: 'GET',
-            headers: {
-              Authorization: `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if(!response.ok){
-            throw new Error('cant fetch data opd');
-          }
-          const data = await response.json();
-          const opd = data.data.map((item: any) => ({
-            value : item.id,
-            label : item.nama_pegawai,
-          }));
-          setPelaksanaOption(opd);
-        } catch (err){
-          console.log('gagal mendapatkan data opd');
-        } finally {
-          setIsLoading(false);
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      setIsLoading(true);
+      try{ 
+        const response = await fetch(`${API_URL}/pegawai/findall`,{
+          method: 'GET',
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if(!response.ok){
+          throw new Error('cant fetch data opd');
         }
-      };
+        const data = await response.json();
+        const opd = data.data.map((item: any) => ({
+          value : item.id,
+          label : item.nama_pegawai,
+        }));
+        setPelaksanaOption(opd);
+      } catch (err){
+        console.log('gagal mendapatkan data opd');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -900,9 +900,6 @@ export const FormEditPohon: React.FC<{
                 }
                 const result = await response.json();
                 const data = result.data;
-                if(data.parent){
-                    setParent(data.parent);
-                }
                 if(data.parent){
                     setParent(data.parent);
                 }

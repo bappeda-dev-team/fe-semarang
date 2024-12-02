@@ -13,8 +13,18 @@ interface tematik {
     parent: number;
     tema: string;
     keterangan: string;
-    indikators: string; 
+    indikators: indikator[]; 
 }
+interface indikator {
+    id_indikator: string;
+    nama_indikator: string;
+    targets: target[];
+}
+type target = {
+    id_target: string;
+    target: string;
+    satuan: string;
+};
 
 const Table = () => {
 
@@ -109,14 +119,12 @@ const Table = () => {
     } else if(Error){
         return (
             <div className="border p-5 rounded-xl shadow-xl">
-                <h1 className="text-red-500 mx-5 py-5">Periksa koneksi internet atau database server</h1>
+                <h1 className="text-red-500 mx-5 py-5">Reload Halaman, Periksa koneksi internet atau database server</h1>
             </div>
         )
     } else if(Tahun?.value == undefined){
         return <TahunNull />
     }
-
-    
 
     return(
         <>
@@ -127,6 +135,8 @@ const Table = () => {
                             <th className="border-r border-b px-6 py-3 min-w-[50px] text-center">No</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Tema</th>
                             <th className="border-l border-b px-6 py-3 min-w-[200px]">Keterangan</th>
+                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Indikator</th>
+                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Target/Satuan</th>
                             <th className="border-l border-b px-6 py-3 min-w-[100px]">Aksi</th>
                         </tr>
                     </thead>
@@ -143,6 +153,27 @@ const Table = () => {
                             <td className="border-r border-b px-6 py-4 text-center">{index + 1}</td>
                             <td className="border-r border-b px-6 py-4 text-center">{data.tema}</td>
                             <td className="border-r border-b px-6 py-4 text-center">{data.keterangan ? data.keterangan : "-"}</td>
+                            {data.indikators ?
+                                <>
+                                    <td className="border-r border-b px-6 py-4 text-center">
+                                        {data.indikators.map((item: indikator) => (
+                                            <p key={item.id_indikator}>{item.nama_indikator}</p>
+                                        ))}
+                                    </td>
+                                    <td className="border-r border-b px-6 py-4 text-center">
+                                        {data.indikators.map((item: indikator) => (
+                                            item.targets.map((t: target) => (
+                                                <p key={t.id_target}>{t.target} / {t.satuan}</p>
+                                            ))
+                                        ))}
+                                    </td>
+                                </> 
+                            :
+                            <>
+                                <td className="border-r border-b px-6 py-4 text-center">-</td>
+                                <td className="border-r border-b px-6 py-4 text-center">-</td>
+                            </>
+                            }
                             <td className="border-r border-b px-6 py-4">
                                 <div className="flex flex-col jutify-center items-center gap-2">
                                     <ButtonGreen className="w-full" halaman_url={`/tematikkota/${data.id}`}>Edit</ButtonGreen>

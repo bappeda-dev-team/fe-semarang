@@ -330,36 +330,10 @@ export const TablePohon = (props: any) => {
             </td>
         </tr>
         {indikator ?
-            indikator.map((data: any) => (
-                <>
-                    <tr key={data.id_indikator}>
-                        <td 
-                            className={`min-w-[100px] border px-2 py-3 bg-white text-start
-                                ${jenis === "Strategic" && "border-red-700"}
-                                ${jenis === "Tactical" && "border-blue-500"}
-                                ${jenis === "Operational" && "border-green-500"}
-                                ${jenis === "Strategic Pemda" && "border-black"}
-                                ${jenis === "Tactical Pemda" && "border-black"}
-                                ${jenis === "Operational Pemda" && "border-black"}
-                            `}
-                        >
-                            Indikator
-                        </td>
-                        <td 
-                            className={`min-w-[300px] border px-2 py-3 bg-white text-start
-                                ${jenis === "Strategic" && "border-red-700"}
-                                ${jenis === "Tactical" && "border-blue-500"}
-                                ${jenis === "Operational" && "border-green-500"}
-                                ${jenis === "Strategic Pemda" && "border-black"}
-                                ${jenis === "Tactical Pemda" && "border-black"}
-                                ${jenis === "Operational Pemda" && "border-black"}
-                            `}
-                        >
-                            {data.nama_indikator ? data.nama_indikator : "-"}
-                        </td>
-                    </tr>
-                    {data.targets.map((data: any, index: number) => (
-                        <tr key={data.id_target}>
+            indikator.length > 1 ?
+                indikator.map((data: any, index: number) => (
+                    <>
+                        <tr key={data.id_indikator}>
                             <td 
                                 className={`min-w-[100px] border px-2 py-3 bg-white text-start
                                     ${jenis === "Strategic" && "border-red-700"}
@@ -367,10 +341,10 @@ export const TablePohon = (props: any) => {
                                     ${jenis === "Operational" && "border-green-500"}
                                     ${jenis === "Strategic Pemda" && "border-black"}
                                     ${jenis === "Tactical Pemda" && "border-black"}
-                                    ${jenis === "Operational Pemda" && "border-black"}    
+                                    ${jenis === "Operational Pemda" && "border-black"}
                                 `}
                             >
-                                Target/Satuan
+                                Indikator {index + 1}
                             </td>
                             <td 
                                 className={`min-w-[300px] border px-2 py-3 bg-white text-start
@@ -379,16 +353,102 @@ export const TablePohon = (props: any) => {
                                     ${jenis === "Operational" && "border-green-500"}
                                     ${jenis === "Strategic Pemda" && "border-black"}
                                     ${jenis === "Tactical Pemda" && "border-black"}
-                                    ${jenis === "Operational Pemda" && "border-black"}    
+                                    ${jenis === "Operational Pemda" && "border-black"}
                                 `}
                             >
-                                {data.target ? data.target : "-"} / {data.satuan ? data.satuan : "-"}
+                                {data.nama_indikator ? data.nama_indikator : "-"}
                             </td>
                         </tr>
-                    ))}
-                </>
-            ))
+                        {data.targets.map((data: any, index: number) => (
+                            <tr key={data.id_target}>
+                                <td 
+                                    className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${jenis === "Operational" && "border-green-500"}
+                                        ${jenis === "Strategic Pemda" && "border-black"}
+                                        ${jenis === "Tactical Pemda" && "border-black"}
+                                        ${jenis === "Operational Pemda" && "border-black"}    
+                                    `}
+                                >
+                                    Target/Satuan {index + 1}
+                                </td>
+                                <td 
+                                    className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${jenis === "Operational" && "border-green-500"}
+                                        ${jenis === "Strategic Pemda" && "border-black"}
+                                        ${jenis === "Tactical Pemda" && "border-black"}
+                                        ${jenis === "Operational Pemda" && "border-black"}    
+                                    `}
+                                >
+                                    {data.target ? data.target : "-"} / {data.satuan ? data.satuan : "-"}
+                                </td>
+                            </tr>
+                        ))}
+                    </>
+                ))
             :
+                indikator.map((data: any) => (
+                    <>
+                        <tr key={data.id_indikator}>
+                            <td 
+                                className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                                    ${jenis === "Strategic" && "border-red-700"}
+                                    ${jenis === "Tactical" && "border-blue-500"}
+                                    ${jenis === "Operational" && "border-green-500"}
+                                    ${jenis === "Strategic Pemda" && "border-black"}
+                                    ${jenis === "Tactical Pemda" && "border-black"}
+                                    ${jenis === "Operational Pemda" && "border-black"}
+                                `}
+                            >
+                                Indikator
+                            </td>
+                            <td 
+                                className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                                    ${jenis === "Strategic" && "border-red-700"}
+                                    ${jenis === "Tactical" && "border-blue-500"}
+                                    ${jenis === "Operational" && "border-green-500"}
+                                    ${jenis === "Strategic Pemda" && "border-black"}
+                                    ${jenis === "Tactical Pemda" && "border-black"}
+                                    ${jenis === "Operational Pemda" && "border-black"}
+                                `}
+                            >
+                                {data.nama_indikator ? data.nama_indikator : "-"}
+                            </td>
+                        </tr>
+                        {data.targets.map((data: any, index: number) => (
+                            <tr key={data.id_target}>
+                                <td 
+                                    className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${jenis === "Operational" && "border-green-500"}
+                                        ${jenis === "Strategic Pemda" && "border-black"}
+                                        ${jenis === "Tactical Pemda" && "border-black"}
+                                        ${jenis === "Operational Pemda" && "border-black"}    
+                                    `}
+                                >
+                                    Target/Satuan
+                                </td>
+                                <td 
+                                    className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${jenis === "Operational" && "border-green-500"}
+                                        ${jenis === "Strategic Pemda" && "border-black"}
+                                        ${jenis === "Tactical Pemda" && "border-black"}
+                                        ${jenis === "Operational Pemda" && "border-black"}    
+                                    `}
+                                >
+                                    {data.target ? data.target : "-"} / {data.satuan ? data.satuan : "-"}
+                                </td>
+                            </tr>
+                        ))}
+                    </>
+                ))
+        :
             <>
                     <tr>
                         <td 
@@ -507,7 +567,7 @@ export const TablePohonEdited = (props: any) => {
   const keterangan = props.item.keterangan;
   const opd = props.item.nama_opd;
   const jenis = props.item.jenis_pohon;
-  const indikator = props.item.indikators;
+  const indikator = props.item.indikator;
   return (
     <table className='w-full'>
       <tbody>
@@ -540,65 +600,125 @@ export const TablePohonEdited = (props: any) => {
             </td>
         </tr>
         {indikator ?
-            indikator.map((data: any) => (
-                <>
-                    <tr key={data.id_indikator}>
-                        <td 
-                            className={`min-w-[100px] border px-2 py-3 bg-white text-start
-                                ${jenis === "Strategic" && "border-red-700"}
-                                ${jenis === "Tactical" && "border-blue-500"}
-                                ${jenis === "Operational" && "border-green-500"}
-                                ${jenis === "StrategicPemda" && "border-black"}
-                                ${jenis === "Tactical Pemda" && "border-black"}
-                                ${jenis === "Operational Pemda" && "border-black"}
-                            `}
-                        >
-                            Indikator
-                        </td>
-                        <td 
-                            className={`min-w-[300px] border px-2 py-3 bg-white text-start
-                                ${jenis === "Strategic" && "border-red-700"}
-                                ${jenis === "Tactical" && "border-blue-500"}
-                                ${jenis === "Operational" && "border-green-500"}
-                                ${jenis === "StrategicPemda" && "border-black"}
-                                ${jenis === "Tactical Pemda" && "border-black"}
-                                ${jenis === "Operational Pemda" && "border-black"}
-                            `}
-                        >
-                            {data.nama_indikator ? data.nama_indikator : "-"}
-                        </td>
-                    </tr>
-                    {data.targets.map((data: any, index: number) => (
-                        <tr key={data.id_target}>
+            indikator.length > 1 ?
+                indikator.map((data: any, index: number) => (
+                    <>
+                        <tr key={data.id_indikator}>
                             <td 
                                 className={`min-w-[100px] border px-2 py-3 bg-white text-start
                                     ${jenis === "Strategic" && "border-red-700"}
                                     ${jenis === "Tactical" && "border-blue-500"}
                                     ${jenis === "Operational" && "border-green-500"}
-                                    ${jenis === "StrategicPemda" && "border-black"}
+                                    ${jenis === "Strategic Pemda" && "border-black"}
                                     ${jenis === "Tactical Pemda" && "border-black"}
-                                    ${jenis === "Operational Pemda" && "border-black"}    
+                                    ${jenis === "Operational Pemda" && "border-black"}
                                 `}
                             >
-                                Target/Satuan
+                                Indikator {index + 1}
                             </td>
                             <td 
                                 className={`min-w-[300px] border px-2 py-3 bg-white text-start
                                     ${jenis === "Strategic" && "border-red-700"}
                                     ${jenis === "Tactical" && "border-blue-500"}
                                     ${jenis === "Operational" && "border-green-500"}
-                                    ${jenis === "StrategicPemda" && "border-black"}
+                                    ${jenis === "Strategic Pemda" && "border-black"}
                                     ${jenis === "Tactical Pemda" && "border-black"}
-                                    ${jenis === "Operational Pemda" && "border-black"}    
+                                    ${jenis === "Operational Pemda" && "border-black"}
                                 `}
                             >
-                                {data.target ? data.target : "-"} / {data.satuan ? data.satuan : "-"}
+                                {data.nama_indikator ? data.nama_indikator : "-"}
                             </td>
                         </tr>
-                    ))}
-                </>
-            ))
+                        {data.targets.map((data: any, index: number) => (
+                            <tr key={data.id_target}>
+                                <td 
+                                    className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${jenis === "Operational" && "border-green-500"}
+                                        ${jenis === "Strategic Pemda" && "border-black"}
+                                        ${jenis === "Tactical Pemda" && "border-black"}
+                                        ${jenis === "Operational Pemda" && "border-black"}    
+                                    `}
+                                >
+                                    Target/Satuan {index + 1}
+                                </td>
+                                <td 
+                                    className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${jenis === "Operational" && "border-green-500"}
+                                        ${jenis === "Strategic Pemda" && "border-black"}
+                                        ${jenis === "Tactical Pemda" && "border-black"}
+                                        ${jenis === "Operational Pemda" && "border-black"}    
+                                    `}
+                                >
+                                    {data.target ? data.target : "-"} / {data.satuan ? data.satuan : "-"}
+                                </td>
+                            </tr>
+                        ))}
+                    </>
+                ))
             :
+                indikator.map((data: any) => (
+                    <>
+                        <tr key={data.id_indikator}>
+                            <td 
+                                className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                                    ${jenis === "Strategic" && "border-red-700"}
+                                    ${jenis === "Tactical" && "border-blue-500"}
+                                    ${jenis === "Operational" && "border-green-500"}
+                                    ${jenis === "Strategic Pemda" && "border-black"}
+                                    ${jenis === "Tactical Pemda" && "border-black"}
+                                    ${jenis === "Operational Pemda" && "border-black"}
+                                `}
+                            >
+                                Indikator
+                            </td>
+                            <td 
+                                className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                                    ${jenis === "Strategic" && "border-red-700"}
+                                    ${jenis === "Tactical" && "border-blue-500"}
+                                    ${jenis === "Operational" && "border-green-500"}
+                                    ${jenis === "Strategic Pemda" && "border-black"}
+                                    ${jenis === "Tactical Pemda" && "border-black"}
+                                    ${jenis === "Operational Pemda" && "border-black"}
+                                `}
+                            >
+                                {data.nama_indikator ? data.nama_indikator : "-"}
+                            </td>
+                        </tr>
+                        {data.targets.map((data: any, index: number) => (
+                            <tr key={data.id_target}>
+                                <td 
+                                    className={`min-w-[100px] border px-2 py-3 bg-white text-start
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${jenis === "Operational" && "border-green-500"}
+                                        ${jenis === "Strategic Pemda" && "border-black"}
+                                        ${jenis === "Tactical Pemda" && "border-black"}
+                                        ${jenis === "Operational Pemda" && "border-black"}    
+                                    `}
+                                >
+                                    Target/Satuan
+                                </td>
+                                <td 
+                                    className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${jenis === "Operational" && "border-green-500"}
+                                        ${jenis === "Strategic Pemda" && "border-black"}
+                                        ${jenis === "Tactical Pemda" && "border-black"}
+                                        ${jenis === "Operational Pemda" && "border-black"}    
+                                    `}
+                                >
+                                    {data.target ? data.target : "-"} / {data.satuan ? data.satuan : "-"}
+                                </td>
+                            </tr>
+                        ))}
+                    </>
+                ))
+        :
             <>
                     <tr>
                         <td 
@@ -606,7 +726,7 @@ export const TablePohonEdited = (props: any) => {
                                 ${jenis === "Strategic" && "border-red-700"}
                                 ${jenis === "Tactical" && "border-blue-500"}
                                 ${jenis === "Operational" && "border-green-500"}
-                                ${jenis === "StrategicPemda" && "border-black"}
+                                ${jenis === "Strategic Pemda" && "border-black"}
                                 ${jenis === "Tactical Pemda" && "border-black"}
                                 ${jenis === "Operational Pemda" && "border-black"}
                             `}
@@ -618,7 +738,7 @@ export const TablePohonEdited = (props: any) => {
                                 ${jenis === "Strategic" && "border-red-700"}
                                 ${jenis === "Tactical" && "border-blue-500"}
                                 ${jenis === "Operational" && "border-green-500"}
-                                ${jenis === "StrategicPemda" && "border-black"}
+                                ${jenis === "Strategic Pemda" && "border-black"}
                                 ${jenis === "Tactical Pemda" && "border-black"}
                                 ${jenis === "Operational Pemda" && "border-black"}
                             `}
@@ -632,7 +752,7 @@ export const TablePohonEdited = (props: any) => {
                                     ${jenis === "Strategic" && "border-red-700"}
                                     ${jenis === "Tactical" && "border-blue-500"}
                                     ${jenis === "Operational" && "border-green-500"}
-                                    ${jenis === "StrategicPemda" && "border-black"}
+                                    ${jenis === "Strategic Pemda" && "border-black"}
                                     ${jenis === "Tactical Pemda" && "border-black"}
                                     ${jenis === "Operational Pemda" && "border-black"}    
                                 `}
@@ -644,7 +764,7 @@ export const TablePohonEdited = (props: any) => {
                                     ${jenis === "Strategic" && "border-red-700"}
                                     ${jenis === "Tactical" && "border-blue-500"}
                                     ${jenis === "Operational" && "border-green-500"}
-                                    ${jenis === "StrategicPemda" && "border-black"}
+                                    ${jenis === "Strategic Pemda" && "border-black"}
                                     ${jenis === "Tactical Pemda" && "border-black"}
                                     ${jenis === "Operational Pemda" && "border-black"}    
                                 `}

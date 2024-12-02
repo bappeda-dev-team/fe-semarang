@@ -11,6 +11,7 @@ import { PohonOpd } from '@/components/lib/Pohon/Opd/PohonOpd';
 import { FormPohonOpd } from '@/components/lib/Pohon/Opd/FormPohonOpd';
 import { getUser, getToken } from '@/components/lib/Cookie';
 import Select from 'react-select';
+import { PohonCascading } from '@/components/lib/Pohon/Cascading/PohonCascading';
 
 interface OptionType {
     value: number;
@@ -37,7 +38,7 @@ interface childs {
     childs: childs[];
 }
 
-const PokinOpd = () => {
+const Cascading = () => {
 
     const [User, setUser] = useState<any>(null);
     const [Tahun, setTahun] = useState<any>(null);
@@ -148,7 +149,7 @@ const PokinOpd = () => {
         return(
             <>
                 <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
-                    <h1>Pohon Kinerja {SelectedOpd?.label}</h1>
+                    <h1>Pohon Cascading {SelectedOpd?.label}</h1>
                 </div>
                 <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
                     <LoadingBeat />
@@ -160,7 +161,7 @@ const PokinOpd = () => {
         return(
             <>
                 <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
-                    <h1>Pohon Kinerja</h1>
+                    <h1>Pohon Cascading</h1>
                 </div>
                 <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
                     {error}
@@ -173,7 +174,7 @@ const PokinOpd = () => {
             return(
                 <>
                     <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
-                        <h1>Pohon Kinerja {SelectedOpd?.label}</h1>
+                        <h1>Pohon Cascading {SelectedOpd?.label}</h1>
                     </div>
                     <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
                         <OpdTahunNull />
@@ -187,7 +188,7 @@ const PokinOpd = () => {
             return(
                 <>
                     <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
-                        <h1>Pohon Kinerja {SelectedOpd?.label}</h1>
+                        <h1>Pohon Cascading {SelectedOpd?.label}</h1>
                     </div>
                     <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
                         <TahunNull />
@@ -201,84 +202,21 @@ const PokinOpd = () => {
         <>
             <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
                 {User?.roles == 'super_admin' ? 
-                    <h1 className="font-bold">Pohon Kinerja {SelectedOpd?.label}</h1>
-                :
-                User?.roles == 'admin_opd' ?
-                    <h1 className="font-bold">Pohon Kinerja {Pokin?.nama_opd}</h1>
+                    <h1 className="font-bold">Pohon Cascading {SelectedOpd?.label}</h1>
                 :
                     <h1 className="font-bold">Pohon Cascading {Pokin?.nama_opd}</h1>
                 }
             </div>
             <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
-                <div className="w-full">
-                    <div className="border-t-2 border-x-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-t-xl ">
-                        <h1 className="text-center font-semibold">
-                            Pohon Dari Pemda
-                        </h1>
-                    </div>
-                    <div className="border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-b-xl">
-                        <div className="mb-1">
-                            <label htmlFor="" className='uppercase text-xs font-bold text-gray-700 my-2 ml-1'>
-                                pohon pemda
-                            </label>
-                            <Select
-                                placeholder="Masukkan Perangkat Daerah"
-                                value={PokinPemda}
-                                options={OptionPokinPemda}
-                                isSearchable
-                                isClearable
-                                onMenuOpen={() => {
-                                    if (OptionPokinPemda.length === 0) {
-                                        fetchPohonPemda();
-                                    }
-                                }}
-                                styles={{
-                                    control: (baseStyles) => ({
-                                    ...baseStyles,
-                                    borderRadius: '8px',
-                                    textAlign: 'start',
-                                    })
-                                }}
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="" className='uppercase text-xs font-bold text-gray-700 my-2 ml-1'>
-                                Strategic
-                            </label>
-                            <Select
-                                placeholder="Pilih Strategic"
-                                isSearchable
-                                isClearable
-                                styles={{
-                                    control: (baseStyles) => ({
-                                    ...baseStyles,
-                                    borderRadius: '8px',
-                                    textAlign: 'start',
-                                    })
-                                }}
-                            />
-                        </div>
-                        <div className="flex justify-between my-2">
-                            <ButtonRedBorder className='w-full mx-2'>
-                                <TbCircleLetterXFilled className='mr-1'/>
-                                Tolak
-                            </ButtonRedBorder>
-                            <ButtonSkyBorder className='w-full mx-2'>
-                                <TbCircleCheckFilled className='mr-1'/>
-                                Terima
-                            </ButtonSkyBorder>
-                        </div>
-                    </div>
-                </div>
                 <div className="tf-tree text-center mt-3">
                     <ul>
                         <li>
                             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg">
                                 <div className="header flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black">
                                 {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') ?
-                                    <h1>Pohon Kinerja OPD</h1>
+                                    <h1>Pohon Cascading</h1>
                                     :
-                                    <h1>Pohon Cascading OPD</h1>
+                                    <h1>Pohon Cascading</h1>
                                 }
                                 </div>
                                 <div className="body flex justify-center my-3">
@@ -313,7 +251,7 @@ const PokinOpd = () => {
                             <ul>
                                 {Pokin.childs.map((data: any) => (
                                     <li key={data.id}>
-                                        <PohonOpd tema={data} deleteTrigger={() => setDeleted((prev) => !prev)}/>
+                                        <PohonCascading tema={data} deleteTrigger={() => setDeleted((prev) => !prev)}/>
                                     </li>
                                 ))}
                                 {formList.map((formId) => (
@@ -349,4 +287,4 @@ const PokinOpd = () => {
     )
 }
 
-export default PokinOpd;
+export default Cascading;

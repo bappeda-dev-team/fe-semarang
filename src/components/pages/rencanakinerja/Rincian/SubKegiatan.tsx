@@ -3,6 +3,8 @@
 import { ButtonSky } from "@/components/global/Button";
 import Select from 'react-select';
 import { useState, useEffect } from "react";
+import { LoadingSync } from "@/components/global/Loading";
+import { getToken, getUser } from "@/components/lib/Cookie";
 
 interface id {
     id: string;
@@ -16,21 +18,37 @@ interface subkegiatan {
     pagu_penetapan : string;
 }
 
-const SubKegiatan: React.FC<id> = (id) => {
+const SubKegiatan: React.FC<id> = ({id}) => {
 
     const [subKegiatan, setSubKegiatan] = useState<subkegiatan[]>([]);
-    const [loading, setLoading] = useState<boolean | null>(null);
+    const [Loading, setLoading] = useState<boolean | null>(null);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
+    const [user, setUser] = useState<any>(null);
+    const token = getToken();
+    
+    useEffect(() => {
+        const fetchUser = getUser();
+        if(fetchUser){
+            setUser(fetchUser.user);
+        }
+    },[]);
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchMandatori = async() => {
+        const fetchSubKegiatan = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/rencana_kinerja/id_rencana_kinerja/pegawai/${id}/input_rincian_kak`);
+                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${user?.pegawai_id}/input_rincian_kak`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
                 const result = await response.json();
-                const data = result.usulan_terpilih_pokir;
-                if(data){
+                const hasil = result.rencana_kinerja;
+                if(hasil.subkegiatan){
+                    const sub = hasil.find((item: any) => item.subkegiatan);
+                    const data = sub.subkegiatan
                     if(data == null){
                         setDataNull(true);
                         setSubKegiatan([]);
@@ -48,18 +66,32 @@ const SubKegiatan: React.FC<id> = (id) => {
                 setLoading(false);
             }
         };
-        fetchMandatori();
-    },[id]);
+        if(user?.roles != undefined){
+            fetchSubKegiatan();
+        }
+    },[id, user, token]);
+
+    if(Loading){
+        return(
+            <>
+                <div className="mt-3 rounded-t-xl border px-5 py-3">
+                    <h1 className="font-bold">Sub Kegiatan</h1>
+                </div>
+                <div className="rounded-b-xl shadow-lg border-x border-b px-5 py-3">
+                    <LoadingSync />
+                </div>
+            </>
+        );
+    }
 
     return(
         <>
             {/* usulan subkegiatan */}
             <div className="mt-3 rounded-t-xl border px-5 py-3">
-                <h1>Usulan Sub Kegiatan</h1>
+                <h1 className="font-bold">Sub Kegiatan</h1>
             </div>
             <div className="rounded-b-xl shadow-lg border-x border-b px-5 py-3">
                 <div className="my-2">
-                    <label>Sub Kegiatan Terpilih :</label>
                     <Select 
                         styles={{
                             control: (baseStyles) => ({
@@ -72,44 +104,40 @@ const SubKegiatan: React.FC<id> = (id) => {
                         />
                 </div>
                 <ButtonSky className="w-full mt-2">Simpan</ButtonSky>
-                {loading ? (
-                    <div className="text-blue-500">LOADING...</div>
-                ):(
-                    <div className="overflow-auto mt-3 rounded-t-xl border">
-                        <table className="w-full">
-                            <thead>
+                <div className="overflow-auto mt-3 rounded-t-xl border">
+                    <table className="w-full">
+                        <thead>
+                            <tr>
+                                <td className="border-r border-b px-6 py-3 min-w-[200px]">Sub Kegiatan</td>
+                                <td className="border-r border-b px-6 py-3 min-w-[200px]">Indikator</td>
+                                <td className="border-r border-b px-6 py-3 min-w-[200px]">Pagu Ranwal 2024</td>
+                                <td className="border-r border-b px-6 py-3 min-w-[200px]">Pagu Rankir 2024</td>
+                                <td className="border-r border-b px-6 py-3 min-w-[200px]">Pagu Penetapan 2024</td>
+                                <td className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {dataNull ? 
                                 <tr>
-                                    <td className="border-r border-b px-6 py-3 min-w-[200px]">Sub Kegiatan</td>
-                                    <td className="border-r border-b px-6 py-3 min-w-[200px]">Indikator</td>
-                                    <td className="border-r border-b px-6 py-3 min-w-[200px]">Pagu Ranwal 2024</td>
-                                    <td className="border-r border-b px-6 py-3 min-w-[200px]">Pagu Rankir 2024</td>
-                                    <td className="border-r border-b px-6 py-3 min-w-[200px]">Pagu Penetapan 2024</td>
-                                    <td className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</td>
+                                    <td className="px-6 py-3" colSpan={6}>
+                                        Data Kosong / Belum Ditambahkan
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {dataNull ? 
-                                    <tr>
-                                        <td className="px-6 py-3" colSpan={6}>
-                                            Data Kosong / Belum Ditambahkan
-                                        </td>
+                            :
+                                subKegiatan.map((data: any) => (
+                                    <tr key={data.id}>
+                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.nama_sub_kegiatan}</td>
+                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.indikator}</td>
+                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.pagu_ranwal}</td>
+                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.pagu_rankir}</td>
+                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.pagu_penetapan}</td>
+                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</td>
                                     </tr>
-                                :
-                                    subKegiatan.map((data: any) => (
-                                        <tr key={data.id}>
-                                            <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.nama_sub_kegiatan}</td>
-                                            <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.indikator}</td>
-                                            <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.pagu_ranwal}</td>
-                                            <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.pagu_rankir}</td>
-                                            <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.pagu_penetapan}</td>
-                                            <td className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</td>
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </>
     )

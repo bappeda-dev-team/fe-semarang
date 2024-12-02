@@ -27,42 +27,6 @@ export function middleware(req: NextRequest) {
 
 export const config = {
     matcher: [
-        "/", 
-        "/User",
-        "/PohonKinerja",
-        "/ReferensiArsitektur",
-        "/SasaranKota",
-        "/BidangUrusan",
-
-        "/ProsesBisnis",
-        "/ProsesBisnis/TambahData",
-        "/ProsesBisnis/EditData/:path*",
-        
-        "/Layanan/LayananSPBE",
-        "/Layanan/LayananSPBE/TambahData",
-        "/Layanan/LayananSPBE/EditData/:path*",
-
-        "/DataInformasi",
-        "/DataInformasi/TambahData",
-        "/DataInformasi/EditData/:path*",
-
-        "/Aplikasi",
-        "/Aplikasi/TambahData",
-        "/Aplikasi/EditData/:path*",
-        
-        "/KebutuhanSPBE",
-        "/KebutuhanSPBE/TambahKebutuhan",
-        "/KebutuhanSPBE/EditKebutuhan/:path*",
-        
-        "/GapArsitektur",
-        "/GapArsitektur/TambahKeterangan/:path",
-        "/GapArsitektur/EditKeterangan/:path",
-
-        "/PemenuhanKebutuhan",
-        "/PemenuhanKebutuhan/EditPemenuhan/:path",
-        
-        "/Arsitektur",
-        "/SdmInfrastruktur",
-        "/PetaRencana",
-    ]
-}
+      "/((?!api|_next/static|_next/image|favicon.ico|login).*)",
+    ],
+  };  

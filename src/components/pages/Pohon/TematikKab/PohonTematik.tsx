@@ -1,7 +1,7 @@
 import '@/components/pages/Pohon/treeflex.css'
 import { useState, useEffect } from 'react';
 import { LoadingBeat } from '@/components/global/Loading';
-import {Pohon} from '@/components/lib/Pohon/Pohon';
+import {Pohon} from '@/components/lib/Pohon/Pemda/Pohon';
 import { getToken } from '@/components/lib/Cookie';
 
 interface pohontematik {

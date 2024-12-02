@@ -13,18 +13,10 @@ import GambaranUmum from '@/components/pages/rencanakinerja/Rincian/GambaranUmum
 import Inovasi from '@/components/pages/rencanakinerja/Rincian/Inovasi';
 import { useParams } from 'next/navigation';
 
-interface musrenbang {
-    id : string;
-    jenis : string;
-    usulan : string;
-    alamat : string;
-    permasalahan : string;
-}
-
 const RincianRencanaKinerja = () => {
 
     const params = useParams();
-    const pegawai_id = params.id as string;
+    const id_rekin = params.id as string;
 
     return(
         <>
@@ -42,12 +34,12 @@ const RincianRencanaKinerja = () => {
                 <button className="w-full uppercase bg-emerald-500 rounded-lg py-1 font-bold my-1">manrisk siap diverifikasi</button>
                 <div className="my-3 border"></div>
             </div> */}
-            <Musrebang id={pegawai_id}/>
-            <Pokir id={pegawai_id}/>
-            <Mandatori id={pegawai_id}/>
-            <Inisiatif id={pegawai_id} />
-            <SubKegiatan id={pegawai_id}/>
-            <Sakip/>
+            <Musrebang id={id_rekin}/>
+            <Pokir id={id_rekin}/>
+            <Mandatori id={id_rekin}/>
+            <Inisiatif id={id_rekin} />
+            <SubKegiatan id={id_rekin}/>
+            <Sakip id={id_rekin}/>
             <Rekin/>
             {/* Rincian sasaran */}
             {/* <div className="flex flex-wrap justify-between items-center mt-3 rounded-t-xl border px-5 py-3">
@@ -118,8 +110,8 @@ const RincianRencanaKinerja = () => {
                     </table>
                 </div>
             </div> */}
-            <DasarHukum id={pegawai_id}/>
-            <GambaranUmum id={pegawai_id}/>
+            <DasarHukum id={id_rekin}/>
+            <GambaranUmum id={id_rekin}/>
             {/* Hasil Output sasaran */}
             {/* <div className="flex flex-wrap justify-between items-center mt-3 rounded-t-xl border px-5 py-3">
                 <h1>Hasil Output Sasaran</h1>
@@ -149,7 +141,7 @@ const RincianRencanaKinerja = () => {
                     </table>
                 </div>
             </div> */}
-            <Inovasi id={pegawai_id}/>
+            <Inovasi id={id_rekin}/>
         </>
     )
 }

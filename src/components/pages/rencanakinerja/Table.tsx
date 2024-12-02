@@ -190,7 +190,7 @@ export const TablePerencanaan = () => {
                             <div className="flex flex-col justify-center items-center gap-2">
                                 <ButtonGreenBorder 
                                     className="w-full"
-                                    halaman_url={`/rencanakinerja/${data.pegawai_id}`}
+                                    halaman_url={`/rencanakinerja/${data.id_rencana_kinerja}`}
                                 >
                                     <TbPencilDown className="mr-1"/>
                                     Input Rincian

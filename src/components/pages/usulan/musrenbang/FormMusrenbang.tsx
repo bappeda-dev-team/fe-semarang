@@ -8,7 +8,7 @@ import { AlertNotification } from "@/components/global/Alert";
 import { useParams, useRouter } from "next/navigation";
 import { getOpdTahun } from "@/components/lib/Cookie";
 import Select from 'react-select';
-import { getToken } from "@/components/lib/Cookie";
+import { getToken, getUser } from "@/components/lib/Cookie";
 
 interface OptionTypeString {
     value: string;
@@ -41,11 +41,16 @@ export const FormMusrenbang = () => {
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [tahun, setTahun] = useState<any>(null);
+    const [User, setUser] = useState<any>(null);
     const router = useRouter();
     const token = getToken();
 
     useEffect(() => {
         const data = getOpdTahun();
+        const fetchUser = getUser();
+        if(fetchUser){
+            setUser(fetchUser.user);
+        }
         if(data){
          if(data.tahun){
              const valueTahun = {
@@ -93,7 +98,7 @@ export const FormMusrenbang = () => {
           uraian: data.uraian,
           kode_opd : data.kode_opd?.value,
           rencana_kinerja_id : "REKIN-PEG-14792",
-          pegawai_id : "123",
+          pegawai_id : User?.pegawai_id,
           tahun: String(tahun?.value),
           status: data.status,
       };

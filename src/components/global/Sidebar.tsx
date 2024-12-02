@@ -18,7 +18,8 @@ import {
   TbSquareRoundedLetterT,
   TbSquareRoundedLetterS,
   TbUser,
-  TbHexagonLetterR
+  TbHexagonLetterR,
+  TbBinaryTree2
 } from "react-icons/tb";
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -59,7 +60,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
     const [KotaPohonKinerjaKota, setKotaPohonKinerjaKota] = useState<boolean | null>(null);
   const [PerencanaanOPD, setPerencanaanOPD] = useState<boolean | null>(null);
     const [pohonKinerjaOpd, setPohonKinerjaOpd] = useState<boolean | null>(null);
-    const [PohonCascading, setPohonCascading] = useState<boolean | null>(null);
+    const [PohonCascadingOpd, setPohonCascadingOpd] = useState<boolean | null>(null);
   const [Perencanaan, setPerencanaan] = useState<boolean | null>(null);
     const [Usulan, setUsulan] = useState<boolean | null>(null);
       const [Musrenbang, setMusrenbang] = useState<boolean | null>(null);
@@ -67,6 +68,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       const [Mandatori, setMandatori] = useState<boolean | null>(null);
       const [Inisiatif, setInisiatif] = useState<boolean | null>(null);
     const [RencanaKinerja, setRencanaKinerja] = useState<boolean | null>(null);
+    const [PohonCascading, setPohonCascading] = useState<boolean | null>(null);
     const [PerencanaanManajemenResiko, setPerencanaanManajemenResiko] = useState<boolean | null>(null);
   const [Laporan, setLaporan] = useState<boolean | null>(null);    
     const [LaporanUsulan, setLaporanUsulan] = useState<boolean | null>(null);
@@ -119,7 +121,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     //DATA MASTER
     if(url == "/DataMaster/masteropd"){
@@ -152,7 +156,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/DataMaster/masterpegawai"){
       setDashboard(false);
@@ -184,7 +190,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/DataMaster/levelpohon"){
       setDashboard(false);
@@ -216,7 +224,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     //Master Program Kegiatan
     if(url == "/DataMaster/masterprogramkegiatan/bidangurusan"){
@@ -249,7 +259,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/DataMaster/masterprogramkegiatan/kegiatan"){
       setDashboard(false);
@@ -281,7 +293,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/DataMaster/masterprogramkegiatan/program"){
       setDashboard(false);
@@ -313,7 +327,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/DataMaster/masterprogramkegiatan/subkegiatan"){
       setDashboard(false);
@@ -345,7 +361,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/DataMaster/masterprogramkegiatan/urusan"){
       setDashboard(false);
@@ -377,7 +395,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/DataMaster/masterjabatan"){
       setDashboard(false);
@@ -409,7 +429,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/DataMaster/masterlembaga"){
       setDashboard(false);
@@ -440,7 +462,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/DataMaster/masteruser"){
       setDashboard(false);
@@ -473,7 +497,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/DataMaster/masterrole"){
       setDashboard(false);
@@ -505,7 +531,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     //PERENCANAAN KOTA
     if(url == "/pohonkinerjakota"){
@@ -538,7 +566,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/tematikkota"){
       setDashboard(false);
@@ -570,7 +600,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/subtematik"){
       setDashboard(false);
@@ -602,7 +634,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     //PERENCANAAN OPD
     if(url == "/pohonkinerjaopd"){
@@ -635,7 +669,44 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
+    }
+    if(url == "/pohoncascadingopd"){
+      setDashboard(false);
+      setDataMaster(false);
+      setMasterOPD(false);
+      setMasterPegawai(false);
+      setLevelPohon(false);
+      setMasterProgramKegiatan(false);
+      setMasterBidangUrusan(false);
+      setMasterKegiatan(false);
+      setMasterProgram(false);
+      setMasterSubKegiatan(false);
+      setMasterUrusan(false);
+      setMasterJabatan(false);
+      setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);
+      setTematikKota(false);
+      setSubTematik(false);
+      setPerencanaanKota(false);
+      setKotaPohonKinerjaKota(false);
+      setPerencanaanOPD(true);
+      setPohonKinerjaOpd(false);
+      setUsulan(false);
+      setRencanaKinerjaKAK(false);
+      setRencanaKinerja(false);
+      setRincianBelanja(false);
+      setMusrenbang(false);
+      setPokokPikiran(false);
+      setMandatori(false);
+      setManajemenResiko(false);
+      setPerencanaan(false);
+      setPohonCascading(false);
+      setPohonCascadingOpd(true);
+      setLaporan(false);
     }
     if(url == "/rencanakinerja"){
       setDashboard(false);
@@ -664,6 +735,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMandatori(false);
       setInisiatif(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
       setRencanaKinerja(true);
       setRincianBelanja(false);
       setManajemenResiko(false);
@@ -697,7 +769,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
       setRincianBelanja(true);
     }
     if(url == "/musrenbang"){
@@ -728,7 +802,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setRencanaKinerjaKAK(false);
       setRincianBelanja(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
       setLaporan(false);
     }
     if(url == "/pokokpikiran"){
@@ -757,9 +833,11 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMandatori(false);
       setInisiatif(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
       setRencanaKinerjaKAK(false);
       setRincianBelanja(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
     }
     if(url == "/mandatori"){
       setDashboard(false);
@@ -787,9 +865,11 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMandatori(true);
       setInisiatif(false);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
       setRencanaKinerjaKAK(false);
       setRincianBelanja(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
     }
     if(url == "/inisiatif"){
       setDashboard(false);
@@ -817,9 +897,11 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setMandatori(false);
       setInisiatif(true);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
       setRencanaKinerjaKAK(false);
       setRincianBelanja(false);
       setManajemenResiko(false);
+      setRencanaKinerja(false);
     }
     if(url == "/manajemenresiko"){
       setDashboard(false);
@@ -842,12 +924,14 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(true);
       setUsulan(false);
       setRencanaKinerjaKAK(false);
+      setRencanaKinerja(false);
       setRincianBelanja(false);
       setMusrenbang(false);
       setPokokPikiran(false);
       setMandatori(false);
       setManajemenResiko(true);
       setPohonCascading(false);
+      setPohonCascadingOpd(false);
     }
     if(url == "/pohoncascading"){
       setDashboard(false);
@@ -873,6 +957,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPohonKinerjaOpd(false);
       setUsulan(false);
       setRencanaKinerjaKAK(false);
+      setRencanaKinerja(false);
       setRincianBelanja(false);
       setMusrenbang(false);
       setPokokPikiran(false);
@@ -880,6 +965,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setManajemenResiko(false);
       setPerencanaan(true);
       setPohonCascading(true);
+      setPohonCascadingOpd(true);
       setLaporan(false);
     }
   }, [url]);
@@ -927,9 +1013,9 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
         <div className="flex gap-x-4 items-center">
           <div className={`flex flex-wrap justify-center text-white text-center text-xl ${!isOpen && 'scale-0'} duration-300`}>
             <h2 className='font-bold'>
-              KERTAS KERJA
+              KINERJA PEMBANGUNAN DAERAH
             </h2>
-            <h3 className='font-normal'>
+            <h3 className='font-thin'>
               Kabupaten Madiun
             </h3>
           </div>
@@ -1106,6 +1192,12 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja OPD</span>
                 </li>
               </Link>
+              <Link href="/pohoncascadingopd">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PohonCascadingOpd ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <TbBinaryTree2 className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Cascading</span>
+                </li>
+              </Link>
             </div>
           }
           {/* {['eselon_1', 'eselon_2', 'eselon_3', 'eselon_4'].includes(User?.roles) &&  */}
@@ -1228,7 +1320,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                   </Link>
                 </div>
                 }
-              <Link href="/rencanakinerja">
+              <Link href="/rencanakinerjakak">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${RencanaKinerjaKAK ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
                   <TbChecklist className="text-xl" />
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Rencana Kinerja KAK</span>

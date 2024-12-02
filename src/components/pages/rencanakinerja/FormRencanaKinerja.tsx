@@ -515,7 +515,7 @@ export const FormEditRencanaKinerja = () => {
                             label: data.status_rencana_kinerja,
                         },
                         indikator: data.indikator?.map((item: indikator) => ({
-                            nama_indikaotr: item.nama_indikator,
+                            nama_indikator: item.nama_indikator,
                             targets: item.targets.map((t: target) => ({
                                 target: t.target,
                                 satuan: t.satuan,

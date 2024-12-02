@@ -55,7 +55,7 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
       <html lang="en" className={font.className}>
         <head>
           <title>KAK Pemda Madiun</title>
-          <meta name="description" content="Aplikasi KAK Pemda Madiun" />
+          <meta name="description" content="Aplikasi Kinerja Pembangunan Daerah Pemda Madiun" />
           <link rel="icon" href="/logo.png" />
         </head>
         <body>

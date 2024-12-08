@@ -52,7 +52,7 @@ export const FormPohonOpd: React.FC<{
     level: number;
     onCancel?: () => void 
     pokin: 'pemda' | 'opd';
-}> = ({ id, level, onCancel, pokin }) => {
+}> = ({ id, level, onCancel }) => {
 
     const {
       control,
@@ -62,12 +62,9 @@ export const FormPohonOpd: React.FC<{
     } = useForm<FormValue>();
     const [NamaPohon, setNamaPohon] = useState<string>('');
     const [Keterangan, setKeterangan] = useState<string>('');
-    const [Pelaksana, setPelaksana] = useState<OptionTypeString[]>([]);
-    const [PelaksanaOption, setPelaksanaOption] = useState<OptionTypeString[]>([]);
     const [Tahun, setTahun] = useState<any>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [DataAdd, setDataAdd] = useState<any>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [IsAdded, setIsAdded] = useState<boolean>(false);
     const [Deleted, setDeleted] = useState<boolean>(false);
     const [user, setUser] = useState<any>(null);
@@ -95,33 +92,6 @@ export const FormPohonOpd: React.FC<{
         }
     },[]);
 
-    const fetchPelaksana = async() => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      setIsLoading(true);
-      try{ 
-        const response = await fetch(`${API_URL}/pegawai/findall`,{
-          method: 'GET',
-          headers: {
-            Authorization: `${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        if(!response.ok){
-          throw new Error('cant fetch data opd');
-        }
-        const data = await response.json();
-        const opd = data.data.map((item: any) => ({
-          value : item.id,
-          label : item.nama_pegawai,
-        }));
-        setPelaksanaOption(opd);
-      } catch (err){
-        console.log('gagal mendapatkan data opd');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     const { fields, append, remove } = useFieldArray({
         control,
         name: "indikator",
@@ -138,13 +108,8 @@ export const FormPohonOpd: React.FC<{
                             level === 2 ? "Super Sub Tematik" :
                             level === 3 ? "Strategic" :
                             level === 4 ? "Tactical" :
-                            level === 5 ? "Operational" : "Unknown",
-            level_pohon :   level === 0 ? 1 :
-                            level === 1 ? 2 :
-                            level === 2 ? 3 :
-                            level === 3 ? 4 :
-                            level === 4 ? 5 :
-                            level === 5 ? 6 : "Unknown",
+                            level === 5 ? "Operational" : "Operational N",
+            level_pohon : level >= 0 && level <= 20 ? level + 1 : "Unknown",
             parent: id,
             tahun: Tahun?.value?.toString(),
             kode_opd: user?.roles == 'super_admin' ? SelectedOpd?.value : user?.kode_opd,
@@ -191,23 +156,17 @@ export const FormPohonOpd: React.FC<{
             :
             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
                 <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
-                    {level == 0 && 
-                        <h1>Tambah SubTematik Baru </h1>
-                    } 
-                    {level == 1 && 
-                        <h1>Tambah SubSubTematik Baru </h1>
-                    } 
-                    {level == 2 && 
-                        <h1>Tambah SuperSubTematik Baru </h1>
-                    } 
-                    {level == 3 && 
+                    { 
+                    level == 3 ?
                         <h1>Tambah Strategic Baru </h1>
-                    } 
-                    {level == 4 && 
+                    : 
+                    level == 4 ?
                         <h1>Tambah Tactical Baru </h1>
-                    } 
-                    {level == 5 && 
+                    : 
+                    level == 5 ?
                         <h1>Tambah Operational Baru </h1>
+                        :
+                        <h1>Tambah Operational N Baru </h1>
                     }
                 </div>
                 <div className="flex justify-center my-3 w-full">
@@ -220,23 +179,25 @@ export const FormPohonOpd: React.FC<{
                                 className="uppercase text-xs font-bold text-gray-700 my-2"
                                 htmlFor="nama_pohon"
                             >
-                                {level == 0 && 
+                                {level == 0 ? 
                                     "Sub Tematik"
-                                } 
-                                {level == 1 && 
+                                : 
+                                level == 1 ? 
                                     "Sub Sub Tematik"
-                                } 
-                                {level == 2 && 
+                                : 
+                                level == 2 ? 
                                     "Super Sub Tematik"
-                                } 
-                                {level == 3 && 
+                                : 
+                                level == 3 ? 
                                     "Strategic"
-                                } 
-                                {level == 4 && 
+                                : 
+                                level == 4 ? 
                                     "Tactical"
-                                } 
-                                {level == 5 && 
+                                : 
+                                level == 5 ? 
                                     "Operational"
+                                    :
+                                    "Operational N"
                                 }
                             </label>
                             <Controller
@@ -383,7 +344,7 @@ export const FormEditPohon: React.FC<{
     onCancel: () => void 
     pokin: 'pemda' | 'opd';
     EditBerhasil : (data: any) => void;
-}> = ({ id, level, onCancel, pokin, EditBerhasil }) => {
+}> = ({ id, level, onCancel, EditBerhasil }) => {
     
     const {
       control,
@@ -398,9 +359,7 @@ export const FormEditPohon: React.FC<{
     const [JenisPohon, setJenisPohon] = useState<string | null>(null);
     const [Tahun, setTahun] = useState<any>(null);
     const [Pelaksana, setPelaksana] = useState<OptionTypeString[]>([]);
-    const [PelaksanaOption, setPelaksanaOption] = useState<OptionTypeString[]>([]);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [IsEdited, setIsEdited] = useState<boolean>(false);
     const [DataEdit, setDataEdit] = useState<any>(null);
     const [Deleted, setDeleted] = useState<boolean>(false);
@@ -433,33 +392,6 @@ export const FormEditPohon: React.FC<{
         control,
         name: "indikator",
     });
-
-    const fetchPelaksana = async() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        setIsLoading(true);
-        try{ 
-          const response = await fetch(`${API_URL}/pegawai/findall`,{
-            method: 'GET',
-            headers: {
-              Authorization: `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if(!response.ok){
-            throw new Error('cant fetch data opd');
-          }
-          const data = await response.json();
-          const opd = data.data.map((item: any) => ({
-            value : item.id,
-            label : item.nama_pegawai,
-          }));
-          setPelaksanaOption(opd);
-        } catch (err){
-          console.log('gagal mendapatkan data opd');
-        } finally {
-          setIsLoading(false);
-        }
-      };
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -528,7 +460,7 @@ export const FormEditPohon: React.FC<{
             nama_pohon : data.nama_pohon,
             Keterangan : data.keterangan,
             jenis_pohon: JenisPohon,
-            level_pohon :   level,
+            level_pohon: level,
             parent: Number(Parent),
             pelaksana: pelaksanaIds,
             tahun: Tahun?.value?.toString(),
@@ -578,14 +510,16 @@ export const FormEditPohon: React.FC<{
             :
             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
                 <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
-                    {level == 4 && 
+                    {level == 4 ? 
                         <h1>Edit Strategic </h1>
-                    } 
-                    {level == 5 && 
+                    :
+                    level == 5 ? 
                         <h1>Edit Tactical </h1>
-                    }
-                    {level == 6 && 
+                    :
+                    level == 6 ? 
                         <h1>Edit Operational </h1>
+                        :
+                        <h1>Edit Operational N</h1>
                     }
                 </div>
                 <div className="flex justify-center my-3 w-full">
@@ -795,5 +729,365 @@ export const FormEditPohon: React.FC<{
             </div>
             }
         </>
+    );
+};
+export const FormCrosscutingOpd: React.FC<{ 
+    formId: number; 
+    id: number | null; 
+    level: number;
+    onCancel?: () => void 
+}> = ({ id, level, onCancel }) => {
+
+    const {
+      control,
+      handleSubmit,
+      formState: { errors },
+      reset
+    } = useForm<FormValue>();
+    const [NamaPohon, setNamaPohon] = useState<string>('');
+    const [Keterangan, setKeterangan] = useState<string>('');
+    const [Tahun, setTahun] = useState<any>(null);
+    const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
+    const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [DataAdd, setDataAdd] = useState<any>(null);
+    const [IsAdded, setIsAdded] = useState<boolean>(false);
+    const [Deleted, setDeleted] = useState<boolean>(false);
+    const [user, setUser] = useState<any>(null);
+    const token = getToken();
+    
+    useEffect(() => {
+        const fetchUser = getUser();
+        const data = getOpdTahun();
+        if(fetchUser){
+            setUser(fetchUser.user);
+        }
+        if(data.tahun){
+            const tahun = {
+                value: data.tahun.value,
+                label: data.tahun.label,
+            }
+            setTahun(tahun);
+        }
+        if(data.opd){
+            const opd = {
+                value: data.opd.value,
+                label: data.opd.label,
+            }
+            setSelectedOpd(opd);
+        }
+    },[]);
+
+    const fetchOpd = async() => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      setIsLoading(true);
+      try{ 
+        const response = await fetch(`${API_URL}/opd/findall`,{
+          method: 'GET',
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if(!response.ok){
+          throw new Error('cant fetch data opd');
+        }
+        const data = await response.json();
+        const opd = data.data.map((item: any) => ({
+          value : item.kode_opd,
+          label : item.nama_opd,
+        }));
+        setOpdOption(opd);
+      } catch (err){
+        console.log('gagal mendapatkan data opd');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "indikator",
+    });
+    
+    const onSubmit: SubmitHandler<FormValue> = async (data) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const formData = {
+            //key : value
+            nama_pohon : data.nama_pohon,
+            Keterangan : data.keterangan,
+            jenis_pohon:    level === 0 ? "Sub Tematik" :
+                            level === 1 ? "Sub Sub Tematik" :
+                            level === 2 ? "Super Sub Tematik" :
+                            level === 3 ? "Strategic" :
+                            level === 4 ? "Tactical" :
+                            level === 5 ? "Operational" : "Operational N",
+            level_pohon : level >= 0 && level <= 20 ? level + 1 : "Unknown",
+            parent: id,
+            tahun: Tahun?.value?.toString(),
+            kode_opd: data.kode_opd?.value,
+            ...(data.indikator && {
+                indikator: data.indikator.map((ind) => ({
+                    indikator: ind.nama_indikator,
+                    target: ind.targets.map((t) => ({
+                        target: t.target,
+                        satuan: t.satuan,
+                    })),
+                })),
+            }),
+        };
+        console.log(formData);
+        // try{
+        //     const url = '/pohon_kinerja_admin/crosscutting/create';
+        //     const response = await fetch(`${API_URL}${url}`, {
+        //         method: "POST",
+        //         headers: {
+        //           Authorization: `${token}`,
+        //           'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify(formData),
+        //     });
+        //     if(response.ok){
+        //         AlertNotification("Berhasil", "Berhasil menambahkan pohon crosscuting", "success", 1000);
+        //         setIsAdded(true);
+        //         const result = await response.json();
+        //         const data = result.data;
+        //         setDataAdd(data);
+        //     } else {
+        //         AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+        //     }
+        // } catch(err){
+        //     AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+        //     console.error(err);
+        // }
+    };
+
+    return (
+        <li>
+            {IsAdded && DataAdd ?
+                <PohonOpdEdited tema={DataAdd} deleteTrigger={() => setDeleted((prev) => !prev)}/>
+            :
+            <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500 bg-yellow-100">
+                <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
+                    { 
+                    level == 3 ?
+                        <h1>Tambah Strategic CrossCuting </h1>
+                    : 
+                    level == 4 ?
+                        <h1>Tambah Tactical CrossCuting </h1>
+                    : 
+                    level == 5 ?
+                        <h1>Tambah Operational CrossCuting </h1>
+                        :
+                        <h1>Tambah Operational N CrossCuting </h1>
+                    }
+                </div>
+                <div className="flex justify-center my-3 w-full">
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className='w-full'
+                    >
+                        <div className="flex flex-col py-3">
+                            <label
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
+                                htmlFor="kode_opd"
+                            >
+                                Cross Perangkat Daerah
+                            </label>
+                            <Controller
+                                name="kode_opd"
+                                control={control}
+                                render={({ field }) => (
+                                <>
+                                    <Select
+                                        {...field}
+                                        placeholder="Masukkan Perangkat Daerah"
+                                        value={KodeOpd}
+                                        options={OpdOption}
+                                        isLoading={isLoading}
+                                        isSearchable
+                                        isClearable
+                                        onMenuOpen={() => {
+                                            if (OpdOption.length === 0) {
+                                                fetchOpd();
+                                            }
+                                        }}
+                                        onChange={(option) => {
+                                            field.onChange(option);
+                                            setKodeOpd(option);
+                                        }}
+                                        styles={{
+                                            control: (baseStyles) => ({
+                                            ...baseStyles,
+                                            borderRadius: '8px',
+                                            textAlign: 'start',
+                                            })
+                                        }}
+                                    />
+                                </>
+                                )}
+                            />
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
+                                htmlFor="nama_pohon"
+                            >
+                                {level == 0 ? 
+                                    "Sub Tematik"
+                                : 
+                                level == 1 ? 
+                                    "Sub Sub Tematik"
+                                : 
+                                level == 2 ? 
+                                    "Super Sub Tematik"
+                                : 
+                                level == 3 ? 
+                                    "Strategic"
+                                : 
+                                level == 4 ? 
+                                    "Tactical"
+                                : 
+                                level == 5 ? 
+                                    "Operational"
+                                    :
+                                    "Operational N"
+                                }
+                            </label>
+                            <Controller
+                                name="nama_pohon"
+                                control={control}
+                                render={({ field }) => (
+                                    <input
+                                        {...field}
+                                        className="border px-4 py-2 rounded-lg"
+                                        id="nama_pohon"
+                                        type="text"
+                                        placeholder="masukkan Pohon"
+                                        value={field.value || NamaPohon}
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            setNamaPohon(e.target.value);
+                                        }}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
+                                htmlFor="keterangan"
+                            >
+                                Keterangan:
+                            </label>
+                            <Controller
+                                name="keterangan"
+                                control={control}
+                                render={({ field }) => (
+                                    <textarea
+                                        {...field}
+                                        className="border px-4 py-2 rounded-lg"
+                                        id="keterangan"
+                                        placeholder="masukkan keterangan"
+                                        value={field.value || Keterangan}
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            setKeterangan(e.target.value);
+                                        }}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <label className="uppercase text-base font-bold text-gray-700 my-2">
+                            indikator sasaran :
+                        </label>
+                        {fields.map((field, index) => (
+                            <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
+                                <Controller
+                                    name={`indikator.${index}.nama_indikator`}
+                                    control={control}
+                                    defaultValue={field.nama_indikator}
+                                    render={({ field }) => (
+                                        <div className="flex flex-col py-3">
+                                            <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                Nama Indikator {index + 1} :
+                                            </label>
+                                            <input
+                                                {...field}
+                                                className="border px-4 py-2 rounded-lg"
+                                                placeholder={`Masukkan nama indikator ${index + 1}`}
+                                            />
+                                        </div>
+                                    )}
+                                />
+                                {field.targets.map((_, subindex) => (
+                                    <>
+                                    <Controller
+                                        name={`indikator.${index}.targets.${subindex}.target`}
+                                        control={control}
+                                        defaultValue={_.target}
+                                        render={({ field }) => (
+                                            <div className="flex flex-col py-3">
+                                                <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                    Target :
+                                                </label>
+                                                <input
+                                                    {...field}
+                                                    type="text"
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    placeholder="Masukkan target"
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    <Controller
+                                        name={`indikator.${index}.targets.${subindex}.satuan`}
+                                        control={control}
+                                        defaultValue={_.satuan}
+                                        render={({ field }) => (
+                                            <div className="flex flex-col py-3">
+                                                <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                    Satuan :
+                                                </label>
+                                                <input
+                                                    {...field}
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    placeholder="Masukkan satuan"
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    </>
+                                ))}
+                                {index >= 0 && (
+                                    <ButtonRedBorder
+                                        type="button"
+                                        onClick={() => remove(index)}
+                                        className="w-[200px] my-3"
+                                    >
+                                        Hapus
+                                    </ButtonRedBorder>
+                                )}
+                            </div>
+                        ))}
+                        <ButtonSkyBorder
+                            className="mb-3 mt-2 w-full"
+                            type="button"
+                            onClick={() => append({ nama_indikator: "", targets: [{ target: "", satuan: "" }] })}
+                        >
+                            Tambah Indikator
+                        </ButtonSkyBorder>
+                        <ButtonSky type="submit" className="w-full my-3">
+                            Simpan
+                        </ButtonSky>
+                        <ButtonRed className="w-full my-3" onClick={onCancel}>
+                            Batal
+                        </ButtonRed>
+                    </form>
+                </div>
+            </div>
+            }
+        </li>
     );
 };

@@ -336,18 +336,18 @@ export const FormEditTematikKab = () => {
     const token = getToken();
     
     const TahunOption = [
-        {label: "Tahun 2019", value: "2019"},
-        {label: "Tahun 2020", value: "2020"},
-        {label: "Tahun 2021", value: "2021"},
-        {label: "Tahun 2022", value: "2022"},
-        {label: "Tahun 2023", value: "2023"},
-        {label: "Tahun 2024", value: "2024"},
-        {label: "Tahun 2025", value: "2025"},
-        {label: "Tahun 2026", value: "2026"},
-        {label: "Tahun 2027", value: "2027"},
-        {label: "Tahun 2028", value: "2028"},
-        {label: "Tahun 2029", value: "2029"},
-        {label: "Tahun 2030", value: "2030"},
+        {label: "2019", value: "2019"},
+        {label: "2020", value: "2020"},
+        {label: "2021", value: "2021"},
+        {label: "2022", value: "2022"},
+        {label: "2023", value: "2023"},
+        {label: "2024", value: "2024"},
+        {label: "2025", value: "2025"},
+        {label: "2026", value: "2026"},
+        {label: "2027", value: "2027"},
+        {label: "2028", value: "2028"},
+        {label: "2029", value: "2029"},
+        {label: "2030", value: "2030"},
     ];
 
     const { fields, append, remove, replace } = useFieldArray({
@@ -392,6 +392,12 @@ export const FormEditTematikKab = () => {
                     }
                     if(data.indikators){
                         reset({
+                            nama_pohon: data.nama_pohon || '',
+                            keterangan: data.keterangan || '',
+                            tahun: {
+                                value: data.tahun,
+                                label: data.tahun,
+                            },
                             indikator: data.indikators?.map((item: indikator) => ({
                                 nama_indikator: item.nama_indikator,
                                 targets: item.targets.map((t: target) => ({
@@ -417,25 +423,25 @@ export const FormEditTematikKab = () => {
     },[id, reset, token, replace]);
     
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      const formData = {
-            //key : value
-            nama_pohon : data.nama_pohon,
-            jenis_pohon : "Tematik",
-            level_pohon : 0,
-            keterangan: data.keterangan,
-            tahun: data.tahun?.value,
-            ...(data.indikator && {
-                indikator: data.indikator.map((ind) => ({
-                    indikator: ind.nama_indikator,
-                    target: ind.targets.map((t) => ({
-                        target: t.target,
-                        satuan: t.satuan,
-                    })),
-                })),
-            }),
-      };
-    //   console.log(formData);
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const formData = {
+              //key : value
+              nama_pohon : data.nama_pohon,
+              jenis_pohon : "Tematik",
+              level_pohon : 0,
+              keterangan: data.keterangan,
+              tahun: data.tahun?.value,
+              ...(data.indikator && {
+                  indikator: data.indikator.map((ind) => ({
+                      indikator: ind.nama_indikator,
+                      target: ind.targets.map((t) => ({
+                          target: t.target,
+                          satuan: t.satuan,
+                      })),
+                  })),
+              }),
+        };
+        // console.log(formData);
         try{
             const response = await fetch(`${API_URL}/pohon_kinerja_admin/update/${id}`, {
                 method: "PUT",

@@ -391,8 +391,7 @@ export const FormEditCascading: React.FC<{
       formState: { errors },
       reset
     } = useForm<FormValue>();
-    const [NamaPohon, setNamaPohon] = useState<string>('');
-    const [Keterangan, setKeterangan] = useState<string>('');
+    const [Status, setStatus] = useState<string>('');
     const [Parent, setParent] = useState<number | null>(null);
     const [KodeOpd, setKodeOpd] = useState<number | null>(null);
     const [JenisPohon, setJenisPohon] = useState<string | null>(null);
@@ -485,6 +484,9 @@ export const FormEditCascading: React.FC<{
                 if(data.jenis_pohon){
                     setJenisPohon(data.jenis_pohon);
                 }
+                if(data.status){
+                    setStatus(data.status);
+                }
                 reset({
                     nama_pohon: data.nama_pohon || '',
                     keterangan: data.keterangan || '',
@@ -507,10 +509,6 @@ export const FormEditCascading: React.FC<{
                         label: item.nama_pegawai,
                     })) || []
                 );
-                replace(data.indikator.map((item: indikator) => ({
-                    indikator: item.nama_indikator,
-                    targets: item.targets,
-                })));
             } catch(err) {
                 console.error(err, 'gagal mengambil data sesuai id pohon')
             }
@@ -528,11 +526,12 @@ export const FormEditCascading: React.FC<{
             nama_pohon : data.nama_pohon,
             Keterangan : data.keterangan,
             jenis_pohon: JenisPohon,
-            level_pohon :   level,
+            level_pohon : level,
             parent: Number(Parent),
             pelaksana: pelaksanaIds,
             tahun: Tahun?.value?.toString(),
             kode_opd: KodeOpd,
+            status: Status,
             ...(data.indikator && {
                 indikator: data.indikator.map((ind) => ({
                     indikator: ind.nama_indikator,
@@ -545,7 +544,7 @@ export const FormEditCascading: React.FC<{
         };
         // console.log(formData);
         try{
-            const url = `/pohon_kinerja_opd/update/${id}`;
+            const url = `/pohon_kinerja_admin/update/${id}`;
             const response = await fetch(`${API_URL}${url}`, {
                 method: "PUT",
                 headers: {
@@ -578,64 +577,13 @@ export const FormEditCascading: React.FC<{
             :
             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
                 <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
-                    {level == 4 && 
-                        <h1>Edit Strategic </h1>
-                    } 
-                    {level == 5 && 
-                        <h1>Edit Tactical </h1>
-                    }
-                    {level == 6 && 
-                        <h1>Edit Operational </h1>
-                    }
+                    Edit Pelaksana
                 </div>
                 <div className="flex justify-center my-3 w-full">
                     <form
                         onSubmit={handleSubmit(onSubmit)}
                         className='w-full'
                     >
-                        <div className="flex flex-col py-3">
-                            <label
-                                className="uppercase text-xs font-bold text-gray-700 my-2"
-                                htmlFor="nama_pohon"
-                            >
-                                {level == 1 && 
-                                    "Sub Tematik"
-                                } 
-                                {level == 2 && 
-                                    "Sub Sub Tematik"
-                                } 
-                                {level == 3 && 
-                                    "Super Sub Tematik"
-                                } 
-                                {level == 4 && 
-                                    "Strategic"
-                                } 
-                                {level == 5 && 
-                                    "Tactical"
-                                }
-                                {level == 6 && 
-                                    "Operational"
-                                }
-                            </label>
-                            <Controller
-                                name="nama_pohon"
-                                control={control}
-                                render={({ field }) => (
-                                    <input
-                                        {...field}
-                                        className="border px-4 py-2 rounded-lg"
-                                        id="nama_pohon"
-                                        type="text"
-                                        placeholder="masukkan Pohon"
-                                        value={field.value || NamaPohon}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            setNamaPohon(e.target.value);
-                                        }}
-                                    />
-                                )}
-                            />
-                        </div>
                         {pokin === 'opd' && 
                             <div className="flex flex-col py-3">
                                 <label
@@ -680,110 +628,6 @@ export const FormEditCascading: React.FC<{
                                 />
                             </div>
                         }
-                        <div className="flex flex-col py-3">
-                            <label
-                                className="uppercase text-xs font-bold text-gray-700 my-2"
-                                htmlFor="keterangan"
-                            >
-                                Keterangan:
-                            </label>
-                            <Controller
-                                name="keterangan"
-                                control={control}
-                                render={({ field }) => (
-                                    <textarea
-                                        {...field}
-                                        className="border px-4 py-2 rounded-lg"
-                                        id="keterangan"
-                                        placeholder="masukkan keterangan"
-                                        value={field.value || Keterangan}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            setKeterangan(e.target.value);
-                                        }}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <label className="uppercase text-base font-bold text-gray-700 my-2">
-                        indikator sasaran :
-                    </label>
-                    {fields.map((field, index) => (
-                        <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
-                            <Controller
-                                name={`indikator.${index}.nama_indikator`}
-                                control={control}
-                                defaultValue={field.nama_indikator}
-                                render={({ field }) => (
-                                    <div className="flex flex-col py-3">
-                                        <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                            Nama Indikator {index + 1} :
-                                        </label>
-                                        <input
-                                            {...field}
-                                            className="border px-4 py-2 rounded-lg"
-                                            placeholder={`Masukkan nama indikator ${index + 1}`}
-                                        />
-                                    </div>
-                                )}
-                            />
-                            {field.targets.map((_, subindex) => (
-                                <>
-                                <Controller
-                                    name={`indikator.${index}.targets.${subindex}.target`}
-                                    control={control}
-                                    defaultValue={_.target}
-                                    render={({ field }) => (
-                                        <div className="flex flex-col py-3">
-                                            <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                Target :
-                                            </label>
-                                            <input
-                                                {...field}
-                                                type="text"
-                                                className="border px-4 py-2 rounded-lg"
-                                                placeholder="Masukkan target"
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                <Controller
-                                    name={`indikator.${index}.targets.${subindex}.satuan`}
-                                    control={control}
-                                    defaultValue={_.satuan}
-                                    render={({ field }) => (
-                                        <div className="flex flex-col py-3">
-                                            <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                Satuan :
-                                            </label>
-                                            <input
-                                                {...field}
-                                                className="border px-4 py-2 rounded-lg"
-                                                placeholder="Masukkan satuan"
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                </>
-                            ))}
-                            {index >= 0 && (
-                                <ButtonRedBorder
-                                    type="button"
-                                    onClick={() => remove(index)}
-                                    className="w-[200px] my-3"
-                                >
-                                    Hapus
-                                </ButtonRedBorder>
-                            )}
-                        </div>
-                    ))}
-                    <ButtonSkyBorder
-                        className="mb-3 mt-2 w-full"
-                        type="button"
-                        onClick={() => append({ nama_indikator: "", targets: [{ target: "", satuan: "" }] })}
-                    >
-                        Tambah Indikator
-                    </ButtonSkyBorder>
                         <ButtonSky type="submit" className="w-full my-3">
                             Simpan
                         </ButtonSky>

@@ -238,14 +238,14 @@ const Cascading = () => {
                                     </table>
                                 </div>
                                 {/* button */}
-                                {(User?.roles == 'admin_opd'|| User?.roles == 'super_admin') &&
+                                {/* {(User?.roles == 'admin_opd'|| User?.roles == 'super_admin') &&
                                     <div className="flex justify-center border my-3 py-3 border-black">
                                         <ButtonGreenBorder onClick={newChild}>
                                             <TbCirclePlus />
                                             Strategic
                                         </ButtonGreenBorder>
                                     </div>
-                                }
+                                } */}
                             </div>
                             {Pokin?.childs ? (
                             <ul>

@@ -106,31 +106,31 @@ export const FormPohonPemda: React.FC<{
     // }, [fields, append]);
 
     const fetchOpd = async() => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        setIsLoading(true);
-        try{ 
-          const response = await fetch(`${API_URL}/opd/findall`,{
-            method: 'GET',
-            headers: {
-              Authorization: `${token}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          if(!response.ok){
-            throw new Error('cant fetch data opd');
-          }
-          const data = await response.json();
-          const opd = data.data.map((item: any) => ({
-            value : item.kode_opd,
-            label : item.nama_opd,
-          }));
-          setOpdOption(opd);
-        } catch (err){
-          console.log('gagal mendapatkan data opd');
-        } finally {
-          setIsLoading(false);
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      setIsLoading(true);
+      try{ 
+        const response = await fetch(`${API_URL}/opd/findall`,{
+          method: 'GET',
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if(!response.ok){
+          throw new Error('cant fetch data opd');
         }
-      };
+        const data = await response.json();
+        const opd = data.data.map((item: any) => ({
+          value : item.kode_opd,
+          label : item.nama_opd,
+        }));
+        setOpdOption(opd);
+      } catch (err){
+        console.log('gagal mendapatkan data opd');
+      } finally {
+        setIsLoading(false);
+      }
+    };
     const fetchPelaksana = async() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
       setIsLoading(true);
@@ -796,6 +796,7 @@ export const FormEditPohon: React.FC<{
     } = useForm<FormValue>();
     const [NamaPohon, setNamaPohon] = useState<string>('');
     const [Keterangan, setKeterangan] = useState<string>('');
+    const [Status, setStatus] = useState<string>('');
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
     const [Parent, setParent] = useState<number | null>(null);
     const [Tahun, setTahun] = useState<any>(null);
@@ -903,6 +904,9 @@ export const FormEditPohon: React.FC<{
                 if(data.parent){
                     setParent(data.parent);
                 }
+                if(data.status){
+                    setStatus(data.status);
+                }
                 if(data.kode_opd){
                     const opd = {
                         value: data.kode_opd,
@@ -962,6 +966,7 @@ export const FormEditPohon: React.FC<{
             parent: Number(Parent),
             tahun: Tahun?.value?.toString(),
             pelaksana: pelaksanaIds,
+            status: Status,
             kode_opd:  (level === 0 || level === 1 || level === 2 || level === 3) ? null : KodeOpd?.value,
             ...(data.indikator && {
                 indikator: data.indikator.map((ind) => ({

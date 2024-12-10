@@ -19,7 +19,8 @@ import {
   TbSquareRoundedLetterS,
   TbUser,
   TbHexagonLetterR,
-  TbBinaryTree2
+  TbBinaryTree2,
+  TbTarget
 } from "react-icons/tb";
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -59,6 +60,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
     const [SubTematik, setSubTematik] = useState<boolean | null>(null);
     const [KotaPohonKinerjaKota, setKotaPohonKinerjaKota] = useState<boolean | null>(null);
   const [PerencanaanOPD, setPerencanaanOPD] = useState<boolean | null>(null);
+    const [TujuanOpd, setTujuanOpd] = useState<boolean | null>(null);
     const [pohonKinerjaOpd, setPohonKinerjaOpd] = useState<boolean | null>(null);
     const [PohonCascadingOpd, setPohonCascadingOpd] = useState<boolean | null>(null);
   const [Perencanaan, setPerencanaan] = useState<boolean | null>(null);
@@ -112,6 +114,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -147,6 +150,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -181,6 +185,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -215,6 +220,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -250,6 +256,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -284,6 +291,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -318,6 +326,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -352,6 +361,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -386,6 +396,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -420,6 +431,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -453,6 +465,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -488,6 +501,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -522,6 +536,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -557,6 +572,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(true);
       setKotaPohonKinerjaKota(true);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -591,6 +607,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setSubTematik(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -625,6 +642,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setSubTematik(true);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setLaporan(false);
       setUsulan(false);
@@ -639,6 +657,41 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPohonCascadingOpd(false);
     }
     //PERENCANAAN OPD
+    if(url == "/tujuanopd"){
+      setDashboard(false);
+      setDataMaster(false);
+      setMasterOPD(false);
+      setMasterPegawai(false);
+      setLevelPohon(false);
+      setMasterProgramKegiatan(false);
+      setMasterBidangUrusan(false);
+      setMasterKegiatan(false);
+      setMasterProgram(false);
+      setMasterSubKegiatan(false);
+      setMasterUrusan(false);
+      setMasterJabatan(false);
+      setMasterLembaga(false);
+      setMasterRole(false);
+      setMasterUser(false);      
+      setPerencanaanKota(false);
+      setTematikKota(false);
+      setSubTematik(false);
+      setKotaPohonKinerjaKota(false);
+      setPerencanaanOPD(true);
+      setTujuanOpd(true);
+      setPohonKinerjaOpd(false);
+      setLaporan(false);
+      setUsulan(false);
+      setRencanaKinerjaKAK(false);
+      setRincianBelanja(false);
+      setMusrenbang(false);
+      setPokokPikiran(false);
+      setMandatori(false);
+      setManajemenResiko(false);
+      setRencanaKinerja(false);
+      setPohonCascading(false);
+      setPohonCascadingOpd(false);
+    }
     if(url == "/pohonkinerjaopd"){
       setDashboard(false);
       setDataMaster(false);
@@ -660,6 +713,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setSubTematik(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(true);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(true);
       setLaporan(false);
       setUsulan(false);
@@ -694,6 +748,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(true);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setUsulan(false);
       setRencanaKinerjaKAK(false);
@@ -954,6 +1009,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPerencanaanKota(false);
       setKotaPohonKinerjaKota(false);
       setPerencanaanOPD(false);
+      setTujuanOpd(false);
       setPohonKinerjaOpd(false);
       setUsulan(false);
       setRencanaKinerjaKAK(false);
@@ -1168,24 +1224,12 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
             {/* submenu */}
             {PerencanaanOPD && 
             <div className="flex flex-col border-l-2 border-white rounded-b-xl px-3 py-2 ml-2 duration-200">
-              {/* <Link href="#">
-                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PohonKinerja ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
-                  <TbSquareRoundedLetterS className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Strategic</span>
+              <Link href="/tujuanopd">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${TujuanOpd ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <TbTarget className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Tujuan OPD</span>
                 </li>
               </Link>
-              <Link href="#">
-                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PohonKinerja ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
-                  <TbSquareRoundedLetterT className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Tactical</span>
-                </li>
-              </Link>
-              <Link href="#">
-                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PohonKinerja ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
-                  <TbSquareRoundedLetterO className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Operational</span>
-                </li>
-              </Link> */}
               <Link href="/pohonkinerjaopd">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${pohonKinerjaOpd ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
                   <TbBinaryTree className="text-xl" />

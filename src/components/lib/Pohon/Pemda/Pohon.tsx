@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { TbArrowGuide, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHourglass, TbPencil, TbTrash } from 'react-icons/tb';
-import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder } from '@/components/global/Button';
+import { TbEye, TbArrowGuide, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHourglass, TbPencil, TbTrash } from 'react-icons/tb';
+import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
 import {FormPohonPemda, FormAmbilPohon, FormEditPohon} from './FormPohonPemda';
 import { getToken } from '../../Cookie';
@@ -19,6 +19,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [FormStrategic, setFormStrategic] = useState<number[]>([]); // List of form IDs
     const [strategicPohons, setStrategicPohons] = useState(tema.strategics || []);
     const [edit, setEdit] = useState<boolean>(false);
+    const [Show, setShow] = useState<boolean>(true);
     const [Edited, setEdited] = useState<any | null>(null);
     const token = getToken();
     
@@ -36,6 +37,9 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
       setEdited(data);
       setEdit(false);
     };
+    const handleShow = () => {
+        setShow((prev) => !prev);
+    }
 
     const hapusSubTematik = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -122,7 +126,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             ${tema.jenis_pohon === "Operational Pemda" && 'border-green-500 text-white bg-gradient-to-r from-[#007982] from-40% to-[#2DCB06]'}
                             `}
                             >
-                        <h1>{tema.jenis_pohon} ID: {tema.id} parent: {tema.parent}</h1>
+                        <h1>{tema.jenis_pohon}</h1>
                     </div>
                     {/* BODY */}
                     <div className="flex justify-center my-3">
@@ -171,40 +175,50 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         tema.jenis_pohon !== 'Operational' &&
                         tema.jenis_pohon !== 'Operational N'
                     ) &&
-                        <div className="flex justify-evenly my-3 py-3">
-                            {/* TOMBOL ADD POHON SESUAI URUTAN AKARNYA */}
-                            {tema.level_pohon !== 3 &&
-                                <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 rounded-lg
-                                        ${(tema.jenis_pohon === 'Strategic' || tema.jenis_pohon === 'Strategic Pemda') && 'border-[#3b82f6] hover:bg-[#3b82f6] text-[#3b82f6] hover:text-white'}    
-                                    `}
-                                    onClick={newChild}
-                                >
-                                    <TbCirclePlus className='mr-1' />
-                                    {tambahPohonName(tema.jenis_pohon)}
-                                </ButtonGreenBorder>
-                            }
-                            {/* AMBIL POHON MULAI DARI STRATEGIC DARI OPD */}
-                            <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 border-[#00A607] hover:bg-[#00A607] text-[#00A607] hover:text-white rounded-lg`}
-                                onClick={newPutChild}
-                                >
-                                <TbArrowGuide className='mr-1' />
-                                {"(Ambil)"} {ambilPohonName(tema.jenis_pohon)}
-                            </ButtonGreenBorder>
-                            {/* TOMBOL ADD KHUSUS STRATEGIC KOTA  */}
-                            {(tema.level_pohon === 0 || tema.level_pohon === 1 || tema.level_pohon === 2 || tema.level_pohon === 3) &&
-                                <ButtonRedBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 rounded-lg`}
-                                    onClick={newStrategic}
-                                >
-                                    <TbCirclePlus className='mr-1' />
-                                    Strategic
-                                </ButtonRedBorder>
+                        <div className="flex flex-wrap gap-3 justify-evenly my-3 py-3">
+                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                onClick={handleShow}
+                            >
+                                <TbEye className='mr-1' />
+                                {Show ? 'Sembunyikan' : 'Tampilkan'}
+                            </ButtonBlackBorder>
+                            {Show &&
+                                <>
+                                    {/* TOMBOL ADD POHON SESUAI URUTAN AKARNYA */}
+                                    {tema.level_pohon !== 3 &&
+                                        <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 rounded-lg
+                                                ${(tema.jenis_pohon === 'Strategic' || tema.jenis_pohon === 'Strategic Pemda') && 'border-[#3b82f6] hover:bg-[#3b82f6] text-[#3b82f6] hover:text-white'}    
+                                            `}
+                                            onClick={newChild}
+                                        >
+                                            <TbCirclePlus className='mr-1' />
+                                            {tambahPohonName(tema.jenis_pohon)}
+                                        </ButtonGreenBorder>
+                                    }
+                                    {/* AMBIL POHON MULAI DARI STRATEGIC DARI OPD */}
+                                    <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 border-[#00A607] hover:bg-[#00A607] text-[#00A607] hover:text-white rounded-lg`}
+                                        onClick={newPutChild}
+                                        >
+                                        <TbArrowGuide className='mr-1' />
+                                        {"(Ambil)"} {ambilPohonName(tema.jenis_pohon)}
+                                    </ButtonGreenBorder>
+                                    {/* TOMBOL ADD KHUSUS STRATEGIC KOTA  */}
+                                    {(tema.level_pohon === 0 || tema.level_pohon === 1 || tema.level_pohon === 2 || tema.level_pohon === 3) &&
+                                        <ButtonRedBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 rounded-lg`}
+                                            onClick={newStrategic}
+                                        >
+                                            <TbCirclePlus className='mr-1' />
+                                            Strategic
+                                        </ButtonRedBorder>
+                                    }
+                                </>
                             }
                         </div>
                     }
                 </div>
             </>
             }
-            <ul>
+            <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
                     <Pohon tema={dahan} key={index} deleteTrigger={deleteTrigger}/>
                 ))}
@@ -252,6 +266,7 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [FormStrategic, setFormStrategic] = useState<number[]>([]); // List of form IDs
     const [strategicPohons, setStrategicPohons] = useState(tema.strategics || []);
     const [edit, setEdit] = useState<boolean>(false);
+    const [Show, setShow] = useState<boolean>(true);
     const [Edited, setEdited] = useState<any | null>(null);
     const token = getToken();
     
@@ -266,9 +281,12 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         setFormStrategic([...PutList, Date.now()]); // Using unique IDs
     };
     const handleEditSuccess = (data: any) => {
-        setEdited(data);
-        setEdit(false);
-      };
+      setEdited(data);
+      setEdit(false);
+    };
+    const handleShow = () => {
+        setShow((prev) => !prev);
+    }
 
     const hapusSubTematik = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -416,40 +434,50 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         tema.jenis_pohon !== 'Operational' &&
                         tema.jenis_pohon !== 'Operational N'
                     ) &&
-                        <div className="flex justify-evenly my-3 py-3">
-                            {/* TOMBOL ADD POHON SESUAI URUTAN AKARNYA */}
-                            {tema.level_pohon !== 3 &&
-                                <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 rounded-lg
-                                        ${(tema.jenis_pohon === 'Strategic' || tema.jenis_pohon === 'Strategic Pemda') && 'border-[#3b82f6] hover:bg-[#3b82f6] text-[#3b82f6] hover:text-white'}
-                                    `}
-                                    onClick={newChild}
-                                >
-                                    <TbCirclePlus className='mr-1' />
-                                    {tambahPohonName(tema.jenis_pohon)}
-                                </ButtonGreenBorder>
-                            }
-                            {/* AMBIL POHON MULAI DARI STRATEGIC DARI OPD */}
-                            <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 border-[#00A607] hover:bg-[#00A607] text-[#00A607] hover:text-white rounded-lg`}
-                                onClick={newPutChild}
+                        <div className="flex flex-wrap gap-3 justify-evenly my-3 py-3">
+                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                onClick={handleShow}
                             >
-                                <TbArrowGuide className='mr-1' />
-                                {"(Ambil)"} {ambilPohonName(tema.jenis_pohon)}
-                            </ButtonGreenBorder>
-                            {/* TOMBOL ADD KHUSUS STRATEGIC KOTA  */}
-                            {(tema.level_pohon === 0 || tema.level_pohon === 1 || tema.level_pohon === 2 || tema.level_pohon === 3) &&
-                                <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 rounded-lg`}
-                                    onClick={newStrategic}
-                                >
-                                    <TbCirclePlus className='mr-1' />
-                                    Strategic
-                                </ButtonGreenBorder>
+                                <TbEye className='mr-1' />
+                                {Show ? 'Sembunyikan' : 'Tampilkan'}
+                            </ButtonBlackBorder>
+                            {Show &&
+                                <>
+                                    {/* TOMBOL ADD POHON SESUAI URUTAN AKARNYA */}
+                                    {tema.level_pohon !== 3 &&
+                                        <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 rounded-lg
+                                                ${(tema.jenis_pohon === 'Strategic' || tema.jenis_pohon === 'Strategic Pemda') && 'border-[#3b82f6] hover:bg-[#3b82f6] text-[#3b82f6] hover:text-white'}    
+                                            `}
+                                            onClick={newChild}
+                                        >
+                                            <TbCirclePlus className='mr-1' />
+                                            {tambahPohonName(tema.jenis_pohon)}
+                                        </ButtonGreenBorder>
+                                    }
+                                    {/* AMBIL POHON MULAI DARI STRATEGIC DARI OPD */}
+                                    <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 border-[#00A607] hover:bg-[#00A607] text-[#00A607] hover:text-white rounded-lg`}
+                                        onClick={newPutChild}
+                                        >
+                                        <TbArrowGuide className='mr-1' />
+                                        {"(Ambil)"} {ambilPohonName(tema.jenis_pohon)}
+                                    </ButtonGreenBorder>
+                                    {/* TOMBOL ADD KHUSUS STRATEGIC KOTA  */}
+                                    {(tema.level_pohon === 0 || tema.level_pohon === 1 || tema.level_pohon === 2 || tema.level_pohon === 3) &&
+                                        <ButtonRedBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 rounded-lg`}
+                                            onClick={newStrategic}
+                                        >
+                                            <TbCirclePlus className='mr-1' />
+                                            Strategic
+                                        </ButtonRedBorder>
+                                    }
+                                </>
                             }
                         </div>
                     }
                 </div>
             </>
             }
-            <ul>
+            <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
                     <Pohon tema={dahan} key={index} deleteTrigger={deleteTrigger}/>
                 ))}

@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import { ButtonSky, ButtonRed } from '@/components/global/Button';
 import { AlertNotification } from "@/components/global/Alert";
-import { getOpdTahun } from "@/components/lib/Cookie";
+import { getOpdTahun, getToken } from "@/components/lib/Cookie";
+import Select from 'react-select';
 
 interface OptionTypeString {
     value: string;
@@ -22,6 +23,7 @@ interface FormValue {
     parent: string;
     nama_pohon: string;
     jenis_pohon: string;
+    level_pohon: number;
     keterangan: string;
     tahun: OptionTypeString;
     status: string;
@@ -38,7 +40,7 @@ type target = {
     satuan: string;
 };
 
-export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose}) => {
+export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id}) => {
 
     const {
       control,
@@ -46,10 +48,15 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose}) => {
       formState: { errors },
       reset
     } = useForm<FormValue>();
-    const [NamaPohon, setNamaPohon] = useState<string>('');
-    const [Keterangan, setKeterangan] = useState<string>('');
+    const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
+    const [Parent, setParent] = useState<string>('');
+    const [JenisPohon, setJenisPohon] = useState<string>('');
     const [Tahun, setTahun] = useState<any>(null);
+    const [Pelaksana, setPelaksana] = useState<OptionTypeString[]>([]);
+    const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
+    const [IsLoading, setIsLoading] = useState<boolean>(false);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
+    const token = getToken();
     
     useEffect(() => {
         const data = getOpdTahun();
@@ -69,50 +76,141 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose}) => {
         }
     },[]);
 
+    const { replace } = useFieldArray({
+        control,
+        name: "indikator",
+    });
+
+    useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const fetchPohonIdUntukCross = async() => {
+            try{
+                const response = await fetch(`${API_URL}/pohon_kinerja_opd/detail/${id}`, {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                });
+                if(!response.ok){
+                    throw new Error('terdapat kesalahan di koneksi backend');
+                }
+                const result = await response.json();
+                const data = result.data;
+                if(data.parent){
+                    setParent(data.parent);
+                }
+                if(data.jenis_pohon){
+                    setJenisPohon(data.jenis_pohon);
+                }
+                reset({
+                    nama_pohon: data.nama_pohon || '',
+                    keterangan: data.keterangan || '',
+                    parent: data.parent || '',
+                    level_pohon: data.level_pohon || '',
+                    indikator: data.indikator?.map((item: indikator) => ({
+                        nama_indikator: item.nama_indikator,
+                        targets: item.targets.map((t: target) => ({
+                            target: t.target,
+                            satuan: t.satuan,
+                        })),
+                    })),
+                });
+            } catch(err) {
+                console.error(err, 'gagal mengambil data sesuai id pohon')
+            }
+        }
+        if(isOpen){
+            fetchPohonIdUntukCross();
+        }
+    },[id, reset, token, replace, isOpen]);
+    
+    const fetchOpd = async() => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      setIsLoading(true);
+      try{ 
+        const response = await fetch(`${API_URL}/opd/findall`,{
+          method: 'GET',
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if(!response.ok){
+          throw new Error('cant fetch data opd');
+        }
+        const data = await response.json();
+        const opd = data.data.map((item: any) => ({
+          value : item.kode_opd,
+          label : item.nama_opd,
+        }));
+        setOpdOption(opd);
+      } catch (err){
+        console.log('gagal mendapatkan data opd');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     const handleClose = () => {
       reset(); // Mereset seluruh form
-      setNamaPohon('');
-      setKeterangan('');
+      setKodeOpd(null);
       onClose();
     };
 
-    // const onSubmit: SubmitHandler<FormValue> = async (data) => {
-    //     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    //     const formData = {
-    //         //key : value
-    //         nama_pohon : data.nama_pohon,
-    //         Keterangan : data.keterangan,
-    //         jenis_pohon:    level === 1 ? "Strategic" :
-    //                         level === 2 ? "Tactical" :
-    //                         level === 3 ? "Operational" : "Unknown",
-    //         level_pohon :   level === 1 ? 4 :
-    //                         level === 2 ? 5 :
-    //                         level === 3 ? 6 : "Unknown",
-    //         parent: id,
-    //         tahun: Tahun?.value?.toString(),
-    //         kode_opd: SelectedOpd?.value,
-    //     };
-    //     // console.log(formData);
-    //     try{
-    //         const response = await fetch(`${API_URL}/pohon_kinerja_opd/create`, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type" : "application/json",
-    //             },
-    //             body: JSON.stringify(formData),
-    //         });
-    //         if(response.ok){
-    //             AlertNotification("Berhasil", "Berhasil menambahkan strategic", "success", 1000);
-    //             onClose();
-    //             onSuccess();
-    //         } else {
-    //             AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
-    //         }
-    //     } catch(err){
-    //         AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
-    //         console.error(err);
-    //     }
-    //   };
+    const onSubmit: SubmitHandler<FormValue> = async (data) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const formData = {
+            //key : value
+            nama_pohon : data.nama_pohon,
+            Keterangan : data.keterangan,
+            jenis_pohon: 
+                JenisPohon === "Strategic" ? "Tactical Crosscutting" :
+                JenisPohon === "Tactical" ? "Operational Crosscutting" :
+                JenisPohon === "Operational" ? "Operational Crosscutting" :
+                "",
+            level_pohon: data.level_pohon === 4 ? 5 :
+                         data.level_pohon === 5 ? 6 :
+                         data.level_pohon === 6 ? 7 :
+                         data.level_pohon === 7 ? 8 :
+                         0,
+            parent: Number(Parent),
+            kode_opd: KodeOpd?.value,
+            tahun: Tahun?.value?.toString(),
+            ...(data.indikator && {
+                indikator: data.indikator.map((ind) => ({
+                    indikator: ind.nama_indikator,
+                    target: ind.targets.map((t) => ({
+                        target: t.target,
+                        satuan: t.satuan,
+                    })),
+                })),
+            }),
+        };
+        if(KodeOpd?.value == null || undefined){
+            AlertNotification("pilih opd terlebih dahulu", "", "warning", 1000);
+        } else {
+            // console.log(formData);
+            try{
+                const response = await fetch(`${API_URL}/crosscutting_opd/create/${id}`, {
+                    method: "POST",
+                    headers: {
+                        Authorization: `${token}`,
+                        "Content-Type" : "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
+                if(response.ok){
+                    AlertNotification("Berhasil", "Berhasil menambahkan strategic", "success", 1000);
+                    onClose();
+                } else {
+                    AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+                }
+            } catch(err){
+                AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+                console.error(err);
+            }
+        }
+      };
 
     if(!isOpen){
         return null;
@@ -123,7 +221,7 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose}) => {
             <div className={`fixed inset-0 bg-black opacity-30`} onClick={handleClose}></div>
             <div className={`bg-white rounded-lg p-8 z-10 w-3/5 text-start`}>
                 <form
-                    // onSubmit={handleSubmit(onSubmit)}
+                    onSubmit={handleSubmit(onSubmit)}
                 >
                     <div className="w-max-[500px] py-2 border-b text-center">
                        Cross Cutting
@@ -131,51 +229,41 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose}) => {
                     <div className="flex flex-col py-3">
                         <label
                             className="uppercase text-xs font-bold text-gray-700 my-2"
-                            htmlFor="nama_pohon"
+                            htmlFor="kode_opd"
                         >
                             Perangkat Daerah
                         </label>
                         <Controller
-                            name="nama_pohon"
+                            name="kode_opd"
                             control={control}
                             render={({ field }) => (
-                                <input
+                            <>
+                                <Select
                                     {...field}
-                                    className="border px-4 py-2 rounded-lg"
-                                    id="nama_pohon"
-                                    type="text"
-                                    placeholder="Pilih Perangkat Daerah"
-                                    value={field.value || NamaPohon}
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        setNamaPohon(e.target.value);
+                                    placeholder="Masukkan Perangkat Daerah"
+                                    value={KodeOpd}
+                                    options={OpdOption}
+                                    isLoading={IsLoading}
+                                    isSearchable
+                                    isClearable
+                                    onMenuOpen={() => {
+                                        if (OpdOption.length === 0) {
+                                            fetchOpd();
+                                        }
+                                    }}
+                                    onChange={(option) => {
+                                        field.onChange(option);
+                                        setKodeOpd(option);
+                                    }}
+                                    styles={{
+                                        control: (baseStyles) => ({
+                                        ...baseStyles,
+                                        borderRadius: '8px',
+                                        textAlign: 'start',
+                                        })
                                     }}
                                 />
-                            )}
-                        />
-                    </div>
-                    <div className="flex flex-col py-3">
-                        <label
-                            className="uppercase text-xs font-bold text-gray-700 my-2"
-                            htmlFor="keterangan"
-                        >
-                            Keterangan:
-                        </label>
-                        <Controller
-                            name="keterangan"
-                            control={control}
-                            render={({ field }) => (
-                                <textarea
-                                    {...field}
-                                    className="border px-4 py-2 rounded-lg"
-                                    id="keterangan"
-                                    placeholder="masukkan keterangan"
-                                    value={field.value || Keterangan}
-                                    onChange={(e) => {
-                                        field.onChange(e);
-                                        setKeterangan(e.target.value);
-                                    }}
-                                />
+                            </>
                             )}
                         />
                     </div>

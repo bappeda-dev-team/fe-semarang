@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { TbCirclePlus, TbPencil, TbTrash, TbTrashX, TbUsersPlus } from 'react-icons/tb';
-import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder } from '@/components/global/Button';
+import { TbCirclePlus, TbPencil, TbTrash, TbTrashX, TbUsersPlus, TbEye } from 'react-icons/tb';
+import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
 import { FormCascading, FormEditCascading } from './FormCascading';
 import { getToken, getUser } from '../../Cookie';
@@ -15,6 +15,7 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [childPohons, setChildPohons] = useState(tema.childs || []);
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
     const [edit, setEdit] = useState<boolean>(false);
+    const [Show, setShow] = useState<boolean>(true);
     const [Edited, setEdited] = useState<any | null>(null);
     const [User, setUser] = useState<any>(null);
     const token = getToken();
@@ -34,6 +35,9 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
       setEdited(data);
       setEdit(false);
     };
+    const handleShow = () => {
+        setShow((prev) => !prev);
+    }
     const hapusPelaksana = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
@@ -90,7 +94,7 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-green-500 text-green-500'}
                         `}
                             >
-                        <h1>{tema.jenis_pohon} ID: {tema.id} Parent: {tema.parent}</h1>
+                        <h1>{tema.jenis_pohon}</h1>
                     </div>
                     {/* BODY */}
                     <div className="flex justify-center my-3">
@@ -109,6 +113,12 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
                             `}
                         >
+                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                onClick={handleShow}
+                            >
+                                <TbEye className='mr-1' />
+                                {Show ? 'Sembunyikan' : 'Tampilkan'}
+                            </ButtonBlackBorder>
                             <ButtonGreenBorder onClick={() => setEdit(true)}>
                                 <TbUsersPlus className="mr-1"/>
                                 Pelaksana
@@ -123,33 +133,22 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
                             `}
                         >
+                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                onClick={handleShow}
+                            >
+                                <TbEye className='mr-1' />
+                                {Show ? 'Sembunyikan' : 'Tampilkan'}
+                            </ButtonBlackBorder>
                             <ButtonSkyBorder onClick={() => setEdit(true)}>
                                 <TbPencil className="mr-1"/>
                                 Pelaksana
                             </ButtonSkyBorder>
                         </div>
                     }
-                    {/* footer */}
-                    {/* {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' )&& 
-                        <div className="flex justify-evenly my-3 py-3">
-                            <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 border-[#00A607] hover:bg-[#00A607] text-[#00A607] hover:text-white rounded-lg`}
-                                onClick={newChild}
-                                >
-                                <TbCirclePlus className='mr-1' />
-                                {newChildButtonName(tema.jenis_pohon)}
-                            </ButtonGreenBorder>
-                            <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 border-[#00A607] hover:bg-[#00A607] text-[#00A607] hover:text-white rounded-lg`}
-                                onClick={newChild}
-                                >
-                                <TbCirclePlus className='mr-1' />
-                                Pelaksana
-                                </ButtonGreenBorder>
-                        </div>
-                    } */}
                 </div>
             </>
             }
-            <ul>
+            <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
                     <PohonCascading tema={dahan} key={index} deleteTrigger={deleteTrigger}/>
                 ))}
@@ -171,6 +170,7 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
 
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
     const [edit, setEdit] = useState<boolean>(false);
+    const [Show, setShow] = useState<boolean>(true);
     const [Edited, setEdited] = useState<any | null>(null);
     const token = getToken();
     
@@ -182,6 +182,9 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
       setEdited(data);
       setEdit(false);
     };
+    const handleShow = () => {
+        setShow((prev) => !prev);
+    }
 
     const hapusPelaksana = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -260,7 +263,7 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
                             ${tema.jenis_pohon === "Operational Pemda" && 'border-green-500 text-white bg-gradient-to-r from-[#007982] from-40% to-[#2DCB06]'}
                         `}
                     >
-                        <h1>{tema.jenis_pohon === 'StrategicKota' ? 'StrategicPemda' : tema.jenis_pohon}</h1>
+                        <h1>{tema.jenis_pohon}</h1>
                     </div>
                     {/* BODY */}
                     <div className="flex justify-center my-3">
@@ -295,6 +298,12 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
                     }
                     {/* footer */}
                     <div className="flex justify-evenly my-3 py-3">
+                        <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                            onClick={handleShow}
+                        >
+                            <TbEye className='mr-1' />
+                            {Show ? 'Sembunyikan' : 'Tampilkan'}
+                        </ButtonBlackBorder>
                         <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 border-[#00A607] hover:bg-[#00A607] text-[#00A607] hover:text-white rounded-lg`}
                             onClick={newChild}
                             >
@@ -309,7 +318,7 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
                         </ButtonGreenBorder> */}
                     </div>
                 </div>
-                <ul>
+                <ul style={{ display: Show ? '' : 'none' }}>
                     {formList.map((formId) => (
                         <FormCascading
                             level={tema.level_pohon}

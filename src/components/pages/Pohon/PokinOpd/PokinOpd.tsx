@@ -795,12 +795,21 @@ const PokinOpd = () => {
                                                             <td className="min-w-[100px] border px-2 py-3 border-black text-start">Tujuan OPD</td>
                                                             <td className="min-w-[300px] border px-2 py-3 border-black text-start">{item.tujuan}</td>
                                                         </tr>
-                                                        {item.indikator.map((i: any) => (
-                                                            <tr key={item.id}>
-                                                                <td className="min-w-[100px] border px-2 py-3 border-black text-start">Indikator</td>
-                                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">{i.indikator}</td>
-                                                            </tr>
-                                                        ))}
+                                                        {item.indikator ? 
+                                                            <>
+                                                                {item.indikator.map((i: any) => (
+                                                                    <tr key={item.id}>
+                                                                        <td className="min-w-[100px] border px-2 py-3 border-black text-start">Indikator</td>
+                                                                        <td className="min-w-[300px] border px-2 py-3 border-black text-start">{i.indikator}</td>
+                                                                    </tr>
+                                                                ))}
+                                                            </>
+                                                        :
+                                                                    <tr key={item.id}>
+                                                                        <td className="min-w-[100px] border px-2 py-3 border-black text-start">Indikator</td>
+                                                                        <td className="min-w-[300px] border px-2 py-3 border-black text-start">-</td>
+                                                                    </tr>
+                                                        }
                                                     </>
                                                 ))
                                             :

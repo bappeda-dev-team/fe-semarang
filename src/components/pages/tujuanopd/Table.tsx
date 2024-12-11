@@ -181,11 +181,17 @@ const Table = () => {
                             <td className="border-r border-b px-6 py-4 text-center">{data.tujuan ? data.tujuan : "-"}</td>
                             <td className="border-r border-b px-6 py-4 text-center">{data.rumus_perhitungan ? data.rumus_perhitungan : "-"}</td>
                             <td className="border-r border-b px-6 py-4 text-center">{data.sumber_data ? data.sumber_data : "-"}</td>
-                            <td className="border-r border-b px-6 py-4 text-center">
-                                {data.indikator.map((item: any) => (
-                                    <p key={item.id_indikator}>{item.nama_indikator}</p>
-                                ))}
-                            </td>
+                            {data.indikator ? 
+                                <td className="border-r border-b px-6 py-4 text-center">
+                                    {data.indikator.map((item: any) => (
+                                        <p key={item.id_indikator}>{item.nama_indikator}</p>
+                                    ))}
+                                </td>
+                            :
+                                <td className="border-r border-b px-6 py-4 text-center">
+                                   -
+                                </td>
+                            }
                         </tr>
                         ))
                     }

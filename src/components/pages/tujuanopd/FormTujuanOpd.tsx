@@ -7,6 +7,7 @@ import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 import { useParams, useRouter } from "next/navigation";
 import { getToken, getUser, getOpdTahun } from "@/components/lib/Cookie";
+import { LoadingButtonClip } from "@/components/global/Loading";
 
 interface OptionTypeString {
     value: string;
@@ -41,12 +42,12 @@ export const FormTujuanOpd = () => {
     const [Tujuan, setTujuan] = useState<string>('');
     const [Rumus, setRumus] = useState<string>('');
     const [SumberData, setSumberData] = useState<string>('');
-    const [TahunAwal, setTahunAwal] = useState<string>('');
-    const [TahunAkhir, setTahunAkhir] = useState<string>('');
-    const [Tahun, setTahun] = useState<OptionTypeString | null>(null);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    // const [TahunAwal, setTahunAwal] = useState<string>('');
+    // const [TahunAkhir, setTahunAkhir] = useState<string>('');
+    // const [Tahun, setTahun] = useState<OptionTypeString | null>(null);
     const [User, setUser] = useState<any>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
+    const [Proses, setProses] = useState<boolean>(false);
     const router = useRouter();
     const token = getToken();
 
@@ -71,6 +72,7 @@ export const FormTujuanOpd = () => {
     });
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
         //key : value
         tujuan : data.tujuan,
@@ -92,6 +94,7 @@ export const FormTujuanOpd = () => {
       };
     //   console.log(formData);
       try{
+        setProses(true);
           const response = await fetch(`${API_URL}/tujuan_opd/create`, {
               method: "POST",
               headers: {
@@ -108,6 +111,8 @@ export const FormTujuanOpd = () => {
           }
       } catch(err){
           AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+      } finally {
+        setProses(false);
       }
     };
 
@@ -300,7 +305,7 @@ export const FormTujuanOpd = () => {
                 </div> */}
                 
                 <label className="uppercase text-base font-bold text-gray-700 my-2">
-                    indikator sasaran :
+                    indikator tujuan OPD:
                 </label>
                 {fields.map((field, index) => (
                     <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
@@ -399,8 +404,16 @@ export const FormTujuanOpd = () => {
                 <ButtonGreen
                     type="submit"
                     className="my-4"
+                    disabled={Proses}
                 >
-                    Simpan
+                    {Proses ? 
+                        <span className="flex">
+                            <LoadingButtonClip />
+                            Menyimpan...
+                        </span> 
+                    :
+                        "Simpan"
+                    }
                 </ButtonGreen>
                 <ButtonRed type="button" halaman_url="/tujuanopd">
                     Kembali
@@ -427,6 +440,7 @@ export const FormEditTujuanOpd = () => {
     const [idNull, setIdNull] = useState<boolean | null>(null);
     const [User, setUser] = useState<any>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
+    const [Proses, setProses] = useState<boolean>(false);
     const router = useRouter();
     const {id} = useParams();
     const token = getToken();
@@ -453,7 +467,7 @@ export const FormEditTujuanOpd = () => {
     
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchTematikKab = async() => {
+        const fetchTujuan = async() => {
             setLoading(true);
             try{
                 const response = await fetch(`${API_URL}/tujuan_opd/detail/${id}`, {
@@ -470,7 +484,6 @@ export const FormEditTujuanOpd = () => {
                     setIdNull(true);
                 } else {
                     const data = result.data;
-                    console.log(result.data);
                     if(data.kode_opd){
                         setKodeOpd(data.kode_opd);
                         reset((prev) => ({ ...prev, nama_pohon: data.nama_pohon }))
@@ -488,20 +501,27 @@ export const FormEditTujuanOpd = () => {
                                 })),
                             })),
                         });
-                        replace(data.indikators.map((item: indikator) => ({
+                        replace(data.indikator.map((item: indikator) => ({
                             indikator: item.nama_indikator,
                             targets: item.targets,
                         })));
+                    } else {
+                        reset({
+                            tujuan: data.tujuan || '',
+                            rumus_perhitungan: data.rumus_perhitungan || '',
+                            sumber_data: data.sumber_data || '',
+                        });
                     }
                 }
             } catch(err) {
                 setError('gagal mendapatkan data, periksa koneksi internet atau database server')
                 console.error(err);
+                console.log(id);
             } finally {
                 setLoading(false);
             }
         }
-        fetchTematikKab();
+        fetchTujuan();
     },[id, reset, token, replace]);
     
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
@@ -524,25 +544,28 @@ export const FormEditTujuanOpd = () => {
                 })),
               }),
         };
-        console.log(formData);
-        // try{
-        //     const response = await fetch(`${API_URL}/tujuan_opd/update/${id}`, {
-        //         method: "PUT",
-        //         headers: {
-        //           Authorization: `${token}`,
-        //           'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(formData),
-        //     });
-        //     if(response.ok){
-        //         AlertNotification("Berhasil", "Berhasil edit data tujuan opd", "success", 1000);
-        //         router.push("/tujuanopd");
-        //     } else {
-        //         AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
-        //     }
-        // } catch(err){
-        //     AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
-        // }
+        // console.log(formData);
+        try{
+            setProses(true);
+            const response = await fetch(`${API_URL}/tujuan_opd/update/${id}`, {
+                method: "PUT",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            if(response.ok){
+                AlertNotification("Berhasil", "Berhasil edit data tujuan opd", "success", 1000);
+                router.push("/tujuanopd");
+            } else {
+                AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+            }
+        } catch(err){
+            AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+        } finally {
+            setProses(false);
+        }
     };
 
     if(loading){
@@ -683,7 +706,7 @@ export const FormEditTujuanOpd = () => {
                         />
                     </div>
                     <label className="uppercase text-base font-bold text-gray-700 my-2">
-                        indikator sasaran :
+                        indikator tujuan OPD :
                     </label>
                     {fields.map((field, index) => (
                         <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
@@ -764,8 +787,16 @@ export const FormEditTujuanOpd = () => {
                     <ButtonGreen
                         type="submit"
                         className="my-4"
+                        disabled={Proses}
                     >
-                        Simpan
+                        {Proses ? 
+                            <span className="flex">
+                                <LoadingButtonClip />
+                                Menyimpan...
+                            </span> 
+                        :
+                            "Simpan"
+                        }
                     </ButtonGreen>
                     <ButtonRed type="button" halaman_url="/tujuanopd">
                         Kembali

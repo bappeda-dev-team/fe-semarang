@@ -8,6 +8,7 @@ import { AlertNotification } from '@/components/global/Alert';
 import Select from 'react-select';
 import { PohonCascadingEdited } from './PohonCascading';
 import { getToken, getUser } from '../../Cookie';
+import { LoadingButtonClip } from '@/components/global/Loading';
 
 interface OptionTypeString {
     value: string;
@@ -403,6 +404,7 @@ export const FormEditCascading: React.FC<{
     const [IsEdited, setIsEdited] = useState<boolean>(false);
     const [DataEdit, setDataEdit] = useState<any>(null);
     const [Deleted, setDeleted] = useState<boolean>(false);
+    const [Proses, setProses] = useState<boolean>(false);
     const [user, setUser] = useState<any>(null);
     const token = getToken();
     
@@ -544,6 +546,7 @@ export const FormEditCascading: React.FC<{
         };
         // console.log(formData);
         try{
+            setProses(true);
             const url = `/pohon_kinerja_admin/update/${id}`;
             const response = await fetch(`${API_URL}${url}`, {
                 method: "PUT",
@@ -567,6 +570,8 @@ export const FormEditCascading: React.FC<{
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
             console.error(err);
+        } finally {
+            setProses(false);
         }
     };
 
@@ -628,8 +633,15 @@ export const FormEditCascading: React.FC<{
                                 />
                             </div>
                         }
-                        <ButtonSky type="submit" className="w-full my-3">
-                            Simpan
+                        <ButtonSky type="submit" className="w-full my-3" disabled={Proses}>
+                            {Proses ? 
+                                <span className="flex">
+                                    <LoadingButtonClip />
+                                    Menyimpan...
+                                </span> 
+                            :
+                                "Simpan"
+                            }
                         </ButtonSky>
                         <ButtonRed className="w-full my-3" onClick={onCancel}>
                             Batal

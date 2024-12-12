@@ -15,7 +15,7 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [childPohons, setChildPohons] = useState(tema.childs || []);
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
     const [edit, setEdit] = useState<boolean>(false);
-    const [Show, setShow] = useState<boolean>(true);
+    const [Show, setShow] = useState<boolean>(false);
     const [Edited, setEdited] = useState<any | null>(null);
     const [User, setUser] = useState<any>(null);
     const token = getToken();
@@ -170,7 +170,7 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
 
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
     const [edit, setEdit] = useState<boolean>(false);
-    const [Show, setShow] = useState<boolean>(true);
+    const [Show, setShow] = useState<boolean>(false);
     const [Edited, setEdited] = useState<any | null>(null);
     const token = getToken();
     

@@ -8,6 +8,7 @@ import { AlertNotification } from '@/components/global/Alert';
 import Select from 'react-select';
 import { PohonEdited } from './Pohon';
 import { getToken } from '../../Cookie';
+import { LoadingButtonClip } from '@/components/global/Loading';
 
 interface OptionTypeString {
     value: string;
@@ -74,6 +75,7 @@ export const FormPohonPemda: React.FC<{
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [IsAdded, setIsAdded] = useState<boolean>(false);
     const [Deleted, setDeleted] = useState<boolean>(false);
+    const [Proses, setProses] = useState<boolean>(false);
     const token = getToken();
     
     useEffect(() => {
@@ -192,6 +194,7 @@ export const FormPohonPemda: React.FC<{
         };
         // console.log(formData);
         try{
+            setProses(true);
             const url = '/pohon_kinerja_admin/create';
             const response = await fetch(`${API_URL}${url}`, {
                 method: "POST",
@@ -213,6 +216,8 @@ export const FormPohonPemda: React.FC<{
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
             console.error(err);
+        } finally {
+            setProses(false);
         }
     };
 
@@ -403,7 +408,27 @@ export const FormPohonPemda: React.FC<{
                             />
                         </div>
                         <label className="uppercase text-base font-bold text-gray-700 my-2">
-                            indikator sasaran :
+                            {
+                            level == 0 ? 
+                                <h1>Indikator Sub Tematik :</h1>
+                            :
+                            level == 1 ? 
+                                <h1>Indikator Sub Sub Tematik :</h1>
+                            :
+                            level == 2 ? 
+                                <h1>Indikator Super Sub Tematik :</h1>
+                            :
+                            level == 3 ? 
+                                <h1>Indikator Strategic :</h1>
+                            :
+                            level == 4 ? 
+                                <h1>Indikator Tactical :</h1>
+                            :
+                            level == 5 ? 
+                                <h1>Indikator Operational :</h1>
+                            :
+                                <h1>Indikator</h1>
+                            }
                         </label>
                         {fields.map((field, index) => (
                             <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
@@ -481,8 +506,15 @@ export const FormPohonPemda: React.FC<{
                         >
                             Tambah Indikator
                         </ButtonSkyBorder>
-                        <ButtonSky type="submit" className="w-full my-3">
-                            Simpan
+                        <ButtonSky type="submit" className="w-full my-3" disabled={Proses}>
+                            {Proses ? 
+                                <span className="flex">
+                                    <LoadingButtonClip />
+                                    Menyimpan...
+                                </span> 
+                            :
+                                "Simpan"
+                            }
                         </ButtonSky>
                         <ButtonRed className="w-full my-3" onClick={onCancel}>
                             Batal
@@ -517,6 +549,7 @@ export const FormAmbilPohon: React.FC<{
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [IsAdded, setIsAdded] = useState<boolean>(false);
     const [DataAdd, setDataAdd] = useState<any>(null);
+    const [Proses, setProses] = useState<boolean>(false);
     const [Deleted, setDeleted] = useState<boolean>(false);
     const token = getToken();
     
@@ -619,6 +652,7 @@ export const FormAmbilPohon: React.FC<{
         };
         // console.log(formData);
         try{
+            setProses(true);
             const response = await fetch(`${API_URL}/pohon_kinerja_admin/clone_strategic/create`, {
                 method: "POST",
                 headers: {
@@ -639,6 +673,8 @@ export const FormAmbilPohon: React.FC<{
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
             console.error(err);
+        } finally {
+            setProses(false);
         }
     };
 
@@ -765,8 +801,15 @@ export const FormAmbilPohon: React.FC<{
                                 )}
                             />
                         </div>
-                        <ButtonSky type="submit" className="w-full my-3">
-                            Simpan
+                        <ButtonSky type="submit" className="w-full my-3" disabled={Proses}>
+                            {Proses ? 
+                                <span className="flex">
+                                    <LoadingButtonClip />
+                                    Menyimpan...
+                                </span> 
+                            :
+                                "Simpan"
+                            }
                         </ButtonSky>
                         <ButtonRed className="w-full my-3" onClick={onCancel}>
                             Batal
@@ -808,6 +851,7 @@ export const FormEditPohon: React.FC<{
     const [IsEdited, setIsEdited] = useState<boolean>(false);
     const [DataEdit, setDataEdit] = useState<any>(null);
     const [Deleted, setDeleted] = useState<boolean>(false);
+    const [Proses, setProses] = useState<boolean>(false);
     const token = getToken();
     
     useEffect(() => {
@@ -956,7 +1000,8 @@ export const FormEditPohon: React.FC<{
             //key : value
             nama_pohon : data.nama_pohon,
             Keterangan : data.keterangan,
-            jenis_pohon:    level === 1 ? "Sub Tematik" :
+            jenis_pohon:    level === 0 ? "Tematik" :
+                            level === 1 ? "Sub Tematik" :
                             level === 2 ? "Sub Sub Tematik" :
                             level === 3 ? "Super Sub Tematik" :
                             level === 4 ? "Strategic Pemda" :
@@ -980,6 +1025,7 @@ export const FormEditPohon: React.FC<{
         };
         // console.log(formData);
         try{
+            setProses(true);
             const response = await fetch(`${API_URL}/pohon_kinerja_admin/update/${id}`, {
                 method: "PUT",
                 headers: {
@@ -1002,6 +1048,8 @@ export const FormEditPohon: React.FC<{
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
             console.error(err);
+        } finally {
+            setProses(false);
         }
     };
 
@@ -1012,6 +1060,9 @@ export const FormEditPohon: React.FC<{
         :
         <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
             <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
+                {level == 0 && 
+                    <h1>Edit Tematik </h1>
+                } 
                 {level == 1 && 
                     <h1>Edit Sub Tematik </h1>
                 } 
@@ -1041,6 +1092,9 @@ export const FormEditPohon: React.FC<{
                             className="uppercase text-xs font-bold text-gray-700 my-2"
                             htmlFor="nama_pohon"
                         >
+                            {level == 0 && 
+                                "Tematik"
+                            } 
                             {level == 1 && 
                                 "Sub Tematik"
                             } 
@@ -1192,7 +1246,33 @@ export const FormEditPohon: React.FC<{
                         />
                     </div>
                     <label className="uppercase text-base font-bold text-gray-700 my-2">
-                        indikator sasaran :
+                        {
+                            level == 0 ? 
+                                <h1>Indikator Tematik :</h1>
+                            :
+                            level == 1 ? 
+                                <h1>Indikator Sub Tematik :</h1>
+                            :
+                            level == 2 ? 
+                                <h1>Indikator Sub Sub Tematik :</h1>
+                            :
+                            level == 3 ? 
+                                <h1>Indikator Super Sub Tematik :</h1>
+                            :
+                            level == 4 ? 
+                                <h1>Indikator Strategic :</h1>
+                            :
+                            level == 5 ? 
+                                <h1>Indikator Tactical :</h1>
+                            :
+                            level == 6 ? 
+                                <h1>Indikator Operational :</h1>
+                            :
+                            level >= 6 ? 
+                                <h1>Indikator Operational N :</h1>
+                            :
+                                <h1>Indikator</h1>
+                        }
                     </label>
                     {fields.map((field, index) => (
                         <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
@@ -1270,8 +1350,15 @@ export const FormEditPohon: React.FC<{
                     >
                         Tambah Indikator
                     </ButtonSkyBorder>
-                    <ButtonSky type="submit" className="w-full my-3">
-                        Simpan
+                    <ButtonSky type="submit" className="w-full my-3" disabled={Proses}>
+                        {Proses ? 
+                                <span className="flex">
+                                    <LoadingButtonClip />
+                                    Menyimpan...
+                                </span> 
+                            :
+                                "Simpan"
+                            }
                     </ButtonSky>
                     <ButtonRed className="w-full my-3" onClick={onCancel}>
                         Batal

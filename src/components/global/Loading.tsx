@@ -26,3 +26,10 @@ export const LoadingSync = (loading: any) => {
     </div>
   );
 };
+export const LoadingButtonClip = (loading: any) => {
+  return (
+    <div className="mr-2 flex flex-col items-center justify-center z-50">
+      <ClipLoader color="#ffffff" loading={loading} size={15} />
+    </div>
+  );
+};

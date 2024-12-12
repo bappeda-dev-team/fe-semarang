@@ -8,6 +8,7 @@ import { AlertNotification } from '@/components/global/Alert';
 import Select from 'react-select';
 import { PohonOpdEdited } from './PohonOpd';
 import { getToken, getUser } from '../../Cookie';
+import { LoadingButtonClip } from '@/components/global/Loading';
 
 interface OptionTypeString {
     value: string;
@@ -67,6 +68,7 @@ export const FormPohonOpd: React.FC<{
     const [DataAdd, setDataAdd] = useState<any>(null);
     const [IsAdded, setIsAdded] = useState<boolean>(false);
     const [Deleted, setDeleted] = useState<boolean>(false);
+    const [Proses, setProses] = useState<boolean>(false);
     const [user, setUser] = useState<any>(null);
     const token = getToken();
     
@@ -125,6 +127,7 @@ export const FormPohonOpd: React.FC<{
         };
         // console.log(formData);
         try{
+            setProses(true);
             const url = '/pohon_kinerja_opd/create';
             const response = await fetch(`${API_URL}${url}`, {
                 method: "POST",
@@ -146,6 +149,8 @@ export const FormPohonOpd: React.FC<{
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
             console.error(err);
+        } finally {
+            setProses(false);
         }
     };
 
@@ -245,7 +250,17 @@ export const FormPohonOpd: React.FC<{
                             />
                         </div>
                         <label className="uppercase text-base font-bold text-gray-700 my-2">
-                            indikator sasaran :
+                            {level == 4 ? 
+                                <h1>Indikator Tactical :</h1>
+                            :
+                            level == 5 ? 
+                                <h1>Indikator Operational :</h1>
+                            :
+                            level >= 5 ? 
+                                <h1>Indikator Operational N :</h1>
+                            :
+                                <h1>Indikator Strategic :</h1>
+                            }
                         </label>
                         {fields.map((field, index) => (
                             <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
@@ -323,8 +338,19 @@ export const FormPohonOpd: React.FC<{
                         >
                             Tambah Indikator
                         </ButtonSkyBorder>
-                        <ButtonSky type="submit" className="w-full my-3">
-                            Simpan
+                        <ButtonSky 
+                            type="submit"
+                            className="w-full my-3"
+                            disabled={Proses}
+                        >
+                            {Proses ? 
+                                <span className="flex">
+                                    <LoadingButtonClip />
+                                    Menyimpan...
+                                </span> 
+                            :
+                                "Simpan"
+                            }
                         </ButtonSky>
                         <ButtonRed className="w-full my-3" onClick={onCancel}>
                             Batal
@@ -363,6 +389,7 @@ export const FormEditPohon: React.FC<{
     const [IsEdited, setIsEdited] = useState<boolean>(false);
     const [DataEdit, setDataEdit] = useState<any>(null);
     const [Deleted, setDeleted] = useState<boolean>(false);
+    const [Proses, setProses] = useState<boolean>(false);
     const [user, setUser] = useState<any>(null);
     const token = getToken();
     
@@ -477,6 +504,7 @@ export const FormEditPohon: React.FC<{
         };
         // console.log(formData);
         try{
+            setProses(true);
             const url = `/pohon_kinerja_opd/update/${id}`;
             const response = await fetch(`${API_URL}${url}`, {
                 method: "PUT",
@@ -500,6 +528,8 @@ export const FormEditPohon: React.FC<{
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
             console.error(err);
+        } finally {
+            setProses(false);
         }
     };
 
@@ -570,50 +600,6 @@ export const FormEditPohon: React.FC<{
                                 )}
                             />
                         </div>
-                        {/* {pokin === 'opd' && 
-                            <div className="flex flex-col py-3">
-                                <label
-                                    className="uppercase text-xs font-bold text-gray-700 my-2"
-                                    htmlFor="pelaksana"
-                                >
-                                    Pelaksana
-                                </label>
-                                <Controller
-                                    name="pelaksana"
-                                    control={control}
-                                    render={({ field }) => (
-                                    <>
-                                        <Select
-                                            {...field}
-                                            placeholder="Pilih Pelaksana (bisa lebih dari satu)"
-                                            value={Pelaksana}
-                                            options={PelaksanaOption}
-                                            isLoading={isLoading}
-                                            isSearchable
-                                            isClearable
-                                            isMulti
-                                            onMenuOpen={() => {
-                                                if (PelaksanaOption.length === 0) {
-                                                    fetchPelaksana();
-                                                }
-                                            }}
-                                            onChange={(option) => {
-                                                field.onChange(option || []);
-                                                setPelaksana(option as OptionTypeString[]);
-                                            }}
-                                            styles={{
-                                                control: (baseStyles) => ({
-                                                ...baseStyles,
-                                                borderRadius: '8px',
-                                                textAlign: 'start',
-                                                })
-                                            }}
-                                        />
-                                    </>
-                                    )}
-                                />
-                            </div>
-                        } */}
                         <div className="flex flex-col py-3">
                             <label
                                 className="uppercase text-xs font-bold text-gray-700 my-2"
@@ -640,77 +626,87 @@ export const FormEditPohon: React.FC<{
                             />
                         </div>
                         <label className="uppercase text-base font-bold text-gray-700 my-2">
-                        indikator sasaran :
-                    </label>
-                    {fields.map((field, index) => (
-                        <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
-                            <Controller
-                                name={`indikator.${index}.nama_indikator`}
-                                control={control}
-                                defaultValue={field.nama_indikator}
-                                render={({ field }) => (
-                                    <div className="flex flex-col py-3">
-                                        <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                            Nama Indikator {index + 1} :
-                                        </label>
-                                        <input
-                                            {...field}
-                                            className="border px-4 py-2 rounded-lg"
-                                            placeholder={`Masukkan nama indikator ${index + 1}`}
-                                        />
-                                    </div>
+                            {level == 4 ? 
+                                <h1>Indikator Strategic :</h1>
+                            :
+                            level == 5 ? 
+                                <h1>Indikator Tactical :</h1>
+                            :
+                            level == 6 ? 
+                                <h1>Indikator Operational :</h1>
+                            :
+                                <h1>Indikator Operational N :</h1>
+                            }
+                        </label>
+                        {fields.map((field, index) => (
+                            <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
+                                <Controller
+                                    name={`indikator.${index}.nama_indikator`}
+                                    control={control}
+                                    defaultValue={field.nama_indikator}
+                                    render={({ field }) => (
+                                        <div className="flex flex-col py-3">
+                                            <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                Nama Indikator {index + 1} :
+                                            </label>
+                                            <input
+                                                {...field}
+                                                className="border px-4 py-2 rounded-lg"
+                                                placeholder={`Masukkan nama indikator ${index + 1}`}
+                                            />
+                                        </div>
+                                    )}
+                                />
+                                {field.targets.map((_, subindex) => (
+                                    <>
+                                    <Controller
+                                        name={`indikator.${index}.targets.${subindex}.target`}
+                                        control={control}
+                                        defaultValue={_.target}
+                                        render={({ field }) => (
+                                            <div className="flex flex-col py-3">
+                                                <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                    Target :
+                                                </label>
+                                                <input
+                                                    {...field}
+                                                    type="text"
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    placeholder="Masukkan target"
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    <Controller
+                                        name={`indikator.${index}.targets.${subindex}.satuan`}
+                                        control={control}
+                                        defaultValue={_.satuan}
+                                        render={({ field }) => (
+                                            <div className="flex flex-col py-3">
+                                                <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                    Satuan :
+                                                </label>
+                                                <input
+                                                    {...field}
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    placeholder="Masukkan satuan"
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    </>
+                                ))}
+                                {index >= 0 && (
+                                    <ButtonRedBorder
+                                        type="button"
+                                        onClick={() => remove(index)}
+                                        className="w-[200px] my-3"
+                                    >
+                                        Hapus
+                                    </ButtonRedBorder>
                                 )}
-                            />
-                            {field.targets.map((_, subindex) => (
-                                <>
-                                <Controller
-                                    name={`indikator.${index}.targets.${subindex}.target`}
-                                    control={control}
-                                    defaultValue={_.target}
-                                    render={({ field }) => (
-                                        <div className="flex flex-col py-3">
-                                            <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                Target :
-                                            </label>
-                                            <input
-                                                {...field}
-                                                type="text"
-                                                className="border px-4 py-2 rounded-lg"
-                                                placeholder="Masukkan target"
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                <Controller
-                                    name={`indikator.${index}.targets.${subindex}.satuan`}
-                                    control={control}
-                                    defaultValue={_.satuan}
-                                    render={({ field }) => (
-                                        <div className="flex flex-col py-3">
-                                            <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                Satuan :
-                                            </label>
-                                            <input
-                                                {...field}
-                                                className="border px-4 py-2 rounded-lg"
-                                                placeholder="Masukkan satuan"
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                </>
-                            ))}
-                            {index >= 0 && (
-                                <ButtonRedBorder
-                                    type="button"
-                                    onClick={() => remove(index)}
-                                    className="w-[200px] my-3"
-                                >
-                                    Hapus
-                                </ButtonRedBorder>
-                            )}
-                        </div>
-                    ))}
+                            </div>
+                        ))}
                     <ButtonSkyBorder
                         className="mb-3 mt-2 w-full"
                         type="button"
@@ -718,8 +714,15 @@ export const FormEditPohon: React.FC<{
                     >
                         Tambah Indikator
                     </ButtonSkyBorder>
-                        <ButtonSky type="submit" className="w-full my-3">
-                            Simpan
+                        <ButtonSky type="submit" className="w-full my-3" disabled={Proses}>
+                            {Proses ? 
+                                <span className="flex">
+                                    <LoadingButtonClip />
+                                    Menyimpan...
+                                </span> 
+                            :
+                                "Simpan"
+                            }
                         </ButtonSky>
                         <ButtonRed className="w-full my-3" onClick={onCancel}>
                             Batal

@@ -125,7 +125,7 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             </ButtonGreenBorder>
                         </div>
                     }
-                    {((User?.roles != 'super_admin' && User?.roles != 'admin_opd') && (tema.jenis_pohon == 'Operational' || tema.jenis_pohon == 'Operational N')) && 
+                    {((User?.roles != 'super_admin' && User?.roles != 'admin_opd')) && 
                         <div 
                             className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
                                 ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
@@ -139,10 +139,12 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 <TbEye className='mr-1' />
                                 {Show ? 'Sembunyikan' : 'Tampilkan'}
                             </ButtonBlackBorder>
-                            <ButtonSkyBorder onClick={() => setEdit(true)}>
-                                <TbPencil className="mr-1"/>
-                                Pelaksana
-                            </ButtonSkyBorder>
+                            {(tema.jenis_pohon == 'Operational' || tema.jenis_pohon == 'Operational N') && 
+                                <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                    <TbUsersPlus className="mr-1"/>
+                                    Pelaksana
+                                </ButtonSkyBorder>
+                            }
                         </div>
                     }
                 </div>
@@ -172,7 +174,15 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
     const [edit, setEdit] = useState<boolean>(false);
     const [Show, setShow] = useState<boolean>(false);
     const [Edited, setEdited] = useState<any | null>(null);
+    const [User, setUser] = useState<any>(null);
     const token = getToken();
+
+    useEffect(() => {
+       const fetchUser = getUser();
+        if(fetchUser){
+            setUser(fetchUser.user);
+        }
+    },[])
     
     // Adds a new form entry
     const newChild = () => {
@@ -201,30 +211,6 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
             }
             AlertNotification("Berhasil", "Pelaksana Berhasil Dihapus", "success", 1000);
             deleteTrigger();
-        } catch(err){
-            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
-            console.error(err);
-        }
-    };
-
-    const hapusPohonOpd = async(id: any) => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        try{
-            const response = await fetch(`${API_URL}/pohon_kinerja_opd/delete/${id}`, {
-                method: "DELETE",
-                headers: {
-                  Authorization: `${token}`,
-                  'Content-Type': 'application/json',
-                },
-            })
-            if(!response.ok){
-                alert("cant fetch data")
-            }
-            AlertNotification("Berhasil", "Data pohon Berhasil Dihapus", "success", 1000);
-            deleteTrigger();
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000); // Reload setelah 3 detik
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
             console.error(err);
@@ -274,49 +260,48 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
                         }
                     </div>
                     {/* BUTTON ACTION INSIDE BOX */}
-                    {!['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
+                    {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' )&& 
                         <div 
-                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black`}
+                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
+                                ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
+                                ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
+                            `}
                         >
-                            <ButtonSkyBorder onClick={() => setEdit(true)}>
-                                <TbPencil className="mr-1"/>
-                                Edit
-                            </ButtonSkyBorder>
-                            <ButtonRedBorder
-                                onClick={() => {
-                                    AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
-                                        if(result.isConfirmed){
-                                                hapusPohonOpd(tema.id);
-                                        }
-                                    });
-                                }}
+                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                onClick={handleShow}
                             >
-                                <TbTrash className='mr-1'/>
-                                Hapus
-                            </ButtonRedBorder>
+                                <TbEye className='mr-1' />
+                                {Show ? 'Sembunyikan' : 'Tampilkan'}
+                            </ButtonBlackBorder>
+                            <ButtonGreenBorder onClick={() => setEdit(true)}>
+                                <TbUsersPlus className="mr-1"/>
+                                Pelaksana
+                            </ButtonGreenBorder>
                         </div>
                     }
-                    {/* footer */}
-                    <div className="flex justify-evenly my-3 py-3">
-                        <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
-                            onClick={handleShow}
+                    {((User?.roles != 'super_admin' && User?.roles != 'admin_opd')) && 
+                        <div 
+                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
+                                ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
+                                ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
+                            `}
                         >
-                            <TbEye className='mr-1' />
-                            {Show ? 'Sembunyikan' : 'Tampilkan'}
-                        </ButtonBlackBorder>
-                        <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 border-[#00A607] hover:bg-[#00A607] text-[#00A607] hover:text-white rounded-lg`}
-                            onClick={newChild}
+                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                onClick={handleShow}
                             >
-                            <TbCirclePlus className='mr-1' />
-                            {newChildButtonName(tema.jenis_pohon)}
-                        </ButtonGreenBorder>
-                        {/* <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r border-2 border-[#00A607] hover:bg-[#00A607] text-[#00A607] hover:text-white rounded-lg`}
-                            onClick={newChild}
-                            >
-                            <TbCirclePlus className='mr-1' />
-                            Pelaksana
-                        </ButtonGreenBorder> */}
-                    </div>
+                                <TbEye className='mr-1' />
+                                {Show ? 'Sembunyikan' : 'Tampilkan'}
+                            </ButtonBlackBorder>
+                            {(tema.jenis_pohon == 'Operational' || tema.jenis_pohon == 'Operational N') && 
+                                <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                    <TbUsersPlus className="mr-1"/>
+                                    Pelaksana
+                                </ButtonSkyBorder>
+                            }
+                        </div>
+                    }
                 </div>
                 <ul style={{ display: Show ? '' : 'none' }}>
                     {formList.map((formId) => (

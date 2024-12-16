@@ -3,7 +3,7 @@
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { ButtonGreen, ButtonRedBorder, ButtonSkyBorder, ButtonRed } from "@/components/global/Button";
-import { LoadingClip } from "@/components/global/Loading";
+import { LoadingClip, LoadingButtonClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 import { useRouter, useParams } from "next/navigation";
 import Select from 'react-select'
@@ -34,6 +34,7 @@ export const FormMasterPegawai = () => {
     const [Role, setRole] = useState<string>('');
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
+    const [Proses, setProses] = useState<boolean>(false);
     const token = getToken();
     
     const fetchOpd = async() => {
@@ -72,6 +73,7 @@ export const FormMasterPegawai = () => {
       };
     //   console.log(formData);
       try{
+          setProses(true);
           const response = await fetch(`${API_URL}/pegawai/create`, {
               method: "POST",
               headers: {
@@ -88,6 +90,8 @@ export const FormMasterPegawai = () => {
           }
       } catch(err){
           AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+      } finally {
+        setProses(false);
       }
     };
 
@@ -217,7 +221,14 @@ export const FormMasterPegawai = () => {
                     type="submit"
                     className="my-4"
                 >
-                    Simpan
+                    {Proses ? 
+                        <span className="flex">
+                            <LoadingButtonClip />
+                            Menyimpan...
+                        </span> 
+                    :
+                        "Simpan"
+                    }
                 </ButtonGreen>
                 <ButtonRed type="button" halaman_url="/DataMaster/masterpegawai">
                     Kembali
@@ -245,6 +256,7 @@ export const FormEditMasterPegawai = () => {
     const [idNull, setIdNull] = useState<boolean | null>(null);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
+    const [Proses, setProses] = useState<boolean>(false);
     const token = getToken();
 
     useEffect(() => {
@@ -328,25 +340,28 @@ export const FormEditMasterPegawai = () => {
           kode_opd : data.kode_opd?.value,
         //   role : data.role, 
       };
-    //   console.log(formData);
-    try{
-        const response = await fetch(`${API_URL}/pegawai/update/${id}`, {
-            method: "PUT",
-            headers: {
-              Authorization: `${token}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
-        if(response.ok){
-            AlertNotification("Berhasil", "Berhasil edit data master pegawai", "success", 1000);
-            router.push("/DataMaster/masterpegawai");
-        } else {
-            AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+        //   console.log(formData);
+        try{
+            setProses(true);
+            const response = await fetch(`${API_URL}/pegawai/update/${id}`, {
+                method: "PUT",
+                headers: {
+                Authorization: `${token}`,
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            if(response.ok){
+                AlertNotification("Berhasil", "Berhasil edit data master pegawai", "success", 1000);
+                router.push("/DataMaster/masterpegawai");
+            } else {
+                AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+            }
+        } catch(err){
+            AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+        } finally {
+            setProses(false);
         }
-    } catch(err){
-        AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
-    }
     };
 
     if(loading){
@@ -497,7 +512,14 @@ export const FormEditMasterPegawai = () => {
                     type="submit"
                     className="my-4"
                 >
-                    Simpan
+                    {Proses ? 
+                        <span className="flex">
+                            <LoadingButtonClip />
+                            Menyimpan...
+                        </span> 
+                    :
+                        "Simpan"
+                    }
                 </ButtonGreen>
                 <ButtonRed type="button" halaman_url="/DataMaster/masterpegawai">
                     Kembali

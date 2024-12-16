@@ -1,14 +1,12 @@
 'use client'
 
-import Link from "next/link";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { setCookie } from "@/components/lib/Cookie";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { AlertNotification } from "@/components/global/Alert";
 import { TbEye, TbEyeClosed } from "react-icons/tb";
 import { ButtonSky } from "@/components/global/Button";
+import { LoadingButtonClip } from "@/components/global/Loading";
 import { login } from "@/components/lib/Cookie";
 
 interface FormValues {
@@ -19,20 +17,26 @@ interface FormValues {
 const LoginPage = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormValues>();
-    const [SelectedUser, setSelectedUser] = useState<any>("");
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [Proses, setProses] = useState<boolean>(false);
     const router = useRouter();
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    //   console.log(data.username, data.password);
-      const isLoggedIn = await login(data.username, data.password);
-
-      if (isLoggedIn) {
-        router.push('/'); // Redirect ke halaman dashboard jika login berhasil
-      } else {
-        console.log('Login gagal');
-        // Tambahkan logika untuk menampilkan pesan kesalahan kepada pengguna jika diperlukan
-      }
+        //   console.log(data.username, data.password);
+        setProses(true);
+        try{
+            const isLoggedIn = await login(data.username, data.password);
+      
+            if (isLoggedIn) {
+              router.push('/'); // Redirect ke halaman dashboard jika login berhasil
+            } else {
+              console.log('Login gagal');
+            }
+        } catch(error) {
+            console.error(error)
+        } finally {
+            setProses(false);
+        }
     };
 
     return(
@@ -92,8 +96,16 @@ const LoginPage = () => {
                 <ButtonSky
                     type="submit"
                     className="w-full"
+                    disabled={Proses}
                 >
-                    Login
+                    {Proses ? 
+                        <span className="flex">
+                            <LoadingButtonClip />
+                            Login...
+                        </span> 
+                    :
+                        "Login"
+                    }
                 </ButtonSky>
             </form>
         </div>

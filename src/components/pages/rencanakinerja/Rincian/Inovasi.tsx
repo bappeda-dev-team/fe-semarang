@@ -101,7 +101,7 @@ const Inovasi: React.FC<id> = ({id}) => {
                 <div className="overflow-auto m-2 rounded-t-xl border">
                     <table className="w-full">
                         <thead>
-                            <tr>
+                            <tr className="bg-gray-300">
                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Judul Inovasi</td>
                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Jenis Inovasi</td>
                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Gambaran nilai kebaruan</td>

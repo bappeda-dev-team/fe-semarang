@@ -201,6 +201,18 @@ const Header = () => {
                 {user?.roles == "eselon_4" && 
                     <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">ASN</button>
                 }
+                {user?.roles == "level_1" && 
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">ASN</button>
+                }
+                {user?.roles == "level_2" && 
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">ASN</button>
+                }
+                {user?.roles == "level_3" && 
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">ASN</button>
+                }
+                {user?.roles == "level_4" && 
+                    <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">ASN</button>
+                }
                 {user?.roles == undefined && 
                     <button className="border border-white text-white px-3 py-2 mx-1 min-w-20 max-h-[37.5px] rounded-lg hover:bg-white hover:text-gray-800">Loading</button>
                 }

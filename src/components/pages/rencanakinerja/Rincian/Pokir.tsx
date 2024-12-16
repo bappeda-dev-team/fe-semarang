@@ -105,7 +105,7 @@ const Pokir: React.FC<id> = ({id}) => {
                 <div className="overflow-auto mt-3 rounded-t-xl border">
                     <table className="w-full">
                         <thead>
-                            <tr>
+                            <tr className="bg-gray-300">
                                 <td className="border-r border-b px-6 py-3 min-w-[50px]">No</td>
                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Usulan</td>
                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Alamat</td>

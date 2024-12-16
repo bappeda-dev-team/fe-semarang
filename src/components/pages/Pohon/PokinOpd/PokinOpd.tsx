@@ -13,14 +13,14 @@ import Select from 'react-select';
 import { AlertNotification } from '@/components/global/Alert';
 import { LoadingButtonClip } from '@/components/global/Loading';
 
+interface OptionType {
+    value: number;
+    label: string;
+}
 interface PokinPemda {
     value: number;
     label: string;
     jenis: string;
-}
-interface opd {
-    kode_opd: string;
-    nama_opd: string;
 }
 interface pokin {
     kode_opd: string;
@@ -71,6 +71,7 @@ const PokinOpd = () => {
     const [OptionPokinCross, setOptionPokinCross] = useState<PokinPemda[]>([]);
     const [PohonCross, setPohonCross] = useState<PokinPemda | null>(null);
     const [ProsesCross, setProsesCross] = useState<boolean>(false);
+    const [LevelPohon, setLevelPohon] = useState<OptionType | null>(null);
 
     const [PohonParent, setPohonParent] = useState<PokinPemda | null>(null);
     const [OptionPohonParent, setOptionPohonParent] = useState<PokinPemda[]>([]);
@@ -327,6 +328,12 @@ const PokinOpd = () => {
         }
     }
 
+    const OptionLevel = [
+        {label: "Strategic", value: 4},
+        {label: "Tactical", value: 5},
+        {label: "Operational", value: 6},
+    ];
+
     // Adds a new form entry
     const newChild = () => {
         setFormList([...formList, Date.now()]); // Using unique IDs
@@ -539,7 +546,7 @@ const PokinOpd = () => {
                                         pohon pemda
                                     </label>
                                     <Select
-                                        placeholder="Masukkan Perangkat Daerah"
+                                        placeholder="Pilih Pohon Pemda"
                                         value={PohonPemda}
                                         options={OptionPokinPemda}
                                         isSearchable
@@ -652,13 +659,13 @@ const PokinOpd = () => {
                             <h1 className="font-semibold border-b-2 py-1 text-center">
                                 Crosscutting Pending
                             </h1>
-                            <div className="flex flex-col py-2 mt-1 justify-between">
+                            <div className="flex flex-col py-2 mt-1">
                                 <table>
                                     <tbody>
                                         <tr className="flex items-center">
                                             <td className="border-l border-t px-2 py-1 bg-white text-start rounded-tl-lg min-w-[150px]">
                                                 <h1 className="font-semibold">
-                                                    Diterima
+                                                    Ditolak 
                                                 </h1>
                                             </td>
                                             <td className="border-t py-1">
@@ -667,23 +674,6 @@ const PokinOpd = () => {
                                                 </h1>
                                             </td>
                                             <td className='border-r border-t px-2 py-1 bg-white text-center rounded-tr-lg w-full'>
-                                                <h1 className="font-semibold">
-                                                    0
-                                                </h1>
-                                            </td>
-                                        </tr>
-                                        <tr className="flex items-center">
-                                            <td className="border-l px-2 py-1 bg-white text-start min-w-[150px]">
-                                                <h1 className="font-semibold">
-                                                    Ditolak 
-                                                </h1>
-                                            </td>
-                                            <td className="py-1">
-                                                <h1 className="font-semibold">
-                                                    :
-                                                </h1>
-                                            </td>
-                                            <td className='border-r px-2 py-1 bg-white text-center w-full'>
                                                 <h1 className="font-semibold">
                                                     0
                                                 </h1>
@@ -722,7 +712,7 @@ const PokinOpd = () => {
                                         pohon OPD
                                     </label>
                                     <Select
-                                        placeholder="Masukkan pohon crosscuting dari opd lain"
+                                        placeholder="Pilih pohon crosscuting"
                                         value={PohonCross}
                                         options={OptionPokinCross}
                                         isSearchable
@@ -746,20 +736,43 @@ const PokinOpd = () => {
                                         }}
                                     />
                                 </div>
-                                {(PohonCross?.jenis == 'Tactical Crosscutting' || PohonCross?.jenis == 'Operational Crosscutting') &&
+                                <div className="mb-1">
+                                    <label htmlFor="" className='uppercase text-xs font-bold text-gray-700 my-2 ml-1'>
+                                        Level
+                                    </label>
+                                    <Select
+                                        placeholder="Pilih Level"
+                                        value={LevelPohon}
+                                        options={OptionLevel}
+                                        isSearchable
+                                        isClearable
+                                        isLoading={IsLoading}
+                                        onChange={(option) => {
+                                            setLevelPohon(option);
+                                        }}
+                                        styles={{
+                                            control: (baseStyles) => ({
+                                                ...baseStyles,
+                                                borderRadius: '8px',
+                                                textAlign: 'start',
+                                            })
+                                        }}
+                                    />
+                                </div>
+                                {(LevelPohon?.value == 5 || LevelPohon?.value == 6) &&
                                     <div className="mb-3">
                                         <label htmlFor="" className='uppercase text-xs font-bold text-gray-700 my-2 ml-1'>
-                                            {PohonPemda?.jenis == 'Tactical Crosscutting' ? 'Strategic' : 'Tactical'}
+                                            {LevelPohon?.value == 5 ? 'Strategic' : 'Tactical'}
                                         </label>
                                         <Select
-                                            placeholder="parent untuk pohon yang diterima"
+                                            placeholder="pilih parent"
                                             value={PohonParent}
                                             options={OptionPohonParent}
                                             isSearchable
                                             isClearable
                                             isLoading={IsLoading}
                                             onMenuOpen={() => {
-                                                if (PohonCross?.jenis == 'Tactical Crosscutting') {
+                                                if (LevelPohon?.value == 5) {
                                                     fetchPohonParent(4);
                                                 } else {
                                                     fetchPohonParent(5);

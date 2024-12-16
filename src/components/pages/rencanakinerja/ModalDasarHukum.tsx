@@ -5,7 +5,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ButtonSky, ButtonRed } from '@/components/global/Button';
 import { getToken, getUser } from "@/components/lib/Cookie";
 import { AlertNotification } from "@/components/global/Alert";
-import DasarHukum from "./Rincian/DasarHukum";
+import { LoadingButtonClip } from "@/components/global/Loading";
 
 interface FormValue {
     rencana_kinerja_id: string;
@@ -32,6 +32,7 @@ export const ModalDasarHukumAdd: React.FC<modal> = ({isOpen, onClose, id_rekin})
     const [PeraturanTerkait, setPeraturanTerkait] = useState<string>('');
     const [Uraian, setUraian] = useState<string>('');
     const [user, setUser] = useState<any>(null);
+    const [Proses, setProses] = useState<boolean>(false);
     const token = getToken();
 
     useEffect(() => {
@@ -53,6 +54,7 @@ export const ModalDasarHukumAdd: React.FC<modal> = ({isOpen, onClose, id_rekin})
       };
     //   console.log(formData);
       try{
+        setProses(true);
           const response = await fetch(`${API_URL}/dasar_hukum/create/${id_rekin}`, {
               method: "POST",
               headers: {
@@ -69,6 +71,8 @@ export const ModalDasarHukumAdd: React.FC<modal> = ({isOpen, onClose, id_rekin})
           }
       } catch(err){
           AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+      } finally {
+        setProses(false);
       }
     };
 
@@ -138,8 +142,15 @@ export const ModalDasarHukumAdd: React.FC<modal> = ({isOpen, onClose, id_rekin})
                             )}
                         />
                     </div>
-                    <ButtonSky className="w-full my-3" type="submit">
-                        Simpan
+                    <ButtonSky className="w-full my-3" type="submit" disabled={Proses}>
+                        {Proses ? 
+                            <span className="flex">
+                                <LoadingButtonClip />
+                                Menyimpan...
+                            </span> 
+                        :
+                            "Simpan"
+                        }
                     </ButtonSky>
                     <ButtonRed className="w-full my-3" onClick={onClose}>
                         Batal
@@ -161,6 +172,7 @@ export const ModalDasarHukumEdit: React.FC<modal> = ({isOpen, onClose, id_rekin,
     const [Uraian, setUraian] = useState<string>('');
     const [Urutan, setUrutan] = useState<number | null>(null);
     const [user, setUser] = useState<any>(null);
+    const [Proses, setProses] = useState<boolean>(false);
     const token = getToken();
 
     useEffect(() => {
@@ -197,7 +209,7 @@ export const ModalDasarHukumEdit: React.FC<modal> = ({isOpen, onClose, id_rekin,
         fetchId();
     },[id, token]);
 
-    const onSubmit: SubmitHandler<FormValue> = async (data) => {
+    const onSubmit: SubmitHandler<FormValue> = async () => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const formData = {
           //key : value
@@ -210,6 +222,7 @@ export const ModalDasarHukumEdit: React.FC<modal> = ({isOpen, onClose, id_rekin,
       };
     //   console.log(formData);
       try{
+        setProses(true);
           const response = await fetch(`${API_URL}/dasar_hukum/update/${id}`, {
               method: "PUT",
               headers: {
@@ -226,6 +239,8 @@ export const ModalDasarHukumEdit: React.FC<modal> = ({isOpen, onClose, id_rekin,
           }
       } catch(err){
           AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+      } finally {
+        setProses(false);
       }
     };
 
@@ -295,8 +310,15 @@ export const ModalDasarHukumEdit: React.FC<modal> = ({isOpen, onClose, id_rekin,
                             )}
                         />
                     </div>
-                    <ButtonSky className="w-full my-3" type="submit">
-                        Simpan
+                    <ButtonSky className="w-full my-3" type="submit" disabled={Proses}>
+                        {Proses ? 
+                            <span className="flex">
+                                <LoadingButtonClip />
+                                Menyimpan...
+                            </span> 
+                        :
+                            "Simpan"
+                        }
                     </ButtonSky>
                     <ButtonRed className="w-full my-3" onClick={onClose}>
                         Batal

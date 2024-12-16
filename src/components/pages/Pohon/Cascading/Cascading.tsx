@@ -77,39 +77,6 @@ const Cascading = () => {
         }
     },[]);
 
-    const fetchPohonPemda = async() => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      setIsLoading(true);
-      try{
-        const url = User?.roles == 'super_admin' ? `pohon_kinerja/status/${SelectedOpd?.value}/${Tahun?.value}` : `pohon_kinerja/status/${User?.kode_opd}/${Tahun?.value}`;
-        const response = await fetch(`${API_URL}/${url}`,{
-          method: 'GET',
-          headers: {
-            Authorization: `${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        if(!response.ok){
-          throw new Error('cant fetch data opd');
-        }
-        const data = await response.json();
-        const pokinPemda = data.data.map((item: any) => ({
-          value : item.id,
-          label : item.nama_pohon,
-        }));
-        setOptionPokinPemda(pokinPemda);
-      } catch (err){
-        console.log('gagal mendapatkan data pohon dari opd', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Adds a new form entry
-    const newChild = () => {
-        setFormList([...formList, Date.now()]); // Using unique IDs
-    };
-
     useEffect(() => {
         const fetchPokinOpd = async(url: string) => {
             const API_URL = process.env.NEXT_PUBLIC_API_URL;

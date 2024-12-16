@@ -129,13 +129,13 @@ export const TablePerencanaan = () => {
                 <thead>
                     <tr className="bg-[#99CEF5] text-white">
                         <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
-                        <th className="border-r border-b px-6 py-3 min-w-[200px]">Pohon Kinerja</th>
-                        <th className="border-r border-b px-6 py-3 min-w-[200px]">Rencana Kinerja</th>
-                        <th className="border-r border-b px-6 py-3 min-w-[200px]">Tahun</th>
-                        <th className="border-r border-b px-6 py-3 min-w-[200px]">Indikator</th>
+                        <th className="border-r border-b px-6 py-3 min-w-[300px]">Pohon Kinerja</th>
+                        <th className="border-r border-b px-6 py-3 min-w-[400px]">Rencana Kinerja</th>
+                        <th className="border-r border-b px-6 py-3 min-w-[100px]">Tahun</th>
+                        <th className="border-r border-b px-6 py-3 min-w-[300px]">Indikator Rencana Kinerja</th>
                         <th className="border-r border-b px-6 py-3 min-w-[200px]">target / Satuan</th>
-                        <th className="border-r border-b px-6 py-3 min-w-[200px]">Status Rencana Kinerja</th>
-                        <th className="border-r border-b px-6 py-3 min-w-[200px]">Catatan</th>
+                        <th className="border-r border-b px-6 py-3 min-w-[100px]">Status</th>
+                        <th className="border-r border-b px-6 py-3 min-w-[300px]">Catatan</th>
                         <th className="border-l border-b px-6 py-3 min-w-[200px]">Aksi</th>
                     </tr>
                 </thead>

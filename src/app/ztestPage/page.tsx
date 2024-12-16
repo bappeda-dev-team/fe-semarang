@@ -1,162 +1,154 @@
 'use client';
 
-import { useState } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+// import { useState } from "react";
 
-interface FormValues {
-  siswa: {
-    nama: string;
-    mata_kuliah: {
-      mata_kuliah: string;
-      nilai: string;
-    }[];
-  }[];
-}
+// export default function ZoomPage() {
+//   const [scale, setScale] = useState(1);
 
-const FormSiswa = () => {
-  const { control, handleSubmit } = useForm<FormValues>({
-    defaultValues: {
-      siswa: [
-        {
-          nama: '',
-          mata_kuliah: [
-            { mata_kuliah: '', nilai: '' },
-          ],
-        },
-      ],
-    },
-  });
+//   const handleZoomIn = () => setScale((prev) => Math.min(prev + 0.1, 2)); // Max 2x zoom
+//   const handleZoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.5)); // Min 0.5x zoom
 
-  const { fields: siswaFields, append: appendSiswa } = useFieldArray({
-    control,
-    name: 'siswa',
-  });
+//   return (
+//     <div className="flex flex-col items-center p-4">
+//       <div
+//         className="border p-4"
+//         style={{
+//           transform: `scale(${scale})`,
+//           transformOrigin: "center",
+//           transition: "transform 0.3s ease",
+//         }}
+//       >
+//         <p>Ini adalah konten yang bisa di-zoom.</p>
+//       </div>
+//       <div className="mt-4 space-x-2">
+//         <button onClick={handleZoomIn} className="p-2 bg-blue-500 text-white rounded">
+//           Zoom In
+//         </button>
+//         <button onClick={handleZoomOut} className="p-2 bg-red-500 text-white rounded">
+//           Zoom Out
+//         </button>
+//       </div>
+//     </div>
+//   );
+// }
+import { useState, useRef } from "react";
 
-  const onSubmit = (data: FormValues) => {
-    console.log('Submitted Data:', data);
+export default function ZoomableDivWithHandToolToggle() {
+  const [zoom, setZoom] = useState(100); // Zoom level in percentage
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [scrollStart, setScrollStart] = useState({ x: 0, y: 0 });
+  const [cursorMode, setCursorMode] = useState<"normal" | "hand">("normal"); // State for cursor mode
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const handleZoomIn = () => setZoom((prev) => Math.min(prev + 10, 200)); // Max 200%
+  const handleZoomOut = () => setZoom((prev) => Math.max(prev - 10, 50)); // Min 50%
+
+  const toggleCursorMode = () =>
+    setCursorMode((prevMode) => (prevMode === "normal" ? "hand" : "normal"));
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (cursorMode === "normal") return; // Ignore if cursor is normal
+    setIsDragging(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+    if (containerRef.current) {
+      setScrollStart({
+        x: containerRef.current.scrollLeft,
+        y: containerRef.current.scrollTop,
+      });
+    }
   };
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {siswaFields.map((siswa, siswaIndex) => (
-        <div key={siswa.id} className="border p-4 rounded space-y-4">
-          <div className="flex flex-col py-3">
-            <label
-              className="uppercase text-xs font-bold text-gray-700 my-2"
-              htmlFor={`siswa-${siswaIndex}-nama`}
-            >
-              Nama Siswa:
-            </label>
-            <Controller
-              name={`siswa.${siswaIndex}.nama`}
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded-lg"
-                  id={`siswa-${siswaIndex}-nama`}
-                  placeholder="Masukkan nama siswa"
-                />
-              )}
-            />
-          </div>
-          <MataKuliahFields control={control} siswaIndex={siswaIndex} />
-        </div>
-      ))}
-      <button
-        type="button"
-        onClick={() =>
-          appendSiswa({
-            nama: '',
-            mata_kuliah: [{ mata_kuliah: '', nilai: '' }],
-          })
-        }
-        className="bg-green-500 text-white px-4 py-2 rounded"
-      >
-        Tambah Siswa
-      </button>
-      <button
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Submit
-      </button>
-    </form>
-  );
-};
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !containerRef.current) return;
+    const dx = dragStart.x - e.clientX;
+    const dy = dragStart.y - e.clientY;
+    containerRef.current.scrollLeft = scrollStart.x + dx;
+    containerRef.current.scrollTop = scrollStart.y + dy;
+  };
 
-const MataKuliahFields = ({
-  control,
-  siswaIndex,
-}: {
-  control: any;
-  siswaIndex: number;
-}) => {
-  const { fields: mataKuliahFields, append: appendMataKuliah } = useFieldArray({
-    control,
-    name: `siswa.${siswaIndex}.mata_kuliah`,
-  });
+  const handleMouseUp = () => setIsDragging(false);
 
   return (
-    <div>
-      <label className="block uppercase text-xs font-bold text-gray-700 my-2">
-        Mata Kuliah:
-      </label>
-      {mataKuliahFields.map((mataKuliah, mkIndex) => (
-        <div key={mataKuliah.id} className="space-y-4">
-          <div className="flex flex-col py-3">
-            <label
-              className="uppercase text-xs font-bold text-gray-700 my-2"
-              htmlFor={`siswa-${siswaIndex}-mata_kuliah-${mkIndex}`}
-            >
-              Mata Kuliah:
-            </label>
-            <Controller
-              name={`siswa.${siswaIndex}.mata_kuliah.${mkIndex}.mata_kuliah`}
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded-lg"
-                  id={`siswa-${siswaIndex}-mata_kuliah-${mkIndex}`}
-                  placeholder="Masukkan mata kuliah"
-                />
-              )}
-            />
-          </div>
-          <div className="flex flex-col py-3">
-            <label
-              className="uppercase text-xs font-bold text-gray-700 my-2"
-              htmlFor={`siswa-${siswaIndex}-nilai-${mkIndex}`}
-            >
-              Nilai:
-            </label>
-            <Controller
-              name={`siswa.${siswaIndex}.mata_kuliah.${mkIndex}.nilai`}
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  className="border px-4 py-2 rounded-lg"
-                  id={`siswa-${siswaIndex}-nilai-${mkIndex}`}
-                  placeholder="Masukkan nilai"
-                />
-              )}
-            />
-          </div>
-          <button
-            type="button"
-            onClick={() =>
-              appendMataKuliah({ mata_kuliah: '', nilai: '' })
-            }
-            className="bg-green-500 text-white px-4 py-2 rounded"
+    <div className="flex flex-col items-center p-5">
+      {/* Zoom Control and Cursor Toggle Buttons */}
+      <div className="flex items-center space-x-3 mb-4">
+        <button onClick={handleZoomIn} className="p-2 bg-blue-500 text-white rounded">
+          Zoom In
+        </button>
+        <button onClick={handleZoomOut} className="p-2 bg-red-500 text-white rounded">
+          Zoom Out
+        </button>
+        <button
+          onClick={toggleCursorMode}
+          className={`p-2 rounded ${
+            cursorMode === "hand" ? "bg-green-500 text-white" : "bg-gray-300 text-black"
+          }`}
+        >
+          {cursorMode === "hand" ? "Switch to Normal Cursor" : "Switch to Hand Tool"}
+        </button>
+      </div>
+
+      {/* Bounding Box */}
+      <div
+        className="border-2 border-gray-400 rounded-lg overflow-hidden w-full h-screen"
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
+        {/* Scrollable & Zoomable Content */}
+        <div
+          ref={containerRef}
+          className="relative h-full w-full overflow-scroll"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          style={{
+            cursor: cursorMode === "hand" ? (isDragging ? "grabbing" : "grab") : "default", // Cursor style
+          }}
+        >
+          <div
+            className="flex flex-wrap gap-2 p-5 border-b-2 border-x-2 rounded-b-xl"
+            style={{
+              transform: `scale(${zoom / 100})`,
+              transformOrigin: "center",
+              transition: "transform 0.3s ease",
+            }}
           >
-            Tambah Mata Kuliah
-          </button>
+            {/* Example Content */}
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+            <div className="p-4 bg-gray-200 rounded shadow">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iste magnam odit corrupti suscipit officia accusamus incidunt necessitatibus vitae id porro? Ipsum et ut doloribus officiis a praesentium laudantium animi velit!</div>
+          </div>
         </div>
-      ))}
+      </div>
     </div>
   );
-};
-
-export default FormSiswa;
+}

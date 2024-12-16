@@ -3,7 +3,7 @@
 import { Controller, SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { ButtonGreen, ButtonRedBorder, ButtonSkyBorder, ButtonRed } from "@/components/global/Button";
-import { LoadingClip } from "@/components/global/Loading";
+import { LoadingClip, LoadingButtonClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 import { useParams, useRouter } from "next/navigation";
 import Select from 'react-select';
@@ -40,6 +40,7 @@ export const FormTematikKab = () => {
     const [NamaPohon, setNamaPohon] = useState<string>('');
     const [Keterangan, setKeterangan] = useState<string>('');
     const [Tahun, setTahun] = useState<OptionTypeString | null>(null);
+    const [Proses, setProses] = useState<boolean>(false);
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const router = useRouter();
     const token = getToken();
@@ -84,6 +85,7 @@ export const FormTematikKab = () => {
       };
     //   console.log(formData);
       try{
+          setProses(true);
           const response = await fetch(`${API_URL}/pohon_kinerja_admin/create`, {
               method: "POST",
               headers: {
@@ -100,6 +102,8 @@ export const FormTematikKab = () => {
           }
       } catch(err){
           AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+      } finally {
+        setProses(false);
       }
     };
 
@@ -306,8 +310,16 @@ export const FormTematikKab = () => {
                 <ButtonGreen
                     type="submit"
                     className="my-4"
+                    disabled={Proses}
                 >
-                    Simpan
+                    {Proses ? 
+                        <span className="flex">
+                            <LoadingButtonClip />
+                            Menyimpan...
+                        </span> 
+                    :
+                        "Simpan"
+                    }
                 </ButtonGreen>
                 <ButtonRed type="button" halaman_url="/tematikkota">
                     Kembali
@@ -331,6 +343,7 @@ export const FormEditTematikKab = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean | null>(null);
     const [idNull, setIdNull] = useState<boolean | null>(null);
+    const [Proses, setProses] = useState<boolean>(false);
     const router = useRouter();
     const {id} = useParams();
     const token = getToken();
@@ -370,7 +383,7 @@ export const FormEditTematikKab = () => {
                     throw new Error('terdapat kesalahan di koneksi backend');
                 }
                 const result = await response.json();
-                if(result.code == 500){
+                if(result.code == 500 || result.code == 400){
                     setIdNull(true);
                 } else {
                     const data = result.data;
@@ -443,6 +456,7 @@ export const FormEditTematikKab = () => {
         };
         // console.log(formData);
         try{
+            setProses(true);
             const response = await fetch(`${API_URL}/pohon_kinerja_admin/update/${id}`, {
                 method: "PUT",
                 headers: {
@@ -459,35 +473,37 @@ export const FormEditTematikKab = () => {
             }
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+        } finally {
+            setProses(false);
         }
     };
 
     if(loading){
         return (    
             <div className="border p-5 rounded-xl shadow-xl">
-                <h1 className="uppercase font-bold">Form Edit Tematik Kabupaten :</h1>
+                <h1 className="uppercase font-bold">Form Edit Tematik Pemda :</h1>
                 <LoadingClip className="mx-5 py-5"/>
             </div>
         );
     } else if(error){
         return (
             <div className="border p-5 rounded-xl shadow-xl">
-                <h1 className="uppercase font-bold">Form Edit Tematik Kabupaten :</h1>
+                <h1 className="uppercase font-bold">Form Edit Tematik Pemda :</h1>
                 <h1 className="text-red-500 mx-5 py-5">{error}</h1>
             </div>
         )
     } else if(idNull){
         return (
             <div className="border p-5 rounded-xl shadow-xl">
-                <h1 className="uppercase font-bold">Form Edit Tematik Kabupaten :</h1>
-                <h1 className="text-red-500 mx-5 py-5">id tidak ditemukan</h1>
+                <h1 className="uppercase font-bold">Form Edit Tematik Pemda :</h1>
+                <h1 className="text-red-500 mx-5 py-5">id tematik tidak ditemukan</h1>
             </div>
         )
     } else {
         return(
         <>
             <div className="border p-5 rounded-xl shadow-xl">
-                <h1 className="uppercase font-bold">Form Edit Tematik Kabupaten :</h1>
+                <h1 className="uppercase font-bold">Form Edit Tematik Pemda :</h1>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col mx-5 py-5"
@@ -687,8 +703,16 @@ export const FormEditTematikKab = () => {
                     <ButtonGreen
                         type="submit"
                         className="my-4"
+                        disabled={Proses}
                     >
-                        Simpan
+                        {Proses ? 
+                            <span className="flex">
+                                <LoadingButtonClip />
+                                Menyimpan...
+                            </span> 
+                        :
+                            "Simpan"
+                        }
                     </ButtonGreen>
                     <ButtonRed type="button" halaman_url="/tematikkota">
                         Kembali

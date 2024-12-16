@@ -8,7 +8,7 @@ import { LoadingClip, LoadingButtonClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 import { useRouter, useParams } from "next/navigation";
 import { TbEye, TbEyeClosed } from "react-icons/tb";
-import { getToken } from "@/components/lib/Cookie";
+import { getToken, getUser, getOpdTahun } from "@/components/lib/Cookie";
 
 interface OptionType {
     value: number;
@@ -30,7 +30,7 @@ interface FormValue {
     role: OptionType[];
 }
 
-export const FormUser = () => {
+export const FormUserOpd = () => {
 
     const {
       control,
@@ -42,15 +42,30 @@ export const FormUser = () => {
     const [Password, setPassword] = useState<string>('');
     const [Aktif, setAktif] = useState<OptionTypeBoolean | null>(null);
     const [Roles, setRoles] = useState<OptionType[]>([]);
-    const [Opd, setOpd] = useState<OptionTypeString | null>(null);
     const [PegawaiOption, setPegawaiOption] = useState<OptionTypeString[]>([]);
-    const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [RolesOption, setRolesOption] = useState<OptionType[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const [Proses, setProses] = useState<boolean>(false);
     const router = useRouter();
     const token = getToken();
     const [showPassword, setShowPassword] = useState(false);
+    const [User, setUser] = useState<any>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchUser = getUser();
+        const data = getOpdTahun();
+        if(fetchUser){
+            setUser(fetchUser.user);
+        }
+        if(data.opd){
+            const opd = {
+                value: data.opd.value,
+                label: data.opd.label,
+            }
+            setSelectedOpd(opd);
+        }
+    },[]);
 
     const fetchRoles = async() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -74,32 +89,6 @@ export const FormUser = () => {
         setRolesOption(role);
       } catch (err){
         console.log('gagal mendapatkan data roles');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    const fetchOpd = async() => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      setIsLoading(true);
-      try{ 
-        const response = await fetch(`${API_URL}/opd/findall`,{
-          method: 'GET',
-          headers: {
-            Authorization: `${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        if(!response.ok){
-          throw new Error('cant fetch data opd');
-        }
-        const data = await response.json();
-        const opd = data.data.map((item: any) => ({
-          value : item.kode_opd,
-          label : item.nama_opd,
-        }));
-        setOpdOption(opd);
-      } catch (err){
-        console.log('gagal mendapatkan data opd');
       } finally {
         setIsLoading(false);
       }
@@ -163,7 +152,7 @@ export const FormUser = () => {
             });
             if(response.ok){
                 AlertNotification("Berhasil", "Berhasil menambahkan data user", "success", 1000);
-                router.push("/DataMaster/masteruser");
+                router.push("/useropd");
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }
@@ -177,42 +166,11 @@ export const FormUser = () => {
     return(
     <>
         <div className="border p-5 rounded-xl shadow-xl">
-            <h1 className="uppercase font-bold">Form Tambah User :</h1>
+            <h1 className="uppercase font-bold">Form Tambah User OPD :</h1>
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col mx-5 py-5"
             >
-                <div className="flex flex-col py-3">
-                    <label
-                        className="uppercase text-xs font-bold text-gray-700 my-2"
-                    >
-                        Perangkat Daerah
-                    </label>
-                        <Select
-                            placeholder="Pilih OPD"
-                            value={Opd}
-                            options={OpdOption}
-                            isLoading={IsLoading}
-                            isSearchable
-                            isClearable
-                            onMenuOpen={() => {
-                                if (OpdOption.length === 0) {
-                                    fetchOpd();
-                                }
-                            }}
-                            onMenuClose={() => setOpdOption([])}
-                            onChange={(option) => {
-                                setOpd(option);
-                            }}
-                            styles={{
-                                control: (baseStyles) => ({
-                                ...baseStyles,
-                                borderRadius: '8px',
-                                textAlign: 'start',
-                                })
-                            }}
-                        />
-                </div>
                 <div className="flex flex-col py-3">
                     <label
                         className="uppercase text-xs font-bold text-gray-700 my-2"
@@ -227,20 +185,18 @@ export const FormUser = () => {
                         <>
                             <Select
                                 {...field}
-                                placeholder={!Opd ? 'Pilih OPD terlebih dahulu' : 'Pilih Pegawai'}
+                                placeholder="Pilih Pegawai untuk user"
                                 value={Nip}
                                 options={PegawaiOption}
                                 isLoading={IsLoading}
                                 isSearchable
                                 isClearable
-                                isDisabled={!Opd}
                                 onMenuOpen={() => {
-                                    if (Opd?.value) {
-                                        fetchPegawai(Opd?.value);
+                                    if (User?.roles == 'super_admin') {
+                                        fetchPegawai(SelectedOpd?.value);
+                                    } else {
+                                        fetchPegawai(User?.kode_opd);
                                     }
-                                }}
-                                onMenuClose={() => {
-                                    setPegawaiOption([]);
                                 }}
                                 onChange={(option) => {
                                     field.onChange(option);
@@ -436,7 +392,7 @@ export const FormUser = () => {
                         "Simpan"
                     }
                 </ButtonGreen>
-                <ButtonRed type="button" halaman_url="/DataMaster/masteruser">
+                <ButtonRed type="button" halaman_url="/useropd">
                     Kembali
                 </ButtonRed>
             </form>
@@ -444,7 +400,7 @@ export const FormUser = () => {
     </>
     )
 }
-export const FormEditUser = () => {
+export const FormEditUserOpd = () => {
 
     const {
       control,
@@ -517,6 +473,7 @@ export const FormEditUser = () => {
                 if(result.code == 400){
                     setIdNull(true);
                 } else if(result.code == 200){
+                    setIdNull(false);
                     reset({
                         nip: data.nip || '',
                         email: data.email || '',
@@ -544,6 +501,7 @@ export const FormEditUser = () => {
                     );
                 }
             } catch(err) {
+                setError('gagal mengambil data sesuai id');
                 console.error(err, 'gagal mengambil data sesuai id')
             } finally {
                 setLoading(false);
@@ -577,7 +535,7 @@ export const FormEditUser = () => {
             });
             if(response.ok){
                 AlertNotification("Berhasil", "Berhasil mengubah data user", "success", 1000);
-                router.push("/DataMaster/masteruser");
+                router.push("/useropd");
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }
@@ -591,21 +549,21 @@ export const FormEditUser = () => {
     if(loading){
         return (    
             <div className="border p-5 rounded-xl shadow-xl">
-                <h1 className="uppercase font-bold">Form Edit User :</h1>
+                <h1 className="uppercase font-bold">Form Edit User OPD :</h1>
                 <LoadingClip className="mx-5 py-5"/>
             </div>
         );
     } else if(error){
         return (
             <div className="border p-5 rounded-xl shadow-xl">
-                <h1 className="uppercase font-bold">Form Edit User :</h1>
+                <h1 className="uppercase font-bold">Form Edit User OPD :</h1>
                 <h1 className="text-red-500 mx-5 py-5">{error}</h1>
             </div>
         )
     } else if(idNull){
         return (
             <div className="border p-5 rounded-xl shadow-xl">
-                <h1 className="uppercase font-bold">Form Edit User :</h1>
+                <h1 className="uppercase font-bold">Form Edit User OPD :</h1>
                 <h1 className="text-red-500 mx-5 py-5">id tidak ditemukan</h1>
             </div>
         )
@@ -614,7 +572,7 @@ export const FormEditUser = () => {
     return(
     <>
         <div className="border p-5 rounded-xl shadow-xl">
-            <h1 className="uppercase font-bold">Form Edit User :</h1>
+            <h1 className="uppercase font-bold">Form Edit User OPD :</h1>
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col mx-5 py-5"
@@ -794,7 +752,7 @@ export const FormEditUser = () => {
                         "Simpan"
                     }
                 </ButtonGreen>
-                <ButtonRed type="button" halaman_url="/DataMaster/masteruser">
+                <ButtonRed type="button" halaman_url="/useropd">
                     Kembali
                 </ButtonRed>
             </form>

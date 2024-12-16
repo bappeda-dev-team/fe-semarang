@@ -105,7 +105,7 @@ const Musrebang: React.FC<id> = ({id}) => {
                 <ButtonSky className="w-full mt-2">Simpan</ButtonSky>
                 <div className="overflow-auto mt-3 rounded-t-xl border">
                     <table className="w-full">
-                        <thead>
+                        <thead className="bg-gray-300">
                             <tr>
                                 <td className="border-r border-b px-6 py-3 min-w-[50px]">No</td>
                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Usulan</td>

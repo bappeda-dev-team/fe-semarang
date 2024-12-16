@@ -4,13 +4,8 @@ import { ButtonGreen, ButtonRed, ButtonSkyBorder, ButtonGreenBorder, ButtonBlack
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { LoadingClip } from "@/components/global/Loading";
 import { useState, useEffect } from "react";
-import { getToken } from "@/components/lib/Cookie";
-import Select from 'react-select';
+import { getToken, getUser, getOpdTahun } from "@/components/lib/Cookie";
 
-interface OptionTypeString {
-    value: string;
-    label: string;
-}
 interface User {
     id: string;
     nip: string;
@@ -25,22 +20,36 @@ interface roles {
 
 const Table = () => {
 
+    const [user, setuser] = useState<any>(null);
     const [User, setUser] = useState<User[]>([]);
-    const [Opd, setOpd] = useState<OptionTypeString | null>(null);
     const [LevelUser, setLevelUser] = useState<string>('');
-    const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [error, setError] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
-    const [IsLoading, setIsLoading] = useState<boolean>(false);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const token = getToken();
 
     useEffect(() => {
+        const fetchUser = getUser();
+        const data = getOpdTahun();
+        if(fetchUser){
+            setuser(fetchUser.user);
+        }
+        if(data.opd){
+            const opd = {
+                value: data.opd.value,
+                label: data.opd.label,
+            }
+            setSelectedOpd(opd);
+        }
+    },[])
+
+    useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchUrusan = async() => {
+        const fetchUrusan = async(url: string) => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/user/findall?kode_opd=${Opd?.value}`, {
+                const response = await fetch(`${API_URL}/${url}`, {
                     headers: {
                       Authorization: `${token}`,
                       'Content-Type': 'application/json',
@@ -69,35 +78,14 @@ const Table = () => {
                 setLoading(false);
             }
         }
-        fetchUrusan();
-    }, [token, Opd]);
-
-    const fetchOpd = async() => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      setIsLoading(true);
-      try{ 
-        const response = await fetch(`${API_URL}/opd/findall`,{
-          method: 'GET',
-          headers: {
-            Authorization: `${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        if(!response.ok){
-          throw new Error('cant fetch data opd');
+        if(user?.roles != undefined || null){
+            if(user?.roles == 'super_admin'){
+                fetchUrusan(`user/findall?kode_opd=${SelectedOpd?.value}`);
+            } else {
+                fetchUrusan(`user/findall?kode_opd=${user?.kode_opd}`);
+            }
         }
-        const data = await response.json();
-        const opd = data.data.map((item: any) => ({
-          value : item.kode_opd,
-          label : item.nama_opd,
-        }));
-        setOpdOption(opd);
-      } catch (err){
-        console.log('gagal mendapatkan data opd');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    }, [token, user, SelectedOpd]);
 
     const hapusUrusan = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -131,108 +119,17 @@ const Table = () => {
                 <h1 className="text-red-500 mx-5 py-5">Periksa koneksi internet atau database server</h1>
             </div>
         )
-    } else if(!Opd){
+    } else if(SelectedOpd == undefined || null){
         return (
-            <>
-                <div className="flex flex-wrap gap-2 items-center justify-between px-3 py-2">
-                    <div className="uppercase">
-                        <Select
-                            styles={{
-                                control: (baseStyles) => ({
-                                    ...baseStyles,
-                                borderRadius: '8px',
-                                minWidth: '320px',
-                                maxWidth: '700px',
-                                minHeight: '30px'
-                                })
-                            }}
-                            onChange={(option) => setOpd(option)}
-                            options={OpdOption}
-                            placeholder="Filter by OPD"
-                            isClearable
-                            value={Opd}
-                            isLoading={IsLoading}
-                            isSearchable
-                            onMenuOpen={() => {
-                                if(OpdOption.length == 0){
-                                    fetchOpd();
-                                }
-                            }}
-                        />
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        {LevelUser == '' ? 
-                            <button className="px-3 py-1 text-center bg-black rounded-lg text-white">Semua Level</button>
-                        :
-                            <ButtonBlackBorder onClick={() => {setLevelUser('')}}>Semua Level</ButtonBlackBorder>
-                        }
-                        {LevelUser == 'super_admin' ? 
-                            <button className="px-3 py-1 text-center bg-sky-500 rounded-lg text-white">Super Admin</button>
-                        :
-                            <ButtonSkyBorder onClick={() => {setLevelUser('super_admin')}}>Super Admin</ButtonSkyBorder>
-                        }
-                        {LevelUser == 'admin_opd' ? 
-                            <button className="px-3 py-1 text-center bg-sky-500 rounded-lg text-white">Admin OPD</button>
-                        :
-                            <ButtonSkyBorder className={`${LevelUser == ''}`} onClick={() => {setLevelUser('admin_opd')}}>Admin OPD</ButtonSkyBorder>
-                        }
-                        {LevelUser == 'level_1' ? 
-                            <button className="px-3 py-1 text-center bg-green-500 rounded-lg text-white">Level 1</button>
-                        :
-                            <ButtonGreenBorder onClick={() => {setLevelUser('level_1')}}>Level 1</ButtonGreenBorder>
-                        }
-                        {LevelUser == 'level_2' ? 
-                            <button className="px-3 py-1 text-center bg-green-500 rounded-lg text-white">Level 2</button>
-                        :
-                            <ButtonGreenBorder onClick={() => {setLevelUser('level_2')}}>Level 2</ButtonGreenBorder>
-                        }
-                        {LevelUser == 'level_3' ? 
-                            <button className="px-3 py-1 text-center bg-green-500 rounded-lg text-white">Level 3</button>
-                        :
-                            <ButtonGreenBorder onClick={() => {setLevelUser('level_3')}}>Level 3</ButtonGreenBorder>
-                        }
-                        {LevelUser == 'level_4' ? 
-                            <button className="px-3 py-1 text-center bg-green-500 rounded-lg text-white">Level 4</button>
-                        :
-                            <ButtonGreenBorder onClick={() => {setLevelUser('level_4')}}>Level 4</ButtonGreenBorder>
-                        }
-                    </div>
-                </div>
-                <div className="border p-1 rounded-xl mx-3 mb-2">
-                    <h1 className="mx-5 py-5">Pilih Filter OPD</h1>
-                </div>
-            </>
+            <div className="border p-5 rounded-xl shadow-xl">
+                <h1 className="mx-5 py-5">Super Admin Wajib Pilih OPD di header terlebih dahulu</h1>
+            </div>
         )
     }
 
     return(
         <>
             <div className="flex flex-wrap gap-2 items-center justify-between px-3 py-2">
-                <div className="uppercase">
-                    <Select
-                        styles={{
-                            control: (baseStyles) => ({
-                                ...baseStyles,
-                            borderRadius: '8px',
-                            minWidth: '320px',
-                            maxWidth: '700px',
-                            minHeight: '30px'
-                            })
-                        }}
-                        onChange={(option) => setOpd(option)}
-                        options={OpdOption}
-                        placeholder="Filter by OPD"
-                        isClearable
-                        value={Opd}
-                        isLoading={IsLoading}
-                        isSearchable
-                        onMenuOpen={() => {
-                            if(OpdOption.length == 0){
-                                fetchOpd();
-                            }
-                        }}
-                    />
-                </div>
                 <div className="flex flex-wrap gap-2">
                     {LevelUser == '' ? 
                         <button className="px-3 py-1 text-center bg-black rounded-lg text-white">Semua Level</button>
@@ -306,7 +203,7 @@ const Table = () => {
                             }
                             <td className="border-r border-b px-6 py-4">
                                 <div className="flex flex-col jutify-center items-center gap-2">
-                                    <ButtonGreen className="w-full" halaman_url={`/DataMaster/masteruser/${data.id}`}>Edit</ButtonGreen>
+                                    <ButtonGreen className="w-full" halaman_url={`/useropd/${data.id}`}>Edit</ButtonGreen>
                                     <ButtonRed 
                                         className="w-full"
                                         onClick={() => {

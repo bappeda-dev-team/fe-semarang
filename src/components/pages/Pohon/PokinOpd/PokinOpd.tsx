@@ -1,17 +1,16 @@
 'use client'
 
 import '@/components/pages/Pohon/treeflex.css'
-import { useState, useEffect } from 'react';
-import { TbPencil, TbCircleCheckFilled, TbCircleLetterXFilled, TbCirclePlus } from 'react-icons/tb';
-import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder } from '@/components/global/Button';
-import { LoadingBeat } from '@/components/global/Loading';
+import { useState, useEffect, useRef } from 'react';
+import { TbPencil, TbCircleCheckFilled, TbCircleLetterXFilled, TbCirclePlus, TbHandStop, TbPointer, TbSettings } from 'react-icons/tb';
+import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder, ButtonBlackBorder } from '@/components/global/Button';
+import { LoadingBeat, LoadingButtonClip } from '@/components/global/Loading';
 import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
 import { PohonOpd } from '@/components/lib/Pohon/Opd/PohonOpd';
 import { FormPohonOpd } from '@/components/lib/Pohon/Opd/FormPohonOpd';
 import { getUser, getToken, getOpdTahun } from '@/components/lib/Cookie';
 import Select from 'react-select';
 import { AlertNotification } from '@/components/global/Alert';
-import { LoadingButtonClip } from '@/components/global/Loading';
 
 interface OptionType {
     value: number;
@@ -57,7 +56,7 @@ const PokinOpd = () => {
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     
-    
+    const[Kendali, setKendali] = useState<boolean>(true);
     //pohon pemda
     const [OptionPokinPemda, setOptionPokinPemda] = useState<PokinPemda[]>([]);
     const [PohonPemda, setPohonPemda] = useState<PokinPemda | null>(null);
@@ -82,6 +81,12 @@ const PokinOpd = () => {
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
     const [Deleted, setDeleted] = useState<boolean>(false);
 
+    const [isDragging, setIsDragging] = useState(false);
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+    const [scrollStart, setScrollStart] = useState({ x: 0, y: 0 });
+    const [cursorMode, setCursorMode] = useState<"normal" | "hand">("normal");
+    const containerRef = useRef<HTMLDivElement | null>(null);
+
     useEffect(() => {
         const fetchUser = getUser();
         if (fetchUser) {
@@ -103,6 +108,32 @@ const PokinOpd = () => {
             setSelectedOpd(opd);
         }
     }, []);
+
+    const toggleCursorMode = () =>{
+      setCursorMode((prevMode) => (prevMode === "normal" ? "hand" : "normal"));
+    }
+    const handleMouseDown = (e: React.MouseEvent) => {
+      if (cursorMode === "normal") return; // Ignore if cursor is normal
+  
+      setIsDragging(true);
+      setDragStart({ x: e.clientX, y: e.clientY });
+      if (containerRef.current) {
+        setScrollStart({
+          x: containerRef.current.scrollLeft,
+          y: containerRef.current.scrollTop,
+        });
+      }
+    };
+  
+    const handleMouseMove = (e: React.MouseEvent) => {
+      if (!isDragging || !containerRef.current) return;
+      const dx = dragStart.x - e.clientX;
+      const dy = dragStart.y - e.clientY;
+      containerRef.current.scrollLeft = scrollStart.x + dx;
+      containerRef.current.scrollTop = scrollStart.y + dy;
+    };
+  
+    const handleMouseUp = () => setIsDragging(false);
 
     const fetchPohonPemda = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -252,6 +283,7 @@ const PokinOpd = () => {
                 alert("cant fetch data")
             }
             AlertNotification("Berhasil", "Data pohon berhasil di tolak", "success", 1000);
+            setDeleted((prev) => !prev);
             // setTimeout(() => {
             //     window.location.reload();
             // }, 1000);
@@ -458,7 +490,7 @@ const PokinOpd = () => {
 
     return (
         <>
-            <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
+            <div className="flex justify-between items-center p-5 border-2 rounded-t-xl mt-2">
                 {User?.roles == 'super_admin' ?
                     <h1 className="font-bold">Pohon Kinerja {SelectedOpd?.label}</h1>
                     :
@@ -467,9 +499,10 @@ const PokinOpd = () => {
                         :
                         <h1 className="font-bold">Pohon Cascading {Pokin?.nama_opd}</h1>
                 }
+                <ButtonBlackBorder onClick={() => setKendali((prev) => !prev)}>{Kendali ? <span className='flex gap-1 items-center'><TbSettings />Sembunyikan</span> : <span className='flex gap-1 items-center'><TbSettings/>Tampilkan</span> }</ButtonBlackBorder>
             </div>
-            <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
-                <div className="flex flex-wrap justify-between gap-2 mb-[7em]">
+            <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl relative w-full h-[calc(100vh-50px)] max-h-screen overflow-auto">
+                <div className={`flex flex-wrap justify-between gap-2 transition-all duration-300 ease-in-out ${Kendali ? "max-h-screen opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}>
                     {/* PEMDA */}
                     <div className="flex flex-wrap gap-2">
                         <div className="border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-xl">
@@ -845,8 +878,17 @@ const PokinOpd = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="tf-tree text-center mt-3">
+                </div> 
+                <div 
+                    className={`tf-tree text-center mt-3 transition-all duration-300 ease-in-out ${cursorMode === 'hand' ? "select-none" : ""}`}
+                    ref={containerRef}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    style={{
+                      cursor: cursorMode === "hand" ? (isDragging ? "grabbing" : "grab") : "default", // Cursor style
+                    }}
+                >
                     <ul>
                         <li>
                             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg">
@@ -953,6 +995,17 @@ const PokinOpd = () => {
                             )}
                         </li>
                     </ul>
+                </div>
+                {/* BUTTON HAND TOOL */}
+                <div className="fixed flex items-center mr-2 mb-2 bottom-0 right-0">
+                  <button
+                    onClick={toggleCursorMode}
+                    className={`p-2 rounded ${
+                      cursorMode === "hand" ? "bg-green-500 text-white" : "bg-gray-300 text-black"
+                    }`}
+                  >
+                    {cursorMode === "hand" ? <TbHandStop size={30}/> : <TbPointer size={30}/>}
+                  </button>
                 </div>
             </div>
         </>

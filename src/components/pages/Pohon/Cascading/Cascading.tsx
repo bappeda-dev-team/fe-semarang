@@ -2,15 +2,12 @@
 
 import '@/components/pages/Pohon/treeflex.css'
 import { getOpdTahun } from '@/components/lib/Cookie';
-import { useState, useEffect } from 'react';
-import { TbCircleCheckFilled, TbCircleLetterXFilled, TbCirclePlus } from 'react-icons/tb';
-import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder } from '@/components/global/Button';
+import { useState, useEffect, useRef } from 'react';
+import { TbHandStop, TbPointer } from 'react-icons/tb';
 import { LoadingBeat } from '@/components/global/Loading';
 import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
-import { PohonOpd } from '@/components/lib/Pohon/Opd/PohonOpd';
 import { FormPohonOpd } from '@/components/lib/Pohon/Opd/FormPohonOpd';
 import { getUser, getToken } from '@/components/lib/Cookie';
-import Select from 'react-select';
 import { PohonCascading } from '@/components/lib/Pohon/Cascading/PohonCascading';
 
 interface OptionType {
@@ -45,15 +42,18 @@ const Cascading = () => {
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [Pokin, setPokin] = useState<pokin | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
-    const [IsLoading, setIsLoading] = useState<boolean | null>(null);
-    const [OptionPokinPemda, setOptionPokinPemda] = useState<OptionType[]>([]);
-    const [PokinPemda, setPokinPemda] = useState<OptionType | null>(null);
     const [error, setError] = useState<string>('');
     const token = getToken();
 
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
-    const [NewStrategic, setNewStrategic] = useState<boolean>(false);
     const [Deleted, setDeleted] = useState<boolean>(false);
+
+    //Hand Tool state
+    const [isDragging, setIsDragging] = useState(false);
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+    const [scrollStart, setScrollStart] = useState({ x: 0, y: 0 });
+    const [cursorMode, setCursorMode] = useState<"normal" | "hand">("normal");
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         const fetchUser = getUser();
@@ -76,6 +76,32 @@ const Cascading = () => {
             setSelectedOpd(opd);
         }
     },[]);
+
+    const toggleCursorMode = () =>{
+      setCursorMode((prevMode) => (prevMode === "normal" ? "hand" : "normal"));
+    }
+    const handleMouseDown = (e: React.MouseEvent) => {
+      if (cursorMode === "normal") return; // Ignore if cursor is normal
+
+      setIsDragging(true);
+      setDragStart({ x: e.clientX, y: e.clientY });
+      if (containerRef.current) {
+        setScrollStart({
+          x: containerRef.current.scrollLeft,
+          y: containerRef.current.scrollTop,
+        });
+      }
+    };
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+      if (!isDragging || !containerRef.current) return;
+      const dx = dragStart.x - e.clientX;
+      const dy = dragStart.y - e.clientY;
+      containerRef.current.scrollLeft = scrollStart.x + dx;
+      containerRef.current.scrollTop = scrollStart.y + dy;
+    };
+
+    const handleMouseUp = () => setIsDragging(false);
 
     useEffect(() => {
         const fetchPokinOpd = async(url: string) => {
@@ -166,16 +192,24 @@ const Cascading = () => {
     }
 
     return(
-        <>
-            <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
+        <div>
+            <div className="flex flex-col p-5 border-2 rounded-t-xl overflow-auto mt-2">
                 {User?.roles == 'super_admin' ? 
                     <h1 className="font-bold">Pohon Cascading {SelectedOpd?.label}</h1>
                 :
                     <h1 className="font-bold">Pohon Cascading {Pokin?.nama_opd}</h1>
                 }
             </div>
-            <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
-                <div className="tf-tree text-center mt-3">
+            <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl relative w-full h-[calc(100vh-100px)] max-h-screen overflow-auto">
+                <div className={`tf-tree text-center mt-3 ${cursorMode === 'hand' ? "select-none" : ""}`}
+                    ref={containerRef}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    style={{
+                      cursor: cursorMode === "hand" ? (isDragging ? "grabbing" : "grab") : "default", // Cursor style
+                    }}
+                >
                     <ul>
                         <li>
                             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg">
@@ -249,8 +283,19 @@ const Cascading = () => {
                         </li>
                     </ul>
                 </div>
+                {/* BUTTON HAND TOOL */}
+                <div className="fixed flex items-center mr-2 mb-2 bottom-0 right-0">
+                  <button
+                    onClick={toggleCursorMode}
+                    className={`p-2 rounded ${
+                      cursorMode === "hand" ? "bg-green-500 text-white" : "bg-gray-300 text-black"
+                    }`}
+                  >
+                    {cursorMode === "hand" ? <TbHandStop size={30}/> : <TbPointer size={30}/>}
+                  </button>
+                </div>
             </div>
-        </>
+        </div>
     )
 }
 

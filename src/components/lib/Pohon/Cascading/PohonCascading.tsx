@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TbCirclePlus, TbPencil, TbTrash, TbTrashX, TbUsersPlus, TbEye } from 'react-icons/tb';
-import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder } from '@/components/global/Button';
+import { ButtonSkyBorder, ButtonGreenBorder, ButtonBlackBorder } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
 import { FormCascading, FormEditCascading } from './FormCascading';
 import { getToken, getUser } from '../../Cookie';
@@ -80,7 +80,8 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         ${tema.jenis_pohon === "OperationalPemda" && 'shadow-slate-500'}
                         ${tema.jenis_pohon === "Strategic" && 'shadow-red-500 bg-red-700'}
                         ${tema.jenis_pohon === "Tactical" && 'shadow-blue-500 bg-blue-500'}
-                        ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'shadow-green-500 bg-green-500'}
+                        ${tema.jenis_pohon === "Operational" && 'shadow-green-500 bg-green-500'}
+                        ${tema.jenis_pohon === "Operational N" && 'shadow-green-500'}
                     `}
                 >
                     {/* HEADER */}
@@ -93,8 +94,12 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             ${tema.jenis_pohon === "Tactical" && 'border-blue-500 text-blue-500'}
                             ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-green-500 text-green-500'}
                         `}
-                            >
-                        <h1>{tema.jenis_pohon}</h1>
+                    >
+                        {tema.jenis_pohon === 'Operational N' ?
+                            <h1>Operational {tema.level_pohon - 6}  </h1>
+                            :
+                            <h1>{tema.jenis_pohon} </h1>
+                        }
                     </div>
                     {/* BODY */}
                     <div className="flex justify-center my-3">
@@ -249,7 +254,11 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
                             ${tema.jenis_pohon === "Operational Pemda" && 'border-green-500 text-white bg-gradient-to-r from-[#007982] from-40% to-[#2DCB06]'}
                         `}
                     >
-                        <h1>{tema.jenis_pohon}</h1>
+                        {tema.jenis_pohon === 'Operational N' ?
+                            <h1>Operational {tema.level_pohon - 6}  </h1>
+                            :
+                            <h1>{tema.jenis_pohon} </h1>
+                        }
                     </div>
                     {/* BODY */}
                     <div className="flex justify-center my-3">
@@ -392,7 +401,13 @@ export const TablePohon = (props: any) => {
                                     {item.nama_pegawai}
                                 </td>
                                 <td
-                                    onClick={() => hapusPelaksana(item.id_pelaksana)}
+                                    onClick={() => {
+                                        AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                            if (result.isConfirmed) {
+                                                hapusPelaksana(item.id_pelaksana);
+                                            }
+                                        });
+                                    }}
                                     className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                         ${jenis === "Strategic" && "border-red-700"}
                                         ${jenis === "Tactical" && "border-blue-500"}
@@ -434,7 +449,13 @@ export const TablePohon = (props: any) => {
                                     {data.nama_pegawai}
                                 </td>
                                 <td
-                                    onClick={() => hapusPelaksana(data.id_pelaksana)}
+                                    onClick={() => {
+                                        AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                            if (result.isConfirmed) {
+                                                hapusPelaksana(item.id_pelaksana);
+                                            }
+                                        });
+                                    }}
                                     className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                         ${jenis === "Strategic" && "border-red-700"}
                                         ${jenis === "Tactical" && "border-blue-500"}
@@ -552,7 +573,13 @@ export const TablePohonEdited = (props: any) => {
                                     {item.nama_pegawai}
                                 </td>
                                 <td
-                                    onClick={() => hapusPelaksana(item.id_pelaksana)}
+                                    onClick={() => {
+                                        AlertQuestion("Hapus?", "Hapus pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                            if (result.isConfirmed) {
+                                                hapusPelaksana(item.id_pelaksana);
+                                            }
+                                        });
+                                    }}
                                     className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                         ${jenis === "Strategic" && "border-red-700"}
                                         ${jenis === "Tactical" && "border-blue-500"}
@@ -594,7 +621,13 @@ export const TablePohonEdited = (props: any) => {
                                 {data.nama_pegawai}
                             </td>
                             <td
-                                onClick={() => hapusPelaksana(data.id_pelaksana)}
+                                onClick={() => {
+                                    AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                        if (result.isConfirmed) {
+                                            hapusPelaksana(item.id_pelaksana);
+                                        }
+                                    });
+                                }}
                                 className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                     ${jenis === "Strategic" && "border-red-700"}
                                     ${jenis === "Tactical" && "border-blue-500"}

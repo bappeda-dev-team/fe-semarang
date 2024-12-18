@@ -129,8 +129,8 @@ const Table = () => {
 
     return(
         <>
-            <div className="flex flex-wrap gap-2 items-center justify-between px-3 py-2">
-                <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 items-center justify-center px-3 py-2">
+                <div className="flex flex-wrap justify-center items-center gap-2">
                     {LevelUser == '' ? 
                         <button className="px-3 py-1 text-center bg-black rounded-lg text-white">Semua Level</button>
                     :

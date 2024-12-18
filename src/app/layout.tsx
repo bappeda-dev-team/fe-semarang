@@ -1,6 +1,6 @@
 'use client'
 
-import { Karla } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/global/Sidebar";
 import Header from "@/components/global/Header";
@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import { getUser } from "@/components/lib/Cookie";
 import NextTopLoader from "nextjs-toploader";
 
-const font = Karla({
+const font = Poppins({
   subsets: ['latin'],
   weight: ['200', '300', '400', '500', '600', '700', '800'],
   display: 'swap', // Mengatur tampilan swap agar tidak ada flash saat font dimuat

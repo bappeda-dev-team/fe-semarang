@@ -308,7 +308,7 @@ export const FormRencanaKinerja = () => {
                 </div>
 
                 <label className="uppercase text-base font-bold text-gray-700 my-2">
-                    indikator sasaran :
+                    indikator rencana kinerja :
                 </label>
                 {fields.map((field, index) => (
                     <div key={index} className="flex flex-col bg-gray-100 my-2 py-2 px-2 rounded-lg">
@@ -722,7 +722,7 @@ export const FormEditRencanaKinerja = () => {
                 </div>
 
                 <label className="uppercase text-base font-bold text-gray-700 my-2">
-                    indikator sasaran :
+                    indikator rencana kinerja :
                 </label>
                 {fields.map((field, index) => (
                     <div key={index} className="flex flex-col bg-gray-100 my-2 py-2 px-2 rounded-lg">

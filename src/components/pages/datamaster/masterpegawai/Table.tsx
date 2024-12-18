@@ -22,10 +22,13 @@ interface pegawai {
 const Table = () => {
 
     const [Pegawai, setPegawai] = useState<pegawai[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [filteredPegawai, setFilteredPegawai] = useState<pegawai[]>([]);
     const [Opd, setOpd] = useState<OptionTypeString | null>(null);
     const [error, setError] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
+    const [isSearchEmpty, setIsSearchEmpty] = useState<boolean>(false); // Pencarian kosong
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false); 
     const token = getToken();
@@ -63,6 +66,25 @@ const Table = () => {
         }
         fetchPegawai();
     }, [token, Opd]);
+
+    useEffect(() => {
+        if (Pegawai && Pegawai.length > 0 && searchQuery.trim() !== '') {
+            const filtered = Pegawai.filter((item) =>
+                item?.nama_pegawai?.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredPegawai(filtered);
+    
+            if (filtered.length === 0) {
+                setIsSearchEmpty(true); // Hasil pencarian kosong
+            } else {
+                setIsSearchEmpty(false);
+            }
+        } else {
+            setFilteredPegawai(Pegawai || []); // Pastikan ini tidak null
+            setIsSearchEmpty(false);
+        }
+    }, [searchQuery, Pegawai]);
+    
 
     const fetchOpd = async() => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -130,13 +152,13 @@ const Table = () => {
                     <Select
                         styles={{
                             control: (baseStyles) => ({
-                            ...baseStyles,
-                            borderRadius: '8px',
-                            minWidth: '320px',
-                            maxWidth: '700px',
-                            minHeight: '30px'
-                        })
-                    }}
+                                ...baseStyles,
+                                borderRadius: '8px',
+                                minWidth: '320px',
+                                maxWidth: '700px',
+                                minHeight: '30px'
+                            })
+                        }}
                         onChange={(option) => setOpd(option)}
                         options={OpdOption}
                         placeholder="Filter by OPD"
@@ -149,7 +171,7 @@ const Table = () => {
                                 fetchOpd();
                             }
                         }}
-                        />
+                    />
                 </div>
                 <div className="border p-1 mx-3 mb-2 rounded-xl">
                     <h1 className="mx-5 py-5">Pilih Filter OPD</h1>
@@ -184,6 +206,13 @@ const Table = () => {
                         }
                     }}
                 />
+                <input
+                    type="text"
+                    placeholder="Cari nama pegawai..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="p-2 border rounded-lg max-h-[38px] border-gray-300"
+                />
             </div>
             <div className="overflow-auto mx-3 my-2 rounded-t-xl border">
                 <table className="w-full">
@@ -199,6 +228,13 @@ const Table = () => {
                         </tr>
                     </thead>
                     <tbody>
+                        {!DataNull && isSearchEmpty && (
+                            <tr>
+                            <td className="px-6 py-3 uppercase" colSpan={13}>
+                                Nama tidak ditemukan
+                            </td>
+                        </tr>
+                        )}
                         {DataNull ? 
                             <tr>
                                 <td className="px-6 py-3 uppercase" colSpan={13}>
@@ -206,14 +242,14 @@ const Table = () => {
                                 </td>
                             </tr>
                         :
-                            Pegawai.map((data, index) => (
-                                <tr key={data.id}>
+                            filteredPegawai.map((data, index) => (
+                                <tr key={data?.id}>
                                     <td className="border-r border-b px-6 py-4">{index + 1}</td>
-                                    <td className="border-r border-b px-6 py-4">{data.nama_pegawai ? data.nama_pegawai : "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{data.nip ? data.nip : "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{data.id ? data.id : "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{data.kode_opd ? data.kode_opd : "-"}</td>
-                                    <td className="border-r border-b px-6 py-4">{data.nama_opd ? data.nama_opd : "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{data?.nama_pegawai ? data.nama_pegawai : "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{data?.nip ? data.nip : "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{data?.id ? data.id : "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{data?.kode_opd ? data.kode_opd : "-"}</td>
+                                    <td className="border-r border-b px-6 py-4">{data?.nama_opd ? data.nama_opd : "-"}</td>
                                     <td className="border-r border-b px-6 py-4">
                                         <div className="flex flex-col jutify-center items-center gap-2">
                                             <ButtonGreen className="w-full" halaman_url={`/DataMaster/masterpegawai/${data.id}`}>Edit</ButtonGreen>

@@ -339,7 +339,7 @@ export const FormTujuanOpd = () => {
                                         </label>
                                         <input
                                             {...field}
-                                            type="text"
+                                            type="number"
                                             className="border px-4 py-2 rounded-lg"
                                             placeholder="Masukkan Tahun"
                                         />

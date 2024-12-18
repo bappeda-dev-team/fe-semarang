@@ -517,7 +517,7 @@ export const FormEditUserOpd = () => {
       })) || [];
       const formData = {
           //key : value
-          nip : data.nip,
+          nip : data.nip?.value,
           email : data.email,
           is_active: data.is_active?.value || Aktif?.value,
           role: RolesIds,

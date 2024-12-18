@@ -133,7 +133,7 @@ export const FormUserOpd = () => {
         })) || [];
         const formData = {
             //key : value
-            nip : data.nip,
+            nip : data.nip?.value,
             email : data.email,
             password : data.password,
             is_active: data.is_active?.value,

@@ -31,7 +31,7 @@ export const login = async (username: string, password: string): Promise<boolean
 
     if (response.status === 200) {
       const data = await response.json();
-      console.log('data dari response : ,', data);
+      // console.log('data dari response : ,', data);
       const token = data.data.token;
       try {
         const decoded = jwtDecoded.jwtDecode(token);

@@ -140,11 +140,11 @@ export const FormUser = () => {
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const RolesIds = Roles?.map((Roles) => ({
-            role_id: Roles.value, // Ubah `value` menjadi `pegawai_id`
+            role_id: Roles.value,
         })) || [];
         const formData = {
             //key : value
-            nip : data.nip,
+            nip : data.nip?.value,
             email : data.email,
             password : data.password,
             is_active: data.is_active?.value,
@@ -161,9 +161,12 @@ export const FormUser = () => {
                 },
                 body: JSON.stringify(formData),
             });
-            if(response.ok){
+            const data = await response.json();
+            if(data.code == 201){
                 AlertNotification("Berhasil", "Berhasil menambahkan data user", "success", 1000);
                 router.push("/DataMaster/masteruser");
+            } else if(data.code == 400){
+                AlertNotification("Gagal", "NIP sudah terdaftar sebagai user / terdapat kesamaan NIP dengan pegawai lain", "error", 3000, true);
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }
@@ -544,6 +547,7 @@ export const FormEditUser = () => {
                     );
                 }
             } catch(err) {
+                setError('gagal mengambil data sesuai id');
                 console.error(err, 'gagal mengambil data sesuai id')
             } finally {
                 setLoading(false);

@@ -27,10 +27,6 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         }
     },[])
     
-    // Adds a new form entry
-    const newChild = () => {
-        setFormList([...formList, Date.now()]); // Using unique IDs
-    };
     const handleEditSuccess = (data: any) => {
       setEdited(data);
       setEdit(false);
@@ -109,14 +105,13 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             <TablePohon item={tema} hapusPelaksana={hapusPelaksana} />
                         }
                     </div>
-                    {/* BUTTON ACTION INSIDE BOX */}
-                    {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' )&& 
+                    {/* BUTTON ACTION TAMPILKAN DAN PELAKSANA*/}
                         <div 
                             className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
                                 ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
                                 ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
                                 ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
-                            `}
+                                `}
                         >
                             <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
                                 onClick={handleShow}
@@ -124,34 +119,53 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 <TbEye className='mr-1' />
                                 {Show ? 'Sembunyikan' : 'Tampilkan'}
                             </ButtonBlackBorder>
+                            {/* BUTTON PELAKSANA SUPER ADMIN, ADMIN OPD, ASN LEVEL 1 */}
+                            {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'level_1')&& 
                             <ButtonGreenBorder onClick={() => setEdit(true)}>
                                 <TbUsersPlus className="mr-1"/>
                                 Pelaksana
                             </ButtonGreenBorder>
-                        </div>
-                    }
-                    {((User?.roles != 'super_admin' && User?.roles != 'admin_opd')) && 
-                        <div 
-                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
-                                ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
-                                ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
-                                ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
-                            `}
-                        >
-                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
-                                onClick={handleShow}
-                            >
-                                <TbEye className='mr-1' />
-                                {Show ? 'Sembunyikan' : 'Tampilkan'}
-                            </ButtonBlackBorder>
-                            {(tema.jenis_pohon == 'Operational' || tema.jenis_pohon == 'Operational N') && 
-                                <ButtonSkyBorder onClick={() => setEdit(true)}>
+                            }
+                            {/* BUTTON PELAKSANA ASN LEVEL 2 */}
+                            {(User?.roles == 'level_2' && 
+                                (
+                                    tema.jenis_pohon === 'Tactical' || 
+                                    tema.jenis_pohon === 'Tactical Pemda' || 
+                                    tema.jenis_pohon === 'Operational' || 
+                                    tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda'
+                                )) &&
+                                <ButtonGreenBorder onClick={() => setEdit(true)}>
                                     <TbUsersPlus className="mr-1"/>
                                     Pelaksana
-                                </ButtonSkyBorder>
+                                </ButtonGreenBorder>
+                            }
+                            {/* BUTTON PELAKSANA ASN LEVEL 3 */}
+                            {(User?.roles == 'level_3' && 
+                                (
+                                    tema.jenis_pohon === 'Operational' || 
+                                    tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda'
+                                )) &&
+                                <ButtonGreenBorder onClick={() => setEdit(true)}>
+                                    <TbUsersPlus className="mr-1"/>
+                                    Pelaksana
+                                </ButtonGreenBorder>
+                            }
+                            {/* BUTTON PELAKSANA ASN LEVEL 4 */}
+                            {(User?.roles == 'level_4' && 
+                                (
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda'
+                                )) &&
+                                <ButtonGreenBorder onClick={() => setEdit(true)}>
+                                    <TbUsersPlus className="mr-1"/>
+                                    Pelaksana
+                                </ButtonGreenBorder>
                             }
                         </div>
-                    }
                 </div>
             </>
             }

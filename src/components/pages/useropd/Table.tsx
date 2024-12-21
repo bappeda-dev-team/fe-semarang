@@ -119,12 +119,14 @@ const Table = () => {
                 <h1 className="text-red-500 mx-5 py-5">Periksa koneksi internet atau database server</h1>
             </div>
         )
-    } else if(SelectedOpd == undefined || null){
-        return (
-            <div className="border p-5 rounded-xl shadow-xl">
-                <h1 className="mx-5 py-5">Super Admin Wajib Pilih OPD di header terlebih dahulu</h1>
-            </div>
-        )
+    } else if(user?.roles == 'super_admin'){
+        if(SelectedOpd == undefined || null){
+            return (
+                <div className="border p-5 rounded-xl shadow-xl">
+                    <h1 className="mx-5 py-5">Super Admin Wajib Pilih OPD di header terlebih dahulu</h1>
+                </div>
+            )
+        }
     }
 
     return(

@@ -3,7 +3,7 @@ import { TbLayersLinked, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHourgla
 import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
 import { FormPohonOpd, FormEditPohon, FormCrosscutingOpd } from './FormPohonOpd';
-import { getToken } from '../../Cookie';
+import { getToken, getUser } from '../../Cookie';
 import { ModalAddCrosscutting } from '@/components/pages/Pohon/ModalCrosscutting';
 
 interface pohon {
@@ -47,9 +47,18 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [DetailCross, setDetailCross] = useState<boolean>(false);
     const [Show, setShow] = useState<boolean>(false);
     const [Cross, setCross] = useState<boolean>(false);
+    const [CrossLoading, setCrossLoading] = useState<boolean>(false);
     const [PohonCross, setPohonCross] = useState<Cross[]>([]);
     const [Edited, setEdited] = useState<any | null>(null);
+    const [User, setUser] = useState<any>(null);
     const token = getToken();
+
+    useEffect(() => {
+       const fetchUser = getUser();
+        if(fetchUser){
+            setUser(fetchUser.user);
+        }
+    },[])
 
     // Adds a new form entry
     const newChild = () => {
@@ -75,6 +84,7 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const fetchPohonCross = async (id: string) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try {
+            setCrossLoading(true);
             const response = await fetch(`${API_URL}/crosscutting_opd/findall/${id}`, {
                 headers: {
                     Authorization: `${token}`,
@@ -89,6 +99,8 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
             setPohonCross(data);
         } catch (err) {
             console.error(err);
+        } finally{
+            setCrossLoading(false);
         }
     }
 
@@ -184,51 +196,159 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 <TablePohon item={tema} />
                             }
                         </div>
-                        {/* BUTTON ACTION INSIDE BOX */}
-                        {!['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
-                            <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
-                                    ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
-                                    ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
-                                    ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
-                                    ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
-                                `}
-                            >
-                                <ButtonSkyBorder onClick={() => setEdit(true)}>
-                                    <TbPencil className="mr-1" />
-                                    Edit
-                                </ButtonSkyBorder>
-                                <ButtonGreenBorder onClick={handleCross}>
-                                    <TbLayersLinked className="mr-1" />
-                                    CrossCuting
-                                </ButtonGreenBorder>
-                                <ModalAddCrosscutting isOpen={Cross} onClose={handleCross} id={tema.id}/>
-                                <ButtonRedBorder
-                                    onClick={() => {
-                                        AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
-                                            if (result.isConfirmed) {
-                                                hapusPohonOpd(tema.id);
-                                            }
-                                        });
-                                    }}
+                        {/* BUTTON ACTION INSIDE BOX SUPER ADMIN, ADMIN OPD, ASN LEVEL 1 */}
+                        {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'level_1') &&
+                            !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
+                                <div
+                                    className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                        ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
+                                    `}
                                 >
-                                    <TbTrash className='mr-1' />
-                                    Hapus
-                                </ButtonRedBorder>
-                            </div>
+                                    <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                        <TbPencil className="mr-1" />
+                                        Edit
+                                    </ButtonSkyBorder>
+                                    <ButtonGreenBorder onClick={handleCross}>
+                                        <TbLayersLinked className="mr-1" />
+                                        CrossCuting
+                                    </ButtonGreenBorder>
+                                    <ModalAddCrosscutting isOpen={Cross} onClose={handleCross} id={tema.id}/>
+                                    <ButtonRedBorder
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPohonOpd(tema.id);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <TbTrash className='mr-1' />
+                                        Hapus
+                                    </ButtonRedBorder>
+                                </div>
+                        }
+                        {/* BUTTON ACTION INSIDE BOX ASN LEVEL 2*/}
+                        {(User?.roles == 'level_2' && 
+                            (
+                                tema.jenis_pohon === 'Tactical' ||  
+                                tema.jenis_pohon === 'Operational' || 
+                                tema.jenis_pohon === 'Operational N'
+                            )) &&
+                            !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
+                                <div
+                                    className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                        ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
+                                    `}
+                                >
+                                    <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                        <TbPencil className="mr-1" />
+                                        Edit
+                                    </ButtonSkyBorder>
+                                    <ButtonGreenBorder onClick={handleCross}>
+                                        <TbLayersLinked className="mr-1" />
+                                        CrossCuting
+                                    </ButtonGreenBorder>
+                                    <ModalAddCrosscutting isOpen={Cross} onClose={handleCross} id={tema.id}/>
+                                    <ButtonRedBorder
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPohonOpd(tema.id);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <TbTrash className='mr-1' />
+                                        Hapus
+                                    </ButtonRedBorder>
+                                </div>
+                        }
+                        {/* BUTTON ACTION INSIDE BOX ASN LEVEL 3*/}
+                        {(User?.roles == 'level_3' && 
+                            (
+                                tema.jenis_pohon === 'Operational' ||  
+                                tema.jenis_pohon === 'Operational N'
+                            )) &&
+                            !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
+                                <div
+                                    className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                        ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
+                                    `}
+                                >
+                                    <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                        <TbPencil className="mr-1" />
+                                        Edit
+                                    </ButtonSkyBorder>
+                                    <ButtonGreenBorder onClick={handleCross}>
+                                        <TbLayersLinked className="mr-1" />
+                                        CrossCuting
+                                    </ButtonGreenBorder>
+                                    <ModalAddCrosscutting isOpen={Cross} onClose={handleCross} id={tema.id}/>
+                                    <ButtonRedBorder
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPohonOpd(tema.id);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <TbTrash className='mr-1' />
+                                        Hapus
+                                    </ButtonRedBorder>
+                                </div>
+                        }
+                        {/* BUTTON ACTION INSIDE BOX ASN LEVEL 4*/}
+                        {(User?.roles == 'level_4' && 
+                            (
+                                tema.jenis_pohon === 'Operational N'
+                            )) &&
+                            !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
+                                <div
+                                    className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                        ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
+                                        ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
+                                        ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
+                                        ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
+                                    `}
+                                >
+                                    <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                        <TbPencil className="mr-1" />
+                                        Edit
+                                    </ButtonSkyBorder>
+                                    <ButtonGreenBorder onClick={handleCross}>
+                                        <TbLayersLinked className="mr-1" />
+                                        CrossCuting
+                                    </ButtonGreenBorder>
+                                    <ModalAddCrosscutting isOpen={Cross} onClose={handleCross} id={tema.id}/>
+                                    <ButtonRedBorder
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPohonOpd(tema.id);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <TbTrash className='mr-1' />
+                                        Hapus
+                                    </ButtonRedBorder>
+                                </div>
                         }
                         {DetailCross &&
                             <>
                                 <div className="flex justify-center my-3">
-                                    {PohonCross.length == 0 ? 
+                                    {CrossLoading ? (
+                                        <p className="bg-white w-full rounded-lg py-3 text-center">Loading...</p>
+                                    ) : PohonCross.length === 0 ? (
                                         <p className="bg-white w-full rounded-lg py-3">tidak ada crosscuting</p>
-                                    :
-                                        <TableCrosscuting item={PohonCross} hapusPohonCross={hapusPohonCross}/>
-                                    }
+                                    ) : (
+                                        <TableCrosscuting item={PohonCross} hapusPohonCross={hapusPohonCross} />
+                                    )}
                                 </div>
                             </>
                         }
-                        {/* BUTTON ACTION INSIDE BOX */}
+                        {/* BUTTON ACTION INSIDE BOX CEK CROSSCUTTING */}
                         {/* detail cross */}
                         {!['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
@@ -258,13 +378,49 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 <TbEye className='mr-1' />
                                 {Show ? 'Sembunyikan' : 'Tampilkan'}
                             </ButtonBlackBorder>
-                            {Show &&
+                            {/* BUTTON TAMBAH POKIN OPD SUPER ADMIN, ADMIN OPD, ASN LEVEL 1 & 2 */}
+                            {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'level_1' || User?.roles == 'level_2') &&
+                                Show &&
                                 <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
-                                    onClick={newChild}
+                                onClick={newChild}
                                 >
-                                    <TbCirclePlus className='mr-1' />
-                                    {newChildButtonName(tema.jenis_pohon)}
-                                </ButtonGreenBorder>
+                                        <TbCirclePlus className='mr-1' />
+                                        {newChildButtonName(tema.jenis_pohon)}
+                                    </ButtonGreenBorder>
+                            }
+                            {/* BUTTON TAMBAH POKIN OPD ASN LEVEL 3 */}
+                            {(User?.roles == 'level_3' && 
+                                (
+                                    tema.jenis_pohon === 'Tactical' || 
+                                    tema.jenis_pohon === 'Tactical Pemda' || 
+                                    tema.jenis_pohon === 'Operational' || 
+                                    tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda'
+                                )) &&
+                                Show &&
+                                    <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                        onClick={newChild}
+                                    >
+                                        <TbCirclePlus className='mr-1' />
+                                        {newChildButtonName(tema.jenis_pohon)}
+                                    </ButtonGreenBorder>
+                            }
+                            {/* BUTTON TAMBAH POKIN OPD ASN LEVEL 4 */}
+                            {(User?.roles == 'level_4' && 
+                                (
+                                    tema.jenis_pohon === 'Operational' || 
+                                    tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda'
+                                )) &&
+                                Show &&
+                                    <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                        onClick={newChild}
+                                    >
+                                        <TbCirclePlus className='mr-1' />
+                                        {newChildButtonName(tema.jenis_pohon)}
+                                    </ButtonGreenBorder>
                             }
                         </div>
                     </div>
@@ -302,8 +458,20 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
     const [edit, setEdit] = useState<boolean>(false);
     const [Show, setShow] = useState<boolean>(false);
+    const [DetailCross, setDetailCross] = useState<boolean>(false);
+    const [Cross, setCross] = useState<boolean>(false);
+    const [CrossLoading, setCrossLoading] = useState<boolean>(false);
+    const [PohonCross, setPohonCross] = useState<Cross[]>([]);
     const [Edited, setEdited] = useState<any | null>(null);
+    const [User, setUser] = useState<any>(null);
     const token = getToken();
+
+    useEffect(() => {
+       const fetchUser = getUser();
+        if(fetchUser){
+            setUser(fetchUser.user);
+        }
+    },[]);
 
     // Adds a new form entry
     const newChild = () => {
@@ -313,10 +481,37 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         setEdited(data);
         setEdit(false);
     };
+    const handleCross = () => {
+        setCross((prev) => !prev);
+    }
+    const handleDetailCross = () => {
+        setDetailCross((prev) => !prev);
+    }
     const handleShow = () => {
         setShow((prev) => !prev);
     }
-
+    const fetchPohonCross = async (id: string) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        try {
+            setCrossLoading(true);
+            const response = await fetch(`${API_URL}/crosscutting_opd/findall/${id}`, {
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('terdapat kesalahan di koneksi backend');
+            }
+            const result = await response.json();
+            const data = result.data || [];
+            setPohonCross(data);
+        } catch (err) {
+            console.error(err);
+        } finally{
+            setCrossLoading(false);
+        }
+    }
     const hapusPohonOpd = async (id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try {
@@ -339,6 +534,27 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
             console.error(err);
         }
+    };
+    const hapusPohonCross = async (id: any) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        console.log(id);
+        // try {
+        //     const response = await fetch(`${API_URL}/crosscutting_opd/delete/${id}`, {
+        //         method: "DELETE",
+        //         headers: {
+        //             Authorization: `${token}`,
+        //             'Content-Type': 'application/json',
+        //         },
+        //     })
+        //     if (!response.ok) {
+        //         alert("cant fetch data")
+        //     }
+        //     AlertNotification("Berhasil", "Data pohon Crosscutting Di hapus", "success", 1000);
+        //     deleteTrigger();
+        // } catch (err) {
+        //     AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        //     console.error(err);
+        // }
     };
 
     return (
@@ -385,32 +601,178 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 <TablePohon item={tema} />
                             }
                         </div>
-                        {/* BUTTON ACTION INSIDE BOX */}
+                        {/* BUTTON ACTION INSIDE BOX SUPER ADMIN, ADMIN OPD, ASN LEVEL 1 */}
+                        {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'level_1') &&
+                            !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
+                                <div
+                                    className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                        ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
+                                    `}
+                                >
+                                    <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                        <TbPencil className="mr-1" />
+                                        Edit
+                                    </ButtonSkyBorder>
+                                    <ButtonGreenBorder onClick={handleCross}>
+                                        <TbLayersLinked className="mr-1" />
+                                        CrossCuting
+                                    </ButtonGreenBorder>
+                                    <ModalAddCrosscutting isOpen={Cross} onClose={handleCross} id={tema.id}/>
+                                    <ButtonRedBorder
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPohonOpd(tema.id);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <TbTrash className='mr-1' />
+                                        Hapus
+                                    </ButtonRedBorder>
+                                </div>
+                        }
+                        {/* BUTTON ACTION INSIDE BOX ASN LEVEL 2*/}
+                        {(User?.roles == 'level_2' && 
+                            (
+                                tema.jenis_pohon === 'Tactical' ||  
+                                tema.jenis_pohon === 'Operational' || 
+                                tema.jenis_pohon === 'Operational N'
+                            )) &&
+                            !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
+                                <div
+                                    className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                        ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
+                                    `}
+                                >
+                                    <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                        <TbPencil className="mr-1" />
+                                        Edit
+                                    </ButtonSkyBorder>
+                                    <ButtonGreenBorder onClick={handleCross}>
+                                        <TbLayersLinked className="mr-1" />
+                                        CrossCuting
+                                    </ButtonGreenBorder>
+                                    <ModalAddCrosscutting isOpen={Cross} onClose={handleCross} id={tema.id}/>
+                                    <ButtonRedBorder
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPohonOpd(tema.id);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <TbTrash className='mr-1' />
+                                        Hapus
+                                    </ButtonRedBorder>
+                                </div>
+                        }
+                        {/* BUTTON ACTION INSIDE BOX ASN LEVEL 3*/}
+                        {(User?.roles == 'level_3' && 
+                            (
+                                tema.jenis_pohon === 'Operational' ||  
+                                tema.jenis_pohon === 'Operational N'
+                            )) &&
+                            !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
+                                <div
+                                    className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                        ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
+                                    `}
+                                >
+                                    <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                        <TbPencil className="mr-1" />
+                                        Edit
+                                    </ButtonSkyBorder>
+                                    <ButtonGreenBorder onClick={handleCross}>
+                                        <TbLayersLinked className="mr-1" />
+                                        CrossCuting
+                                    </ButtonGreenBorder>
+                                    <ModalAddCrosscutting isOpen={Cross} onClose={handleCross} id={tema.id}/>
+                                    <ButtonRedBorder
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPohonOpd(tema.id);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <TbTrash className='mr-1' />
+                                        Hapus
+                                    </ButtonRedBorder>
+                                </div>
+                        }
+                        {/* BUTTON ACTION INSIDE BOX ASN LEVEL 4*/}
+                        {(User?.roles == 'level_4' && 
+                            (
+                                tema.jenis_pohon === 'Operational N'
+                            )) &&
+                            !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
+                                <div
+                                    className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                        ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
+                                        ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
+                                        ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
+                                        ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
+                                    `}
+                                >
+                                    <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                        <TbPencil className="mr-1" />
+                                        Edit
+                                    </ButtonSkyBorder>
+                                    <ButtonGreenBorder onClick={handleCross}>
+                                        <TbLayersLinked className="mr-1" />
+                                        CrossCuting
+                                    </ButtonGreenBorder>
+                                    <ModalAddCrosscutting isOpen={Cross} onClose={handleCross} id={tema.id}/>
+                                    <ButtonRedBorder
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPohonOpd(tema.id);
+                                                }
+                                            });
+                                        }}
+                                    >
+                                        <TbTrash className='mr-1' />
+                                        Hapus
+                                    </ButtonRedBorder>
+                                </div>
+                        }
+                        {DetailCross &&
+                            <>
+                                <div className="flex justify-center my-3">
+                                    {CrossLoading ? (
+                                        <p className="bg-white w-full rounded-lg py-3 text-center">Loading...</p>
+                                    ) : PohonCross.length === 0 ? (
+                                        <p className="bg-white w-full rounded-lg py-3">tidak ada crosscuting</p>
+                                    ) : (
+                                        <TableCrosscuting item={PohonCross} hapusPohonCross={hapusPohonCross} />
+                                    )}
+                                </div>
+                            </>
+                        }
+                        {/* BUTTON ACTION INSIDE BOX CEK CROSSCUTTING */}
+                        {/* detail cross */}
                         {!['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
                                 className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
                                     ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
                                     ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
                                     ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
-                                    ${tema.jenis_pohon === "Operational N" && 'border-green-500'}    
+                                    ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
                                 `}
                             >
-                                <ButtonSkyBorder onClick={() => setEdit(true)}>
-                                    <TbPencil className="mr-1" />
-                                    Edit
-                                </ButtonSkyBorder>
-                                <ButtonRedBorder
+                                <ButtonSkyBorder 
                                     onClick={() => {
-                                        AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
-                                            if (result.isConfirmed) {
-                                                hapusPohonOpd(tema.id);
-                                            }
-                                        });
+                                        fetchPohonCross(tema.id);
+                                        handleDetailCross();
                                     }}
                                 >
-                                    <TbTrash className='mr-1' />
-                                    Hapus
-                                </ButtonRedBorder>
+                                    <TbEye className="mr-1" />
+                                    Cek Crosscuting
+                                </ButtonSkyBorder>
                             </div>
                         }
                         {/* footer */}
@@ -421,13 +783,49 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 <TbEye className='mr-1' />
                                 {Show ? 'Sembunyikan' : 'Tampilkan'}
                             </ButtonBlackBorder>
-                            {Show &&
+                            {/* BUTTON TAMBAH POKIN OPD SUPER ADMIN, ADMIN OPD, ASN LEVEL 1 & 2 */}
+                            {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'level_1' || User?.roles == 'level_2') &&
+                                Show &&
                                 <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
-                                    onClick={newChild}
+                                onClick={newChild}
                                 >
-                                    <TbCirclePlus className='mr-1' />
-                                    {newChildButtonName(tema.jenis_pohon)}
-                                </ButtonGreenBorder>
+                                        <TbCirclePlus className='mr-1' />
+                                        {newChildButtonName(tema.jenis_pohon)}
+                                    </ButtonGreenBorder>
+                            }
+                            {/* BUTTON TAMBAH POKIN OPD ASN LEVEL 3 */}
+                            {(User?.roles == 'level_3' && 
+                                (
+                                    tema.jenis_pohon === 'Tactical' || 
+                                    tema.jenis_pohon === 'Tactical Pemda' || 
+                                    tema.jenis_pohon === 'Operational' || 
+                                    tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda'
+                                )) &&
+                                Show &&
+                                    <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                        onClick={newChild}
+                                    >
+                                        <TbCirclePlus className='mr-1' />
+                                        {newChildButtonName(tema.jenis_pohon)}
+                                    </ButtonGreenBorder>
+                            }
+                            {/* BUTTON TAMBAH POKIN OPD ASN LEVEL 4 */}
+                            {(User?.roles == 'level_4' && 
+                                (
+                                    tema.jenis_pohon === 'Operational' || 
+                                    tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda'
+                                )) &&
+                                Show &&
+                                    <ButtonGreenBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                        onClick={newChild}
+                                    >
+                                        <TbCirclePlus className='mr-1' />
+                                        {newChildButtonName(tema.jenis_pohon)}
+                                    </ButtonGreenBorder>
                             }
                         </div>
                     </div>
@@ -865,49 +1263,218 @@ export const TableCrosscuting = (props: any) => {
     const { item, hapusPohonCross } = props;
 
     return (
-        <table className="w-full border-collapse">
-            <thead>
-                <tr className="bg-gray-200">
-                    <th className="border px-4 py-2">Nama Pohon</th>
-                    <th className="border px-4 py-2">Jenis Pohon</th>
-                    <th className="border px-4 py-2">OPD</th>
-                    <th className="border px-4 py-2">Indikator</th>
-                    <th className="border px-4 py-2">Status</th>
-                    <th className="border px-4 py-2">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                {item.map((data: any) => (
-                    <tr key={data.id} className="bg-white hover:bg-gray-100">
-                        <td className="border px-4 py-2">{data.nama_pohon ? data.nama_pohon : "-"}</td>
+        item.map((data: any, index: number) => (
+            <table key={index} className="w-full">
+                <h1 className='text-white mb-2 p-1 border rounded-l-2xl w-full'>Crosscutting ke {index + 1}</h1>
+                <tbody>
+                    <tr>
                         <td
-                            className={`border px-4 py-2`}
+                            className={`min-w-[100px] border px-2 py-3 bg-yellow-100 text-start`}
                         >
-                            {data?.jenis_pohon ? data.jenis_pohon : "-"}
+                            tema
                         </td>
-                        <td className="border px-4 py-2">
-                            {data?.kode_opd ? data.kode_opd : "-"}
-                        </td>
-                        <td className="border px-4 py-2">
-                            {data.indikator?.map((indikator: any) => (
-                                <div key={indikator.id_indikator}>
-                                    {indikator.nama_indikator}
-                                </div>
-                            )) || "-"}
-                        </td>
-                        <td className="border px-4 py-2">{data.status ? data.status : "-"}</td>
-                        <td className="border px-4 py-2">
-                            <button
-                                onClick={() => hapusPohonCross(data.id)}
-                                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                            >
-                                Hapus
-                            </button>
+                        <td
+                            className={`min-w-[300px] border px-2 py-3 bg-yellow-100 text-start`}
+                        >
+                            {data.nama_pohon ? data.nama_pohon : "-"}
                         </td>
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                    {data.indikator ?
+                        data.indikator.length > 1 ?
+                            data.indikator.map((data: any, index: number) => (
+                                <>
+                                    <tr key={data.id_indikator}>
+                                        <td
+                                            className={`min-w-[100px] border px-2 py-3 bg-white text-start`}
+                                        >
+                                            Indikator {index + 1}
+                                        </td>
+                                        <td
+                                            className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
+                                        >
+                                            {data.nama_indikator ? data.nama_indikator : "-"}
+                                        </td>
+                                    </tr>
+                                    {data.targets ? 
+                                        data.targets.map((data: any) => (
+                                            <tr key={data.id_target}>
+                                                <td
+                                                    className={`min-w-[100px] border px-2 py-3 bg-white text-start`}
+                                                >
+                                                    Target/Satuan {index + 1}
+                                                </td>
+                                                <td
+                                                    className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
+                                                >
+                                                    {data.target ? data.target : "-"} / {data.satuan ? data.satuan : "-"}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    :
+                                            <tr>
+                                                <td
+                                                    className={`min-w-[100px] border px-2 py-3 bg-white text-start`}
+                                                >
+                                                    Target/Satuan
+                                                </td>
+                                                <td
+                                                    className={`min-w-[300px] border px-2 py-3 bg-white text-start   
+                                                `}
+                                                >
+                                                    -
+                                                </td>
+                                            </tr>
+                                    }
+                                </>
+                            ))
+                            :
+                            data.indikator.map((data: any) => (
+                                <>
+                                    <tr key={data.id_indikator}>
+                                        <td
+                                            className={`min-w-[100px] border px-2 py-3 bg-white text-start`}
+                                        >
+                                            Indikator
+                                        </td>
+                                        <td
+                                            className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
+                                        >
+                                            {data.nama_indikator ? data.nama_indikator : "-"}
+                                        </td>
+                                    </tr>
+                                    {data.targets ? 
+                                        data.targets.map((data: any) => (
+                                            <tr key={data.id_target}>
+                                                <td
+                                                    className={`min-w-[100px] border px-2 py-3 bg-white text-start`}
+                                                >
+                                                    Target/Satuan
+                                                </td>
+                                                <td
+                                                    className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
+                                                >
+                                                    {data.target ? data.target : "-"} / {data.satuan ? data.satuan : "-"}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    :
+                                            <tr>
+                                                <td
+                                                    className={`min-w-[100px] border px-2 py-3 bg-white text-start`}
+                                                >
+                                                    Target/Satuan
+                                                </td>
+                                                <td
+                                                    className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
+                                                >
+                                                    -
+                                                </td>
+                                            </tr>
+                                    }
+                                </>
+                            ))
+                        :
+                        <>
+                            <tr>
+                                <td
+                                    className={`min-w-[100px] border px-2 py-3 bg-white text-start`}
+                                >
+                                    Indikator
+                                </td>
+                                <td
+                                    className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
+                                >
+                                    -
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    className={`min-w-[100px] border px-2 py-3 bg-white text-start`}
+                                >
+                                    Target/Satuan
+                                </td>
+                                <td
+                                    className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
+                                >
+                                    -
+                                </td>
+                            </tr>
+                        </>
+                    }
+                    {data.opd &&
+                        <tr>
+                            <td
+                                className={`min-w-[100px] border px-2 py-1 bg-white text-start`}
+                            >
+                                Perangkat Daerah
+                            </td>
+                            <td
+                                className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
+                            >
+                                {data.opd ? data.opd : "-"}
+                            </td>
+                        </tr>
+                    }
+                    {data.nama_opd &&
+                        <tr>
+                            <td
+                                className={`min-w-[100px] border px-2 py-1 bg-white text-start`}
+                            >
+                                Perangkat Daerah
+                            </td>
+                            <td
+                                className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
+                            >
+                                {data.nama_opd ? data.nama_opd : "-"}
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td
+                            className={`min-w-[100px] border px-2 py-1 bg-white text-start`}
+                        >
+                            Keterangan
+                        </td>
+                        <td
+                            className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
+                        >
+                            {data.keterangan ? data.keterangan : "-"}
+                        </td>
+                    </tr>
+                    {status &&
+                        <tr>
+                            <td
+                                className={`min-w-[100px] border px-2 py-1 bg-white text-start`}
+                            >
+                                Status
+                            </td>
+                            <td
+                                className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
+                            >
+                                {status === 'menunggu_disetujui' ? (
+                                    <div className="flex items-center">
+                                        {status || "-"}
+                                        <TbHourglass />
+                                    </div>
+                                ) : status === 'disetujui' ? (
+                                    <div className="flex items-center text-green-500">
+                                        {status || "-"}
+                                        <TbCheck />
+                                    </div>
+                                ) : status === 'ditolak' ? (
+                                    <div className="flex items-center text-red-500">
+                                        {status || "-"}
+                                        <TbCircleLetterXFilled />
+                                    </div>
+                                ) : (
+                                    <span>{status || "-"}</span>
+                                )}
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        ))
     );
 };
 

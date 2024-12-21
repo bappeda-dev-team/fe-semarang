@@ -501,7 +501,7 @@ const PokinOpd = () => {
                 }
                 <ButtonBlackBorder onClick={() => setKendali((prev) => !prev)}>{Kendali ? <span className='flex gap-1 items-center'><TbSettings />Sembunyikan</span> : <span className='flex gap-1 items-center'><TbSettings/>Tampilkan</span> }</ButtonBlackBorder>
             </div>
-            <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl relative w-full h-[calc(100vh-50px)] max-h-screen overflow-auto">
+            <div className="flex flex-col py-5 px-3 border-b-2 border-x-2 rounded-b-xl relative w-full h-[calc(100vh-50px)] max-h-screen overflow-auto">
                 <div className={`flex flex-wrap justify-between gap-2 transition-all duration-300 ease-in-out ${Kendali ? "max-h-screen opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}>
                     {/* PEMDA */}
                     <div className="flex flex-wrap gap-2">
@@ -943,16 +943,16 @@ const PokinOpd = () => {
                                         </tbody>
                                     </table>
                                 </div>
-                                <div
-                                    className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black`}
-                                >
-                                    <ButtonSkyBorder halaman_url='/tujuanopd'>
-                                        <TbPencil className="mr-1"/>
-                                        Tujuan OPD
-                                    </ButtonSkyBorder>
-                                </div>
+                                {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') &&
+                                    <div className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black`}>
+                                        <ButtonSkyBorder halaman_url='/tujuanopd'>
+                                            <TbPencil className="mr-1"/>
+                                            Tujuan OPD
+                                        </ButtonSkyBorder>
+                                    </div>
+                                }
                                 {/* button */}
-                                {(User?.roles == 'admin_opd' || User?.roles == 'super_admin') &&
+                                {(User?.roles == 'admin_opd' || User?.roles == 'super_admin' || User?.roles == 'level_1') &&
                                     <div className="flex justify-center my-1 py-2">
                                         <ButtonGreenBorder className='border-[#ef4444] hover:bg-[#ef4444] text-[#ef4444] hover:text-white' onClick={newChild}>
                                             <TbCirclePlus />

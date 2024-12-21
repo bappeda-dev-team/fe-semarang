@@ -2,7 +2,7 @@
 
 import { useEffect, useState} from 'react';
 import { 
-  TbBook, TbFileImport, TbApps, TbChecklist, TbShoppingCartDollar, TbRefreshAlert,
+  TbBook, TbApps, TbChecklist, TbShoppingCartDollar, TbRefreshAlert,
   TbLogout,TbBook2,TbBulb,TbFileAlert,TbTooltip,TbBinaryTree,TbBuildingFortress,
   TbBuildingCommunity,TbDatabaseCog,TbHome,TbFileDelta, TbFile3D,
   TbCircleArrowLeftFilled, TbBadges, TbBuilding,
@@ -14,9 +14,6 @@ import {
   TbFileCode2,
   TbUsers,
   TbArrowUpFromArc,
-  TbSquareRoundedLetterO,
-  TbSquareRoundedLetterT,
-  TbSquareRoundedLetterS,
   TbUser,
   TbHexagonLetterR,
   TbBinaryTree2,
@@ -27,6 +24,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import "@/app/globals.css";
 import { logout, getUser } from '../lib/Cookie';
+import PokinOpd from '../pages/Pohon/PokinOpd/PokinOpd';
 
 interface SidebarProps {
   isOpen: boolean | null;
@@ -1490,6 +1488,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
             </li>
           }
           {/* SUB MENU DATA MASTER */}
+          {User?.roles == 'super_admin' &&
             <div className={`transition-all duration-300 ease-in-out ${DataMaster ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
               <Link href="/DataMaster/masterlembaga">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${MasterLembaga ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
@@ -1574,7 +1573,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                   </Link>
                 </div>
             </div>
-          {/* LABEL PERENCANAAN KOTA */}
+          }
+          {/* LABEL PERENCANAAN PEMDA */}
           {User?.roles == 'super_admin'&& 
           <>
             <li 
@@ -1612,6 +1612,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
             </li>
           }
             {/* SUB MENU PERENCANAAN OPD */}
+            {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') && 
             <div className={`transition-all duration-300 ease-in-out ${PerencanaanOPD ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
               {/* <Link href="/tujuanopd">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${TujuanOpd ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
@@ -1673,6 +1674,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                   </Link>
                 </div>
             </div>
+            }
           {/* LABEL PERENCANAAN ASN */}
           {(User?.roles == 'eselon_1' || User?.roles == 'eselon_2' || User?.roles == 'eselon_3' || User?.roles == 'eselon_4' || User?.roles == 'level_1' || User?.roles == 'level_2' || User?.roles == 'level_3' || User?.roles == 'level_4') &&
             <li 
@@ -1720,9 +1722,15 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                     </li>
                   </Link>
                 </div>
+              <Link href="/pohonkinerjaopd">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${pohonKinerjaOpd ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <TbBinaryTree className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja</span>
+                </li>
+              </Link>
               <Link href="/pohoncascading">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PohonCascading ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
-                  <TbBinaryTree className="text-xl" />
+                  <TbBinaryTree2 className="text-xl" />
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Cascading</span>
                 </li>
               </Link>

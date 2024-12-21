@@ -150,9 +150,12 @@ export const FormUserOpd = () => {
                 },
                 body: JSON.stringify(formData),
             });
-            if(response.ok){
+            const data = await response.json();
+            if(data.code == 201){
                 AlertNotification("Berhasil", "Berhasil menambahkan data user", "success", 1000);
                 router.push("/useropd");
+            } else if(data.code == 400) {
+                AlertNotification("Gagal", "NIP sudah terdaftar sebagai user / terdapat kesamaan NIP dengan pegawai lain", "error", 3000, true);
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }
@@ -517,7 +520,7 @@ export const FormEditUserOpd = () => {
       })) || [];
       const formData = {
           //key : value
-          nip : data.nip?.value,
+          nip : data.nip,
           email : data.email,
           is_active: data.is_active?.value || Aktif?.value,
           role: RolesIds,

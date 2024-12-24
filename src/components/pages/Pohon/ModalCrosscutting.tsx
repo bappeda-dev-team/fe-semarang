@@ -51,8 +51,8 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id}) => 
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
     const [Parent, setParent] = useState<string>('');
     const [JenisPohon, setJenisPohon] = useState<string>('');
+    const [LevelPohon, setLevelPohon] = useState<number | null>(null);
     const [Tahun, setTahun] = useState<any>(null);
-    const [Pelaksana, setPelaksana] = useState<OptionTypeString[]>([]);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
@@ -101,6 +101,9 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id}) => 
                 }
                 if(data.jenis_pohon){
                     setJenisPohon(data.jenis_pohon);
+                }
+                if(data.level_pohon){
+                    setLevelPohon(data.level_pohon);
                 }
                 reset({
                     nama_pohon: data.nama_pohon || '',
@@ -159,22 +162,16 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id}) => 
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const jenisPohon = `${JenisPohon} Crosscutting`
         const formData = {
             //key : value
             nama_pohon : data.nama_pohon,
             Keterangan : data.keterangan,
-            jenis_pohon: 
-                JenisPohon === "Strategic" ? "Tactical Crosscutting" :
-                JenisPohon === "Tactical" ? "Operational Crosscutting" :
-                JenisPohon === "Operational" ? "Operational Crosscutting" :
-                "",
-            level_pohon: data.level_pohon === 4 ? 5 :
-                         data.level_pohon === 5 ? 6 :
-                         data.level_pohon === 6 ? 7 :
-                         data.level_pohon === 7 ? 8 :
-                         0,
+            jenis_pohon: jenisPohon,
+            level_pohon: LevelPohon,
             parent: Number(Parent),
             kode_opd: KodeOpd?.value,
+            status: 'crosscutting_menunggu',
             tahun: Tahun?.value?.toString(),
             ...(data.indikator && {
                 indikator: data.indikator.map((ind) => ({

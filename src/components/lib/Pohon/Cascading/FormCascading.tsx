@@ -439,7 +439,8 @@ export const FormEditCascading: React.FC<{
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try{ 
-          const response = await fetch(`${API_URL}/pegawai/findall`,{
+          const url = user?.roles == 'super_admin' ? `pegawai/findall?kode_opd=${SelectedOpd?.value}` : `pegawai/findall?kode_opd=${user?.kode_opd}`
+          const response = await fetch(`${API_URL}/${url}`,{
             method: 'GET',
             headers: {
               Authorization: `${token}`,

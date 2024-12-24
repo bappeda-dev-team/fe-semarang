@@ -74,10 +74,10 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         ${tema.jenis_pohon === "Strategic Pemda" && 'shadow-slate-500'}
                         ${tema.jenis_pohon === "Tactical Pemda" && 'shadow-slate-500'}
                         ${tema.jenis_pohon === "OperationalPemda" && 'shadow-slate-500'}
-                        ${tema.jenis_pohon === "Strategic" && 'shadow-red-500 bg-red-700'}
-                        ${tema.jenis_pohon === "Tactical" && 'shadow-blue-500 bg-blue-500'}
-                        ${tema.jenis_pohon === "Operational" && 'shadow-green-500 bg-green-500'}
-                        ${tema.jenis_pohon === "Operational N" && 'shadow-green-500'}
+                        ${(tema.jenis_pohon === "Strategic" || tema.jenis_pohon === "Strategic Crosscutting") && 'shadow-red-500 bg-red-700'}
+                        ${(tema.jenis_pohon === "Tactical" || tema.jenis_pohon === "Tactical Crosscutting") && 'shadow-blue-500 bg-blue-500'}
+                        ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational Crosscutting") && 'shadow-green-500 bg-green-500'}
+                        ${(tema.jenis_pohon === "Operational N" || tema.jenis_pohon === "Operational N Crosscutting") && 'shadow-green-500'}
                     `}
                 >
                     {/* HEADER */}
@@ -86,9 +86,9 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             ${tema.jenis_pohon === "Strategic Pemda" && 'border-red-700 text-white bg-gradient-to-r from-[#CA3636] from-40% to-[#BD04A1]'}
                             ${tema.jenis_pohon === "Tactical Pemda" && 'border-blue-500 text-white bg-gradient-to-r from-[#3673CA] from-40% to-[#08D2FB]'}
                             ${tema.jenis_pohon === "Operational Pemda" && 'border-green-500 text-white bg-gradient-to-r from-[#007982] from-40% to-[#2DCB06]'}
-                            ${tema.jenis_pohon === "Strategic" && 'border-red-500 text-red-700'}
-                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500 text-blue-500'}
-                            ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-green-500 text-green-500'}
+                            ${(tema.jenis_pohon === "Strategic" || tema.jenis_pohon === "Strategic Crosscutting") && 'border-red-500 text-red-700'}
+                            ${(tema.jenis_pohon === "Tactical" || tema.jenis_pohon === "Tactical Crosscutting") && 'border-blue-500 text-blue-500'}
+                            ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational Crosscutting" || tema.jenis_pohon === "Operational N" || tema.jenis_pohon === "Operational N Crosscutting") && 'border-green-500 text-green-500'}
                         `}
                     >
                         {tema.jenis_pohon === 'Operational N' ?
@@ -131,10 +131,13 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 (
                                     tema.jenis_pohon === 'Tactical' || 
                                     tema.jenis_pohon === 'Tactical Pemda' || 
+                                    tema.jenis_pohon === 'Tactical Crosscutting' || 
                                     tema.jenis_pohon === 'Operational' || 
                                     tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational Crosscutting' || 
                                     tema.jenis_pohon === 'Operational N' || 
-                                    tema.jenis_pohon === 'Operational N Pemda'
+                                    tema.jenis_pohon === 'Operational N Pemda' ||
+                                    tema.jenis_pohon === 'Operational N Crosscutting'
                                 )) &&
                                 <ButtonGreenBorder onClick={() => setEdit(true)}>
                                     <TbUsersPlus className="mr-1"/>
@@ -146,8 +149,10 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 (
                                     tema.jenis_pohon === 'Operational' || 
                                     tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational Crosscutting' || 
                                     tema.jenis_pohon === 'Operational N' || 
-                                    tema.jenis_pohon === 'Operational N Pemda'
+                                    tema.jenis_pohon === 'Operational N Pemda' ||
+                                    tema.jenis_pohon === 'Operational N Crosscutting'
                                 )) &&
                                 <ButtonGreenBorder onClick={() => setEdit(true)}>
                                     <TbUsersPlus className="mr-1"/>
@@ -158,7 +163,8 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             {(User?.roles == 'level_4' && 
                                 (
                                     tema.jenis_pohon === 'Operational N' || 
-                                    tema.jenis_pohon === 'Operational N Pemda'
+                                    tema.jenis_pohon === 'Operational N Pemda' ||
+                                    tema.jenis_pohon === 'Operational N Crosscutting'
                                 )) &&
                                 <ButtonGreenBorder onClick={() => setEdit(true)}>
                                     <TbUsersPlus className="mr-1"/>
@@ -252,20 +258,24 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
             <>
                 <div 
                     className={`tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg
-                        ${tema.jenis_pohon === "Strategic" && 'shadow-red-500 bg-red-700'}
-                        ${tema.jenis_pohon === "Tactical" && 'shadow-blue-500 bg-blue-500'}
-                        ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'shadow-green-500 bg-green-500'}
+                        ${tema.jenis_pohon === "Strategic Pemda" && 'shadow-slate-500'}
+                        ${tema.jenis_pohon === "Tactical Pemda" && 'shadow-slate-500'}
+                        ${tema.jenis_pohon === "OperationalPemda" && 'shadow-slate-500'}
+                        ${(tema.jenis_pohon === "Strategic" || tema.jenis_pohon === "Strategic Crosscutting") && 'shadow-red-500 bg-red-700'}
+                        ${(tema.jenis_pohon === "Tactical" || tema.jenis_pohon === "Tactical Crosscutting") && 'shadow-blue-500 bg-blue-500'}
+                        ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational Crosscutting") && 'shadow-green-500 bg-green-500'}
+                        ${(tema.jenis_pohon === "Operational N" || tema.jenis_pohon === "Operational N Crosscutting") && 'shadow-green-500'}
                     `}
                 >
                     {/* HEADER */}
                     <div
                         className={`flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 rounded-lg bg-white
-                            ${tema.jenis_pohon === "Strategic" && 'border-red-500 text-red-700'}
-                            ${tema.jenis_pohon === "Tactical" && 'border-blue-500 text-blue-500'}
-                            ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-green-500 text-green-500'}
                             ${tema.jenis_pohon === "Strategic Pemda" && 'border-red-700 text-white bg-gradient-to-r from-[#CA3636] from-40% to-[#BD04A1]'}
                             ${tema.jenis_pohon === "Tactical Pemda" && 'border-blue-500 text-white bg-gradient-to-r from-[#3673CA] from-40% to-[#08D2FB]'}
                             ${tema.jenis_pohon === "Operational Pemda" && 'border-green-500 text-white bg-gradient-to-r from-[#007982] from-40% to-[#2DCB06]'}
+                            ${(tema.jenis_pohon === "Strategic" || tema.jenis_pohon === "Strategic Crosscutting") && 'border-red-500 text-red-700'}
+                            ${(tema.jenis_pohon === "Tactical" || tema.jenis_pohon === "Tactical Crosscutting") && 'border-blue-500 text-blue-500'}
+                            ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational Crosscutting" || tema.jenis_pohon === "Operational N" || tema.jenis_pohon === "Operational N Crosscutting") && 'border-green-500 text-green-500'}
                         `}
                     >
                         {tema.jenis_pohon === 'Operational N' ?
@@ -282,14 +292,13 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
                             <TablePohon item={tema} hapusPelaksana={hapusPelaksana}/>
                         }
                     </div>
-                    {/* BUTTON ACTION INSIDE BOX */}
-                    {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' )&& 
+                    {/* BUTTON ACTION TAMPILKAN DAN PELAKSANA*/}
                         <div 
                             className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
                                 ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
                                 ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
                                 ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
-                            `}
+                                `}
                         >
                             <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
                                 onClick={handleShow}
@@ -297,34 +306,59 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
                                 <TbEye className='mr-1' />
                                 {Show ? 'Sembunyikan' : 'Tampilkan'}
                             </ButtonBlackBorder>
+                            {/* BUTTON PELAKSANA SUPER ADMIN, ADMIN OPD, ASN LEVEL 1 */}
+                            {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'level_1')&& 
                             <ButtonGreenBorder onClick={() => setEdit(true)}>
                                 <TbUsersPlus className="mr-1"/>
                                 Pelaksana
                             </ButtonGreenBorder>
-                        </div>
-                    }
-                    {((User?.roles != 'super_admin' && User?.roles != 'admin_opd')) && 
-                        <div 
-                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
-                                ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
-                                ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
-                                ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
-                            `}
-                        >
-                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
-                                onClick={handleShow}
-                            >
-                                <TbEye className='mr-1' />
-                                {Show ? 'Sembunyikan' : 'Tampilkan'}
-                            </ButtonBlackBorder>
-                            {(tema.jenis_pohon == 'Operational' || tema.jenis_pohon == 'Operational N') && 
-                                <ButtonSkyBorder onClick={() => setEdit(true)}>
+                            }
+                            {/* BUTTON PELAKSANA ASN LEVEL 2 */}
+                            {(User?.roles == 'level_2' && 
+                                (
+                                    tema.jenis_pohon === 'Tactical' || 
+                                    tema.jenis_pohon === 'Tactical Pemda' || 
+                                    tema.jenis_pohon === 'Tactical Crosscutting' || 
+                                    tema.jenis_pohon === 'Operational' || 
+                                    tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational Crosscutting' || 
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda' ||
+                                    tema.jenis_pohon === 'Operational N Crosscutting'
+                                )) &&
+                                <ButtonGreenBorder onClick={() => setEdit(true)}>
                                     <TbUsersPlus className="mr-1"/>
                                     Pelaksana
-                                </ButtonSkyBorder>
+                                </ButtonGreenBorder>
+                            }
+                            {/* BUTTON PELAKSANA ASN LEVEL 3 */}
+                            {(User?.roles == 'level_3' && 
+                                (
+                                    tema.jenis_pohon === 'Operational' || 
+                                    tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational Crosscutting' || 
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda' ||
+                                    tema.jenis_pohon === 'Operational N Crosscutting'
+                                )) &&
+                                <ButtonGreenBorder onClick={() => setEdit(true)}>
+                                    <TbUsersPlus className="mr-1"/>
+                                    Pelaksana
+                                </ButtonGreenBorder>
+                            }
+                            {/* BUTTON PELAKSANA ASN LEVEL 4 */}
+                            {(User?.roles == 'level_4' && 
+                                (
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda' ||
+                                    tema.jenis_pohon === 'Operational N Crosscutting'
+                                )) &&
+                                <ButtonGreenBorder onClick={() => setEdit(true)}>
+                                    <TbUsersPlus className="mr-1"/>
+                                    Pelaksana
+                                </ButtonGreenBorder>
                             }
                         </div>
-                    }
                 </div>
                 <ul style={{ display: Show ? '' : 'none' }}>
                     {formList.map((formId) => (
@@ -356,24 +390,24 @@ export const TablePohon = (props: any) => {
                 <tr>
                     <td 
                         className={`min-w-[100px] border px-2 py-3 bg-white text-start rounded-l-lg
-                            ${jenis === "Strategic" && "border-red-700"}
-                            ${jenis === "Tactical" && "border-blue-500"}
-                            ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                            ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                            ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                            ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                             ${jenis === "Strategic Pemda" && "border-black"}
                             ${jenis === "Tactical Pemda" && "border-black"}
                             ${jenis === "Operational Pemda" && "border-black"}
                         `}
                     >
-                        {(jenis === 'Strategic' || jenis === 'Strategic Pemda') && 'Strategic'}
-                        {(jenis === 'Tactical' || jenis === 'Tactical Pemda') && 'Tactical'}
-                        {(jenis === 'Operational' || jenis === 'Operational Pemda') && 'Operational'}
-                        {jenis === 'Operational N' && 'Operational N'}
+                        {(jenis === 'Strategic' || jenis === 'Strategic Pemda' || jenis === 'Strategic Crosscutting') && 'Strategic'}
+                        {(jenis === 'Tactical' || jenis === 'Tactical Pemda' || jenis === 'Tactical Crosscutting') && 'Tactical'}
+                        {(jenis === 'Operational' || jenis === 'Operational Pemda' || jenis === 'Operational Crosscutting') && 'Operational'}
+                        {(jenis === 'Operational N' || jenis === 'Operational N Crosscutting') && 'Operational N'}
                     </td>
                     <td 
                         className={`min-w-[300px] border px-2 py-3 bg-white text-start rounded-r-lg
-                            ${jenis === "Strategic" && "border-red-700"}
-                            ${jenis === "Tactical" && "border-blue-500"}
-                            ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                            ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                            ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                            ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                             ${jenis === "Strategic Pemda" && "border-black"}
                             ${jenis === "Tactical Pemda" && "border-black"}
                             ${jenis === "Operational Pemda" && "border-black"}
@@ -392,9 +426,9 @@ export const TablePohon = (props: any) => {
                             <tr key={item.id_pelaksana}>
                                 <td 
                                     className={`min-w-[100px] border px-2 py-1 bg-white text-start rounded-l-lg
-                                        ${jenis === "Strategic" && "border-red-700"}
-                                        ${jenis === "Tactical" && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                        ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                         ${jenis === "Strategic Pemda" && "border-black"}
                                         ${jenis === "Tactical Pemda" && "border-black"}
                                         ${jenis === "Operational Pemda" && "border-black"}    
@@ -404,9 +438,9 @@ export const TablePohon = (props: any) => {
                                 </td>
                                 <td 
                                     className={`min-w-[300px] border px-2 py-3 bg-white text-start
-                                        ${jenis === "Strategic" && "border-red-700"}
-                                        ${jenis === "Tactical" && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                        ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                         ${jenis === "Strategic Pemda" && "border-black"}
                                         ${jenis === "Tactical Pemda" && "border-black"}
                                         ${jenis === "Operational Pemda" && "border-black"}    
@@ -423,9 +457,9 @@ export const TablePohon = (props: any) => {
                                         });
                                     }}
                                     className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
-                                        ${jenis === "Strategic" && "border-red-700"}
-                                        ${jenis === "Tactical" && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                        ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                         ${jenis === "Strategic Pemda" && "border-black"}
                                         ${jenis === "Tactical Pemda" && "border-black"}
                                         ${jenis === "Operational Pemda" && "border-black"}    
@@ -440,9 +474,9 @@ export const TablePohon = (props: any) => {
                             <tr key={data.id_pelaksana}>
                                 <td 
                                     className={`min-w-[100px] border px-2 py-1 bg-white text-start rounded-l-lg
-                                        ${jenis === "Strategic" && "border-red-700"}
-                                        ${jenis === "Tactical" && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                        ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                         ${jenis === "Strategic Pemda" && "border-black"}
                                         ${jenis === "Tactical Pemda" && "border-black"}
                                         ${jenis === "Operational Pemda" && "border-black"}    
@@ -452,9 +486,9 @@ export const TablePohon = (props: any) => {
                                 </td>
                                 <td 
                                     className={`min-w-[300px] border px-2 py-3 bg-white text-start
-                                        ${jenis === "Strategic" && "border-red-700"}
-                                        ${jenis === "Tactical" && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                        ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                         ${jenis === "Strategic Pemda" && "border-black"}
                                         ${jenis === "Tactical Pemda" && "border-black"}
                                         ${jenis === "Operational Pemda" && "border-black"}    
@@ -471,9 +505,9 @@ export const TablePohon = (props: any) => {
                                         });
                                     }}
                                     className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
-                                        ${jenis === "Strategic" && "border-red-700"}
-                                        ${jenis === "Tactical" && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                        ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                         ${jenis === "Strategic Pemda" && "border-black"}
                                         ${jenis === "Tactical Pemda" && "border-black"}
                                         ${jenis === "Operational Pemda" && "border-black"}    
@@ -487,9 +521,9 @@ export const TablePohon = (props: any) => {
                     <tr>
                         <td 
                             className={`min-w-[100px] border px-2 py-1 bg-white text-start rounded-l-lg
-                                ${jenis === "Strategic" && "border-red-700"}
-                                ${jenis === "Tactical" && "border-blue-500"}
-                                ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                 ${jenis === "Strategic Pemda" && "border-black"}
                                 ${jenis === "Tactical Pemda" && "border-black"}
                                 ${jenis === "Operational Pemda" && "border-black"}    
@@ -499,9 +533,9 @@ export const TablePohon = (props: any) => {
                         </td>
                         <td 
                             className={`min-w-[300px] border px-2 py-3 bg-white text-start rounded-r-lg
-                                ${jenis === "Strategic" && "border-red-700"}
-                                ${jenis === "Tactical" && "border-blue-500"}
-                                ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                 ${jenis === "Strategic Pemda" && "border-black"}
                                 ${jenis === "Tactical Pemda" && "border-black"}
                                 ${jenis === "Operational Pemda" && "border-black"}    
@@ -528,24 +562,24 @@ export const TablePohonEdited = (props: any) => {
                 <tr>
                     <td 
                         className={`min-w-[100px] border px-2 py-3 bg-white text-start rounded-l-lg
-                            ${jenis === "Strategic" && "border-red-700"}
-                            ${jenis === "Tactical" && "border-blue-500"}
-                            ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                            ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                            ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                            ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                             ${jenis === "Strategic Pemda" && "border-black"}
                             ${jenis === "Tactical Pemda" && "border-black"}
                             ${jenis === "Operational Pemda" && "border-black"}
                         `}
                     >
-                        {(jenis === 'Strategic' || jenis === 'Strategic Pemda') && 'Strategic'}
-                        {(jenis === 'Tactical' || jenis === 'Tactical Pemda') && 'Tactical'}
-                        {(jenis === 'Operational' || jenis === 'Operational Pemda') && 'Operational'}
-                        {jenis === 'Operational N' && 'Operational N'}
+                        {(jenis === 'Strategic' || jenis === 'Strategic Pemda' || jenis === "Strategic Crosscutting") && 'Strategic'}
+                        {(jenis === 'Tactical' || jenis === 'Tactical Pemda' || jenis === 'Tactical Crosscutting') && 'Tactical'}
+                        {(jenis === 'Operational' || jenis === 'Operational Pemda' || jenis === "Operational Crosscutting") && 'Operational'}
+                        {(jenis === 'Operational N' || jenis === 'Operational N Crosscutting') && 'Operational N'}
                     </td>
                     <td 
                         className={`min-w-[300px] border px-2 py-3 bg-white text-start rounded-r-lg
-                            ${jenis === "Strategic" && "border-red-700"}
-                            ${jenis === "Tactical" && "border-blue-500"}
-                            ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                            ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                            ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                            ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                             ${jenis === "Strategic Pemda" && "border-black"}
                             ${jenis === "Tactical Pemda" && "border-black"}
                             ${jenis === "Operational Pemda" && "border-black"}
@@ -564,9 +598,9 @@ export const TablePohonEdited = (props: any) => {
                             <tr key={item.id_pelaksana}>
                                 <td 
                                     className={`min-w-[100px] border px-2 py-1 bg-white text-start rounded-l-lg
-                                        ${jenis === "Strategic" && "border-red-700"}
-                                        ${jenis === "Tactical" && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                        ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                         ${jenis === "Strategic Pemda" && "border-black"}
                                         ${jenis === "Tactical Pemda" && "border-black"}
                                         ${jenis === "Operational Pemda" && "border-black"}    
@@ -576,9 +610,9 @@ export const TablePohonEdited = (props: any) => {
                                 </td>
                                 <td 
                                     className={`min-w-[300px] border px-2 py-3 bg-white text-start
-                                        ${jenis === "Strategic" && "border-red-700"}
-                                        ${jenis === "Tactical" && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                        ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                         ${jenis === "Strategic Pemda" && "border-black"}
                                         ${jenis === "Tactical Pemda" && "border-black"}
                                         ${jenis === "Operational Pemda" && "border-black"}    
@@ -595,9 +629,9 @@ export const TablePohonEdited = (props: any) => {
                                         });
                                     }}
                                     className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
-                                        ${jenis === "Strategic" && "border-red-700"}
-                                        ${jenis === "Tactical" && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                        ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                         ${jenis === "Strategic Pemda" && "border-black"}
                                         ${jenis === "Tactical Pemda" && "border-black"}
                                         ${jenis === "Operational Pemda" && "border-black"}    
@@ -612,9 +646,9 @@ export const TablePohonEdited = (props: any) => {
                         <tr key={data.id_pelaksana}>
                             <td 
                                 className={`min-w-[100px] border px-2 py-1 bg-white text-start rounded-l-lg
-                                    ${jenis === "Strategic" && "border-red-700"}
-                                    ${jenis === "Tactical" && "border-blue-500"}
-                                    ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                    ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                    ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                    ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                     ${jenis === "Strategic Pemda" && "border-black"}
                                     ${jenis === "Tactical Pemda" && "border-black"}
                                     ${jenis === "Operational Pemda" && "border-black"}    
@@ -624,9 +658,9 @@ export const TablePohonEdited = (props: any) => {
                             </td>
                             <td 
                                 className={`min-w-[300px] border px-2 py-3 bg-white text-start
-                                    ${jenis === "Strategic" && "border-red-700"}
-                                    ${jenis === "Tactical" && "border-blue-500"}
-                                    ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                    ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                    ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                    ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                     ${jenis === "Strategic Pemda" && "border-black"}
                                     ${jenis === "Tactical Pemda" && "border-black"}
                                     ${jenis === "Operational Pemda" && "border-black"}    
@@ -643,9 +677,9 @@ export const TablePohonEdited = (props: any) => {
                                     });
                                 }}
                                 className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
-                                    ${jenis === "Strategic" && "border-red-700"}
-                                    ${jenis === "Tactical" && "border-blue-500"}
-                                    ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                    ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                    ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                    ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                     ${jenis === "Strategic Pemda" && "border-black"}
                                     ${jenis === "Tactical Pemda" && "border-black"}
                                     ${jenis === "Operational Pemda" && "border-black"}    
@@ -659,9 +693,9 @@ export const TablePohonEdited = (props: any) => {
                     <tr>
                         <td 
                             className={`min-w-[100px] border px-2 py-1 bg-white text-start rounded-l-lg
-                                ${jenis === "Strategic" && "border-red-700"}
-                                ${jenis === "Tactical" && "border-blue-500"}
-                                ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                 ${jenis === "Strategic Pemda" && "border-black"}
                                 ${jenis === "Tactical Pemda" && "border-black"}
                                 ${jenis === "Operational Pemda" && "border-black"}    
@@ -671,9 +705,9 @@ export const TablePohonEdited = (props: any) => {
                         </td>
                         <td 
                             className={`min-w-[300px] border px-2 py-3 bg-white text-start rounded-r-lg
-                                ${jenis === "Strategic" && "border-red-700"}
-                                ${jenis === "Tactical" && "border-blue-500"}
-                                ${(jenis === "Operational" || jenis == "Operational N") && "border-green-500"}
+                                ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
+                                ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
+                                ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
                                 ${jenis === "Strategic Pemda" && "border-black"}
                                 ${jenis === "Tactical Pemda" && "border-black"}
                                 ${jenis === "Operational Pemda" && "border-black"}    

@@ -11,6 +11,7 @@ import { FormPohonOpd } from '@/components/lib/Pohon/Opd/FormPohonOpd';
 import { getUser, getToken, getOpdTahun } from '@/components/lib/Cookie';
 import Select from 'react-select';
 import { AlertNotification } from '@/components/global/Alert';
+import { ModalPohonPemda, ModalPohonCrosscutting} from './ModalPohonPemda';
 
 interface OptionType {
     value: number;
@@ -56,22 +57,21 @@ const PokinOpd = () => {
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     
-    const[Kendali, setKendali] = useState<boolean>(true);
-    //pohon pemda
-    const [OptionPokinPemda, setOptionPokinPemda] = useState<PokinPemda[]>([]);
-    const [PohonPemda, setPohonPemda] = useState<PokinPemda | null>(null);
-    const [ProsesPemda, setProsesPemda] = useState<boolean>(false);
+    const [Kendali, setKendali] = useState<boolean>(true);
+    
     //rekapitulasi jumlah pohon dari pemda
     const [JumlahPemdaStrategic, setJumlahPemdaStrategic] = useState<PokinPemda[]>([]);
     const [JumlahPemdaTactical, setJumlahPemdaTactical] = useState<PokinPemda[]>([]);
     const [JumlahPemdaOperational, setJumlahPemdaOperational] = useState<PokinPemda[]>([]);
     
+    //pohon pemda
+    const [PohonPemda, setPohonPemda] = useState<boolean>(false);
+    const [TriggerAfterPokinOutside, setTriggerAfterPokinOutside] = useState<boolean>(false);
+    
     //pohon cross opd lain
-    const [OptionPokinCross, setOptionPokinCross] = useState<PokinPemda[]>([]);
+    const [PohonCrosscutting, setPohonCrosscutting] = useState<boolean>(false);
     const [CrossPending, setCrossPending] = useState<number | null>(null);
-    const [PohonCross, setPohonCross] = useState<PokinPemda | null>(null);
-    const [ProsesCross, setProsesCross] = useState<boolean>(false);
-    const [LevelPohon, setLevelPohon] = useState<OptionType | null>(null);
+    const [CrossDitolak, setCrossDitolak] = useState<number | null>(null);
 
     const [PohonParent, setPohonParent] = useState<PokinPemda | null>(null);
     const [OptionPohonParent, setOptionPohonParent] = useState<PokinPemda[]>([]);
@@ -135,264 +135,16 @@ const PokinOpd = () => {
     };
   
     const handleMouseUp = () => setIsDragging(false);
-
-    const fetchPohonPemda = async () => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        setIsLoading(true);
-        try {
-            const url = User?.roles == 'super_admin' ? `pohon_kinerja/pemda/${SelectedOpd?.value}/${Tahun?.value}` : `pohon_kinerja/pemda/${User?.kode_opd}/${Tahun?.value}`;
-            const response = await fetch(`${API_URL}/${url}`, {
-                method: 'GET',
-                headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!response.ok) {
-                throw new Error('cant fetch data opd');
-            }
-            const data = await response.json();
-            if(data.data == null){
-                console.log("pohon dari pemda kosong/belum ditambahkan")
-            } else {
-                const pokinPemda = data.data.map((item: any) => ({
-                    value: item.id,
-                    label: `${item.jenis_pohon} - ${item.nama_pohon}`,
-                    jenis: item.jenis_pohon,
-                }));
-                setOptionPokinPemda(pokinPemda);
-            }
-        } catch (err) {
-            console.log('gagal mendapatkan data pohon dari opd', err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    const fetchPohonCross = async () => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        setIsLoading(true);
-        try {
-            const url = User?.roles == 'super_admin' ? `pohon_kinerja_admin/crosscutting/${SelectedOpd?.value}/${Tahun?.value}` : `pohon_kinerja_admin/crosscutting/${User?.kode_opd}/${Tahun?.value}`;
-            const response = await fetch(`${API_URL}/${url}`, {
-                method: 'GET',
-                headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!response.ok) {
-                throw new Error('cant fetch data opd');
-            }
-            const data = await response.json();
-            if(data.data == null){
-                console.log("pohon crosscutting kosong/belum ditambahkan")
-            } else {
-                const pokinCross = data.data.map((item: any) => ({
-                    value: item.id,
-                    label: item.nama_pohon,
-                }));
-                setOptionPokinCross(pokinCross);
-                setCrossPending(pokinCross.length);
-            }
-        } catch (err) {
-            console.log('gagal mendapatkan data pohon dari opd', err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    const fetchPohonParent = async (level: number) => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        let url = ''; // Deklarasikan di luar blok
-        setIsLoading(true);
-        try {
-            if (User?.roles == 'super_admin') {
-                url = `pohon_kinerja/pilih_parent/${SelectedOpd?.value}/${Tahun?.value}/${level}`;
-            } else {
-                url = `pohon_kinerja/pilih_parent/${User?.kode_opd}/${Tahun?.value}/${level}`;
-            }
-
-            if (!url) {
-                throw new Error('URL tidak valid.');
-            }
-
-            const response = await fetch(`${API_URL}/${url}`, {
-                method: 'GET',
-                headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!response.ok) {
-                throw new Error('cant fetch data opd');
-            }
-            const data = await response.json();
-            if(data.data == null){
-                console.log("pohon opd kosong, tambahkan di pohon kinerja OPD untuk membuat pohon parent")
-            } else {
-                const parent = data.data.map((item: any) => ({
-                    value: item.id,
-                    label: `${item.jenis_pohon} - ${item.nama_pohon}`,
-                    jenis: item.jenis_pohon,
-                }));
-                setOptionPohonParent(parent);
-            }
-        } catch (err) {
-            console.log('gagal mendapatkan data pohon dari opd', err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    // CONTROL POHON DARI PEMDA
-    const terimaPohonPemda = async (id: number) => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const formData = {
-            id: id,
-            parent: PohonParent ? PohonParent?.value : 0,
-            jenis_pohon: PohonPemda?.jenis,
-        }
-        // console.log(formData);
-        try {
-            setProsesPemda(true);
-            const response = await fetch(`${API_URL}/pohon_kinerja_admin/clone_pokin_pemda/create`, {
-                method: "POST",
-                headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-            if (!response.ok) {
-                alert("cant fetch data")
-            }
-            AlertNotification("Berhasil", "Pohon dari pemda di terima", "success", 1000);
-            setDeleted((prev) => !prev);
-            setPohonPemda(null);
-            setPohonParent(null);
-        } catch (err) {
-            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
-            console.error(err);
-        } finally{
-            setProsesPemda(false);
-        }
+    
+    const handleModalPohonPemda = () => {
+        setPohonPemda((prev) => !prev);
     }
-    const tolakPohonPemda = async (id: number) => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const formData = {
-            id: id,
-        }
-        // console.log(formData);
-        try {
-            setProsesPemda(true);
-            const response = await fetch(`${API_URL}/pohon_kinerja_admin/tolak_pokin/${id}`, {
-                method: "PUT",
-                headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-            if (!response.ok) {
-                alert("cant fetch data")
-            }
-            AlertNotification("Berhasil", "Data pohon berhasil di tolak", "success", 1000);
-            setDeleted((prev) => !prev);
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 1000);
-        } catch (err) {
-            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
-            console.error(err);
-        } finally {
-            setProsesPemda(false);
-        }
+    const handleModalCrosscutting = () => {
+        setPohonCrosscutting((prev) => !prev);
     }
-    // CONTROL POHON CROSSCUTTING DARI OPD LAIN
-    const terimaPohonCross = async (id: number, parent?: number) => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const formData = {
-            nip_pegawai: User?.nip,
-            approve: true,
-            jenis_pohon: LevelPohon ? (
-                            LevelPohon?.value === 4 ? "Strategic Crosscutting" :
-                            LevelPohon?.value === 5 ? "Tactical Crosscutting" :
-                            LevelPohon?.value === 6 ? "Operational Crosscutting" :
-                            LevelPohon?.value >= 7 ? "Operational N Crosscutting" : "Pohon Crosscutting"
-                        )
-                        :
-                            "",
-            level_pohon: LevelPohon?.value,
-            parent: parent,
-        }
-        // console.log(formData);
-        try {
-            setProsesCross(true);
-            const response = await fetch(`${API_URL}/crosscutting/${id}/${parent}/permission`, {
-                method: "POST",
-                headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-            if (!response.ok) {
-                alert("cant fetch data")
-            }
-            AlertNotification("Berhasil", "Pohon dari pemda di terima", "success", 1000);
-            setDeleted((prev) => !prev);
-            setPohonCross(null);
-            setPohonParent(null);
-            setLevelPohon(null);
-            fetchPohonCross();
-        } catch (err) {
-            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
-            console.error(err);
-        } finally {
-            setProsesCross(false);
-        }
+    const handleTriggerAfterPokinOutside = () => {
+        setTriggerAfterPokinOutside((prev) => !prev);
     }
-    const tolakPohonCross = async (id: number) => {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const formData = {
-            nip_pegawai: User?.nip,
-            approve: false,
-        }
-        // console.log(formData);
-        try {
-            setProsesCross(true);
-            const response = await fetch(`${API_URL}/crosscutting/${id}/0/permission`, {
-                method: "POST",
-                headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-            if (!response.ok) {
-                alert("cant fetch data");
-                console.error
-            }
-            AlertNotification("Berhasil", "Data pohon berhasil di tolak", "success", 1000);
-            setDeleted((prev) => !prev);
-            setPohonCross(null);
-            setPohonParent(null);
-            fetchPohonCross();
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 1000);
-        } catch (err) {
-            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
-            console.error(err);
-        } finally {
-            setProsesCross(false);
-        }
-    }
-
-    const OptionLevel = [
-        {label: "Strategic", value: 4},
-        {label: "Tactical", value: 5},
-        {label: "Operational", value: 6},
-    ];
 
     // Adds a new form entry
     const newChild = () => {
@@ -403,7 +155,7 @@ const PokinOpd = () => {
         const fetchPokinOpd = async (url: string) => {
             const API_URL = process.env.NEXT_PUBLIC_API_URL;
             setLoading(true);
-            //fetch pokin opd
+            //FETCH POKIN OPD
             try {
                 const response = await fetch(`${API_URL}/${url}`, {
                     headers: {
@@ -423,7 +175,7 @@ const PokinOpd = () => {
             } finally {
                 setLoading(false);
             }
-            //fetch 
+            //FETCH STATUS POHON PEMDA
             try {
                 const url = User?.roles == 'super_admin' ? `pohon_kinerja/status/${SelectedOpd?.value}/${Tahun?.value}` : `pohon_kinerja/status/${User?.kode_opd}/${Tahun?.value}`;
                 const response = await fetch(`${API_URL}/${url}`, {
@@ -451,6 +203,32 @@ const PokinOpd = () => {
             } finally {
                 setLoading(false);
             }
+            //FETCH STATUS POHON CROSSCUTTING
+            try {
+                const url = User?.roles == 'super_admin' ? `crosscutting_menunggu/${SelectedOpd?.value}/${Tahun?.value}` : `crosscutting_menunggu/${User?.kode_opd}/${Tahun?.value}`;
+                const response = await fetch(`${API_URL}/${url}`, {
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error('terdapat kesalahan di koneksi backend');
+                }
+                const result = await response.json();
+                const data = result.data || [];
+                if (data) {
+                    const pending = data.filter((item: any) => item.status === "crosscutting_menunggu");
+                    setCrossPending(pending.length);
+                    const ditolak = data.filter((item: any) => item.status === "crosscutting_ditolak");
+                    setCrossDitolak(ditolak.length);
+                }
+            } catch (err) {
+                setError('gagal mendapatkan data, terdapat kesalahan backend/server saat mengambil data pohon kinerja perangkat daerah');
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
         }
         if (User?.roles == 'super_admin') {
             if (SelectedOpd?.value != undefined && Tahun?.value != undefined) {
@@ -461,43 +239,7 @@ const PokinOpd = () => {
                 fetchPokinOpd(`pohon_kinerja_opd/findall/${User?.kode_opd}/${Tahun?.value}`);
             }
         }
-    }, [User, SelectedOpd, Tahun, Deleted, token]);
-
-    useEffect(() => {
-        const fetchPohonCross = async () => {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL;
-            setIsLoading(true);
-            try {
-                const url = User?.roles == 'super_admin' ? `pohon_kinerja_admin/crosscutting/${SelectedOpd?.value}/${Tahun?.value}` : `pohon_kinerja_admin/crosscutting/${User?.kode_opd}/${Tahun?.value}`;
-                const response = await fetch(`${API_URL}/${url}`, {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error('cant fetch data opd');
-                }
-                const data = await response.json();
-                if(data.data == null){
-                    console.log("pohon crosscutting kosong/belum ditambahkan")
-                } else {
-                    const pokinCross = data.data.map((item: any) => ({
-                        value: item.id,
-                        label: item.nama_pohon,
-                    }));
-                    setOptionPokinCross(pokinCross);
-                    setCrossPending(pokinCross.length);
-                }
-            } catch (err) {
-                console.log('gagal mendapatkan data pohon dari opd', err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchPohonCross();
-    },[Deleted, token, User, SelectedOpd, Tahun]);
+    }, [User, SelectedOpd, Tahun, Deleted, token, TriggerAfterPokinOutside]);
 
     if (Loading) {
         return (
@@ -567,399 +309,127 @@ const PokinOpd = () => {
                     <ButtonBlackBorder onClick={() => setKendali((prev) => !prev)}>{Kendali ? <span className='flex gap-1 items-center'><TbSettings />Sembunyikan</span> : <span className='flex gap-1 items-center'><TbSettings/>Tampilkan</span> }</ButtonBlackBorder>
                 }
             </div>
-            <div className="flex flex-col py-5 px-3 border-b-2 border-x-2 rounded-b-xl relative w-full h-[calc(100vh-50px)] max-h-screen overflow-auto">
+            <div className="flex flex-col py-3 px-3 border-b-2 border-x-2 rounded-b-xl relative w-full h-[calc(100vh-50px)] max-h-screen overflow-auto">
                 {(User?.roles == 'admin_opd' || User?.roles == 'super_admin') && 
                     <div className={`flex flex-wrap justify-between gap-2 transition-all duration-300 ease-in-out ${Kendali ? "max-h-screen opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}>
                         {/* PEMDA */}
-                        <div className="flex flex-wrap gap-2">
-                            <div className="border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-xl">
-                                <h1 className="font-semibold border-b-2 py-1 text-center">
-                                    Pohon Pemda Pending
-                                </h1>
-                                <div className="flex flex-col py-2 mt-1 justify-between">
-                                    <table>
-                                        <tbody>
-                                            <tr className="flex items-center">
-                                                <td className="border-l border-t px-2 py-1 bg-white text-start rounded-tl-lg min-w-[150px]">
-                                                    <h1 className="font-semibold text-red-500">
-                                                        Strategic
-                                                    </h1>
-                                                </td>
-                                                <td className="border-t py-1">
-                                                    <h1 className="font-semibold">
-                                                        :
-                                                    </h1>
-                                                </td>
-                                                <td className='border-r border-t px-2 py-1 bg-white text-center rounded-tr-lg w-full'>
-                                                    <h1 className="font-semibold text-red-500">
-                                                        {JumlahPemdaStrategic?.length || 0}
-                                                    </h1>
-                                                </td>
-                                            </tr>
-                                            <tr className="flex items-center">
-                                                <td className="border-l  px-2 py-1 bg-white text-start min-w-[150px]">
-                                                    <h1 className="font-semibold text-green-500">
-                                                        Tactical
-                                                    </h1>
-                                                </td>
-                                                <td className=" py-1">
-                                                    <h1 className="font-semibold">
-                                                        :
-                                                    </h1>
-                                                </td>
-                                                <td className='border-r  px-2 py-1 bg-white text-center w-full'>
-                                                    <h1 className="font-semibold text-green-500">
-                                                        {JumlahPemdaTactical?.length || 0}
-                                                    </h1>
-                                                </td>
-                                            </tr>
-                                            <tr className="flex items-center">
-                                                <td className="border-l border-b px-2 py-1 bg-white text-start rounded-bl-lg min-w-[150px]">
-                                                    <h1 className="font-semibold text-blue-500">
-                                                        Operational
-                                                    </h1>
-                                                </td>
-                                                <td className="border-b py-1">
-                                                    <h1 className="font-semibold">
-                                                        :
-                                                    </h1>
-                                                </td>
-                                                <td className='border-r border-b px-2 py-1 bg-white text-center rounded-br-lg w-full'>
-                                                    <h1 className="font-semibold text-blue-500">
-                                                        {JumlahPemdaOperational?.length || 0}
-                                                    </h1>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                        <div className="flex flex-col justify-between border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-xl">
+                            <h1 className="font-semibold border-b-2 py-1 text-center">
+                                Pohon Pemda Pending
+                            </h1>
+                            <div className="flex flex-col py-2 mt-1 justify-between">
+                                <table>
+                                    <tbody>
+                                        <tr className="flex items-center">
+                                            <td className="border-l border-t px-2 py-1 bg-white text-start rounded-tl-lg min-w-[150px]">
+                                                <h1 className="font-semibold text-red-500">
+                                                    Strategic
+                                                </h1>
+                                            </td>
+                                            <td className="border-t py-1">
+                                                <h1 className="font-semibold">
+                                                    :
+                                                </h1>
+                                            </td>
+                                            <td className='border-r border-t px-2 py-1 bg-white text-center rounded-tr-lg w-full'>
+                                                <h1 className="font-semibold text-red-500">
+                                                    {JumlahPemdaStrategic?.length || 0}
+                                                </h1>
+                                            </td>
+                                        </tr>
+                                        <tr className="flex items-center">
+                                            <td className="border-l  px-2 py-1 bg-white text-start min-w-[150px]">
+                                                <h1 className="font-semibold text-green-500">
+                                                    Tactical
+                                                </h1>
+                                            </td>
+                                            <td className=" py-1">
+                                                <h1 className="font-semibold">
+                                                    :
+                                                </h1>
+                                            </td>
+                                            <td className='border-r  px-2 py-1 bg-white text-center w-full'>
+                                                <h1 className="font-semibold text-green-500">
+                                                    {JumlahPemdaTactical?.length || 0}
+                                                </h1>
+                                            </td>
+                                        </tr>
+                                        <tr className="flex items-center">
+                                            <td className="border-l border-b px-2 py-1 bg-white text-start rounded-bl-lg min-w-[150px]">
+                                                <h1 className="font-semibold text-blue-500">
+                                                    Operational
+                                                </h1>
+                                            </td>
+                                            <td className="border-b py-1">
+                                                <h1 className="font-semibold">
+                                                    :
+                                                </h1>
+                                            </td>
+                                            <td className='border-r border-b px-2 py-1 bg-white text-center rounded-br-lg w-full'>
+                                                <h1 className="font-semibold text-blue-500">
+                                                    {JumlahPemdaOperational?.length || 0}
+                                                </h1>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            <div className="">
-                                <div className="border-t-2 border-x-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-t-xl ">
-                                    <h1 className="text-center font-semibold">
-                                        Pohon Dari Pemda
-                                    </h1>
-                                </div>
-                                <div className="border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-b-xl">
-                                    <div className="mb-1">
-                                        <label htmlFor="" className='uppercase text-xs font-bold text-gray-700 my-2 ml-1'>
-                                            pohon pemda
-                                        </label>
-                                        <Select
-                                            placeholder="Pilih Pohon Pemda"
-                                            value={PohonPemda}
-                                            options={OptionPokinPemda}
-                                            isSearchable
-                                            isClearable
-                                            isLoading={IsLoading}
-                                            onMenuOpen={() => {
-                                                if (OptionPokinPemda.length === 0) {
-                                                    fetchPohonPemda();
-                                                }
-                                            }}
-                                            onChange={(option) => {
-                                                setPohonPemda(option);
-                                            }}
-                                            styles={{
-                                                control: (baseStyles) => ({
-                                                    ...baseStyles,
-                                                    borderRadius: '8px',
-                                                    textAlign: 'start',
-                                                })
-                                            }}
-                                        />
-                                    </div>
-                                    {(PohonPemda?.jenis == 'Tactical Pemda' || PohonPemda?.jenis == 'Operational Pemda') &&
-                                        <div className="mb-3">
-                                            <label htmlFor="" className='uppercase text-xs font-bold text-gray-700 my-2 ml-1'>
-                                                {PohonPemda?.jenis == 'Tactical Pemda' ? 'Strategic' : 'Tactical'}
-                                            </label>
-                                            <Select
-                                                placeholder="parent untuk pohon yang diterima"
-                                                value={PohonParent}
-                                                options={OptionPohonParent}
-                                                isSearchable
-                                                isClearable
-                                                isLoading={IsLoading}
-                                                onMenuOpen={() => {
-                                                    if (PohonPemda?.jenis == 'Tactical Pemda') {
-                                                        fetchPohonParent(4);
-                                                    } else {
-                                                        fetchPohonParent(5);
-                                                    }
-                                                }}
-                                                onChange={(option) => {
-                                                    setPohonParent(option);
-                                                }}
-                                                onMenuClose={() => setOptionPohonParent([])}
-                                                styles={{
-                                                    control: (baseStyles) => ({
-                                                        ...baseStyles,
-                                                        borderRadius: '8px',
-                                                        textAlign: 'start',
-                                                    })
-                                                }}
-                                            />
-                                        </div>
-                                    }
-                                    <div className="flex justify-between my-2">
-                                        <ButtonRedBorder
-                                            className='w-full mx-2'
-                                            disabled={ProsesPemda}
-                                            onClick={() => {
-                                                if (PohonPemda?.value == null || undefined) {
-                                                    AlertNotification("Pilih", "Pilih Pohon dari pemda terlebih dahulu", "warning", 1000);
-                                                } else {
-                                                    tolakPohonPemda(PohonPemda?.value);
-                                                }
-                                            }}
-                                        >
-                                            {ProsesPemda ? 
-                                                <span className="flex">
-                                                    <LoadingButtonClip />
-                                                    Menolak...
-                                                </span> 
-                                            :
-                                                <span className="flex items-center">
-                                                    <TbCircleLetterXFilled className='mr-1' />
-                                                    Tolak
-                                                </span> 
-                                            }
-                                        </ButtonRedBorder>
-                                        <ButtonSkyBorder
-                                            onClick={() => {
-                                                if (PohonPemda?.value == null || undefined) {
-                                                    AlertNotification("Pilih", "Pilih Pohon dari pemda terlebih dahulu", "warning", 1000);
-                                                } else {
-                                                    terimaPohonPemda(PohonPemda?.value);
-                                                }
-                                            }}
-                                            className='w-full mx-2'
-                                            disabled={ProsesPemda}
-                                        >
-                                            {ProsesPemda ? 
-                                                <span className="flex">
-                                                    <LoadingButtonClip />
-                                                    Menerima...
-                                                </span> 
-                                            :
-                                                <span className="flex items-center">
-                                                    <TbCircleCheckFilled className='mr-1' />
-                                                    Terima
-                                                </span> 
-                                            }
-                                        </ButtonSkyBorder>
-                                    </div>
-                                </div>
-                            </div>
+                            <ButtonSkyBorder className="w-full" onClick={handleModalPohonPemda}>
+                                <TbSettings className='mr-1'/>
+                                Edit
+                            </ButtonSkyBorder>
+                            <ModalPohonPemda isOpen={PohonPemda} onClose={handleModalPohonPemda} onSuccess={handleTriggerAfterPokinOutside}/>
                         </div>
                         {/* CROSS OPD */}
-                        <div className="flex flex-wrap gap-2">
-                            {/* CONTROL CROSSCUTTING */}
-                            <div className="border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-xl">
-                                <h1 className="font-semibold border-b-2 py-1 text-center">
-                                    Crosscutting Pending
-                                </h1>
-                                <div className="flex flex-col py-2 mt-1">
-                                    <table>
-                                        <tbody>
-                                            <tr className="flex items-center">
-                                                <td className="border-l border-t px-2 py-1 bg-white text-start rounded-tl-lg min-w-[150px]">
-                                                    <h1 className="font-semibold">
-                                                        Ditolak 
-                                                    </h1>
-                                                </td>
-                                                <td className="border-t py-1">
-                                                    <h1 className="font-semibold">
-                                                        :
-                                                    </h1>
-                                                </td>
-                                                <td className='border-r border-t px-2 py-1 bg-white text-center rounded-tr-lg w-full'>
-                                                    <h1 className="font-semibold">
-                                                        0
-                                                    </h1>
-                                                </td>
-                                            </tr>
-                                            <tr className="flex items-center">
-                                                <td className="border-l border-b px-2 py-1 bg-white text-start rounded-bl-lg min-w-[150px]">
-                                                    <h1 className="font-semibold">
-                                                        Pending
-                                                    </h1>
-                                                </td>
-                                                <td className="border-b py-1">
-                                                    <h1 className="font-semibold">
-                                                        :
-                                                    </h1>
-                                                </td>
-                                                <td className='border-r border-b px-2 py-1 bg-white text-center rounded-br-lg w-full'>
-                                                    <h1 className="font-semibold">
-                                                        {CrossPending ? CrossPending : 0}
-                                                    </h1>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                        <div className="flex flex-col justify-between border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-xl">
+                            <h1 className="font-semibold border-b-2 py-1 text-center">
+                                Crosscutting Pending
+                            </h1>
+                            <div className="flex flex-col py-2 mt-1">
+                                <table>
+                                    <tbody>
+                                        <tr className="flex items-center">
+                                            <td className="border-l border-t px-2 py-1 bg-white text-start rounded-tl-lg min-w-[150px]">
+                                                <h1 className="font-semibold">
+                                                    Ditolak 
+                                                </h1>
+                                            </td>
+                                            <td className="border-t py-1">
+                                                <h1 className="font-semibold">
+                                                    :
+                                                </h1>
+                                            </td>
+                                            <td className='border-r border-t px-2 py-1 bg-white text-center rounded-tr-lg w-full'>
+                                                <h1 className="font-semibold">
+                                                    {CrossDitolak ? CrossDitolak : 0}
+                                                </h1>
+                                            </td>
+                                        </tr>
+                                        <tr className="flex items-center">
+                                            <td className="border-l border-b px-2 py-1 bg-white text-start rounded-bl-lg min-w-[150px]">
+                                                <h1 className="font-semibold">
+                                                    Pending
+                                                </h1>
+                                            </td>
+                                            <td className="border-b py-1">
+                                                <h1 className="font-semibold">
+                                                    :
+                                                </h1>
+                                            </td>
+                                            <td className='border-r border-b px-2 py-1 bg-white text-center rounded-br-lg w-full'>
+                                                <h1 className="font-semibold">
+                                                    {CrossPending ? CrossPending : 0}
+                                                </h1>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            {/* FORM CONTROL CROSSCUTTING */}
-                            <div className="">
-                                <div className="border-t-2 border-x-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-t-xl ">
-                                    <h1 className="text-center font-semibold">
-                                        Pohon CrossCuting OPD
-                                    </h1>
-                                </div>
-                                <div className="border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-b-xl">
-                                    {/* INPUT POHON OPD */}
-                                    <div className="mb-1">
-                                        <label htmlFor="" className='uppercase text-xs font-bold text-gray-700 my-2 ml-1'>
-                                            pohon OPD
-                                        </label>
-                                        <Select
-                                            placeholder="Pilih pohon crosscuting"
-                                            value={PohonCross}
-                                            options={OptionPokinCross}
-                                            isSearchable
-                                            isClearable
-                                            isLoading={IsLoading}
-                                            onMenuOpen={() => {
-                                                if (OptionPokinCross.length === 0) {
-                                                    fetchPohonCross();
-                                                }
-                                            }}
-                                            onChange={(option) => {
-                                                setPohonCross(option);
-                                            }}
-                                            onMenuClose={() => setOptionPokinCross([])}
-                                            styles={{
-                                                control: (baseStyles) => ({
-                                                    ...baseStyles,
-                                                    borderRadius: '8px',
-                                                    textAlign: 'start',
-                                                })
-                                            }}
-                                        />
-                                    </div>
-                                    {/* INPUT LEVEL POHON */}
-                                    <div className="mb-1">
-                                        <label htmlFor="" className='uppercase text-xs font-bold text-gray-700 my-2 ml-1'>
-                                            Level
-                                        </label>
-                                        <Select
-                                            placeholder="Pilih Level"
-                                            value={LevelPohon}
-                                            options={OptionLevel}
-                                            isSearchable
-                                            isClearable
-                                            isLoading={IsLoading}
-                                            onChange={(option) => {
-                                                setLevelPohon(option);
-                                                setPohonParent(null);
-                                            }}
-                                            styles={{
-                                                control: (baseStyles) => ({
-                                                    ...baseStyles,
-                                                    borderRadius: '8px',
-                                                    textAlign: 'start',
-                                                })
-                                            }}
-                                        />
-                                    </div>
-                                    {/* INPUT PARENT */}
-                                    {(LevelPohon?.value == 5 || LevelPohon?.value == 6) &&
-                                        <div className="mb-3">
-                                            <label htmlFor="" className='uppercase text-xs font-bold text-gray-700 my-2 ml-1'>
-                                                {LevelPohon?.value == 5 ? 'Strategic' : 'Tactical'}
-                                            </label>
-                                            <Select
-                                                placeholder="pilih parent"
-                                                value={PohonParent}
-                                                options={OptionPohonParent}
-                                                isSearchable
-                                                isClearable
-                                                isLoading={IsLoading}
-                                                onMenuOpen={() => {
-                                                    if (LevelPohon?.value == 5) {
-                                                        fetchPohonParent(4);
-                                                    } else {
-                                                        fetchPohonParent(5);
-                                                    }
-                                                }}
-                                                onChange={(option) => {
-                                                    setPohonParent(option);
-                                                }}
-                                                onMenuClose={() => setOptionPohonParent([])}
-                                                styles={{
-                                                    control: (baseStyles) => ({
-                                                        ...baseStyles,
-                                                        borderRadius: '8px',
-                                                        textAlign: 'start',
-                                                    })
-                                                }}
-                                            />
-                                        </div>
-                                    }
-                                    {/* BUTTON TOLAK TERIMA */}
-                                    <div className="flex justify-between my-2">
-                                        <ButtonRedBorder
-                                            className='w-full mx-2'
-                                            disabled={ProsesCross}
-                                            onClick={() => {
-                                                if (PohonCross?.value == null || undefined) {
-                                                    AlertNotification("Pilih", "Pilih Pohon Crosscutting terlebih dahulu", "warning", 1000);
-                                                } else {
-                                                    tolakPohonCross(PohonCross?.value);
-                                                }
-                                            }}
-                                        >
-                                            {ProsesCross ? 
-                                                <span className="flex">
-                                                    <LoadingButtonClip />
-                                                    Menolak...
-                                                </span> 
-                                            :
-                                                <span className="flex items-center">
-                                                    <TbCircleLetterXFilled className='mr-1' />
-                                                    Tolak
-                                                </span> 
-                                            }
-                                        </ButtonRedBorder>
-                                        <ButtonSkyBorder
-                                            onClick={() => {
-                                                if (!PohonCross?.value) {
-                                                    // Kondisi: Jika PohonCross kosong
-                                                    AlertNotification("Pohon Crosscutting", "Pilih Pohon Crosscutting terlebih dahulu", "warning", 1000);
-                                                } else if (!LevelPohon?.value) {
-                                                    // Kondisi: Jika PohonCross tidak kosong, tetapi LevelPohon kosong
-                                                    AlertNotification("Pilih Level", "Pilih Level Pohon untuk diterima", "warning", 1000);
-                                                } else if (LevelPohon?.value === 4) {
-                                                    // Kondisi: Jika PohonCross tidak kosong & LevelPohon == 4
-                                                    terimaPohonCross(PohonCross?.value, 0);
-                                                } else if (LevelPohon?.value >= 5 && !PohonParent?.value) {
-                                                    // Kondisi: Jika PohonCross tidak kosong & LevelPohon >= 5 & PohonParent kosong
-                                                    AlertNotification("Pilih Parent", "Tactical dan Operational wajib memilih parent", "warning", 1000);
-                                                } else if (LevelPohon?.value >= 5 && PohonParent?.value) {
-                                                    // Kondisi: Jika PohonCross tidak kosong & LevelPohon >= 5 & PohonParent tidak kosong
-                                                    terimaPohonCross(PohonCross?.value, PohonParent?.value);
-                                                }
-                                            }}
-                                            disabled={ProsesCross}
-                                            className='w-full mx-2'
-                                        >
-                                            {ProsesCross ? 
-                                                <span className="flex">
-                                                    <LoadingButtonClip />
-                                                    Menerima...
-                                                </span> 
-                                            :
-                                                <span className="flex items-center">
-                                                    <TbCircleCheckFilled className='mr-1' />
-                                                    Terima
-                                                </span> 
-                                            }
-                                        </ButtonSkyBorder>
-                                    </div>
-                                </div>
-                            </div>
+                            <ButtonSkyBorder className="w-full" onClick={handleModalCrosscutting}>
+                                <TbSettings className='mr-1'/>
+                                Edit
+                            </ButtonSkyBorder>
+                            <ModalPohonCrosscutting isOpen={PohonCrosscutting} onClose={handleModalCrosscutting} onSuccess={handleTriggerAfterPokinOutside}/>
                         </div>
                     </div>
                 }

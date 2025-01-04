@@ -51,6 +51,7 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id}) => 
     const [KodeOpd, setKodeOpd] = useState<OptionTypeString | null>(null);
     const [Parent, setParent] = useState<string>('');
     const [JenisPohon, setJenisPohon] = useState<string>('');
+    const [Keterangan, setKeterangan] = useState<string>('');
     const [LevelPohon, setLevelPohon] = useState<number | null>(null);
     const [Tahun, setTahun] = useState<any>(null);
     const [OpdOption, setOpdOption] = useState<OptionTypeString[]>([]);
@@ -107,7 +108,7 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id}) => 
                 }
                 reset({
                     nama_pohon: data.nama_pohon || '',
-                    keterangan: data.keterangan || '',
+                    keterangan: '',
                     parent: data.parent || '',
                     level_pohon: data.level_pohon || '',
                     indikator: data.indikator?.map((item: indikator) => ({
@@ -157,31 +158,17 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id}) => 
     const handleClose = () => {
       reset(); // Mereset seluruh form
       setKodeOpd(null);
+      setKeterangan('');
       onClose();
     };
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const jenisPohon = `${JenisPohon} Crosscutting`
         const formData = {
             //key : value
-            nama_pohon : data.nama_pohon,
             Keterangan : data.keterangan,
-            jenis_pohon: jenisPohon,
-            level_pohon: LevelPohon,
-            parent: Number(Parent),
             kode_opd: KodeOpd?.value,
-            status: 'crosscutting_menunggu',
             tahun: Tahun?.value?.toString(),
-            ...(data.indikator && {
-                indikator: data.indikator.map((ind) => ({
-                    indikator: ind.nama_indikator,
-                    target: ind.targets.map((t) => ({
-                        target: t.target,
-                        satuan: t.satuan,
-                    })),
-                })),
-            }),
         };
         if(KodeOpd?.value == null || undefined){
             AlertNotification("pilih opd terlebih dahulu", "", "warning", 1000);
@@ -197,7 +184,7 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id}) => 
                     body: JSON.stringify(formData),
                 });
                 if(response.ok){
-                    AlertNotification("Berhasil", "Berhasil menambahkan strategic", "success", 1000);
+                    AlertNotification("Berhasil", "Berhasil menambahkan crosscutting", "success", 1000);
                     onClose();
                 } else {
                     AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
@@ -261,6 +248,31 @@ export const ModalAddCrosscutting: React.FC<modal> = ({isOpen, onClose, id}) => 
                                     }}
                                 />
                             </>
+                            )}
+                        />
+                    </div>
+                    <div className="flex flex-col py-3">
+                        <label
+                            className="uppercase text-xs font-bold text-gray-700 my-2"
+                            htmlFor="keterangan"
+                        >
+                            Keterangan:
+                        </label>
+                        <Controller
+                            name="keterangan"
+                            control={control}
+                            render={({ field }) => (
+                                <textarea
+                                    {...field}
+                                    className="border px-4 py-2 rounded-lg"
+                                    id="keterangan"
+                                    placeholder="masukkan keterangan"
+                                    value={field.value || Keterangan}
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        setKeterangan(e.target.value);
+                                    }}
+                                />
                             )}
                         />
                     </div>

@@ -24,7 +24,6 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import "@/app/globals.css";
 import { logout, getUser } from '../lib/Cookie';
-import PokinOpd from '../pages/Pohon/PokinOpd/PokinOpd';
 
 interface SidebarProps {
   isOpen: boolean | null;
@@ -43,8 +42,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
     const [MasterOPD, setMasterOPD] = useState<boolean | null>(null);
     const [MasterPegawai, setMasterPegawai] = useState<boolean | null>(null);
     const [LevelPohon, setLevelPohon] = useState<boolean | null>(null);
-    const [MasterProgramKegiatan, setMasterProgramKegiatan] = useState<boolean | null>(null);
     const [MasterJabatan, setMasterJabatan] = useState<boolean | null>(null);
+    const [MasterProgramKegiatan, setMasterProgramKegiatan] = useState<boolean | null>(null);
       const [MasterUrusan, setMasterUrusan] = useState<boolean | null>(null);
       const [MasterBidangUrusan, setMasterBidangUrusan] = useState<boolean | null>(null);
       const [MasterProgram, setMasterProgram] = useState<boolean | null>(null);
@@ -1688,13 +1687,15 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
             {/* SUB MENU PERENCANAAN ASN */}
             <div className={`transition-all duration-300 ease-in-out ${Perencanaan ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
               {/* LABEL USULAN ASN */}
-              <li 
-                className="flex items-center gap-x-2 cursor-pointer p-2 hover:bg-gray-700 rounded-xl transition-all duration-300 ease-in-out"
-                onClick={() => setUsulan(Usulan ? false : true)}
-              >
-                <TbApps className="text-xl" />
-                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Usulan</span>
-              </li>
+              {User?.roles == 'level_3' &&
+                <li 
+                  className="flex items-center gap-x-2 cursor-pointer p-2 hover:bg-gray-700 rounded-xl transition-all duration-300 ease-in-out"
+                  onClick={() => setUsulan(Usulan ? false : true)}
+                >
+                  <TbApps className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Usulan</span>
+                </li>
+              }
                 {/* subs menu USULAN ASN */}
                 <div className={`transition-all duration-300 ease-in-out ${Usulan ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
                   <Link href="/musrenbang">
@@ -1740,18 +1741,22 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Rencana Kinerja</span>
                 </li>
               </Link>
-              <Link href="/rincianbelanja">
-                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${RincianBelanja ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
-                  <TbShoppingCartDollar className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Rincian Belanja</span>
-                </li>
-              </Link>
-              <Link href="/manajemenresiko">
-                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PerencanaanManajemenResiko ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
-                  <TbRefreshAlert className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Manajemen Resiko</span>
-                </li>
-              </Link>
+              {User?.roles == 'level_3' &&
+                <Link href="/rincianbelanja">
+                  <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${RincianBelanja ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                    <TbShoppingCartDollar className="text-xl" />
+                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Rincian Belanja</span>
+                  </li>
+                </Link>
+              }
+              {(User?.roles == 'level_2' || User?.roles == 'level_3') &&
+                <Link href="/manajemenresiko">
+                  <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PerencanaanManajemenResiko ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                    <TbRefreshAlert className="text-xl" />
+                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Manajemen Resiko</span>
+                  </li>
+                </Link>
+              }
             </div>
           {/* LABEL LAPORAN */}
           <li 

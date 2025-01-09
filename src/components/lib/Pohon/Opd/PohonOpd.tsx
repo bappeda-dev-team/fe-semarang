@@ -900,6 +900,7 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
 }
 
 export const TablePohon = (props: any) => {
+    const id = props.item.id;
     const tema = props.item.nama_pohon;
     const keterangan = props.item.keterangan;
     const opd = props.item.perangkat_daerah?.nama_opd;
@@ -907,6 +908,42 @@ export const TablePohon = (props: any) => {
     const jenis = props.item.jenis_pohon;
     const indikator = props.item.indikator;
     const status = props.item.status;
+
+    const [OpdAsal, setOpdAsal] = useState<string | null>(null);
+    const [Proses, setProses] = useState<boolean>(false);
+    const token = getToken();
+
+    useEffect(() => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        const fetchOpdAsal = async() => {
+            try{
+                setProses(true);
+                const response = await fetch(`${API_URL}/crosscutting_opd/opd-from/${id}`, {
+                   method: "GET",
+                   headers: {
+                    Authorization: `${token}`,
+                    'Content-Type' : 'application/json',
+                   }
+                });
+                if (!response.ok) {
+                    throw new Error('kesalahan ketika fetch data opd asal');
+                }
+                const data = await response.json();
+                if(data.code === 500){
+                    setOpdAsal(null);
+                } else {
+                    setOpdAsal(data.data.nama_opd);
+                    // console.log(data.data.nama_opd);
+                }
+            } catch(err){
+                console.error(err, "gagal fetch data opd asal");
+            } finally {
+                setProses(false);
+            }
+        }
+        fetchOpdAsal();
+    }, [token, id]);
+
     return (
         <table className='w-full'>
             <tbody>
@@ -1275,6 +1312,28 @@ export const TablePohon = (props: any) => {
                             ) : (
                                 <span>{status || "-"}</span>
                             )}
+                        </td>
+                    </tr>
+                }
+                {(status === "crosscutting_disetujui" || status === "crosscutting_disetujui_existing")  &&
+                    <tr>
+                        <td
+                            className={`min-w-[100px] border px-2 py-1 text-start rounded-l-lg ${status === 'crosscutting_disetujui' && 'border-yellow-700'} bg-slate-200
+                                ${jenis === "Strategic" && "border-red-700"}
+                                ${jenis === "Tactical" && "border-blue-500"}
+                                ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                            `}
+                        >
+                            OPD Asal
+                        </td>
+                        <td
+                            className={`min-w-[300px] border px-2 py-3 text-start rounded-r-lg ${status === 'crosscutting_disetujui' && 'border-yellow-700'} bg-slate-200
+                                ${jenis === "Strategic" && "border-red-700"}
+                                ${jenis === "Tactical" && "border-blue-500"}
+                                ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                            `}
+                        >
+                            {Proses ? "Loading.." : OpdAsal ? OpdAsal : "-"}
                         </td>
                     </tr>
                 }

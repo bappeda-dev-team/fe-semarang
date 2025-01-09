@@ -23,7 +23,16 @@ interface TypePohonPemda {
     keterangan?: string;
     status?: string;
     tahun?: string;
+    indikators?: indikator[];
 }
+interface indikator {
+    nama_indikator: string;
+    targets: target[];
+}
+type target = {
+    target: string;
+    satuan: string;
+};
 
 export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) => {
 
@@ -129,6 +138,7 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
                     jenis: item.jenis_pohon,
                     tahun: item.tahun,
                     status: item.status,
+                    indikators: item.indikators,
                 }));
                 setOptionPohonPemda(pokinPemda);
             }
@@ -322,6 +332,31 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
                                         {PohonPemda?.jenis}    
                                     </td>
                                 </tr>
+                                {PohonPemda?.indikators &&
+                                <tr>
+                                    <td
+                                        className={`min-w-[100px] px-2 py-3 bg-white text-start rounded-tl-lg`}
+                                    >
+                                        Indikator
+                                    </td>
+                                    <td
+                                        className={`py-3 bg-white text-start rounded-tr-lg`}
+                                    >
+                                        :
+                                    </td>
+                                    <td
+                                        className={`min-w-[300px] px-2 py-3 bg-white text-start rounded-tr-lg`}
+                                    >
+                                        {PohonPemda?.indikators ? 
+                                            PohonPemda?.indikators.map((i: any) => (
+                                                <p key={i.id_indikator}>{i.nama_indikator}</p>
+                                            ))
+                                        :
+                                            "-"
+                                        }
+                                    </td>
+                                </tr>
+                                }
                                 <tr>
                                     <td
                                         className={`min-w-[100px] px-2 py-3 bg-white text-start rounded-tl-lg`}
@@ -551,8 +586,8 @@ export const ModalPohonCrosscutting: React.FC<modal> = ({isOpen, onClose, onSucc
             :
                 "",
         }
-        console.log(formData);
-        console.log("Baru", id);
+        // console.log(formData);
+        // console.log("Baru", id);
         try {
             setProses(true);
             const response = await fetch(`${API_URL}/crosscutting/${id}/permission`, {

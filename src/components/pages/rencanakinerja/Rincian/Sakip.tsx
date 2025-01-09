@@ -3,7 +3,8 @@
 import { ButtonSky, ButtonSkyBorder } from "@/components/global/Button";
 import { getToken, getUser } from "@/components/lib/Cookie";
 import { useState, useEffect } from "react";
-import { LoadingSync } from "@/components/global/Loading";
+import { LoadingSync, LoadingButtonClip } from "@/components/global/Loading";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 interface id {
@@ -44,8 +45,10 @@ const Sakip: React.FC<id> = ({id}) => {
     const [Sakip, setSakip] = useState<sakip | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
+    const [ProsesIk, setProsesIk] = useState<boolean>(true);
     const [user, setUser] = useState<any>(null);
     const token = getToken();
+    const router = useRouter();
     
     useEffect(() => {
         const fetchUser = getUser();
@@ -53,6 +56,11 @@ const Sakip: React.FC<id> = ({id}) => {
             setUser(fetchUser.user);
         }
     },[]);
+
+    const handleManualIk = () => {
+      setProsesIk(true);  
+      router.push("manual_ik/tambah");
+    }
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -110,7 +118,7 @@ const Sakip: React.FC<id> = ({id}) => {
         {/* SasaranKinerja */}
         <div className="mt-3 rounded-t-xl border px-5 py-3">
                 <div className="flex justify-between">
-                    <h1>Sasaran Kinerja</h1>
+                    <h1 className="font-bold">Sasaran Kinerja</h1>
                     <ButtonSky halaman_url={`/rencanakinerja/${id}/edit`}>Edit Sasaran</ButtonSky>
                 </div>
                 <div className="mx-2 my-3">
@@ -151,21 +159,35 @@ const Sakip: React.FC<id> = ({id}) => {
                                 {Sakip?.indikator.map((i: indikator, index: number) => (
                                     <React.Fragment key={i.id_indikator}>
                                         <tr>
-                                            <td className="px-2 py-2 border">Indikator Kinerja ke {index + 1}</td>
-                                            <td className="px-2 py-2 border">{i.nama_indikator}</td>
+                                            <td className="px-2 py-2 border bg-slate-100">Indikator Kinerja ke {index + 1}</td>
+                                            <td className="px-2 py-2 border bg-slate-100">{i.nama_indikator}</td>
                                         </tr>
                                         {i.targets.map((t: targets) => (
                                             <tr key={t.id_target}>
-                                                <td className="px-2 py-2 border">Target Indikator Kinerja {index + 1}</td>
-                                                <td className="px-2 py-2 border">{t.target} {t.satuan}</td>
+                                                <td className="px-2 py-2 border bg-slate-100">Target Indikator Kinerja {index + 1}</td>
+                                                <td className="px-2 py-2 border bg-slate-100">{t.target} {t.satuan}</td>
                                             </tr>
                                         ))}
+                                        <tr>
+                                            <td className="px-2 py-2 border">Manual IK </td>
+                                            <td className="px-2 py-2 border">
+                                                <ButtonSkyBorder
+                                                    disabled={ProsesIk}
+                                                    onClick={handleManualIk}
+                                                >
+                                                    {ProsesIk ?
+                                                        <p className="flex items-center">
+                                                            <LoadingButtonClip />
+                                                            Manual IK
+                                                        </p>
+                                                    :
+                                                        "Manual IK"
+                                                    }
+                                                </ButtonSkyBorder>
+                                            </td>
+                                        </tr>
                                     </React.Fragment>
                                 ))}
-                                <tr>
-                                    <td className="px-2 py-2 border">Manual IK </td>
-                                    <td className="px-2 py-2 border"><ButtonSkyBorder>edit Manual IK</ButtonSkyBorder></td>
-                                </tr>
                                 <tr>
                                     <td className="px-2 py-2 border">Data Input </td>
                                     <td className="px-2 py-2 border">kinerja</td>

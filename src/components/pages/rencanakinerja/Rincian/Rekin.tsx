@@ -21,9 +21,8 @@ const Rekin = () => {
             {/* rencana aksi */}
             <div className="rounded-b-xl shadow-lg border-x border-b px-5 py-3">
                 <div className="flex flex-wrap justify-between items-center">
-                    <h1>Rencana Aksi</h1>
+                    <h1 className="font-bold">Rencana Aksi</h1>
                     <div className="flex flex-wrap">
-                        <ButtonGreen className="m-1">Fix Jumlah Target</ButtonGreen>
                         <ButtonSky className="m-1" onClick={() => handleModalNewRenaksi()}>Tambah Tahapan</ButtonSky>
                         <ModalRenaksi isOpen={isOpenNewRenaksi} onClose={handleModalNewRenaksi}/>
                     </div>

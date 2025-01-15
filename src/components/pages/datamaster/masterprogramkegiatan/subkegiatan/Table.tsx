@@ -14,6 +14,7 @@ interface subkegiatan {
     target_subkegiatan: string;
     satuan_target_subkegiatan: string;
     kode_opd: string;
+    nama_opd: string;
 }
 
 // interface opd {
@@ -124,7 +125,7 @@ const Table = () => {
                             <td className="border-r border-b px-6 py-4">{index + 1}</td>
                             <td className="border-r border-b px-6 py-4">{data.nama_sub_kegiatan ? data.nama_sub_kegiatan : "-"}</td>
                             <td className="border-r border-b px-6 py-4">{data.tahun ? data.tahun : "-"}</td>
-                            <td className="border-r border-b px-6 py-4">{data.kode_opd ? data.kode_opd : "-"}</td>
+                            <td className="border-r border-b px-6 py-4">{data.nama_opd ? data.nama_opd : "-"}</td>
                             <td className="border-r border-b px-6 py-4">
                                 <div className="flex flex-col jutify-center items-center gap-2">
                                     <ButtonGreen className="w-full" halaman_url={`/DataMaster/masterprogramkegiatan/subkegiatan/${data.id}`}>Edit</ButtonGreen>

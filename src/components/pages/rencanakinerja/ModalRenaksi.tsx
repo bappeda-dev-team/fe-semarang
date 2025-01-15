@@ -41,7 +41,7 @@ export const ModalRenaksi: React.FC<modal> = ({isOpen, onClose, className}) => {
                         className="uppercase text-xs font-bold text-gray-700 my-2"
                         htmlFor="nama_rencana_aksi"
                     >
-                        Nama Rencana Aksi:
+                        Tahapan:
                     </label>
                     <Controller
                         name="nama_rencana_aksi"
@@ -52,7 +52,7 @@ export const ModalRenaksi: React.FC<modal> = ({isOpen, onClose, className}) => {
                                 className="border px-4 py-2 rounded-lg"
                                 id="nama_rencana_aksi"
                                 type="text"
-                                placeholder="masukkan Nama Rencana Aksi"
+                                placeholder="masukkan Tahapan Rencana Aksi"
                                 value={field.value || namaRenaksi}
                                 onChange={(e) => {
                                     field.onChange(e);

@@ -1,6 +1,6 @@
 'use client'
 
-import { ButtonSkyBorder } from "@/components/global/Button";
+import { ButtonSkyBorder, ButtonSky, ButtonRedBorder } from "@/components/global/Button";
 import { ModalInovasi } from "../ModalInovasi";
 import { useState, useEffect } from "react";
 import { LoadingSync } from "@/components/global/Loading";
@@ -48,7 +48,7 @@ const Inovasi: React.FC<id> = ({id}) => {
                 if(hasil.inovasi){
                     const i = hasil.find((item: any) => item.inovasi);
                     const data = i.inovasi
-                    if(data == null){
+                    if(data == null || data.length === 0){
                         setDataNull(true);
                         setInovasi([]);
                     } else {
@@ -96,6 +96,8 @@ const Inovasi: React.FC<id> = ({id}) => {
             {/* Inovasi Sasaran */}
             <div className="flex flex-wrap justify-between items-center mt-3 rounded-t-xl border px-5 py-3">
                 <h1 className="font-bold">Inovasi Sasaran</h1>
+                <ButtonSky onClick={handleModalNewInovasi}>tambah inovasi sasaran</ButtonSky>
+                <ModalInovasi onClose={handleModalNewInovasi} isOpen={isOpenNewInovasi}/>
             </div>
             <div className="rounded-b-xl shadow-lg border-x border-b px-5 py-3">
                 <div className="overflow-auto m-2 rounded-t-xl border">
@@ -122,8 +124,8 @@ const Inovasi: React.FC<id> = ({id}) => {
                                     <td className="border px-6 py-3">{data.jenis_inovasi}</td>
                                     <td className="border px-6 py-3">{data.gambaran_nilia_kebaruan}</td>
                                     <td className="border px-6 py-3">
-                                        <ButtonSkyBorder className="w-full" onClick={handleModalNewInovasi}>Edit</ButtonSkyBorder>
-                                        <ModalInovasi onClose={handleModalNewInovasi} isOpen={isOpenNewInovasi}/>
+                                        <ButtonSkyBorder className="w-full">Edit</ButtonSkyBorder>
+                                        <ButtonRedBorder className="w-full">Hapus</ButtonRedBorder>
                                     </td>
                                 </tr>
                                 ))

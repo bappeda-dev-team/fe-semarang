@@ -20,7 +20,7 @@ import {
   TbTarget
 } from "react-icons/tb";
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useParams } from 'next/navigation';
 import Link from 'next/link';
 import "@/app/globals.css";
 import { logout, getUser } from '../lib/Cookie';
@@ -35,6 +35,7 @@ interface SidebarProps {
 export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
 
   const [User, setUser] = useState<any>(null);
+  const {id} = useParams();
   const url = usePathname();
   //state menu, submenu, subsmenu
   const [Dashboard, setDashboard] = useState<boolean | null>(null);
@@ -1086,7 +1087,12 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPohonCascadingOpd(false);
       setLaporan(false);
     }
-    if(url == "/rencanakinerja"){
+    if(
+        url == "/rencanakinerja" || 
+        url == `/rencanakinerja/${id}/edit` ||
+        url == `/rencanakinerja/${id}/tambah` ||
+        url == `/rencanakinerja/manual_ik/${id}`
+      ){
       setDashboard(false);
       setDataMaster(false);
       setMasterOPD(false);

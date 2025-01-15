@@ -27,6 +27,7 @@ interface FormValue {
     indikator: indikator[];
 }
 interface indikator {
+    id_indikator?: string;
     nama_indikator: string;
     targets: target[];
 }
@@ -125,7 +126,7 @@ export const FormRencanaKinerja = () => {
           catatan : data.catatan,
           tahun : String(Tahun?.value),
           kode_opd : User?.kode_opd,
-          pegawai_id : User?.pegawai_id,
+          pegawai_id : User?.nip,
           indikator: data.indikator.map((ind) => ({
             nama_indikator: ind.nama_indikator,
             target: ind.targets.map((t) => ({
@@ -166,10 +167,58 @@ export const FormRencanaKinerja = () => {
             >
                 <div className="flex flex-col py-3">
                     <label
-                    className="uppercase text-xs font-bold text-gray-700 my-2"
-                    htmlFor="nama_rencana_kinerja"
+                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                        htmlFor="id_pohon"
                     >
-                    Nama Rencana Kinerja :
+                        Pohon :
+                    </label>
+                    <Controller
+                        name="id_pohon"
+                        control={control}
+                        rules={{required : "Pohon Harus Dipilih"}}
+                        render={({ field }) => (
+                        <>
+                            <Select
+                                {...field}
+                                placeholder="Masukkan Pohon"
+                                value={Pokin}
+                                options={PokinOption}
+                                isLoading={IsLoading}
+                                isSearchable
+                                isClearable
+                                onMenuOpen={() => {
+                                    if (User?.pegawai_id != undefined) {
+                                    fetchPokinByPelaksana();
+                                    }
+                                }}
+                                onChange={(option) => {
+                                    field.onChange(option);
+                                    setPokin(option);
+                                }}
+                                styles={{
+                                    control: (baseStyles) => ({
+                                    ...baseStyles,
+                                    borderRadius: '8px',
+                                    })
+                                }}
+                            />
+                            {errors.id_pohon ?
+                                <h1 className="text-red-500">
+                                    {errors.id_pohon.message}
+                                </h1>
+                            :
+                                <h1 className="text-slate-300 text-xs">*Pohon Harus Dipilih</h1>
+                            }
+                        </>
+                        )}
+                    />
+                </div>
+                <div className="flex flex-col py-3">
+                    <label
+                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                        htmlFor="nama_rencana_kinerja"
+                    >
+                    Rencana Kinerja :
                     </label>
                     <Controller
                         name="nama_rencana_kinerja"
@@ -203,55 +252,7 @@ export const FormRencanaKinerja = () => {
                 <div className="flex flex-col py-3">
                     <label
                         className="uppercase text-xs font-bold text-gray-700 my-2"
-                        htmlFor="id_pohon"
-                    >
-                        Pohon :
-                    </label>
-                    <Controller
-                        name="id_pohon"
-                        control={control}
-                        rules={{required : "Pohon Harus Terisi"}}
-                        render={({ field }) => (
-                        <>
-                            <Select
-                                {...field}
-                                placeholder="Masukkan Pohon"
-                                value={Pokin}
-                                options={PokinOption}
-                                isLoading={IsLoading}
-                                isSearchable
-                                isClearable
-                                onMenuOpen={() => {
-                                    if (User?.pegawai_id != undefined) {
-                                    fetchPokinByPelaksana();
-                                    }
-                                }}
-                                onChange={(option) => {
-                                    field.onChange(option);
-                                    setPokin(option);
-                                }}
-                                styles={{
-                                    control: (baseStyles) => ({
-                                    ...baseStyles,
-                                    borderRadius: '8px',
-                                    })
-                                }}
-                            />
-                            {errors.id_pohon ?
-                                <h1 className="text-red-500">
-                                    {errors.id_pohon.message}
-                                </h1>
-                            :
-                                <h1 className="text-slate-300 text-xs">*Pohon Harus Terisi</h1>
-                            }
-                        </>
-                        )}
-                    />
-                </div>
-                <div className="flex flex-col py-3">
-                    <label
-                    className="uppercase text-xs font-bold text-gray-700 my-2"
-                    htmlFor="catatan"
+                        htmlFor="catatan"
                     >
                     Catatan :
                     </label>
@@ -515,6 +516,7 @@ export const FormEditRencanaKinerja = () => {
                             label: data.status_rencana_kinerja,
                         },
                         indikator: data.indikator?.map((item: indikator) => ({
+                            id_indikator: item.id_indikator,
                             nama_indikator: item.nama_indikator,
                             targets: item.targets.map((t: target) => ({
                                 target: t.target,
@@ -525,6 +527,7 @@ export const FormEditRencanaKinerja = () => {
     
                     // Replace the fields to avoid duplication
                     replace(data.indikator.map((item: indikator) => ({
+                        id_indikator: item.id_indikator,
                         nama_indikator: item.nama_indikator,
                         targets: item.targets,
                     })));
@@ -545,8 +548,9 @@ export const FormEditRencanaKinerja = () => {
             catatan : data.catatan,
             tahun : String(Tahun?.value),
             kode_opd : User?.kode_opd,
-            pegawai_id : User?.pegawai_id,
+            pegawai_id : User?.nip,
             indikator: data.indikator.map((ind) => ({
+                id_indikator: ind.id_indikator,
               nama_indikator: ind.nama_indikator,
               target: ind.targets.map((t) => ({
                 target: t.target,
@@ -586,10 +590,56 @@ export const FormEditRencanaKinerja = () => {
             >
                 <div className="flex flex-col py-3">
                     <label
-                    className="uppercase text-xs font-bold text-gray-700 my-2"
-                    htmlFor="nama_rencana_kinerja"
+                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                        htmlFor="id_pohon"
                     >
-                    Nama Rencana Kinerja :
+                        Pohon :
+                    </label>
+                    <Controller
+                        name="id_pohon"
+                        control={control}
+                        rules={{required : "Pohon Harus Dipilih"}}
+                        render={({ field }) => (
+                        <>
+                            <Select
+                                {...field}
+                                placeholder="Masukkan Pohon"
+                                options={PokinOption}
+                                isLoading={IsLoading}
+                                isSearchable
+                                isClearable
+                                onMenuOpen={() => {
+                                    if (User?.pegawai_id != undefined) {
+                                    fetchPokinByPelaksana();
+                                    }
+                                }}
+                                onChange={(option) => {
+                                    field.onChange(option);
+                                }}
+                                styles={{
+                                    control: (baseStyles) => ({
+                                    ...baseStyles,
+                                    borderRadius: '8px',
+                                    })
+                                }}
+                            />
+                            {errors.id_pohon ?
+                                <h1 className="text-red-500">
+                                    {errors.id_pohon.message}
+                                </h1>
+                            :
+                                <h1 className="text-slate-300 text-xs">*Pohon Harus Dipilih</h1>
+                            }
+                        </>
+                        )}
+                    />
+                </div>
+                <div className="flex flex-col py-3">
+                    <label
+                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                        htmlFor="nama_rencana_kinerja"
+                    >
+                    Rencana Kinerja :
                     </label>
                     <Controller
                         name="nama_rencana_kinerja"
@@ -622,53 +672,7 @@ export const FormEditRencanaKinerja = () => {
                 <div className="flex flex-col py-3">
                     <label
                         className="uppercase text-xs font-bold text-gray-700 my-2"
-                        htmlFor="id_pohon"
-                    >
-                        Pohon :
-                    </label>
-                    <Controller
-                        name="id_pohon"
-                        control={control}
-                        rules={{required : "Pohon Harus Terisi"}}
-                        render={({ field }) => (
-                        <>
-                            <Select
-                                {...field}
-                                placeholder="Masukkan Pohon"
-                                options={PokinOption}
-                                isLoading={IsLoading}
-                                isSearchable
-                                isClearable
-                                onMenuOpen={() => {
-                                    if (User?.pegawai_id != undefined) {
-                                    fetchPokinByPelaksana();
-                                    }
-                                }}
-                                onChange={(option) => {
-                                    field.onChange(option);
-                                }}
-                                styles={{
-                                    control: (baseStyles) => ({
-                                    ...baseStyles,
-                                    borderRadius: '8px',
-                                    })
-                                }}
-                            />
-                            {errors.id_pohon ?
-                                <h1 className="text-red-500">
-                                    {errors.id_pohon.message}
-                                </h1>
-                            :
-                                <h1 className="text-slate-300 text-xs">*Pohon Harus Terisi</h1>
-                            }
-                        </>
-                        )}
-                    />
-                </div>
-                <div className="flex flex-col py-3">
-                    <label
-                    className="uppercase text-xs font-bold text-gray-700 my-2"
-                    htmlFor="catatan"
+                        htmlFor="catatan"
                     >
                     Catatan :
                     </label>

@@ -63,12 +63,10 @@ export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('opd');
   localStorage.removeItem('user');
-  localStorage.removeItem('tahun');
 
   // Hapus semua cookie yang terkait
   document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
   document.cookie = 'user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
-  document.cookie = 'tahun=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
   document.cookie = 'opd=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
 
   // Redirect ke halaman login

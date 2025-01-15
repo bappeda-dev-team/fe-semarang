@@ -1,10 +1,12 @@
 'use client'
 
-import { ButtonSky, ButtonSkyBorder, ButtonGreen, ButtonRedBorder } from "@/components/global/Button";
+import { ButtonSky, ButtonSkyBorder, ButtonRedBorder } from "@/components/global/Button";
+import { TbPencil, TbTrash } from "react-icons/tb";
 import { ModalRenaksi } from "../ModalRenaksi";
+import { ModalTahapan } from "../ModalTahapan";
 import { useState } from "react";
 
-const Rekin = () => {
+const Renaksi = () => {
 
     const [isOpenNewRenaksi, setIsOpenNewRenaksi] = useState<boolean>(false);
 
@@ -24,7 +26,8 @@ const Rekin = () => {
                     <h1 className="font-bold">Rencana Aksi</h1>
                     <div className="flex flex-wrap">
                         <ButtonSky className="m-1" onClick={() => handleModalNewRenaksi()}>Tambah Tahapan</ButtonSky>
-                        <ModalRenaksi isOpen={isOpenNewRenaksi} onClose={handleModalNewRenaksi}/>
+                        {/* <ModalRenaksi isOpen={isOpenNewRenaksi} onClose={handleModalNewRenaksi}/> */}
+                        <ModalTahapan isOpen={isOpenNewRenaksi} onClose={handleModalNewRenaksi}/>
                     </div>
                 </div>
                 <div className="overflow-auto mt-3 rounded-t-xl border">
@@ -33,7 +36,7 @@ const Rekin = () => {
                             <tr>
                                 <td rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px]">No</td>
                                 <td rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Tahapan kerja</td>
-                                <td rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Aksi</td>
+                                <td rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px] text-center">Aksi</td>
                                 <td colSpan={3} className="border-r border-b px-6 py-3 min-w-[20px]">1</td>
                                 <td colSpan={3} className="border-r border-b px-6 py-3 min-w-[20px]">2</td>
                                 <td colSpan={3} className="border-r border-b px-6 py-3 min-w-[20px]">3</td>
@@ -65,75 +68,81 @@ const Rekin = () => {
                                 <td colSpan={3} className="border-r border-b px-6 py-3 min-w-[20px] max-h-[20px] text-center">T</td>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="text-sm">
                             <tr>
                                 <td className="border-r border-b px-6 py-4">1</td>
                                 <td className="border-r border-b px-6 py-4">Rapat Koordinasi</td>
                                 <td className="border-r border-b px-6 py-4">
                                     <div className="flex flex-col justify-center items-center gap-2">
-                                        <ButtonSkyBorder>Edit</ButtonSkyBorder>
-                                        <ButtonRedBorder>Hapus</ButtonRedBorder>
+                                       <ButtonSkyBorder className="w-full flex items-center gap-1">
+                                          <TbPencil />
+                                          Edit
+                                       </ButtonSkyBorder>
+                                       <ButtonRedBorder className="w-full flex items-center gap-1">
+                                          <TbTrash />
+                                          Hapus
+                                       </ButtonRedBorder>
                                     </div>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         10
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <div className="p-1 rounded-full hover:border hover:border-black hover:bg-black hover:text-white cursor-pointer">
+                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
-                                   </div>
+                                   </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
                                    -
@@ -207,4 +216,4 @@ const Rekin = () => {
     )
 }
 
-export default Rekin;
+export default Renaksi;

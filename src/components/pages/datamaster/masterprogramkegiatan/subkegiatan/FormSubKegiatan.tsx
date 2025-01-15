@@ -21,6 +21,7 @@ interface FormValue {
     satuan_target_subkegiatan: string;
     tahun: OptionTypeString;
     kode_opd: OptionTypeString;
+    nama_opd: OptionTypeString;
 }
 
 export const FormSubKegiatan = () => {
@@ -319,10 +320,10 @@ export const FormEditSubKegiatan = () => {
                         setNamaSubKegiatan(data.nama_sub_kegiatan);
                         reset((prev) => ({ ...prev, nama_subkegiatan: data.nama_subkegiatan }))
                     }
-                    if(data.kode_opd){
+                    if(data.kode_opd && data.nama_opd){
                         const opd = {
                             value: data.kode_opd,
-                            label: data.kode_opd,
+                            label: data.nama_opd,
                         }
                         setKodeOpd(opd);
                         reset((prev) => ({ ...prev, kode_opd: opd }))

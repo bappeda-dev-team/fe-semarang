@@ -79,8 +79,8 @@ const FormManualIk = () => {
                 }
                 const hasil = await response.json();
                 // console.log(data);
-                if(hasil.data.id != 0){
-                    const detail = hasil.data; 
+                const detail = hasil.data; 
+                if(hasil.data.output_data && Object.keys(hasil.data.output_data).length > 0){
                     setDataNew(false);
                     if(detail.rencana_kinerja){
                         setRekin(detail.rencana_kinerja.Nama_rencana_kinerja);
@@ -161,6 +161,18 @@ const FormManualIk = () => {
                     }
                 } else {
                     setDataNew(true);
+                    if(detail.rencana_kinerja){
+                        setRekin(detail.rencana_kinerja.Nama_rencana_kinerja);
+                        if (detail.rencana_kinerja.indikator.length > 0) {
+                            const indikator = detail.rencana_kinerja.indikator[0]; // Ambil elemen pertama dari array indikator
+                            const targetData = indikator.targets.length > 0 ? indikator.targets[0] : null; // Ambil elemen pertama dari array targets
+                            
+                            // Set state dengan data yang diambil
+                            setNamaIndikator(indikator.nama_indikator);
+                            setTarget(targetData?.target || ""); // Default ke string kosong jika targetData null
+                            setSatuan(targetData?.satuan || ""); // Default ke string kosong jika targetData null
+                        }
+                    }
                 }
             } catch(err) {
                 console.log("");
@@ -197,7 +209,9 @@ const FormManualIk = () => {
         try{
             setProses(true);
             const response = await fetch(`${API_URL}/manual_ik/${DataNew ? 'create' : 'update'}/${id}`, {
+            // const response = await fetch(`${API_URL}/manual_ik/create/${id}`, {
                 method: DataNew ? "POST" : "PUT",
+                // method: "POST",
                 headers: {
                     Authorization : `${token}`,
                     "Content-Type" : "application/json",

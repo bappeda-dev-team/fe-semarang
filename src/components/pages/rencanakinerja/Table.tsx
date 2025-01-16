@@ -151,7 +151,7 @@ export const TablePerencanaan = () => {
                     <tr key={data.id_rencana_kinerja}>
                         <td className="border-r border-b px-6 py-4">{index + 1}</td>
                         <td className="border-r border-b px-6 py-4">{data.nama_pohon ? data.nama_pohon : "-"}</td>
-                        <td className="border-r border-b px-6 py-4">{data.nama_rencana_kinerja ? data.nama_rencana_kinerja : "-"}</td>
+                        <td className="border-r border-b px-6 py-4">{data.nama_rencana_kinerja ? data.id_rencana_kinerja : "-"}</td>
                         <td className="border-r border-b px-6 py-4 text-center">{data.tahun ? data.tahun : "-"}</td>
                         {data.indikator != null ? 
                             <>

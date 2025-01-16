@@ -24,6 +24,7 @@ const DasarHukum: React.FC<id> = ({id}) => {
     const [IdEdit, setIdEdit] = useState<string>('');
     const [dasarHukum, setDasarHukum] = useState<dasar_hukum[]>([]);
     const [Loading, setLoading] = useState<boolean | null>(null);
+    const [Deleted, setDeleted] = useState<boolean>(false);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
     const [user, setUser] = useState<any>(null);
     const token = getToken();
@@ -40,23 +41,17 @@ const DasarHukum: React.FC<id> = ({id}) => {
         const fetchDasarHukum = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${user?.pegawai_id}/input_rincian_kak`, {
+                const response = await fetch(`${API_URL}/dasar_hukum/findall/${id}`, {
                     headers: {
                       Authorization: `${token}`,
                       'Content-Type': 'application/json',
                     },
                 });
                 const result = await response.json();
-                const hasil = result.rencana_kinerja;
-                if (hasil) {
-                    const dk = hasil.find((item: any) => item.dasar_hukum);
-                    if (dk && dk.dasar_hukum) {
-                        setDataNull(false);
-                        setDasarHukum(dk.dasar_hukum);
-                    } else {
-                        setDataNull(true);
-                        setDasarHukum([]);
-                    }
+                const hasil = result.dasar_hukum;
+                if (hasil != null) {
+                    setDataNull(false);
+                    setDasarHukum(hasil);
                 } else {
                     setDataNull(true);
                     setDasarHukum([]);
@@ -70,7 +65,7 @@ const DasarHukum: React.FC<id> = ({id}) => {
         if(user?.roles != undefined){    
             fetchDasarHukum();
         }
-    },[token, id, user, isOpenNewDasarHukum, isOpenEditDasarHukum]);
+    },[token, id, user, isOpenNewDasarHukum, isOpenEditDasarHukum, Deleted]);
 
     const handleModalNewDasarHukum = () => {
         if(isOpenNewDasarHukum){
@@ -100,10 +95,11 @@ const DasarHukum: React.FC<id> = ({id}) => {
                 },
             })
             if(!response.ok){
-                alert("cant fetch data")
+                alert("response !ok ketika gagal hapus dasar hukum");
             }
             setDasarHukum(dasarHukum.filter((data) => (data.id !== id)))
-            AlertNotification("Berhasil", "Data lembaga Berhasil Dihapus", "success", 1000);
+            AlertNotification("Berhasil", "Dasar Hukum Berhasil Dihapus", "success", 1000);
+            setDeleted((prev) => !prev);
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
         }
@@ -138,7 +134,7 @@ const DasarHukum: React.FC<id> = ({id}) => {
                 <div className="overflow-auto m-2 rounded-t-xl border">
                     <table className="w-full">
                         <thead>
-                            <tr className="bg-gray-300">
+                            <tr className="bg-gray-300 border border-gray-300">
                                 <td className="border-r border-b px-6 py-3 min-w-[50px]">No</td>
                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Peraturan Terkait</td>
                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Uraian</td>

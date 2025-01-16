@@ -1091,7 +1091,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
         url == "/rencanakinerja" || 
         url == `/rencanakinerja/${id}/edit` ||
         url == `/rencanakinerja/${id}/tambah` ||
-        url == `/rencanakinerja/manual_ik/${id}`
+        url == `/rencanakinerja/manual_ik/${id}` ||
+        url == `/rencanakinerja/${id}`
       ){
       setDashboard(false);
       setDataMaster(false);
@@ -1422,7 +1423,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setPohonCascadingOpd(true);
       setLaporan(false);
     }
-  }, [url]);
+  }, [url, id]);
 
   return (
     <div className="flex">

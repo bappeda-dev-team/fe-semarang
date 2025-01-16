@@ -206,8 +206,10 @@ export const ModalDasarHukumEdit: React.FC<modal> = ({isOpen, onClose, id_rekin,
                 console.error(err);
             }
         };
-        fetchId();
-    },[id, token]);
+        if(isOpen){
+            fetchId();
+        }
+    },[id, token, isOpen]);
 
     const onSubmit: SubmitHandler<FormValue> = async () => {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;

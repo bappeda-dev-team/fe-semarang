@@ -23,6 +23,7 @@ const GambaranUmum: React.FC<id> = ({id}) => {
     const [IdEdit, setIdEdit] = useState<string>('');
     const [gambaran, setGambaran] = useState<gambaran_umum[]>([]);
     const [Loading, setLoading] = useState<boolean | null>(null);
+    const [Deleted, setDeleted] = useState<boolean>(false);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
     const [user, setUser] = useState<any>(null);
     const token = getToken();
@@ -39,29 +40,23 @@ const GambaranUmum: React.FC<id> = ({id}) => {
         const fetchGambaran = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${user?.pegawai_id}/input_rincian_kak`, {
+                const response = await fetch(`${API_URL}/gambaran_umum/findall/${id}`, {
                     headers: {
                       Authorization: `${token}`,
                       'Content-Type': 'application/json',
                     },
                 });
                 const result = await response.json();
-                const hasil = result.rencana_kinerja;
-                if (hasil) {
-                    const dk = hasil.find((item: any) => item.gambaran_umum);
-                    if (dk && dk.gambaran_umum) {
-                        setDataNull(false);
-                        setGambaran(dk.gambaran_umum);
-                    } else {
-                        setDataNull(true);
-                        setGambaran([]);
-                    }
+                const hasil = result.gambaran_umum;
+                if (hasil != null) {
+                    setDataNull(false);
+                    setGambaran(hasil);
                 } else {
                     setDataNull(true);
                     setGambaran([]);
                 }
             } catch(err) {
-                console.log(err)
+                console.log(err);
             } finally {
                 setLoading(false);
             }
@@ -69,7 +64,7 @@ const GambaranUmum: React.FC<id> = ({id}) => {
         if(user?.roles != undefined){    
             fetchGambaran();
         }
-    },[id, user, token, isOpenEditGambaranUmum, isOpenNewGambaranUmum]);
+    },[id, user, token, Deleted, isOpenEditGambaranUmum, isOpenNewGambaranUmum]);
 
     const handleModalNewGambaranUmum = () => {
         if(isOpenNewGambaranUmum){
@@ -102,7 +97,8 @@ const GambaranUmum: React.FC<id> = ({id}) => {
                 alert("cant fetch data")
             }
             setGambaran(gambaran.filter((data) => (data.id !== id)))
-            AlertNotification("Berhasil", "Data lembaga Berhasil Dihapus", "success", 1000);
+            AlertNotification("Berhasil", "Gambaran Umum Berhasil Dihapus", "success", 1000);
+            setDeleted((prev) => !prev);
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
         }
@@ -137,7 +133,7 @@ const GambaranUmum: React.FC<id> = ({id}) => {
                 <div className="overflow-auto m-2 rounded-t-xl border">
                     <table className="w-full">
                         <thead>
-                            <tr className="bg-gray-300">
+                            <tr className="bg-gray-300 border border-gray-300">
                                 <td className="border-r border-b px-6 py-3 min-w-[50px]">No</td>
                                 <td className="border-r border-b px-6 py-3 min-w-[500px]">Gambaran Umum</td>
                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</td>

@@ -339,7 +339,7 @@ const PokinOpd = () => {
                                         </tr>
                                         <tr className="flex items-center">
                                             <td className="border-l  px-2 py-1 bg-white text-start min-w-[150px]">
-                                                <h1 className="font-semibold text-green-500">
+                                                <h1 className="font-semibold text-blue-500">
                                                     Tactical
                                                 </h1>
                                             </td>
@@ -349,14 +349,14 @@ const PokinOpd = () => {
                                                 </h1>
                                             </td>
                                             <td className='border-r  px-2 py-1 bg-white text-center w-full'>
-                                                <h1 className="font-semibold text-green-500">
+                                                <h1 className="font-semibold text-blue-500">
                                                     {JumlahPemdaTactical?.length || 0}
                                                 </h1>
                                             </td>
                                         </tr>
                                         <tr className="flex items-center">
                                             <td className="border-l border-b px-2 py-1 bg-white text-start rounded-bl-lg min-w-[150px]">
-                                                <h1 className="font-semibold text-blue-500">
+                                                <h1 className="font-semibold text-green-500">
                                                     Operational
                                                 </h1>
                                             </td>
@@ -366,7 +366,7 @@ const PokinOpd = () => {
                                                 </h1>
                                             </td>
                                             <td className='border-r border-b px-2 py-1 bg-white text-center rounded-br-lg w-full'>
-                                                <h1 className="font-semibold text-blue-500">
+                                                <h1 className="font-semibold text-green-500">
                                                     {JumlahPemdaOperational?.length || 0}
                                                 </h1>
                                             </td>

@@ -45,7 +45,7 @@ const Sakip: React.FC<id> = ({id}) => {
     const [Sakip, setSakip] = useState<sakip | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
-    const [ProsesIk, setProsesIk] = useState<boolean>(true);
+    const [ProsesIk, setProsesIk] = useState<boolean>(false);
     const [user, setUser] = useState<any>(null);
     const token = getToken();
     const router = useRouter();
@@ -67,7 +67,7 @@ const Sakip: React.FC<id> = ({id}) => {
         const fetchSakip = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${user?.pegawai_id}/input_rincian_kak`, {
+                const response = await fetch(`${API_URL}/detail-rencana_kinerja/${id}`, {
                     headers: {
                       Authorization: `${token}`,
                       'Content-Type': 'application/json',
@@ -75,15 +75,13 @@ const Sakip: React.FC<id> = ({id}) => {
                 });
                 const result = await response.json();
                 const hasil = result.rencana_kinerja;
-                const renja = hasil.find((item: any) => item.rencana_kinerja);
-                const data = renja.rencana_kinerja
-                if(data){
-                    if(data == null){
+                if(hasil){
+                    if(hasil == null){
                         setDataNull(true);
                         setSakip(null);
                     } else {
                         setDataNull(false);
-                        setSakip(data);
+                        setSakip(hasil);
                     }
                 } else {
                     setDataNull(true);
@@ -186,12 +184,12 @@ const Sakip: React.FC<id> = ({id}) => {
                                                 </ButtonSkyBorder>
                                             </td>
                                         </tr>
+                                        {/* <tr>
+                                            <td className="px-2 py-2 border">Data Input </td>
+                                            <td className="px-2 py-2 border">kinerja</td>
+                                        </tr> */}
                                     </React.Fragment>
                                 ))}
-                                <tr>
-                                    <td className="px-2 py-2 border">Data Input </td>
-                                    <td className="px-2 py-2 border">kinerja</td>
-                                </tr>
                             </>
                         }
                         </tbody>

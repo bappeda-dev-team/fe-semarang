@@ -164,19 +164,17 @@ export const ModalEditGambaranUmum: React.FC<modal> = ({isOpen, onClose, id_reki
                 });
                 const result = await response.json();
                 const data = result.gambaran_umum;
-                if(result.code == 500){
-                    setIdNull(true);
-                } else {
-                    if(data.gambaran_umum){
-                        setGambaranUmum(data.gambaran_umum)
-                    }
+                if(data.gambaran_umum){
+                    setGambaranUmum(data.gambaran_umum)
                 }
             } catch(err){
                 console.error(err);
             }
         };
-        fetchId();
-    },[id, token]);
+        if(isOpen){
+            fetchId();
+        }
+    },[id, token, isOpen]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;

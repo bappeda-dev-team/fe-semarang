@@ -9,12 +9,20 @@ import { useState } from "react";
 const Renaksi = () => {
 
     const [isOpenNewRenaksi, setIsOpenNewRenaksi] = useState<boolean>(false);
+    const [isOpenTahapan, setIsOpenTahapan] = useState<boolean>(false);
 
     const handleModalNewRenaksi = () => {
         if(isOpenNewRenaksi){
             setIsOpenNewRenaksi(false);
         } else {
             setIsOpenNewRenaksi(true);
+        }
+    }
+    const handleModalTahapan = () => {
+        if(isOpenTahapan){
+            setIsOpenTahapan(false);
+        } else {
+            setIsOpenTahapan(true);
         }
     }
 
@@ -26,8 +34,8 @@ const Renaksi = () => {
                     <h1 className="font-bold">Rencana Aksi</h1>
                     <div className="flex flex-wrap">
                         <ButtonSky className="m-1" onClick={() => handleModalNewRenaksi()}>Tambah Tahapan</ButtonSky>
-                        {/* <ModalRenaksi isOpen={isOpenNewRenaksi} onClose={handleModalNewRenaksi}/> */}
-                        <ModalTahapan isOpen={isOpenNewRenaksi} onClose={handleModalNewRenaksi}/>
+                        <ModalRenaksi isOpen={isOpenNewRenaksi} onClose={handleModalNewRenaksi}/>
+                        <ModalTahapan isOpen={isOpenTahapan} onClose={handleModalTahapan}/>
                     </div>
                 </div>
                 <div className="overflow-auto mt-3 rounded-t-xl border">
@@ -85,62 +93,62 @@ const Renaksi = () => {
                                     </div>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         10
                                    </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
                                    </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
                                    </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
                                    </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
                                    </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
                                    </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
                                    </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
                                    </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
                                    </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
                                    </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
                                    </button>
                                 </td>
                                 <td colSpan={3} className="border-r border-b px-6 py-4">
-                                   <button className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
+                                   <button onClick={handleModalTahapan} className="py-1 px-2 rounded-full hover:bg-gray-300 hover:text-white cursor-pointer">
                                         +
                                    </button>
                                 </td>

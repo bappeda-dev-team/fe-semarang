@@ -966,7 +966,7 @@ export const FormEditPohon: React.FC<{
                         value: item.pegawai_id,
                         label: item.nama_pegawai,
                     })) || [],
-                    indikator: data.indikators?.map((item: indikator) => ({
+                    indikator: data.indikator?.map((item: indikator) => ({
                         nama_indikator: item.nama_indikator,
                         targets: item.targets.map((t: target) => ({
                             target: t.target,

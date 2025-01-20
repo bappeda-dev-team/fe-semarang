@@ -160,7 +160,7 @@ const Table = () => {
                             }}
                         />
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    {/* <div className="flex flex-wrap gap-2">
                         {LevelUser == '' ? 
                             <button className="px-3 py-1 text-center bg-black rounded-lg text-white">Semua Level</button>
                         :
@@ -196,7 +196,7 @@ const Table = () => {
                         :
                             <ButtonGreenBorder onClick={() => {setLevelUser('level_4')}}>Level 4</ButtonGreenBorder>
                         }
-                    </div>
+                    </div> */}
                 </div>
                 <div className="border p-1 rounded-xl mx-3 mb-2">
                     <h1 className="mx-5 py-5">Pilih Filter OPD</h1>
@@ -233,7 +233,7 @@ const Table = () => {
                         }}
                     />
                 </div>
-                <div className="flex flex-wrap gap-2">
+                {/* <div className="flex flex-wrap gap-2">
                     {LevelUser == '' ? 
                         <button className="px-3 py-1 text-center bg-black rounded-lg text-white">Semua Level</button>
                     :
@@ -269,7 +269,7 @@ const Table = () => {
                     :
                         <ButtonGreenBorder onClick={() => {setLevelUser('level_4')}}>Level 4</ButtonGreenBorder>
                     }
-                </div>
+                </div> */}
             </div>
             <div className="overflow-auto m-2 rounded-t-xl border">
                 <table className="w-full">
@@ -277,7 +277,7 @@ const Table = () => {
                         <tr className="bg-[#99CEF5] text-white">
                             <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">NIP</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Email</th>
+                            {/* <th className="border-r border-b px-6 py-3 min-w-[200px]">Email</th> */}
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Status</th>
                             <th className="border-r border-b px-6 py-3 min-w-[300px]">Roles</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</th>
@@ -295,7 +295,7 @@ const Table = () => {
                         <tr key={data.id}>
                             <td className="border-r border-b px-6 py-4">{index + 1}</td>
                             <td className="border-r border-b px-6 py-4">{data.nip? data.nip : "-"}</td>
-                            <td className="border-r border-b px-6 py-4 text-center">{data.email ? data.email : "-"}</td>
+                            {/* <td className="border-r border-b px-6 py-4 text-center">{data.email ? data.email : "-"}</td> */}
                             <td className="border-r border-b px-6 py-4 text-center">{data.is_active === true ? 'Aktif' : 'tidak aktif'}</td>
                             {data.role ? 
                                 <td className="border-r border-b px-6 py-4 text-center">

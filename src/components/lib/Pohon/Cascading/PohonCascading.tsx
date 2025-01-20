@@ -101,9 +101,9 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                     {/* BODY */}
                     <div className="flex justify-center my-3">
                         {Edited ? 
-                            <TablePohonEdited item={Edited} hapusPelaksana={hapusPelaksana}/>
+                            <TablePohonEdited item={Edited} hapusPelaksana={hapusPelaksana} user={User?.roles}/>
                         :
-                            <TablePohon item={tema} hapusPelaksana={hapusPelaksana} />
+                            <TablePohon item={tema} hapusPelaksana={hapusPelaksana} user={User?.roles}/>
                         }
                     </div>
                     {/* BUTTON ACTION TAMPILKAN DAN PELAKSANA*/}
@@ -289,9 +289,9 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
                     {/* BODY */}
                     <div className="flex justify-center my-3">
                         {Edited ? 
-                            <TablePohonEdited item={Edited} hapusPelaksana={hapusPelaksana}/>
+                            <TablePohonEdited item={Edited} hapusPelaksana={hapusPelaksana} user={User?.roles}/>
                         :
-                            <TablePohon item={tema} hapusPelaksana={hapusPelaksana}/>
+                            <TablePohon item={tema} hapusPelaksana={hapusPelaksana} user={User?.roles}/>
                         }
                     </div>
                     {/* BUTTON ACTION TAMPILKAN DAN PELAKSANA*/}
@@ -381,10 +381,12 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
 }
 
 export const TablePohon = (props: any) => {
-  const { item, hapusPelaksana } = props;
+
+  const { item, hapusPelaksana, user } = props;
   const tema = props.item.nama_pohon;
   const jenis = props.item.jenis_pohon;
   const pelaksana = props.item.pelaksana;
+
   return (
     <div className="flex flex-col w-full">
         <table className='mb-2'>
@@ -446,24 +448,107 @@ export const TablePohon = (props: any) => {
                                 >
                                     {item.nama_pegawai}
                                 </td>
-                                <td
-                                    onClick={() => {
-                                        AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
-                                            if (result.isConfirmed) {
-                                                hapusPelaksana(item.id_pelaksana);
-                                            }
-                                        });
-                                    }}
-                                    className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
-                                        ${jenis === "Strategic" && "border-red-700"}
-                                        ${jenis === "Tactical" && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
-                                        ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
-                                        ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}   
-                                    `}
-                                >
-                                    <TbTrashX />
-                                </td>
+                                {(user == 'level_1' || user == 'admin_opd' || user == 'super_admin') &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}   
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
+                                {(user == 'level_2' && (
+                                   jenis === 'Tactical' || 
+                                   jenis === 'Tactical Pemda' || 
+                                   jenis === 'Tactical Crosscutting' || 
+                                   jenis === 'Operational' || 
+                                   jenis === 'Operational Pemda' || 
+                                   jenis === 'Operational Crosscutting' || 
+                                   jenis === 'Operational N' || 
+                                   jenis === 'Operational N Pemda' ||
+                                   jenis === 'Operational N Crosscutting' 
+                                )) &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}   
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
+                                {(user == 'level_3' && (
+                                   jenis === 'Operational' || 
+                                   jenis === 'Operational Pemda' || 
+                                   jenis === 'Operational Crosscutting' || 
+                                   jenis === 'Operational N' || 
+                                   jenis === 'Operational N Pemda' ||
+                                   jenis === 'Operational N Crosscutting' 
+                                )) &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}   
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
+                                {(user == 'level_4' && (
+                                   jenis === 'Operational N' || 
+                                   jenis === 'Operational N Pemda' ||
+                                   jenis === 'Operational N Crosscutting' 
+                                )) &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}   
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
                             </tr>
                         ))
                     :
@@ -491,24 +576,107 @@ export const TablePohon = (props: any) => {
                                 >
                                     {data.nama_pegawai}
                                 </td>
-                                <td
-                                    onClick={() => {
-                                        AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
-                                            if (result.isConfirmed) {
-                                                hapusPelaksana(item.id_pelaksana);
-                                            }
-                                        });
-                                    }}
-                                    className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
-                                        ${jenis === "Strategic" && "border-red-700"}
-                                        ${jenis === "Tactical" && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
-                                        ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
-                                        ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}  
-                                    `}
-                                >
-                                    <TbTrashX />
-                                </td>
+                                {(user == 'level_1' || user == 'admin_opd' || user == 'super_admin') &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}  
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
+                                {(user == 'level_2' && (
+                                    tema.jenis_pohon === 'Tactical' || 
+                                    tema.jenis_pohon === 'Tactical Pemda' || 
+                                    tema.jenis_pohon === 'Tactical Crosscutting' || 
+                                    tema.jenis_pohon === 'Operational' || 
+                                    tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational Crosscutting' || 
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda' ||
+                                    tema.jenis_pohon === 'Operational N Crosscutting'
+                                )) &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}  
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
+                                {(user == 'level_3' && (
+                                    tema.jenis_pohon === 'Operational' || 
+                                    tema.jenis_pohon === 'Operational Pemda' || 
+                                    tema.jenis_pohon === 'Operational Crosscutting' || 
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda' ||
+                                    tema.jenis_pohon === 'Operational N Crosscutting'
+                                )) &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}  
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
+                                {(user == 'level_4' && (
+                                    tema.jenis_pohon === 'Operational N' || 
+                                    tema.jenis_pohon === 'Operational N Pemda' ||
+                                    tema.jenis_pohon === 'Operational N Crosscutting'
+                                )) &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}  
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
                             </tr>
                         ))
                 :
@@ -543,7 +711,7 @@ export const TablePohon = (props: any) => {
   )
 }
 export const TablePohonEdited = (props: any) => {
-  const { item, hapusPelaksana } = props;
+  const { item, hapusPelaksana, user } = props;
   const tema = props.item.nama_pohon;
   const jenis = props.item.jenis_pohon;
   const pelaksana = props.item.pelaksana;
@@ -612,25 +780,107 @@ export const TablePohonEdited = (props: any) => {
                                 >
                                     {item.nama_pegawai}
                                 </td>
-                                <td
-                                    onClick={() => {
-                                        AlertQuestion("Hapus?", "Hapus pelaksana", "question", "Hapus", "Batal").then((result) => {
-                                            if (result.isConfirmed) {
-                                                hapusPelaksana(item.id_pelaksana);
-                                            }
-                                        });
-                                    }}
-                                    className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
-                                        ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
-                                        ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
-                                        ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
-                                        ${jenis === "Strategic Pemda" && "border-black"}
-                                        ${jenis === "Tactical Pemda" && "border-black"}
-                                        ${jenis === "Operational Pemda" && "border-black"}    
-                                    `}
-                                >
-                                    <TbTrashX />
-                                </td>
+                                {(user == 'level_1' || user == 'admin_opd' || user == 'super_admin') &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}   
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
+                                {(user == 'level_2' && (
+                                   jenis === 'Tactical' || 
+                                   jenis === 'Tactical Pemda' || 
+                                   jenis === 'Tactical Crosscutting' || 
+                                   jenis === 'Operational' || 
+                                   jenis === 'Operational Pemda' || 
+                                   jenis === 'Operational Crosscutting' || 
+                                   jenis === 'Operational N' || 
+                                   jenis === 'Operational N Pemda' ||
+                                   jenis === 'Operational N Crosscutting' 
+                                )) &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}   
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
+                                {(user == 'level_3' && (
+                                   jenis === 'Operational' || 
+                                   jenis === 'Operational Pemda' || 
+                                   jenis === 'Operational Crosscutting' || 
+                                   jenis === 'Operational N' || 
+                                   jenis === 'Operational N Pemda' ||
+                                   jenis === 'Operational N Crosscutting' 
+                                )) &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}   
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
+                                {(user == 'level_4' && (
+                                   jenis === 'Operational N' || 
+                                   jenis === 'Operational N Pemda' ||
+                                   jenis === 'Operational N Crosscutting' 
+                                )) &&
+                                    <td
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    hapusPelaksana(item.id_pelaksana);
+                                                }
+                                            });
+                                        }}
+                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}   
+                                        `}
+                                    >
+                                        <TbTrashX />
+                                    </td>
+                                }
                             </tr>
                         ))
                     :
@@ -660,25 +910,107 @@ export const TablePohonEdited = (props: any) => {
                             >
                                 {data.nama_pegawai}
                             </td>
-                            <td
-                                onClick={() => {
-                                    AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
-                                        if (result.isConfirmed) {
-                                            hapusPelaksana(item.id_pelaksana);
-                                        }
-                                    });
-                                }}
-                                className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
-                                    ${(jenis === "Strategic" || jenis === "Strategic Crosscutting") && "border-red-700"}
-                                    ${(jenis === "Tactical" || jenis === "Tactical Crosscutting") && "border-blue-500"}
-                                    ${(jenis === "Operational" || jenis == "Operational N" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-green-500"}
-                                    ${jenis === "Strategic Pemda" && "border-black"}
-                                    ${jenis === "Tactical Pemda" && "border-black"}
-                                    ${jenis === "Operational Pemda" && "border-black"}    
-                                `}
-                            >
-                                <TbTrashX />
-                            </td>
+                            {(user == 'level_1' || user == 'admin_opd' || user == 'super_admin') &&
+                                <td
+                                    onClick={() => {
+                                        AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                            if (result.isConfirmed) {
+                                                hapusPelaksana(item.id_pelaksana);
+                                            }
+                                        });
+                                    }}
+                                    className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                        ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}  
+                                    `}
+                                >
+                                    <TbTrashX />
+                                </td>
+                            }
+                            {(user == 'level_2' && (
+                                tema.jenis_pohon === 'Tactical' || 
+                                tema.jenis_pohon === 'Tactical Pemda' || 
+                                tema.jenis_pohon === 'Tactical Crosscutting' || 
+                                tema.jenis_pohon === 'Operational' || 
+                                tema.jenis_pohon === 'Operational Pemda' || 
+                                tema.jenis_pohon === 'Operational Crosscutting' || 
+                                tema.jenis_pohon === 'Operational N' || 
+                                tema.jenis_pohon === 'Operational N Pemda' ||
+                                tema.jenis_pohon === 'Operational N Crosscutting'
+                            )) &&
+                                <td
+                                    onClick={() => {
+                                        AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                            if (result.isConfirmed) {
+                                                hapusPelaksana(item.id_pelaksana);
+                                            }
+                                        });
+                                    }}
+                                    className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                        ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}  
+                                    `}
+                                >
+                                    <TbTrashX />
+                                </td>
+                            }
+                            {(user == 'level_3' && (
+                                tema.jenis_pohon === 'Operational' || 
+                                tema.jenis_pohon === 'Operational Pemda' || 
+                                tema.jenis_pohon === 'Operational Crosscutting' || 
+                                tema.jenis_pohon === 'Operational N' || 
+                                tema.jenis_pohon === 'Operational N Pemda' ||
+                                tema.jenis_pohon === 'Operational N Crosscutting'
+                            )) &&
+                                <td
+                                    onClick={() => {
+                                        AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                            if (result.isConfirmed) {
+                                                hapusPelaksana(item.id_pelaksana);
+                                            }
+                                        });
+                                    }}
+                                    className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                        ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}  
+                                    `}
+                                >
+                                    <TbTrashX />
+                                </td>
+                            }
+                            {(user == 'level_4' && (
+                                tema.jenis_pohon === 'Operational N' || 
+                                tema.jenis_pohon === 'Operational N Pemda' ||
+                                tema.jenis_pohon === 'Operational N Crosscutting'
+                            )) &&
+                                <td
+                                    onClick={() => {
+                                        AlertQuestion("Hapus?", "Hapus Pelaksana", "question", "Hapus", "Batal").then((result) => {
+                                            if (result.isConfirmed) {
+                                                hapusPelaksana(item.id_pelaksana);
+                                            }
+                                        });
+                                    }}
+                                    className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        ${jenis === "Strategic" && "border-red-700"}
+                                        ${jenis === "Tactical" && "border-blue-500"}
+                                        ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                        ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                        ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}  
+                                    `}
+                                >
+                                    <TbTrashX />
+                                </td>
+                            }
                         </tr>
                     ))
                 :

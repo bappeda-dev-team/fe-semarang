@@ -435,7 +435,7 @@ const FormManualIk = () => {
                     <div className="flex w-full">
                         <div className="px-5 py-5 border-b border-l border-black w-[200px] bg-white">Satuan Pengukuran</div>
                         <div className="px-5 py-5 border-b border-x border-black flex flex-col w-full gap-2 bg-white">
-                            <div className="border border-black px-4 py-2 rounded-lg w-full">Otomatis</div>
+                            <div className="border border-black px-4 py-2 rounded-lg w-full">{Satuan}</div>
                         </div>
                     </div>
                     {/* JENIS INDIKATOR KINERJA */}

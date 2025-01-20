@@ -2,7 +2,7 @@
 
 import '@/components/pages/Pohon/treeflex.css'
 import { useState, useEffect, useRef } from 'react';
-import { TbPencil, TbCircleCheckFilled, TbCircleLetterXFilled, TbCirclePlus, TbHandStop, TbPointer, TbSettings } from 'react-icons/tb';
+import { TbPencil, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHandStop, TbPointer, TbSettings, TbHourglass } from 'react-icons/tb';
 import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder, ButtonBlackBorder } from '@/components/global/Button';
 import { LoadingBeat, LoadingButtonClip } from '@/components/global/Loading';
 import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
@@ -67,6 +67,7 @@ const PokinOpd = () => {
     //pohon pemda
     const [PohonPemda, setPohonPemda] = useState<boolean>(false);
     const [TriggerAfterPokinOutside, setTriggerAfterPokinOutside] = useState<boolean>(false);
+    const [LevelPemda, setLevelPemda] = useState<number>(0);
     
     //pohon cross opd lain
     const [PohonCrosscutting, setPohonCrosscutting] = useState<boolean>(false);
@@ -136,8 +137,9 @@ const PokinOpd = () => {
   
     const handleMouseUp = () => setIsDragging(false);
     
-    const handleModalPohonPemda = () => {
+    const handleModalPohonPemda = (level: number) => {
         setPohonPemda((prev) => !prev);
+        setLevelPemda(level);
     }
     const handleModalCrosscutting = () => {
         setPohonCrosscutting((prev) => !prev);
@@ -315,70 +317,108 @@ const PokinOpd = () => {
                         {/* PEMDA */}
                         <div className="flex flex-col justify-between border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-xl">
                             <h1 className="font-semibold border-b-2 py-1 text-center">
-                                Pohon Pemda Pending
+                                Pohon Pemda
                             </h1>
                             <div className="flex flex-col py-2 mt-1 justify-between">
                                 <table>
-                                    <tbody>
-                                        <tr className="flex items-center">
-                                            <td className="border-l border-t px-2 py-1 bg-white text-start rounded-tl-lg min-w-[150px]">
-                                                <h1 className="font-semibold text-red-500">
+                                    <tbody className='flex flex-col gap-2'>
+                                        <tr className="flex items-center border border-red-500 text-red-500 cursor-pointer rounded-lg px-2 hover:bg-red-500 hover:text-white"
+                                            onClick={() => handleModalPohonPemda(4)}
+                                        >
+                                            <td className="px-2 py-1 text-start min-w-[130px]">
+                                                <button type="button" className="font-semibold">
                                                     Strategic
-                                                </h1>
+                                                </button>
                                             </td>
-                                            <td className="border-t py-1">
+                                            <td className="py-1">
                                                 <h1 className="font-semibold">
                                                     :
                                                 </h1>
                                             </td>
-                                            <td className='border-r border-t px-2 py-1 bg-white text-center rounded-tr-lg w-full'>
-                                                <h1 className="font-semibold text-red-500">
+                                            <td className='flex justify-center px-2 py-1 text-center w-full'>
+                                                <h1 className="flex items-center gap-1 font-semibold">
                                                     {JumlahPemdaStrategic?.length || 0}
+                                                    <TbHourglass />
+                                                </h1>
+                                            </td>
+                                            <td className="py-1">
+                                                <h1 className="font-semibold">
+                                                    /
+                                                </h1>
+                                            </td>
+                                            <td className='flex justify-center px-2 py-1 text-center w-full'>
+                                                <h1 className="flex items-center gap-1 font-semibold">
+                                                    0
+                                                    <TbCheck />
                                                 </h1>
                                             </td>
                                         </tr>
-                                        <tr className="flex items-center">
-                                            <td className="border-l  px-2 py-1 bg-white text-start min-w-[150px]">
-                                                <h1 className="font-semibold text-blue-500">
+                                        <tr className="flex items-center border border-blue-500 text-blue-500 cursor-pointer rounded-lg px-2 hover:bg-blue-500 hover:text-white"
+                                            onClick={() => handleModalPohonPemda(5)}
+                                        >
+                                            <td className="px-2 py-1 text-start min-w-[130px]">
+                                                <h1 className="font-semibold">
                                                     Tactical
                                                 </h1>
                                             </td>
-                                            <td className=" py-1">
+                                            <td className="py-1">
                                                 <h1 className="font-semibold">
                                                     :
                                                 </h1>
                                             </td>
-                                            <td className='border-r  px-2 py-1 bg-white text-center w-full'>
-                                                <h1 className="font-semibold text-blue-500">
+                                            <td className='flex justify-center px-2 py-1 text-center w-full'>
+                                                <h1 className="flex items-center gap-1 font-semibold">
                                                     {JumlahPemdaTactical?.length || 0}
+                                                    <TbHourglass />
+                                                </h1>
+                                            </td>
+                                            <td className="py-1">
+                                                <h1 className="font-semibold">
+                                                    /
+                                                </h1>
+                                            </td>
+                                            <td className='flex justify-center px-2 py-1 text-center w-full'>
+                                                <h1 className="flex items-center gap-1 font-semibold">
+                                                    0
+                                                    <TbCheck />
                                                 </h1>
                                             </td>
                                         </tr>
-                                        <tr className="flex items-center">
-                                            <td className="border-l border-b px-2 py-1 bg-white text-start rounded-bl-lg min-w-[150px]">
-                                                <h1 className="font-semibold text-green-500">
+                                        <tr className="flex items-center border border-green-500 text-green-500 cursor-pointer rounded-lg px-2 hover:bg-green-500 hover:text-white"
+                                            onClick={() => handleModalPohonPemda(6)}
+                                        >
+                                            <td className="px-2 py-1 text-start min-w-[130px]">
+                                                <h1 className="font-semibold">
                                                     Operational
                                                 </h1>
                                             </td>
-                                            <td className="border-b py-1">
+                                            <td className="py-1">
                                                 <h1 className="font-semibold">
                                                     :
                                                 </h1>
                                             </td>
-                                            <td className='border-r border-b px-2 py-1 bg-white text-center rounded-br-lg w-full'>
-                                                <h1 className="font-semibold text-green-500">
+                                            <td className='flex justify-center px-2 py-1 text-center w-full'>
+                                                <h1 className="flex gap-1 items-center font-semibold">
                                                     {JumlahPemdaOperational?.length || 0}
+                                                    <TbHourglass />
+                                                </h1>
+                                            </td>
+                                            <td className="py-1">
+                                                <h1 className="font-semibold">
+                                                    /
+                                                </h1>
+                                            </td>
+                                            <td className='flex justify-center px-2 py-1 text-center w-full'>
+                                                <h1 className="flex gap-1 items-center font-semibold">
+                                                    0
+                                                    <TbCheck />
                                                 </h1>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <ButtonSkyBorder className="w-full" onClick={handleModalPohonPemda}>
-                                <TbSettings className='mr-1'/>
-                                Edit
-                            </ButtonSkyBorder>
-                            <ModalPohonPemda isOpen={PohonPemda} onClose={handleModalPohonPemda} onSuccess={handleTriggerAfterPokinOutside}/>
+                            <ModalPohonPemda isOpen={PohonPemda} isLevel={LevelPemda} onClose={() => {handleModalPohonPemda(4)}} onSuccess={handleTriggerAfterPokinOutside}/>
                         </div>
                         {/* CROSS OPD */}
                         <div className="flex flex-col justify-between border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-xl">

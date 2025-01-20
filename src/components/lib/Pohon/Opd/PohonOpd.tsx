@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { TbLayersLinked, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHourglass, TbPencil, TbTrash, TbEye } from 'react-icons/tb';
+import { TbLayersLinked, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHourglass, TbPencil, TbTrash, TbEye, TbArrowAutofitWidth } from 'react-icons/tb';
 import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
 import { FormPohonOpd, FormEditPohon, FormCrosscutingOpd } from './FormPohonOpd';
 import { getToken, getUser } from '../../Cookie';
 import { ModalAddCrosscutting } from '@/components/pages/Pohon/ModalCrosscutting';
+import { ModalPindahPohonOpd } from '@/components/pages/Pohon/ModalPindahPohonOpd';
 
 interface pohon {
     tema: any;
@@ -47,6 +48,7 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [DetailCross, setDetailCross] = useState<boolean>(false);
     const [Show, setShow] = useState<boolean>(false);
     const [Cross, setCross] = useState<boolean>(false);
+    const [PindahPohon, setPindahPohon] = useState<boolean>(false);
     const [CrossLoading, setCrossLoading] = useState<boolean>(false);
     const [PohonCross, setPohonCross] = useState<Cross[]>([]);
     const [Edited, setEdited] = useState<any | null>(null);
@@ -64,11 +66,11 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const newChild = () => {
         setFormList([...formList, Date.now()]); // Using unique IDs
     };
-    const newCross = () => {
-        setCrossList([...CrossList, Date.now()]); // Using unique IDs
-    };
     const handleCross = () => {
         setCross((prev) => !prev);
+    }
+    const handlePindahPohon = () => {
+        setPindahPohon((prev) => !prev);
     }
     const handleEditSuccess = (data: any) => {
         setEdited(data);
@@ -167,27 +169,27 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                 <>
                     <div
                         className={`tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg
-                        ${tema.jenis_pohon === "Strategic Pemda" && 'shadow-slate-500'}
-                        ${tema.jenis_pohon === "Tactical Pemda" && 'shadow-slate-500'}
-                        ${tema.jenis_pohon === "OperationalPemda" && 'shadow-slate-500'}
-                        ${tema.jenis_pohon === "Strategic" && 'shadow-red-500 bg-red-700'}
-                        ${tema.jenis_pohon === "Tactical"&& 'shadow-blue-500 bg-blue-500'}
-                        ${tema.jenis_pohon === "Operational" && 'shadow-green-500 bg-green-500'}
-                        ${tema.jenis_pohon === "Operational N" && 'shadow-slate-500 bg-white'}
-                        ${(tema.jenis_pohon === "Strategic Crosscutting" || tema.jenis_pohon === "Tactical Crosscutting" || tema.jenis_pohon === "Operational Crosscutting" || tema.jenis_pohon === "Operational N Crosscutting") && 'shadow-yellow-700 bg-yellow-700'}
-                    `}
+                            ${tema.jenis_pohon === "Strategic Pemda" && 'shadow-slate-500'}
+                            ${tema.jenis_pohon === "Tactical Pemda" && 'shadow-slate-500'}
+                            ${tema.jenis_pohon === "OperationalPemda" && 'shadow-slate-500'}
+                            ${tema.jenis_pohon === "Strategic" && 'shadow-red-500 bg-red-700'}
+                            ${tema.jenis_pohon === "Tactical"&& 'shadow-blue-500 bg-blue-500'}
+                            ${tema.jenis_pohon === "Operational" && 'shadow-green-500 bg-green-500'}
+                            ${tema.jenis_pohon === "Operational N" && 'shadow-slate-500 bg-white'}
+                            ${(tema.jenis_pohon === "Strategic Crosscutting" || tema.jenis_pohon === "Tactical Crosscutting" || tema.jenis_pohon === "Operational Crosscutting" || tema.jenis_pohon === "Operational N Crosscutting") && 'shadow-yellow-700 bg-yellow-700'}
+                        `}
                     >
                         {/* HEADER */}
                         <div
                             className={`flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 rounded-lg bg-white
-                            ${tema.jenis_pohon === "Strategic Pemda" && 'border-red-700 text-white bg-gradient-to-r from-[#CA3636] from-40% to-[#BD04A1]'}
-                            ${tema.jenis_pohon === "Tactical Pemda" && 'border-blue-500 text-white bg-gradient-to-r from-[#3673CA] from-40% to-[#08D2FB]'}
-                            ${tema.jenis_pohon === "Operational Pemda" && 'border-green-500 text-white bg-gradient-to-r from-[#007982] from-40% to-[#2DCB06]'}
-                            ${(tema.jenis_pohon === "Strategic" || tema.jenis_pohon === 'Strategic Crosscutting') && 'border-red-500 text-red-700'}
-                            ${(tema.jenis_pohon === "Tactical" || tema.jenis_pohon === 'Tactical Crosscutting') && 'border-blue-500 text-blue-500'}
-                            ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-green-500 text-green-500'}
-                            ${(tema.jenis_pohon === "Operational Crosscutting" || tema.jenis_pohon === "Operational N Crosscutting") && 'border-green-500 text-green-500'}
-                        `}
+                                ${tema.jenis_pohon === "Strategic Pemda" && 'border-red-700 text-white bg-gradient-to-r from-[#CA3636] from-40% to-[#BD04A1]'}
+                                ${tema.jenis_pohon === "Tactical Pemda" && 'border-blue-500 text-white bg-gradient-to-r from-[#3673CA] from-40% to-[#08D2FB]'}
+                                ${tema.jenis_pohon === "Operational Pemda" && 'border-green-500 text-white bg-gradient-to-r from-[#007982] from-40% to-[#2DCB06]'}
+                                ${(tema.jenis_pohon === "Strategic" || tema.jenis_pohon === 'Strategic Crosscutting') && 'border-red-500 text-red-700'}
+                                ${(tema.jenis_pohon === "Tactical" || tema.jenis_pohon === 'Tactical Crosscutting') && 'border-blue-500 text-blue-500'}
+                                ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-green-500 text-green-500'}
+                                ${(tema.jenis_pohon === "Operational Crosscutting" || tema.jenis_pohon === "Operational N Crosscutting") && 'border-green-500 text-green-500'}
+                            `}
                         >
                             {tema.jenis_pohon === 'Operational N' ?
                                 <h1>Operational {tema.level_pohon - 6}  </h1>
@@ -242,8 +244,11 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         {(User?.roles == 'level_2' && 
                             (
                                 tema.jenis_pohon === 'Tactical' ||  
+                                tema.jenis_pohon === 'Tactical Crosscutting' ||  
                                 tema.jenis_pohon === 'Operational' || 
-                                tema.jenis_pohon === 'Operational N'
+                                tema.jenis_pohon === 'Operational Crosscutting' || 
+                                tema.jenis_pohon === 'Operational N' ||
+                                tema.jenis_pohon === 'Operational N Crosscutting'
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                                 <div
@@ -282,7 +287,9 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         {(User?.roles == 'level_3' && 
                             (
                                 tema.jenis_pohon === 'Operational' ||  
-                                tema.jenis_pohon === 'Operational N'
+                                tema.jenis_pohon === 'Operational Crosscutting' ||  
+                                tema.jenis_pohon === 'Operational N' ||
+                                tema.jenis_pohon === 'Operational N Crosscutting'
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                                 <div
@@ -320,7 +327,8 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         {/* BUTTON ACTION INSIDE BOX ASN LEVEL 4*/}
                         {(User?.roles == 'level_4' && 
                             (
-                                tema.jenis_pohon === 'Operational N'
+                                tema.jenis_pohon === 'Operational N' ||
+                                tema.jenis_pohon === 'Operational N Crosscutting'
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                                 <div
@@ -401,6 +409,71 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         }
                         {/* footer */}
                         <div className="flex justify-evenly my-3 py-3">
+                            {(tema.level_pohon != 4 && (
+                                User?.roles == 'super_admin' ||
+                                User?.roles == 'admin_opd' ||
+                                User?.roles == 'level_1' ||
+                                User?.roles == 'level_2'
+                            )) &&
+                                <>
+                                    <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                        onClick={handlePindahPohon}
+                                        >
+                                        <TbArrowAutofitWidth className='mr-1' />
+                                        Pindah
+                                    </ButtonBlackBorder>
+                                    <ModalPindahPohonOpd 
+                                        onClose={handlePindahPohon}
+                                        isOpen={PindahPohon}
+                                        id={tema.id}
+                                        pohon={tema}
+                                        onSuccess={deleteTrigger}
+                                    />
+                                </>
+                            }
+                            {(User?.roles == 'level_3' && (
+                                tema.jenis_pohon == "Operational" ||
+                                tema.jenis_pohon == "Operational Pemda" ||
+                                tema.jenis_pohon == "Operational Crosscutting" ||
+                                tema.jenis_pohon == "Operational N" ||
+                                tema.jenis_pohon == "Operational N Crosscutting"
+                            )) &&
+                                <>
+                                    <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                        onClick={handlePindahPohon}
+                                        >
+                                        <TbArrowAutofitWidth className='mr-1' />
+                                        Pindah
+                                    </ButtonBlackBorder>
+                                    <ModalPindahPohonOpd 
+                                        onClose={handlePindahPohon}
+                                        isOpen={PindahPohon}
+                                        id={tema.id}
+                                        pohon={tema}
+                                        onSuccess={deleteTrigger}
+                                    />
+                                </>
+                            }
+                            {(User?.roles == 'level_4' && (
+                                tema.jenis_pohon == "Operational N" ||
+                                tema.jenis_pohon == "Operational N Crosscutting"
+                            )) &&
+                                <>
+                                    <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                        onClick={handlePindahPohon}
+                                        >
+                                        <TbArrowAutofitWidth className='mr-1' />
+                                        Pindah
+                                    </ButtonBlackBorder>
+                                    <ModalPindahPohonOpd 
+                                        onClose={handlePindahPohon}
+                                        isOpen={PindahPohon}
+                                        id={tema.id}
+                                        pohon={tema}
+                                        onSuccess={deleteTrigger}
+                                    />
+                                </>
+                            }
                             <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
                                 onClick={handleShow}
                             >
@@ -489,6 +562,7 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     const [Show, setShow] = useState<boolean>(false);
     const [DetailCross, setDetailCross] = useState<boolean>(false);
     const [Cross, setCross] = useState<boolean>(false);
+    const [PindahPohon, setPindahPohon] = useState<boolean>(false);
     const [CrossLoading, setCrossLoading] = useState<boolean>(false);
     const [PohonCross, setPohonCross] = useState<Cross[]>([]);
     const [Edited, setEdited] = useState<any | null>(null);
@@ -512,6 +586,9 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     };
     const handleCross = () => {
         setCross((prev) => !prev);
+    }
+    const handlePindahPohon = () => {
+        setPindahPohon((prev) => !prev);
     }
     const handleDetailCross = () => {
         setDetailCross((prev) => !prev);
@@ -670,8 +747,11 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         {(User?.roles == 'level_2' && 
                             (
                                 tema.jenis_pohon === 'Tactical' ||  
+                                tema.jenis_pohon === 'Tactical Crosscutting' ||  
                                 tema.jenis_pohon === 'Operational' || 
-                                tema.jenis_pohon === 'Operational N'
+                                tema.jenis_pohon === 'Operational Crosscutting' || 
+                                tema.jenis_pohon === 'Operational N' ||
+                                tema.jenis_pohon === 'Operational N Crosscutting'
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                                 <div
@@ -710,7 +790,9 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         {(User?.roles == 'level_3' && 
                             (
                                 tema.jenis_pohon === 'Operational' ||  
-                                tema.jenis_pohon === 'Operational N'
+                                tema.jenis_pohon === 'Operational Crosscutting' ||  
+                                tema.jenis_pohon === 'Operational N' ||
+                                tema.jenis_pohon === 'Operational N Crosscutting' 
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                                 <div
@@ -748,7 +830,8 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         {/* BUTTON ACTION INSIDE BOX ASN LEVEL 4*/}
                         {(User?.roles == 'level_4' && 
                             (
-                                tema.jenis_pohon === 'Operational N'
+                                tema.jenis_pohon === 'Operational N' ||
+                                tema.jenis_pohon === 'Operational N Crosscutting'
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                                 <div
@@ -829,6 +912,52 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         }
                         {/* footer */}
                         <div className="flex justify-evenly my-3 py-3">
+                            {(tema.level_pohon != 4 && (
+                                User?.roles == 'super_admin' ||
+                                User?.roles == 'admin_opd' ||
+                                User?.roles == 'level_1' ||
+                                User?.roles == 'level_2'
+                            )) &&
+                                <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                    onClick={handlePindahPohon}
+                                >
+                                    <TbArrowAutofitWidth className='mr-1' />
+                                    Pindah
+                                </ButtonBlackBorder>
+                            }
+                            {(User?.roles == 'level_3' && (
+                                tema.jenis_pohon == "Operational" ||
+                                tema.jenis_pohon == "Operational Pemda" ||
+                                tema.jenis_pohon == "Operational Crosscutting" ||
+                                tema.jenis_pohon == "Operational N" ||
+                                tema.jenis_pohon == "Operational N Crosscutting"
+                            )) &&
+                                <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                    onClick={handlePindahPohon}
+                                >
+                                    <TbArrowAutofitWidth className='mr-1' />
+                                    Pindah
+                                </ButtonBlackBorder>
+                            }
+                            {(User?.roles == 'level_4' && (
+                                tema.jenis_pohon == "Operational N" ||
+                                tema.jenis_pohon == "Operational N Crosscutting"
+                            )) &&
+                                <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                    onClick={handlePindahPohon}
+                                >
+                                    <TbArrowAutofitWidth className='mr-1' />
+                                    Pindah
+                                </ButtonBlackBorder>
+                            }
+                            <ModalPindahPohonOpd 
+                                onClose={handlePindahPohon}
+                                isOpen={PindahPohon}
+                                id={tema.id}
+                                pohon={tema}
+                                onSuccess={deleteTrigger}
+                            />
+                            {/* BUTTON TAMPILKAN / SEMBUNYIKAN */}
                             <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
                                 onClick={handleShow}
                             >

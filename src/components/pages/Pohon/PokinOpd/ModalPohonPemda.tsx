@@ -6,24 +6,54 @@ import { TbCircleCheckFilled, TbCircleLetterXFilled, TbFileCheck, TbFilePlus } f
 import { ButtonRedBorder, ButtonSkyBorder, ButtonRed } from "@/components/global/Button";
 import { LoadingButtonClip } from "@/components/global/Loading";
 import { getToken, getUser, getOpdTahun } from "@/components/lib/Cookie";
+import { TablePohon } from "../ModalPindahPohonOpd";
 
 interface modal {
     isOpen: boolean;
     onClose: () => void;
     onSuccess: () => void;
+    isLevel?: number;
 }
 interface OptionType {
     value: number;
     label: string;
 }
+interface OptionTypeString {
+    value: string;
+    label: string;
+}
 interface TypePohonPemda {
     value: number;
-    label: string;
-    jenis: string;
+    label?: string;
+    id: number;
+    parent: OptionType;
+    nama_pohon: string;
+    jenis_pohon: string;
+    level_pohon: number;
     keterangan?: string;
-    status?: string;
-    tahun?: string;
-    indikators?: indikator[];
+    tahun: OptionTypeString;
+    status: string;
+    kode_opd: string;
+    nama_opd: string;
+    pelaksana?: OptionTypeString[];
+    indikator: indikator[];
+}
+interface TypePohonCross {
+    value: number;
+    label?: string;
+    opd_pengirim?: string;
+    id: number;
+    parent: OptionType;
+    nama_pohon: string;
+    jenis_pohon: string;
+    level_pohon: number;
+    keterangan?: string;
+    tahun: OptionTypeString;
+    status: string;
+    kode_opd: string;
+    nama_opd: string;
+    pelaksana?: OptionTypeString[];
+    indikator: indikator[];
 }
 interface indikator {
     nama_indikator: string;
@@ -34,11 +64,11 @@ type target = {
     satuan: string;
 };
 
-export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) => {
+export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess, isLevel}) => {
 
     const [PohonPemda, setPohonPemda] = useState<TypePohonPemda | null>(null);
-    const [PohonParent, setPohonParent] = useState<OptionType | null>(null);
-    const [OptionPohonParent, setOptionPohonParent] = useState<OptionType[]>([]);
+    const [PohonParent, setPohonParent] = useState<TypePohonPemda | null>(null);
+    const [OptionPohonParent, setOptionPohonParent] = useState<TypePohonPemda[]>([]);
     const [OptionPohonPemda, setOptionPohonPemda] = useState<TypePohonPemda[]>([]);
 
     const [Proses, setProses] = useState<boolean>(false);
@@ -103,7 +133,13 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
                 const parent = data.data.map((item: any) => ({
                     value: item.id,
                     label: `${item.jenis_pohon} - ${item.nama_pohon}`,
-                    jenis: item.jenis_pohon,
+                    nama_pohon: item.nama_pohon,
+                    jenis_pohon: item.jenis_pohon,
+                    level_pohon: item.level_pohon,
+                    nama_opd: item.nama_opd,
+                    kode_opd: item.kode_opd,
+                    indikator: item.indikator,
+                    tahun: item.tahun
                 }));
                 setOptionPohonParent(parent);
             }
@@ -113,7 +149,7 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
             setIsLoading(false);
         }
     };
-    const fetchPohonPemda = async () => {
+    const fetchPohonPemda = async (level: number) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setIsLoading(true);
         try {
@@ -132,10 +168,15 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
             if(data.data == null){
                 console.log("pohon dari pemda kosong/belum ditambahkan")
             } else {
-                const pokinPemda = data.data.map((item: any) => ({
+                const filteredData = data.data.filter((item: any) => item.level_pohon === level);
+                const pokinPemda = filteredData.map((item: any) => ({
                     value: item.id,
                     label: `${item.jenis_pohon} - ${item.nama_pohon}`,
-                    jenis: item.jenis_pohon,
+                    nama_pohon: item.nama_pohon,
+                    jenis_pohon: item.jenis_pohon,
+                    level_pohon: item.level_pohon,
+                    nama_opd: item.nama_opd,
+                    kode_opd: item.kode_opd,
                     tahun: item.tahun,
                     status: item.status,
                     indikators: item.indikators,
@@ -153,7 +194,7 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
         const formData = {
             id: id,
             parent: PohonParent ? PohonParent?.value : 0,
-            jenis_pohon: PohonPemda?.jenis,
+            jenis_pohon: PohonPemda?.jenis_pohon,
         }
         // console.log(formData);
         try {
@@ -227,14 +268,18 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
             {/* KONDISI ON CLOSE */}
             <div className={`fixed inset-0 bg-black opacity-30`} onClick={handleClose}></div>
 
-            <div className={`bg-white rounded-lg p-8 z-10 w-[50%] text-start`}>
+            <div className={`bg-white rounded-lg p-8 z-10 w-4/5 max-h-[80%] text-start overflow-auto`}>
                 <div className="w-max-[500px] py-2 border-b text-center font-bold">
                     Pohon Dari Pemda
                 </div>
                 <div className="py-5 my-5">
                     <div className="mb-1">
                         <label htmlFor="" className='uppercase text-xs font-medium text-gray-700 my-2 ml-1'>
-                            pohon pemda
+                            {isLevel === 4 ? 'Strategic Pemda' :
+                             isLevel === 5 ? 'Tactical Pemda' :
+                             isLevel === 6 ? 'Operational Pemda' :
+                                             'Pohon Pemda'
+                            }
                         </label>
                         <Select
                             placeholder="Pilih Pohon Pemda"
@@ -244,8 +289,8 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
                             isClearable
                             isLoading={IsLoading}
                             onMenuOpen={() => {
-                                if (OptionPohonPemda.length === 0) {
-                                    fetchPohonPemda();
+                                if(isLevel){
+                                    fetchPohonPemda(isLevel)
                                 }
                             }}
                             onChange={(option) => {
@@ -260,10 +305,10 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
                             }}
                         />
                     </div>
-                    {(PohonPemda?.jenis == 'Tactical Pemda' || PohonPemda?.jenis == 'Operational Pemda') &&
+                    {(PohonPemda?.jenis_pohon == 'Tactical Pemda' || PohonPemda?.jenis_pohon == 'Operational Pemda') &&
                         <div className="mb-3">
                             <label htmlFor="" className='uppercase text-xs font-medium text-gray-700 my-2 ml-1'>
-                                {PohonPemda?.jenis == 'Tactical Pemda' ? 'Strategic' : 'Tactical'}
+                                {PohonPemda?.jenis_pohon == 'Tactical Pemda' ? 'Strategic' : 'Tactical'}
                             </label>
                             <Select
                                 placeholder="parent untuk pohon yang diterima"
@@ -273,7 +318,7 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
                                 isClearable
                                 isLoading={IsLoading}
                                 onMenuOpen={() => {
-                                    if (PohonPemda?.jenis == 'Tactical Pemda') {
+                                    if (PohonPemda?.jenis_pohon == 'Tactical Pemda') {
                                         fetchPohonParent(4);
                                     } else {
                                         fetchPohonParent(5);
@@ -293,107 +338,84 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
                             />
                         </div>
                     }
-                    <p className="uppercase text-gray-700 font-medium text-xs mt-3">Preview Pohon:</p>
-                    {(PohonPemda?.value != undefined || null) &&
-                    <div className="py-3 px-2 mt-2 rounded-xl text-sm border shadow-lg">
-                        <table className='w-full'>
-                            <tbody>
-                                <tr>
-                                    <td
-                                        className={`min-w-[100px] px-2 py-3 bg-white text-start rounded-tl-lg`}
-                                    >
-                                        Nama Pohon
-                                    </td>
-                                    <td
-                                        className={`py-3 bg-white text-start rounded-tr-lg`}
-                                    >
-                                        :  
-                                    </td>
-                                    <td
-                                        className={`min-w-[300px] px-2 py-3 bg-white text-start rounded-tr-lg`}
-                                    >
-                                        {PohonPemda?.label}    
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        className={`min-w-[100px] px-2 py-3 bg-white text-start rounded-tl-lg`}
-                                    >
-                                        Jenis Pohon
-                                    </td>
-                                    <td
-                                        className={`py-3 bg-white text-start rounded-tr-lg`}
-                                    >
-                                        :  
-                                    </td>
-                                    <td
-                                        className={`min-w-[300px] px-2 py-3 bg-white text-start rounded-tr-lg`}
-                                    >
-                                        {PohonPemda?.jenis}    
-                                    </td>
-                                </tr>
-                                {PohonPemda?.indikators &&
-                                <tr>
-                                    <td
-                                        className={`min-w-[100px] px-2 py-3 bg-white text-start rounded-tl-lg`}
-                                    >
-                                        Indikator
-                                    </td>
-                                    <td
-                                        className={`py-3 bg-white text-start rounded-tr-lg`}
-                                    >
-                                        :
-                                    </td>
-                                    <td
-                                        className={`min-w-[300px] px-2 py-3 bg-white text-start rounded-tr-lg`}
-                                    >
-                                        {PohonPemda?.indikators ? 
-                                            PohonPemda?.indikators.map((i: any) => (
-                                                <p key={i.id_indikator}>{i.nama_indikator}</p>
-                                            ))
-                                        :
-                                            "-"
-                                        }
-                                    </td>
-                                </tr>
-                                }
-                                <tr>
-                                    <td
-                                        className={`min-w-[100px] px-2 py-3 bg-white text-start rounded-tl-lg`}
-                                    >
-                                        Tahun
-                                    </td>
-                                    <td
-                                        className={`py-3 bg-white text-start rounded-tr-lg`}
-                                    >
-                                        :  
-                                    </td>
-                                    <td
-                                        className={`min-w-[300px] px-2 py-3 bg-white text-start rounded-tr-lg`}
-                                    >
-                                        {PohonPemda?.tahun}    
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        className={`min-w-[100px] px-2 py-3 bg-white text-start rounded-tl-lg`}
-                                    >
-                                        Status
-                                    </td>
-                                    <td
-                                        className={`py-3 bg-white text-start rounded-tr-lg`}
-                                    >
-                                        :  
-                                    </td>
-                                    <td
-                                        className={`min-w-[300px] px-2 py-3 bg-white text-start rounded-tr-lg`}
-                                    >
-                                        {PohonPemda?.status}    
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    {/* PREVIEW KEDUA POHON */}
+                    <div className="flex justify-between">
+                        {PohonPemda &&
+                            <p className="uppercase text-xs font-medium text-gray-700 mt-2 ml-1">Preview Pohon pemda</p>
+                        }
+                        {PohonParent &&
+                            <p className="uppercase text-xs font-medium text-gray-700 mt-2 ml-1">Preview Pohon parent</p>
+                        }
                     </div>
+                    {(PohonPemda?.value != undefined || null) &&
+                        <>
+                        <div className="flex justify-between items-start py-2 gap-2 h-full overflow-auto">
+                            {/* POHON PEMDA */}
+                            <div 
+                                className={`flex flex-col rounded-lg shadow-lg px-2
+                                    ${PohonPemda?.jenis_pohon === "Strategic Pemda" && 'border'}
+                                    ${PohonPemda?.jenis_pohon === "Tactical Pemda" && 'border'}
+                                    ${PohonPemda?.jenis_pohon === "OperationalPemda" && 'border'}
+                                    ${PohonPemda?.jenis_pohon === "Strategic" && 'bg-red-700'}
+                                    ${PohonPemda?.jenis_pohon === "Tactical"&& 'bg-blue-500'}
+                                    ${PohonPemda?.jenis_pohon === "Operational" && 'bg-green-500'}
+                                    ${PohonPemda?.jenis_pohon === "Operational N" && 'bg-white'}
+                                    ${(PohonPemda?.jenis_pohon === "Strategic Crosscutting" || PohonPemda?.jenis_pohon === "Tactical Crosscutting" || PohonPemda?.jenis_pohon === "Operational Crosscutting" || PohonPemda?.jenis_pohon === "Operational N Crosscutting") && 'bg-yellow-700'}
+                                `}
+                            >
+                                <div
+                                    className={`flex py-3 justify-center font-bold text-sm uppercase border my-3 rounded-lg bg-white
+                                        ${PohonPemda?.jenis_pohon === "Strategic Pemda" && 'border-red-500 text-white bg-gradient-to-r from-[#CA3636] from-40% to-[#BD04A1]'}
+                                        ${PohonPemda?.jenis_pohon === "Tactical Pemda" && 'border-blue-500 text-white bg-gradient-to-r from-[#3673CA] from-40% to-[#08D2FB]'}
+                                        ${PohonPemda?.jenis_pohon === "Operational Pemda" && 'border-green-500 text-white bg-gradient-to-r from-[#007982] from-40% to-[#2DCB06]'}
+                                        ${(PohonPemda?.jenis_pohon === "Strategic" || PohonPemda?.jenis_pohon === 'Strategic Crosscutting') && 'border-red-500 text-red-500'}
+                                        ${(PohonPemda?.jenis_pohon === "Tactical" || PohonPemda?.jenis_pohon === 'Tactical Crosscutting') && 'border-blue-500 text-blue-500'}
+                                        ${(PohonPemda?.jenis_pohon === "Operational" || PohonPemda?.jenis_pohon === "Operational N") && 'border-green-500 text-green-500'}
+                                        ${(PohonPemda?.jenis_pohon === "Operational Crosscutting" || PohonPemda?.jenis_pohon === "Operational N Crosscutting") && 'border-green-500 text-green-500'}
+                                    `}
+                                >
+                                    {PohonPemda?.jenis_pohon}
+                                </div>
+                                <div className="mb-3">
+                                    {PohonPemda &&
+                                        <TablePohon item={PohonPemda}/>
+                                    }
+                                </div>
+                            </div>
+                            {/* POHON PARENT */}
+                            <div 
+                                className={`flex flex-col rounded-lg shadow-lg px-2
+                                    ${PohonParent?.jenis_pohon === "Strategic Pemda" && 'border'}
+                                    ${PohonParent?.jenis_pohon === "Tactical Pemda" && 'border'}
+                                    ${PohonParent?.jenis_pohon === "OperationalPemda" && 'border'}
+                                    ${PohonParent?.jenis_pohon === "Strategic" && 'bg-red-700'}
+                                    ${PohonParent?.jenis_pohon === "Tactical"&& 'bg-blue-500'}
+                                    ${PohonParent?.jenis_pohon === "Operational" && 'bg-green-500'}
+                                    ${PohonParent?.jenis_pohon === "Operational N" && 'bg-white'}
+                                    ${(PohonParent?.jenis_pohon === "Strategic Crosscutting" || PohonParent?.jenis_pohon === "Tactical Crosscutting" || PohonParent?.jenis_pohon === "Operational Crosscutting" || PohonParent?.jenis_pohon === "Operational N Crosscutting") && 'bg-yellow-700'}
+                                `}
+                            >
+                                <div
+                                    className={`flex py-3 justify-center font-bold text-sm uppercase border my-3 rounded-lg bg-white
+                                        ${PohonParent?.jenis_pohon === "Strategic Pemda" && 'border-red-500 text-white bg-gradient-to-r from-[#CA3636] from-40% to-[#BD04A1]'}
+                                        ${PohonParent?.jenis_pohon === "Tactical Pemda" && 'border-blue-500 text-white bg-gradient-to-r from-[#3673CA] from-40% to-[#08D2FB]'}
+                                        ${PohonParent?.jenis_pohon === "Operational Pemda" && 'border-green-500 text-white bg-gradient-to-r from-[#007982] from-40% to-[#2DCB06]'}
+                                        ${(PohonParent?.jenis_pohon === "Strategic" || PohonParent?.jenis_pohon === 'Strategic Crosscutting') && 'border-red-500 text-red-500'}
+                                        ${(PohonParent?.jenis_pohon === "Tactical" || PohonParent?.jenis_pohon === 'Tactical Crosscutting') && 'border-blue-500 text-blue-500'}
+                                        ${(PohonParent?.jenis_pohon === "Operational" || PohonParent?.jenis_pohon === "Operational N") && 'border-green-500 text-green-500'}
+                                        ${(PohonParent?.jenis_pohon === "Operational Crosscutting" || PohonParent?.jenis_pohon === "Operational N Crosscutting") && 'border-green-500 text-green-500'}
+                                    `}
+                                >
+                                    {PohonParent?.jenis_pohon}
+                                </div>
+                                <div className="mb-3">
+                                    {PohonParent &&
+                                        <TablePohon item={PohonParent}/>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        </>
                     }
                 </div>
                 <div className="flex gap-1 justify-between my-2">
@@ -444,7 +466,7 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
                         }
                     </ButtonSkyBorder>
                 </div>
-                <ButtonRed className="w-full" onClick={onClose}>
+                <ButtonRed className="w-full" onClick={handleClose}>
                     Batal
                 </ButtonRed>
             </div>
@@ -455,14 +477,14 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess}) =
 
 export const ModalPohonCrosscutting: React.FC<modal> = ({isOpen, onClose, onSuccess}) => {
 
-    const [PohonCross, setPohonCross] = useState<TypePohonPemda | null>(null);
+    const [PohonCross, setPohonCross] = useState<TypePohonCross | null>(null);
     const [PohonParent, setPohonParent] = useState<OptionType | null>(null);
     const [LevelPohon, setLevelPohon] = useState<OptionType | null>(null);
     const [Baru, setBaru] = useState<boolean>(false);
     const [Pilih, setPilih] = useState<boolean>(false);
 
     const [OptionPohonParent, setOptionPohonParent] = useState<OptionType[]>([]);
-    const [OptionPohonCross, setOptionPohonCross] = useState<TypePohonPemda[]>([]);
+    const [OptionPohonCross, setOptionPohonCross] = useState<TypePohonCross[]>([]);
 
     const [Proses, setProses] = useState<boolean>(false);
     const [IsLoading, setIsLoading] = useState<boolean>(false);
@@ -557,7 +579,9 @@ export const ModalPohonCrosscutting: React.FC<modal> = ({isOpen, onClose, onSucc
             } else {
                 const pokinCross = data.data.map((item: any) => ({
                     value: item.id,
-                    label: `${item.status === "crosscutting_ditolak" ? "Ditolak" : item.status === "crosscutting_menunggu" ? "Pending" : "Unknown"} - ${item.keterangan}`,
+                    label: `${item.status === "crosscutting_ditolak" ? "Ditolak" : item.status === "crosscutting_menunggu" ? "Pending" : "Unknown"} - ${item.keterangan} - ${item.opd_pengirim}`,
+                    keterangan: item.keterangan,
+                    opd_pengirim: item.opd_pengirim,
                 }));
                 setOptionPohonCross(pokinCross);
             }
@@ -757,6 +781,22 @@ export const ModalPohonCrosscutting: React.FC<modal> = ({isOpen, onClose, onSucc
                             }}
                         />
                     </div>
+                    {PohonCross &&
+                        <table className="my-2 ml-2">
+                            <tbody>
+                                <tr>
+                                    <td className="min-w-[120px]">Keterangan</td>
+                                    <td>:</td>
+                                    <td className="pl-2">{PohonCross?.keterangan}</td>
+                                </tr>
+                                <tr>
+                                    <td className="min-w-[120px]">OPD Asal</td>
+                                    <td>:</td>
+                                    <td className="pl-2">{PohonCross?.opd_pengirim}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
                     <div className="mb-3">
                         <label htmlFor="" className='uppercase text-xs font-medium text-gray-700 my-2 ml-1'>
                             Status Terima Pohon
@@ -957,7 +997,7 @@ export const ModalPohonCrosscutting: React.FC<modal> = ({isOpen, onClose, onSucc
                         }
                     </ButtonSkyBorder>
                 </div>
-                <ButtonRed className="w-full" onClick={onClose}>
+                <ButtonRed className="w-full" onClick={handleClose}>
                     Batal
                 </ButtonRed>
             </div>

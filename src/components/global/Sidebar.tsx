@@ -17,7 +17,12 @@ import {
   TbUser,
   TbHexagonLetterR,
   TbBinaryTree2,
-  TbTarget
+  TbTarget,
+  TbMapPin,
+  TbBulbFilled,
+  TbChartBar,
+  TbCalendarShare,
+  TbMessageReport
 } from "react-icons/tb";
 import Image from 'next/image';
 import { usePathname, useParams } from 'next/navigation';
@@ -57,11 +62,16 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
     const [TematikKota, setTematikKota] = useState<boolean | null>(null);
     const [SubTematik, setSubTematik] = useState<boolean | null>(null);
     const [KotaPohonKinerjaKota, setKotaPohonKinerjaKota] = useState<boolean | null>(null);
+    const [RPJMD, setRPJMD] = useState<boolean | null>(null);
+      const [TujuanPemda, setTujuanPemda] = useState<boolean | null>(null);
+      const [SasaranPemda, setSasaranPemda] = useState<boolean | null>(null);
+    const [IKU, setIKU] = useState<boolean | null>(null);
   const [PerencanaanOPD, setPerencanaanOPD] = useState<boolean | null>(null);
     const [TujuanOpd, setTujuanOpd] = useState<boolean | null>(null);
     const [pohonKinerjaOpd, setPohonKinerjaOpd] = useState<boolean | null>(null);
     const [PohonCascadingOpd, setPohonCascadingOpd] = useState<boolean | null>(null);
     const [UserOpd, setUserOpd] = useState<boolean | null>(null);
+    const [PermasalahanOpd, setPermasalahanOpd] = useState<boolean | null>(null);
     const [MasterUsulan, setMasterUsulan] = useState<boolean | null>(null);
       const [MasterUsulanMusrenbang, setMasterUsulanMusrenbang] = useState<boolean | null>(null);
       const [MasterUsulanPokir, setMasterUsulanPokir] = useState<boolean | null>(null);
@@ -1534,8 +1544,8 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
               </Link>
               <Link href="/DataMaster/levelpohon">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${LevelPohon ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
-                  <TbHexagonalPyramid className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Level Pohon</span>
+                  <TbApps className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master Usulan</span>
                 </li>
               </Link>
               <li 
@@ -1604,6 +1614,35 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja Pemda</span>
                 </li>
               </Link>
+              {/* LABEL RPJMD */}
+              <li 
+                className={`flex items-center font-medium gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-gray-700 transition-all duration-300 ease-in-out`}
+                onClick={() => setRPJMD(RPJMD ? false : true)}
+              >
+                <TbCalendarShare className="text-xl" />
+                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>RPJMD</span>
+              </li>
+              {/* SUB MENU RPJMD */}
+              <div className={`transition-all duration-300 ease-in-out ${RPJMD ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+                <Link href="/tujuanpemda">
+                  <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${TujuanPemda ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                    <TbMapPin className="text-xl" />
+                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Tujuan Pemda</span>
+                  </li>
+                </Link>
+                <Link href="/sasaranpemda">
+                  <li className={`flex items-center text-sm gap-x-2 cursor-pointer p-2 rounded-xl ${SasaranPemda ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                    <TbTarget className="text-xl" />
+                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Sasaran Pemda</span>
+                  </li>
+                </Link>
+              </div>
+              <Link href="/pohonkinerjakota">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${IKU ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <TbChartBar className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>IKU</span>
+                </li>
+              </Link>
             </div>
           </>
           }
@@ -1642,6 +1681,12 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${UserOpd ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
                   <TbUser className="text-xl" />
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>User OPD</span>
+                </li>
+              </Link>
+              <Link href="/useropd">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PermasalahanOpd ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <TbMessageReport className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Permasalahan</span>
                 </li>
               </Link>
               {/* LABEL MASTER USULAN OPD */}

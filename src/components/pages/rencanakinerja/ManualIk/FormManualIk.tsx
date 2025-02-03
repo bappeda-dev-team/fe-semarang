@@ -9,6 +9,7 @@ import { useParams } from 'next/navigation';
 import { getToken } from '@/components/lib/Cookie';
 import { AlertNotification } from '@/components/global/Alert';
 import { LoadingButtonClip, LoadingSync } from '@/components/global/Loading';
+import { useRouter } from 'next/navigation';
 
 interface OptionTypeString {
     value: string;
@@ -33,8 +34,9 @@ interface FormValue {
 const FormManualIk = () => {
     const {id} = useParams();
     const token = getToken();
+    const router = useRouter();
     const [DataNew, setDataNew] = useState<boolean>(false);
-    const {control, reset, handleSubmit} = useForm<FormValue>();
+    const {control, reset, handleSubmit, formState: {errors}, } = useForm<FormValue>();
     
     const [Loading, setLoading] = useState<boolean>(false);
     const [Proses, setProses] = useState<boolean>(false);
@@ -133,7 +135,7 @@ const FormManualIk = () => {
                     }
                     if(detail.unit_penanggung_jawab){
                         setUnitPenanggunaJawab(detail.unit_penanggung_jawab);
-                        reset({unit_penanggung_jawab : detail.unit_penanggung_jawab});
+                        reset((prev) => ({ ...prev, unit_penanggung_jawab : detail.unit_penanggung_jawab}));
                     }
                     if(detail.unit_penyedia_data){
                         setUnitPenyediaData(detail.unit_penyedia_data);
@@ -221,6 +223,7 @@ const FormManualIk = () => {
             if(response.ok){
                 AlertNotification("Berhasil", "Manual Indikator Kinerja berhasil disimpan", "success", 2000);
                 setSuccess((prev) => !prev);
+                router.push('/rencanakinerja');
             }
         } catch(err){
             AlertNotification("Gagal", "periksa koneksi internet / database server", "error", 2000);
@@ -246,13 +249,13 @@ const FormManualIk = () => {
     ];
 
     const handleCheckKinerja = () => {
-            setCheckKinerja((prev) => !prev);
+        setCheckKinerja((prev) => !prev);
     }
     const handleCheckPenduduk = () => {
-            setCheckPenduduk((prev) => !prev);
+        setCheckPenduduk((prev) => !prev);
     }
     const handleCheckSpatial = () => {
-            setCheckSpatial((prev) => !prev);
+        setCheckSpatial((prev) => !prev);
     }
 
     if(Loading){
@@ -274,26 +277,28 @@ const FormManualIk = () => {
                                 name="perspektif"
                                 control={control}
                                 render={({field}) => (
-                                    <Select
-                                        {...field}
-                                        placeholder="Pilih Perspektif"
-                                        options={optionPerspektif}
-                                        value={Perspektif}
-                                        onChange={(option) => {
-                                            field.onChange(option);
-                                            setPerspektif(option);
-                                        }}
-                                        styles={{
-                                            control: (baseStyles, state) => ({
-                                                ...baseStyles,
-                                                borderRadius: '8px',
-                                                borderColor: 'black', // Warna default border menjadi merah
-                                                '&:hover': {
-                                                borderColor: '#3673CA', // Warna border tetap merah saat hover
-                                                },
-                                            }),
-                                        }}
-                                    />
+                                    <>
+                                        <Select
+                                            {...field}
+                                            placeholder="Pilih Perspektif"
+                                            options={optionPerspektif}
+                                            value={Perspektif || field.value}
+                                            onChange={(option) => {
+                                                field.onChange(option);
+                                                setPerspektif(option);
+                                            }}
+                                            styles={{
+                                                control: (baseStyles, state) => ({
+                                                    ...baseStyles,
+                                                    borderRadius: '8px',
+                                                    borderColor: 'black', // Warna default border menjadi merah
+                                                    '&:hover': {
+                                                    borderColor: '#3673CA', // Warna border tetap merah saat hover
+                                                    },
+                                                }),
+                                            }}
+                                        />
+                                    </>
                                 )}
                             />
                             <div className="flex flex-col p-2 border border-gray-500 mt-2 text-gray-500 font-light text-sm">
@@ -347,16 +352,18 @@ const FormManualIk = () => {
                                 name="tujuan_rekin"
                                 control={control}
                                 render={({field}) => (
-                                    <textarea
-                                        {...field}
-                                        className="border border-black px-4 py-2 rounded-lg w-full"
-                                        value={TujuanRekin}
-                                        onChange={(event) => {
-                                            field.onChange(event);
-                                            setTujuanRekin(event.target.value);
-                                        }}
-                                        placeholder="Menjelaskan Manfaat dari Rencana Hasil Kinerja"
-                                    />
+                                    <>
+                                        <textarea
+                                            {...field}
+                                            className="border border-black px-4 py-2 rounded-lg w-full"
+                                            value={TujuanRekin}
+                                            onChange={(event) => {
+                                                field.onChange(event);
+                                                setTujuanRekin(event.target.value);
+                                            }}
+                                            placeholder="Menjelaskan Manfaat dari Rencana Hasil Kinerja"
+                                        />
+                                    </>
                                 )}
                             />
                         </div>
@@ -381,16 +388,18 @@ const FormManualIk = () => {
                                 name="definisi"
                                 control={control}
                                 render={({field}) => (
-                                    <textarea
-                                        {...field}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            setDefinisi(e.target.value);
-                                        }}
-                                        value={Definisi}
-                                        className="border border-black px-4 py-2 rounded-lg w-full"
-                                        placeholder="Menjelaskan penjelasan dari indikator kinerja. Bisa dijelaskan dengan detail atau perintah yang ingin diturunkan kebawahan"
-                                    />
+                                    <>
+                                        <textarea
+                                            {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                setDefinisi(e.target.value);
+                                            }}
+                                            value={Definisi}
+                                            className="border border-black px-4 py-2 rounded-lg w-full"
+                                            placeholder="Menjelaskan penjelasan dari indikator kinerja. Bisa dijelaskan dengan detail atau perintah yang ingin diturunkan kebawahan"
+                                        />
+                                    </>
                             )}
                             />
                             {/* KEY */}
@@ -399,16 +408,18 @@ const FormManualIk = () => {
                                 name="key_activities"
                                 control={control}
                                 render={({field}) => (
-                                    <textarea
-                                        {...field}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            setKeyActivity(e.target.value);
-                                        }}
-                                        value={KeyActivity}
-                                        className="border border-black px-4 py-2 rounded-lg w-full"
-                                        placeholder="Hal yang paling menentukan dalam pencapaian rencana hasil kerja"
-                                    />
+                                    <>
+                                        <textarea
+                                            {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                setKeyActivity(e.target.value);
+                                            }}
+                                            value={KeyActivity}
+                                            className="border border-black px-4 py-2 rounded-lg w-full"
+                                            placeholder="Hal yang paling menentukan dalam pencapaian rencana hasil kerja"
+                                        />
+                                    </>
                                 )}
                             />
                             {/* FORMULA */}
@@ -417,16 +428,18 @@ const FormManualIk = () => {
                                 name="formula"
                                 control={control}
                                 render={({field}) => (
-                                    <textarea
-                                        {...field}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            setFormula(e.target.value);
-                                        }}
-                                        value={Formula}
-                                        className="border border-black px-4 py-2 rounded-lg w-full"
-                                        placeholder="Menjelaskan bagaimana cara perhitungan target indikator"
-                                    />
+                                    <>
+                                        <textarea
+                                            {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                setFormula(e.target.value);
+                                            }}
+                                            value={Formula}
+                                            className="border border-black px-4 py-2 rounded-lg w-full"
+                                            placeholder="Menjelaskan bagaimana cara perhitungan target indikator"
+                                        />
+                                    </>
                                 )}
                             />
                         </div>
@@ -446,26 +459,28 @@ const FormManualIk = () => {
                                 name="jenis_indikator"
                                 control={control}
                                 render={({field}) => (
-                                    <Select
-                                        {...field}
-                                        placeholder="Output / Outcome"
-                                        value={JenisIndikator}
-                                        onChange={(option) => {
-                                            field.onChange(option);
-                                            setJenisIndikator(option);
-                                        }}
-                                        options={optionJenisIndikatorKinerja}
-                                        styles={{
-                                            control: (baseStyles, state) => ({
-                                                ...baseStyles,
-                                                borderRadius: '8px',
-                                                borderColor: 'black', // Warna default border menjadi merah
-                                                '&:hover': {
-                                                borderColor: '#3673CA', // Warna border tetap merah saat hover
-                                                },
-                                            }),
-                                        }}
-                                    />
+                                    <>
+                                        <Select
+                                            {...field}
+                                            placeholder="Output / Outcome"
+                                            value={JenisIndikator}
+                                            onChange={(option) => {
+                                                field.onChange(option);
+                                                setJenisIndikator(option);
+                                            }}
+                                            options={optionJenisIndikatorKinerja}
+                                            styles={{
+                                                control: (baseStyles, state) => ({
+                                                    ...baseStyles,
+                                                    borderRadius: '8px',
+                                                    borderColor: 'black', // Warna default border menjadi merah
+                                                    '&:hover': {
+                                                    borderColor: '#3673CA', // Warna border tetap merah saat hover
+                                                    },
+                                                }),
+                                            }}
+                                        />
+                                    </>
                                 )}
                             />
                         </div>
@@ -539,18 +554,22 @@ const FormManualIk = () => {
                         <div className="px-5 py-5 border-b border-x border-black flex flex-col w-full gap-2 bg-white">
                             <Controller
                                 name="unit_penanggung_jawab"
-                                control={control} 
+                                control={control}
+                                rules= {{required : 'UPJ wajib terisi'}} 
                                 render={({field}) => (
-                                    <input
-                                        {...field}
-                                        value={UnitPenanggunaJawab}
-                                        onChange={(e) => {
-                                            field.onChange(e.target.value);
-                                            setUnitPenanggunaJawab(e.target.value);
-                                        }}
-                                        className="border border-black px-4 py-2 rounded-lg w-full"
-                                        placeholder="masukkan unit penanggung jawab"
-                                    />
+                                    <>
+                                        <input
+                                            {...field}
+                                            id='unit_penanggung_jawab'
+                                            value={UnitPenanggunaJawab || field.value}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                                setUnitPenanggunaJawab(e.target.value);
+                                            }}
+                                            className="border border-black px-4 py-2 rounded-lg w-full"
+                                            placeholder="masukkan unit penanggung jawab"
+                                        />
+                                    </>
                                 )}
                             />
                         </div>
@@ -563,16 +582,18 @@ const FormManualIk = () => {
                                 name='unit_penyedia_data'
                                 control={control}
                                 render={({field}) => (
-                                    <input
-                                        {...field}
-                                        value={UnitPenyediaData}
-                                        onChange={(e) => {
-                                            field.onChange(e.target.value);
-                                            setUnitPenyediaData(e.target.value);
-                                        }}
-                                        className="border border-black px-4 py-2 rounded-lg w-full"
-                                        placeholder="Instansi yang memproduksi datanya"
-                                    />
+                                    <>
+                                        <input
+                                            {...field}
+                                            value={UnitPenyediaData}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                                setUnitPenyediaData(e.target.value);
+                                            }}
+                                            className="border border-black px-4 py-2 rounded-lg w-full"
+                                            placeholder="Instansi yang memproduksi datanya"
+                                        />
+                                    </>
                                 )}
                             />
                         </div>
@@ -585,16 +606,18 @@ const FormManualIk = () => {
                                 name='sumber_data'
                                 control={control} 
                                 render={({field}) => (
-                                    <input
-                                        {...field}
-                                        value={SumberData}
-                                        onChange={(e) => {
-                                            field.onChange(e.target.value);
-                                            setSumberData(e.target.value);
-                                        }}
-                                        className="border border-black px-4 py-2 rounded-lg w-full"
-                                        placeholder="Dari dokumen apa sumber data di ambil"
-                                    />
+                                    <>
+                                        <input
+                                            {...field}
+                                            value={SumberData}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                                setSumberData(e.target.value);
+                                            }}
+                                            className="border border-black px-4 py-2 rounded-lg w-full"
+                                            placeholder="Dari dokumen apa sumber data di ambil"
+                                        />
+                                    </>
                                 )}
                             />
                         </div>
@@ -607,32 +630,36 @@ const FormManualIk = () => {
                                 name="jangka_waktu_awal"
                                 control={control}
                                 render={({field}) => (
-                                    <input
-                                        {...field}
-                                        value={JangkaWaktuAwal}
-                                        onChange={(e) => {
-                                            field.onChange(e.target.value);
-                                            setJangkaWaktuAwal(e.target.value);
-                                        }}
-                                        className="border border-black px-4 py-2 rounded-lg w-full"
-                                        placeholder="Dari"
-                                    />
+                                    <>
+                                        <input
+                                            {...field}
+                                            value={JangkaWaktuAwal}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                                setJangkaWaktuAwal(e.target.value);
+                                            }}
+                                            className="border border-black px-4 py-2 rounded-lg w-full"
+                                            placeholder="Dari"
+                                        />
+                                    </>
                                 )}
                             />
                             <Controller
                                 name="jangka_waktu_akhir"
                                 control={control}
                                 render={({field}) => (
-                                    <input
-                                        {...field}
-                                        value={JangkaWaktuAkhir}
-                                        onChange={(e) => {
-                                            field.onChange(e.target.value);
-                                            setJangkaWaktuAkhir(e.target.value);
-                                        }}
-                                        className="border border-black px-4 py-2 rounded-lg w-full"
-                                        placeholder="Sampai"
-                                    />
+                                    <>
+                                        <input
+                                            {...field}
+                                            value={JangkaWaktuAkhir}
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                                setJangkaWaktuAkhir(e.target.value);
+                                            }}
+                                            className="border border-black px-4 py-2 rounded-lg w-full"
+                                            placeholder="Sampai"
+                                        />
+                                    </>
                                 )}
                             />
                         </div>
@@ -645,26 +672,28 @@ const FormManualIk = () => {
                                 name='periode_pelaporan'
                                 control={control}
                                 render={({field}) => (
-                                    <Select
-                                        {...field}
-                                        placeholder="Pilih Periode Pelaporan"
-                                        value={PeriodePelaporan}
-                                        options={optionPeriodePelaporan}
-                                        onChange={(option) => {
-                                            field.onChange(option);
-                                            setPeriodePelaporan(option)
-                                        }}
-                                        styles={{
-                                            control: (baseStyles, state) => ({
-                                                ...baseStyles,
-                                                borderRadius: '8px',
-                                                borderColor: 'black', // Warna default border menjadi merah
-                                                '&:hover': {
-                                                borderColor: '#3673CA', // Warna border tetap merah saat hover
-                                                },
-                                            }),
-                                        }}
-                                    />
+                                    <>
+                                        <Select
+                                            {...field}
+                                            placeholder="Pilih Periode Pelaporan"
+                                            value={PeriodePelaporan}
+                                            options={optionPeriodePelaporan}
+                                            onChange={(option) => {
+                                                field.onChange(option);
+                                                setPeriodePelaporan(option)
+                                            }}
+                                            styles={{
+                                                control: (baseStyles, state) => ({
+                                                    ...baseStyles,
+                                                    borderRadius: '8px',
+                                                    borderColor: 'black', // Warna default border menjadi merah
+                                                    '&:hover': {
+                                                    borderColor: '#3673CA', // Warna border tetap merah saat hover
+                                                    },
+                                                }),
+                                            }}
+                                        />
+                                    </>
                                 )}
                             />
                         </div>

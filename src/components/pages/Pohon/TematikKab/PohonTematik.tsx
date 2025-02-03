@@ -88,9 +88,7 @@ const PohonTematik = ({id} : pohontematik) => {
             <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
                 <div className="tf-tree text-center mt-3">
                     <ul>
-                        <li>
-                            <Pohon tema={Pokin} deleteTrigger={() => setDeleted((prev) => !prev)}/>
-                        </li>
+                        <Pohon tema={Pokin} deleteTrigger={() => setDeleted((prev) => !prev)}/>
                     </ul>
                 </div>
             </div>

@@ -2,9 +2,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { AlertNotification } from "@/components/global/Alert";
 import Select from 'react-select'
-import { TbCircleCheckFilled, TbCircleLetterXFilled, TbFileCheck, TbFilePlus } from 'react-icons/tb';
-import { ButtonRedBorder, ButtonSkyBorder, ButtonRed } from "@/components/global/Button";
-import { LoadingButtonClip } from "@/components/global/Loading";
+import { TbCircleCheckFilled, TbCircleLetterXFilled, TbFileCheck, TbFilePlus, TbEye, TbEyeClosed } from 'react-icons/tb';
+import { ButtonRedBorder, ButtonSkyBorder, ButtonRed, ButtonBlackBorder } from "@/components/global/Button";
+import { LoadingBeat, LoadingButtonClip } from "@/components/global/Loading";
 import { getToken, getUser, getOpdTahun } from "@/components/lib/Cookie";
 import { TablePohon } from "../ModalPindahPohonOpd";
 
@@ -55,6 +55,22 @@ interface TypePohonCross {
     pelaksana?: OptionTypeString[];
     indikator: indikator[];
 }
+interface pokin {
+    kode_opd: string;
+    nama_opd: string;
+    tahun: string;
+    childs: childs[]
+}
+interface childs {
+    id: number;
+    parent: number;
+    strategi: string;
+    target: string;
+    satuan: string;
+    keterangan: string;
+    indikators: string;
+    childs: childs[];
+}
 interface indikator {
     nama_indikator: string;
     targets: target[];
@@ -67,6 +83,8 @@ type target = {
 export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess, isLevel}) => {
 
     const [PohonPemda, setPohonPemda] = useState<TypePohonPemda | null>(null);
+    const [ButtonDetailPohonPemda, setButtonDetailPohonPemda] = useState<boolean>(false);
+    const [DetailPohonPemda, setDetailPohonPemda] = useState<pokin | null>(null);
     const [PohonParent, setPohonParent] = useState<TypePohonPemda | null>(null);
     const [OptionPohonParent, setOptionPohonParent] = useState<TypePohonPemda[]>([]);
     const [OptionPohonPemda, setOptionPohonPemda] = useState<TypePohonPemda[]>([]);
@@ -179,10 +197,34 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess, is
                     kode_opd: item.kode_opd,
                     tahun: item.tahun,
                     status: item.status,
-                    indikators: item.indikators,
+                    indikator: item.indikator,
                 }));
                 setOptionPohonPemda(pokinPemda);
             }
+        } catch (err) {
+            console.log('gagal mendapatkan data pohon dari opd', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    const fetchDetailPohonPemda = async (id: number) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${API_URL}/pohon_kinerja_opd/pokinpemda_review/${id}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('cant fetch data opd');
+            }
+            const result = await response.json();
+            const data = result.data.tematiks;
+            setDetailPohonPemda(data);
+            // console.log(data);
         } catch (err) {
             console.log('gagal mendapatkan data pohon dari opd', err);
         } finally {
@@ -295,6 +337,7 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess, is
                             }}
                             onChange={(option) => {
                                 setPohonPemda(option);
+                                setButtonDetailPohonPemda(false);
                             }}
                             styles={{
                                 control: (baseStyles) => ({
@@ -338,6 +381,45 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess, is
                             />
                         </div>
                     }
+                    {/* BUTTON DETAIL PARENT POHON PEMDA */}
+                    {PohonPemda &&
+                        <div className="flex">
+                            <ButtonBlackBorder
+                                onClick={() => {
+                                    setButtonDetailPohonPemda((prev) => !prev);
+                                    if(PohonPemda){
+                                        fetchDetailPohonPemda(Number(PohonPemda?.value));
+                                    }
+                                }}
+                            >
+                                {ButtonDetailPohonPemda ? 
+                                    <div className="flex items-center justify-center gap-1">
+                                        <TbEye />
+                                        Sembunyikan Detail Pohon Pemda
+                                    </div>
+                                    :
+                                    <div className="flex items-center justify-center gap-1">
+                                        <TbEyeClosed />
+                                        Tampilkan Detail Pohon Pemda
+                                    </div>
+                                }
+                            </ButtonBlackBorder>
+                        </div>
+                    }
+                    {/* DETAIL PARENT POHON PEMDA */}
+                    {ButtonDetailPohonPemda && (
+                        IsLoading ? 
+                            <LoadingBeat />
+                        :
+                        <div className="flex flex-col justify-center text-center mt-2">
+                            <h1 className="font-bold uppercase">Detail relasi parent pohon Pemda</h1>
+                            <div className="tf-tree text-center mt-3">
+                                <ul>
+                                    <TableDetailPohonPemda item={DetailPohonPemda}/>
+                                </ul>
+                            </div>
+                        </div>
+                    )}
                     {/* PREVIEW KEDUA POHON */}
                     <div className="flex justify-between">
                         {PohonPemda &&
@@ -1004,4 +1086,92 @@ export const ModalPohonCrosscutting: React.FC<modal> = ({isOpen, onClose, onSucc
         </div>
     )
     }
+}
+
+export const TableDetailPohonPemda = (props: any) => {
+
+    const tema = props?.item?.[0]?.tema;
+    const jenis = props?.item?.[0]?.jenis_pohon;
+    const childs = props?.item?.[0]?.childs;
+
+    return(
+        <>
+            <li className="list-none">
+                <div 
+                    className={`tf-nc tf flex flex-col rounded-lg shadow-lg border list-none
+                        ${jenis === "Strategic Pemda" && 'shadow-slate-500'}
+                        ${jenis === "Tactical Pemda" && 'shadow-slate-500'}
+                        ${jenis === "OperationalPemda" && 'shadow-slate-500'}
+                        ${jenis === "Strategic" && 'shadow-red-500 bg-red-700'}
+                        ${jenis === "Tactical"&& 'shadow-blue-500 bg-blue-500'}
+                        ${jenis === "Operational" && 'shadow-green-500 bg-green-500'}
+                        ${jenis === "Operational N" && 'shadow-slate-500 bg-white'}
+                        ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && 'shadow-yellow-700 bg-yellow-700'}
+                    `}
+                >
+                    {/* HEADER */}
+                    <div
+                        className={`flex pt-3 justify-center font-bold text-lg uppercase border my-3 mx-3 py-3 rounded-lg bg-white
+                            ${jenis === "Strategic Pemda" && 'border-red-700 text-white bg-gradient-to-r from-[#CA3636] from-40% to-[#BD04A1]'}
+                            ${jenis === "Tactical Pemda" && 'border-blue-500 text-white bg-gradient-to-r from-[#3673CA] from-40% to-[#08D2FB]'}
+                            ${jenis === "Operational Pemda" && 'border-green-500 text-white bg-gradient-to-r from-[#007982] from-40% to-[#2DCB06]'}
+                            ${(jenis === "Strategic" || jenis === 'Strategic Crosscutting') && 'border-red-500 text-red-700'}
+                            ${(jenis === "Tactical" || jenis === 'Tactical Crosscutting') && 'border-blue-500 text-blue-500'}
+                            ${(jenis === "Operational" || jenis === "Operational N") && 'border-green-500 text-green-500'}
+                            ${(jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && 'border-green-500 text-green-500'}
+                            ${(jenis === "Tematik" || jenis === "Sub Tematik" || jenis === 'Sub Sub Tematik' || jenis === 'Super Sub Tematik') && 'border-black text-black'}
+                        `}
+                    >
+                        {jenis === 'Operational N' ?
+                            <h1>Operational {jenis - 6}  </h1>
+                            :
+                            <h1>{jenis} </h1>
+                        }
+                    </div>
+                    {/* BODY */}
+                    <div className="flex justify-center m-3">
+                        <table className='w-full'>
+                            <tbody>
+                                <tr>
+                                    <td
+                                        className={`min-w-[100px] border px-2 py-3 bg-white text-start rounded-tl-lg
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Tematik" || jenis === "Sub Tematik" || jenis === "Sub Sub Tematik" || jenis === 'Super Sub Tematik') && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}
+                                        `}
+                                    >
+                                        {(jenis === 'Tematik' || jenis === 'Sub Tematik' || jenis === 'Sub Sub Tematik' || jenis === 'Super Sub Tematik') && 'Tema'}
+                                        {(jenis === 'Strategic' || jenis === 'Strategic Pemda' || jenis === 'Strategic Crosscutting') && 'Strategic'}
+                                        {(jenis === 'Tactical' || jenis === 'Tactical Pemda' || jenis === 'Tactical Crosscutting') && 'Tactical'}
+                                        {(jenis === 'Operational' || jenis === 'Operational Pemda' || jenis === 'Operational Crosscutting') && 'Operational'}
+                                        {(jenis === 'Operational N' || jenis === 'Operational N Crosscutting') && 'Operational N'}
+                                    </td>
+                                    <td
+                                        className={`min-w-[300px] border px-2 py-3 bg-white text-start rounded-tr-lg
+                                            ${jenis === "Strategic" && "border-red-700"}
+                                            ${jenis === "Tactical" && "border-blue-500"}
+                                            ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                            ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                            ${(jenis === "Tematik" || jenis === "Sub Tematik" || jenis === "Sub Sub Tematik" || jenis === 'Super Sub Tematik') && "border-black"}
+                                            ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}
+                                        `}
+                                    >
+                                        {tema ? tema : "-"}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <ul className="list-none">
+                    {childs &&
+                        <TableDetailPohonPemda item={childs}/>
+                    }
+                </ul>
+            </li>
+        </>
+    )
 }

@@ -229,7 +229,7 @@ export const FormTematikKab = () => {
                     />
                 </div>
                 <label className="uppercase text-base font-bold text-gray-700 my-2">
-                    indikator sasaran :
+                    indikator tematik :
                 </label>
                 {fields.map((field, index) => (
                     <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">
@@ -622,7 +622,7 @@ export const FormEditTematikKab = () => {
                         />
                     </div>
                     <label className="uppercase text-base font-bold text-gray-700 my-2">
-                        indikator sasaran :
+                        indikator tematik :
                     </label>
                     {fields.map((field, index) => (
                         <div key={index} className="flex flex-col my-2 py-2 px-5 border rounded-lg">

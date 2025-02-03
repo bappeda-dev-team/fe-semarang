@@ -83,7 +83,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     };
 
     return (
-        <li>
+        <li key={tema.id}>
             {edit ? 
                 <FormEditPohon
                     level={tema.level_pohon}
@@ -95,6 +95,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                     EditBerhasil={handleEditSuccess}
                 />
             :
+            //
             <>
                 <div 
                     className={`tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg
@@ -336,7 +337,7 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
     };
 
     return (
-        <li>
+        <li key={tema.id}>
             {edit ? 
                 <FormEditPohon
                     level={tema.level_pohon}
@@ -523,7 +524,7 @@ export const TablePohon = (props: any) => {
   const keterangan = props.item.keterangan;
   const opd = props.item.perangkat_daerah?.nama_opd;
   const jenis = props.item.jenis_pohon;
-  const indikator = props.item.indikators;
+  const indikator = props.item.indikator;
   const status = props.item.status;
   return (
     <table className='w-full'>

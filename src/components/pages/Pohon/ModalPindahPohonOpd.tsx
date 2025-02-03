@@ -402,10 +402,7 @@ export const TablePohon = ({item} : {item: pohon}) => {
                             ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}
                         `}
                     >
-                        {(jenis === 'Strategic' || jenis === 'Strategic Pemda' || jenis === 'Strategic Crosscutting') && 'Strategic'}
-                        {(jenis === 'Tactical' || jenis === 'Tactical Pemda' || jenis === 'Tactical Crosscutting') && 'Tactical'}
-                        {(jenis === 'Operational' || jenis === 'Operational Pemda' || jenis === 'Operational Crosscutting') && 'Operational'}
-                        {(jenis === 'Operational N' || jenis === 'Operational N Crosscutting') && 'Operational N'}
+                        Nama Pohon
                     </td>
                     <td
                         className={`min-w-[100px] border px-2 py-3 bg-white text-start rounded-tr-lg

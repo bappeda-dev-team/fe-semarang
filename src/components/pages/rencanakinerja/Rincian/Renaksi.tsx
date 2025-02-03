@@ -209,16 +209,7 @@ const Renaksi = () => {
                         </tbody>
                     </table>
                 </div>
-                <h1 className="my-2">waktu yang dibutuhkan : 4 Bulan</h1>
-                <div className="my-3 border"></div>
-                <div className="flex flex-wrap gap-2">
-                    <select className="px-3 py-1 rounded-lg border min-w-20">
-                        <option value="Dau">Dau</option>
-                        <option value="Dau">Dau</option>
-                        <option value="Dau">Dau</option>
-                    </select>
-                    <ButtonSky>ubah</ButtonSky>
-                </div>
+                <h1 className="my-2 ml-2">waktu yang dibutuhkan : 4 Bulan</h1>
             </div>
         </>
     )

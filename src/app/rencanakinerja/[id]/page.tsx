@@ -38,7 +38,7 @@ const RincianRencanaKinerja = () => {
                 <Renaksi/>
                 <DasarHukum id={id_rekin}/>
                 <GambaranUmum id={id_rekin}/>
-                <Inovasi id={id_rekin}/>
+                {/* <Inovasi id={id_rekin}/> */}
             </div>
         </>
     )

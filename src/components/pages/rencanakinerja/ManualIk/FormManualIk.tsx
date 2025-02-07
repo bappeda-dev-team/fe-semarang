@@ -51,7 +51,7 @@ const FormManualIk = () => {
     const [Definisi, setDefinisi] = useState<string>("");
     const [KeyActivity, setKeyActivity] = useState<string>("");
     const [Formula, setFormula] = useState<string>("");
-    const [JenisIndikator, setJenisIndikator] = useState<OptionTypeString | null>(null);
+    const [JenisIndikator, setJenisIndikator] = useState<string>("");
     const [UnitPenanggunaJawab, setUnitPenanggunaJawab] = useState<string>("");
     const [UnitPenyediaData, setUnitPenyediaData] = useState<string>("");
     const [SumberData, setSumberData] = useState<string>("");
@@ -121,12 +121,8 @@ const FormManualIk = () => {
                         reset({formula : detail.formula});
                     }
                     if(detail.jenis_indikator){
-                        const jenis = {
-                            value: detail.jenis_indikator,
-                            label: detail.jenis_indikator,
-                        }
-                        setJenisIndikator(jenis);
-                        reset({jenis_indikator : jenis});
+                        setJenisIndikator(detail.jenis_indikator);
+                        reset({jenis_indikator : detail.jenis_indikator});
                     }
                     if(detail.output_data){
                         setCheckKinerja(detail.output_data.kinerja);
@@ -194,7 +190,7 @@ const FormManualIk = () => {
             definisi : Definisi,
             key_activities : KeyActivity,
             formula : Formula,
-            jenis_indikator : JenisIndikator?.value,
+            jenis_indikator : JenisIndikator,
             output_data : {
                 kinerja: checkKinerja,
                 penduduk: checkPenduduk,
@@ -256,6 +252,9 @@ const FormManualIk = () => {
     }
     const handleCheckSpatial = () => {
         setCheckSpatial((prev) => !prev);
+    }
+    const handleJenisIndikatorKinerja = (text: string) => {
+        setJenisIndikator(text);
     }
 
     if(Loading){
@@ -455,34 +454,63 @@ const FormManualIk = () => {
                     <div className="flex w-full">
                         <label htmlFor='jenis_indikator' className="px-5 py-5 border-b border-l border-black w-[200px] bg-white">Jenis Indikator Kinerja</label>
                         <div className="px-5 py-5 border-b border-x border-black flex flex-col w-full gap-2 bg-white">
-                            <Controller 
-                                name="jenis_indikator"
-                                control={control}
-                                render={({field}) => (
-                                    <>
-                                        <Select
-                                            {...field}
-                                            placeholder="Output / Outcome"
-                                            value={JenisIndikator}
-                                            onChange={(option) => {
-                                                field.onChange(option);
-                                                setJenisIndikator(option);
-                                            }}
-                                            options={optionJenisIndikatorKinerja}
-                                            styles={{
-                                                control: (baseStyles, state) => ({
-                                                    ...baseStyles,
-                                                    borderRadius: '8px',
-                                                    borderColor: 'black', // Warna default border menjadi merah
-                                                    '&:hover': {
-                                                    borderColor: '#3673CA', // Warna border tetap merah saat hover
-                                                    },
-                                                }),
-                                            }}
-                                        />
-                                    </>
-                                )}
-                            />
+                            <div className="flex gap-5 w-full">
+                                <div className="flex gap-2 items-center">
+                                    {JenisIndikator === "Outcome" ? 
+                                        <button
+                                            type="button"
+                                            onClick={() => handleJenisIndikatorKinerja('')}
+                                            className="w-[20px] h-[20px] bg-emerald-500 rounded-full text-white p-1 flex justify-center items-center"
+                                        >
+                                            <TbCheck />
+                                        </button>
+                                    :
+                                        <button
+                                            type="button"
+                                            onClick={() => handleJenisIndikatorKinerja('Outcome')}
+                                            className="w-[20px] h-[20px] border border-black rounded-full"
+                                        ></button>
+                                    }
+                                    <p onClick={() => handleJenisIndikatorKinerja(JenisIndikator !== 'Outcome' ? 'Outcome' : '')} className={`cursor-pointer ${JenisIndikator === 'Outcome' && 'text-emerald-500'}`}>Outcome</p>
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    {JenisIndikator === "Outcome Antara" ? 
+                                        <button
+                                            type="button"
+                                            onClick={() => handleJenisIndikatorKinerja('')}
+                                            className="w-[20px] h-[20px] bg-emerald-500 rounded-full text-white p-1 flex justify-center items-center"
+                                        >
+                                            <TbCheck />
+                                        </button>
+                                    :
+                                        <button
+                                            type="button"
+                                            onClick={() => handleJenisIndikatorKinerja('Outcome Antara')}
+                                            className="w-[20px] h-[20px] border border-black rounded-full"
+                                        ></button>
+                                    }
+                                    <p onClick={() => handleJenisIndikatorKinerja(JenisIndikator !== 'Outcome Antara' ? 'Outcome Antara' : '')} className={`cursor-pointer ${JenisIndikator === 'Outcome Antara' && 'text-emerald-500'}`}>Outcome Antara</p>
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    {JenisIndikator === "Output" ? 
+                                        <button
+                                            type="button"
+                                            onClick={() => handleJenisIndikatorKinerja('')}
+                                            className="w-[20px] h-[20px] bg-emerald-500 rounded-full text-white p-1 flex justify-center items-center"
+                                        >
+                                            <TbCheck />
+                                        </button>
+                                    :
+                                        <button
+                                            type="button"
+                                            onClick={() => handleJenisIndikatorKinerja('Output')}
+                                            className="w-[20px] h-[20px] border border-black rounded-full"
+                                        ></button>
+                                    }
+                                    <p onClick={() => handleJenisIndikatorKinerja(JenisIndikator !== 'Output' ? 'Output' : '')} className={`cursor-pointer ${JenisIndikator === 'Output' && 'text-emerald-500'}`}>Output</p>
+                                </div>
+                            </div>
+                            <label className="text-sm text-gray-300 italic">*Pilih salah satu</label>
                         </div>
                     </div>
                     {/* OUTPUT DATA */}
@@ -545,7 +573,7 @@ const FormManualIk = () => {
                                     <p onClick={handleCheckSpatial} className={`cursor-pointer ${checkSpatial && 'text-emerald-500'}`}>Spatial</p>
                                 </div>
                             </div>
-                            <label className="text-sm text-gray-300 italic">*bisa pilih lebih dari satu</label>
+                            <label className="text-sm text-gray-300 italic">*Bisa pilih lebih dari satu</label>
                         </div>
                     </div>
                     {/* UNIT PENANGGUNG JAWAB */}
@@ -555,7 +583,6 @@ const FormManualIk = () => {
                             <Controller
                                 name="unit_penanggung_jawab"
                                 control={control}
-                                rules= {{required : 'UPJ wajib terisi'}} 
                                 render={({field}) => (
                                     <>
                                         <input

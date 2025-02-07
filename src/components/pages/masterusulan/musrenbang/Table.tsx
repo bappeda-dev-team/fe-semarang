@@ -1,10 +1,11 @@
 'use client'
 
-import { ButtonGreen, ButtonRed } from "@/components/global/Button";
+import { ButtonSky, ButtonGreen, ButtonRed } from "@/components/global/Button";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { useState, useEffect } from "react";
 import { LoadingClip } from "@/components/global/Loading";
 import { getToken } from "@/components/lib/Cookie";
+import { ModalAddUsulan } from "../ModalUsulan";
 
 interface Usulan {
   id: string;
@@ -21,6 +22,10 @@ interface Usulan {
 const Table = () => {
 
     const [Musrenbang, setMusrenbang] = useState<Usulan[]>([]);
+    const [ModalNew, setModalNew] = useState<boolean>(false);
+    const [TriggerFetch, setTriggerFetch] = useState<boolean>(false);
+    const [ModalEdit, setModalEdit] = useState<boolean>(false);
+    const [IdEdit, setIdEdit] = useState<string>('');
     const [Error, setError] = useState<boolean | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
@@ -58,7 +63,7 @@ const Table = () => {
             }
         }
         fetchMusrenbang();
-    }, [token]);
+    }, [token, TriggerFetch]);
 
     const hapusMusrenbang = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -80,6 +85,18 @@ const Table = () => {
         }
     };
 
+    const handleModalNew = () => {
+        setModalNew((prev) => !prev);
+    }
+    const handleModalEdit = (id: string) => {
+        setModalEdit(true);
+        setIdEdit(id);
+    }
+    const handleModalEditClose = () => {
+        setModalEdit(false);
+        setIdEdit('');
+    }
+
     if(Loading){
         return (    
             <div className="border p-5 rounded-xl shadow-xl">
@@ -96,12 +113,19 @@ const Table = () => {
 
     return(
         <>
+            <ButtonSky onClick={handleModalNew}>tambah musrenbang</ButtonSky>
+            <ModalAddUsulan 
+                metode="baru"
+                jenis="musrenbang"
+                isOpen={ModalNew}
+                onClose={handleModalNew}
+                onSuccess={() => setTriggerFetch((prev) => !prev)}
+            />
             <div className="overflow-auto m-2 rounded-t-xl border">
                 <table className="w-full">
                     <thead>
                         <tr className="bg-[#99CEF5] text-white">
                             <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Tahun</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Usulan</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Alamat</th>
                             <th className="border-r border-b px-6 py-3 min-w-[300px]">Uraian</th>
@@ -121,7 +145,6 @@ const Table = () => {
                         Musrenbang.map((data, index) => (
                         <tr key={data.id}>
                             <td className="border-r border-b px-6 py-4">{index + 1}</td>
-                            <td className="border-r border-b px-6 py-4">{data.tahun ? data.tahun : "-"}</td>
                             <td className="border-r border-b px-6 py-4">{data.usulan ? data.usulan : "-"}</td>
                             <td className="border-r border-b px-6 py-4">{data.alamat ? data.alamat : "-"}</td>
                             <td className="border-r border-b px-6 py-4">{data.uraian ? data.uraian : "-"}</td>
@@ -129,7 +152,20 @@ const Table = () => {
                             <td className="border-r border-b px-6 py-4">{data.status ? data.status : "-"}</td>
                             <td className="border-r border-b px-6 py-4">
                                 <div className="flex flex-col jutify-center items-center gap-2">
-                                    <ButtonGreen className="w-full" halaman_url={`/MasterUsulan/mastermusrenbang/${data.id}`}>Edit</ButtonGreen>
+                                    <ButtonGreen 
+                                        className="w-full"
+                                        onClick={() => handleModalEdit(data.id)}
+                                    >
+                                        Edit
+                                    </ButtonGreen>
+                                    <ModalAddUsulan 
+                                        jenis="musrenbang"
+                                        metode="lama"
+                                        onClose={handleModalEditClose}
+                                        isOpen={ModalEdit}
+                                        id={IdEdit}
+                                        onSuccess={() => setTriggerFetch((prev) => !prev)}
+                                    />
                                     <ButtonRed 
                                         className="w-full"
                                         onClick={() => {

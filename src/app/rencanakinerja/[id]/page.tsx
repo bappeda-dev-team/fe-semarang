@@ -1,13 +1,14 @@
 'use client'
 
 import { FiHome } from 'react-icons/fi';
-import Musrebang from '@/components/pages/rencanakinerja/Rincian/Musrebang';
+import Musrebang from '@/components/pages/rencanakinerja/Rincian/Usulan';
 import SubKegiatan from '@/components/pages/rencanakinerja/Rincian/SubKegiatan';
 import Sakip from '@/components/pages/rencanakinerja/Rincian/Sakip';
 import Renaksi from '@/components/pages/rencanakinerja/Rincian/Renaksi';
 import DasarHukum from '@/components/pages/rencanakinerja/Rincian/DasarHukum';
 import GambaranUmum from '@/components/pages/rencanakinerja/Rincian/GambaranUmum';
 import Inovasi from '@/components/pages/rencanakinerja/Rincian/Inovasi';
+import Permasalahan from '@/components/pages/rencanakinerja/Rincian/Permasalahan';
 import { useParams } from 'next/navigation';
 
 const RincianRencanaKinerja = () => {
@@ -38,6 +39,7 @@ const RincianRencanaKinerja = () => {
                 <Renaksi/>
                 <DasarHukum id={id_rekin}/>
                 <GambaranUmum id={id_rekin}/>
+                <Permasalahan id={id_rekin}/>
                 {/* <Inovasi id={id_rekin}/> */}
             </div>
         </>

@@ -1,12 +1,12 @@
 'use client'
 
-import { ButtonSky, ButtonRed } from "@/components/global/Button";
+import { ButtonSky, ButtonRedBorder } from "@/components/global/Button";
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import Select from 'react-select';
 import { useState, useEffect } from "react";
 import { LoadingSync } from "@/components/global/Loading";
 import { getToken, getUser } from "@/components/lib/Cookie";
-import { AlertNotification } from "@/components/global/Alert";
+import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 
 interface id {
     id: string;
@@ -16,12 +16,12 @@ interface OptionTypeString {
     label: string;
 }
 interface subkegiatan {
-    id : string;
-    nama_sub_kegiatan : string;
-    indikator : string;
-    pagu_ranwal : string;
-    pagu_rankir : string;
-    pagu_penetapan : string;
+    id: string;
+    rekin_id: string;
+    status: string;
+    nama_sub_kegiatan: string;
+    kode_opd: string;
+    tahun: string;
 }
 interface formValue {
     sub_kegiatan: OptionTypeString;
@@ -35,6 +35,7 @@ const SubKegiatan: React.FC<id> = ({id}) => {
     const [InputSubKegiatan, setInputSubKegiatan] = useState<OptionTypeString | null>(null);
     const [OptionSubKegiatan, setOptionSubKegiatan] = useState<OptionTypeString[]>([]);
     const [Loading, setLoading] = useState<boolean>(false);
+    const [Deleted, setDeleted] = useState<boolean>(false);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
     const [user, setUser] = useState<any>(null);
     const token = getToken();
@@ -51,7 +52,7 @@ const SubKegiatan: React.FC<id> = ({id}) => {
         const fetchSubKegiatan = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${user?.pegawai_id}/input_rincian_kak`, {
+                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${user?.nip}/input_rincian_kak`, {
                     headers: {
                       Authorization: `${token}`,
                       'Content-Type': 'application/json',
@@ -59,15 +60,14 @@ const SubKegiatan: React.FC<id> = ({id}) => {
                 });
                 const result = await response.json();
                 const hasil = result.rencana_kinerja;
-                if(hasil.subkegiatan){
-                    const sub = hasil.find((item: any) => item.subkegiatan);
-                    const data = sub.subkegiatan
+                if(hasil){
+                    const data = hasil.find((item: any) => item.subkegiatan);
                     if(data == null){
                         setDataNull(true);
                         setSubKegiatan([]);
                     } else {
                         setDataNull(false);
-                        setSubKegiatan(data);
+                        setSubKegiatan(data.subkegiatan);
                     }
                 } else {
                     setDataNull(true);
@@ -82,12 +82,12 @@ const SubKegiatan: React.FC<id> = ({id}) => {
         if(user?.roles != undefined){
             fetchSubKegiatan();
         }
-    },[id, user, token]);
+    },[id, user, token, Deleted]);
 
     const fetchOptionSubKegiatan = async() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
-            const response = await fetch(`${API_URL}/sub_kegiatan/findall`, {
+            const response = await fetch(`${API_URL}/sub_kegiatan/pilihan/${user?.kode_opd}`, {
                 headers: {
                     Authorization: `${token}`
                 }
@@ -114,26 +114,50 @@ const SubKegiatan: React.FC<id> = ({id}) => {
     const onSubmit: SubmitHandler<formValue> = async(data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
-            sub_kegiatan : data.sub_kegiatan?.value
+            id_subkegiatan : data.sub_kegiatan?.value
         }
-        console.log(formData);
-        // try{
-        //     const response = await fetch(`${API_URL}/lorem`, {
-        //         method: "POST",
-        //         headers: {
-        //             Authorization : `${token}`
-        //         }
-        //     });
-        //     if(response.ok){
-        //         AlertNotification("Berhasil", "menambahkan sub kegiatan ke rencana kinerja", "success", 2000);
-        //     } else {
-        //         AlertNotification("Gagal", "terdapat kesalahan pada endpoint backend / internet server", "success", 2000);
-        //     }
-        // } catch(err){
-        //     console.log(err);
-        //     AlertNotification("Gagal", "cek koneksi internet / database server", "success", 2000);
-        // }
+        // console.log(formData);
+        try{
+            const response = await fetch(`${API_URL}/sub_kegiatan/create_rekin/${id}`, {
+                method: "POST",
+                headers: {
+                    Authorization : `${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            if(response.ok){
+                AlertNotification("Berhasil", "menambahkan sub kegiatan ke rencana kinerja", "success", 2000);
+                setDeleted((prev) => !prev);
+            } else {
+                AlertNotification("Gagal", "terdapat kesalahan pada endpoint backend / internet server", "error", 2000);
+            }
+        } catch(err){
+            console.log(err);
+            AlertNotification("Gagal", "cek koneksi internet / database server", "success", 2000);
+        }
     }
+
+    const hapusSubKegiatan = async(id: any) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        try{
+            const response = await fetch(`${API_URL}/sub_kegiatan/delete_subkegiatan_terpilih/${id}`, {
+                method: "DELETE",
+                headers: {
+                  Authorization: `${token}`,
+                  'Content-Type': 'application/json',
+                },
+            })
+            if(!response.ok){
+                alert("response !ok ketika gagal hapus sub kegiatan");
+            }
+            setSubKegiatan(subKegiatan.filter((data) => (data.id !== id)))
+            AlertNotification("Berhasil", "Sub Kegiatan Berhasil Dihapus", "success", 1000);
+            setDeleted((prev) => !prev);
+        } catch(err){
+            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+        }
+    };
 
     if(Loading){
         return(
@@ -192,30 +216,33 @@ const SubKegiatan: React.FC<id> = ({id}) => {
                         <thead>
                             <tr className="bg-gray-300">
                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Sub Kegiatan</td>
-                                <td className="border-r border-b px-6 py-3 min-w-[200px]">Indikator</td>
-                                <td className="border-r border-b px-6 py-3 min-w-[200px]">Pagu Ranwal 2024</td>
-                                <td className="border-r border-b px-6 py-3 min-w-[200px]">Pagu Rankir 2024</td>
-                                <td className="border-r border-b px-6 py-3 min-w-[200px]">Pagu Penetapan 2024</td>
                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</td>
                             </tr>
                         </thead>
                         <tbody>
                             {dataNull ? 
                                 <tr>
-                                    <td className="px-6 py-3" colSpan={6}>
+                                    <td className="px-6 py-3" colSpan={10}>
                                         Data Kosong / Belum Ditambahkan
                                     </td>
                                 </tr>
                             :
                                 subKegiatan.map((data: any) => (
                                     <tr key={data.id}>
-                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.nama_sub_kegiatan}</td>
-                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.indikator}</td>
-                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.pagu_ranwal}</td>
-                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.pagu_rankir}</td>
-                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.pagu_penetapan}</td>
+                                        <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.nama_sub_kegiatan || "-"}</td>
                                         <td className="border-r border-b px-6 py-3 min-w-[200px]">
-                                            <ButtonRed>Hapus</ButtonRed>
+                                            <ButtonRedBorder
+                                                className="w-full"
+                                                onClick={() => {
+                                                    AlertQuestion("Hapus?", "Hapus Sub Kegiatan yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                                        if(result.isConfirmed){
+                                                            hapusSubKegiatan(data.id);
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                Hapus
+                                            </ButtonRedBorder>
                                         </td>
                                     </tr>
                                 ))

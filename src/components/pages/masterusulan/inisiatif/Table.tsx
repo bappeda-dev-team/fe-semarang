@@ -107,7 +107,6 @@ const Table = () => {
                             <th className="border-r border-b px-6 py-3 min-w-[300px]">Uraian</th>
                             <th className="border-r border-b px-6 py-3 min-w-[300px]">Kode OPD</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Status</th>
-                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -127,23 +126,6 @@ const Table = () => {
                             <td className="border-r border-b px-6 py-4">{data.uraian ? data.uraian : "-"}</td>
                             <td className="border-r border-b px-6 py-4">{data.kode_opd ? data.kode_opd : "-"}</td>
                             <td className="border-r border-b px-6 py-4">{data.status ? data.status : "-"}</td>
-                            <td className="border-r border-b px-6 py-4">
-                                <div className="flex flex-col jutify-center items-center gap-2">
-                                    <ButtonGreen className="w-full" halaman_url={`/MasterUsulan/mastermusrenbang/${data.id}`}>Edit</ButtonGreen>
-                                    <ButtonRed 
-                                        className="w-full"
-                                        onClick={() => {
-                                            AlertQuestion("Hapus?", "Hapus Usulan Inisiatif yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                                                if(result.isConfirmed){
-                                                    hapusMusrenbang(data.id);
-                                                }
-                                            });
-                                        }}
-                                    >
-                                        Hapus
-                                    </ButtonRed>
-                                </div>
-                            </td>
                         </tr>
                         ))
                     }

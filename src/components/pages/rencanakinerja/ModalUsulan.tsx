@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ButtonSky, ButtonRed } from '@/components/global/Button';
 import { AlertNotification } from "@/components/global/Alert";
-import { getToken, getUser } from "@/components/lib/Cookie";
+import { getToken, getUser, getOpdTahun } from "@/components/lib/Cookie";
 import { LoadingButtonClip } from "@/components/global/Loading";
 import Select from "react-select";
 
@@ -23,30 +23,53 @@ interface modal {
     isOpen: boolean;
     onClose: () => void;
     className?: string;
-    id?: string;
+    rekin_id?: string;
+    onSuccess: () => void;
 }
 
 interface FormValue {
-    usulan: OptionType | null | string;
+    // musrenbang & pokir
+    jenis_usulan?: string;
+    usulan_id?: OptionType | null | string;
+    rekin_id?: string;
+    tahun: string;
+    kode_opd: string;
+    keterangan?: string;
+    // mandatori & inisiatif
+    usulan?: string;
+    manfaat?: string;
+    uraian?: string;
+    rencana_kinerja_id?: string;
+    pegawai_id?: string;
+    peraturan_terkait?: string;
 }
 
 
-export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
+export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose, rekin_id, onSuccess }) => {
 
     const {
         control,
         handleSubmit,
         formState: { errors },
     } = useForm<FormValue>();
-    const [user, setUser] = useState<any>(null);
+    const [User, setUser] = useState<any>(null);
+    const [Tahun, setTahun] = useState<any>(null);
 
     const [JenisUsulan, setJenisUsulan] = useState<string>('');
-
+    // musrenbang
     const [UsulanMusrenbang, setUsulanMusrenbang] = useState<OptionMusrenbang | null>(null);
     const [OptionMusrenbang, setOptionMusrenbang] = useState<OptionMusrenbang[]>([]);
-    
+    // pokir
     const [UsulanPokir, setUsulanPokir] = useState<OptionMusrenbang | null>(null);
     const [OptionPokir, setOptionPokir] = useState<OptionMusrenbang[]>([]);
+    // mandatori
+    const [UsulanMandatori, setUsulanMandatori] = useState<string>('');
+    const [PeraturanTerkait, setPeraturanTerkait] = useState<string>('');
+    // inisiatif
+    const [UsulanInisiatif, setUsulanInisiatif] = useState<string>('');
+    
+    const [Uraian, setUraian] = useState<string>('');
+    const [Manfaat, setManfaat] = useState<string>('');
     
     const [LoadingOption, setLoadingOption] = useState<boolean>(false);
     const [Proses, setProses] = useState<boolean>(false);
@@ -54,8 +77,16 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
 
     useEffect(() => {
         const fetchUser = getUser();
+        const data = getOpdTahun();
         if (fetchUser) {
             setUser(fetchUser.user);
+        }
+        if (data.tahun) {
+            const tahun = {
+                value: data.tahun.value,
+                label: data.tahun.label,
+            }
+            setTahun(tahun);
         }
     }, []);
 
@@ -63,7 +94,7 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try {
             setLoadingOption(true);
-            const response = await fetch(`${API_URL}/usulan_musrebang/findall`, {
+            const response = await fetch(`${API_URL}/usulan_musrebang/findall?status=belum_diambil`, {
                 headers: {
                     Authorization: `${token}`,
                 }
@@ -73,7 +104,7 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
             }
             const hasil = await response.json();
             const data = hasil.usulan_musrebang;
-            if (data.length != 0) {
+            if (data != null) {
                 const option = data.map((item: any) => ({
                     value: item.id,
                     label: item.usulan,
@@ -91,35 +122,115 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
             setLoadingOption(false);
         }
     }
+    const fetchPokir = async () => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        try {
+            setLoadingOption(true);
+            const response = await fetch(`${API_URL}/usulan_pokok_pikiran/findall?status=belum_diambil`, {
+                headers: {
+                    Authorization: `${token}`,
+                }
+            });
+            if (!response.ok) {
+                throw new Error("terdapat kesalahan server ketika fetch data dropdown musrenbang");
+            }
+            const hasil = await response.json();
+            const data = hasil.usulan_pokok_pikiran;
+            if (data.length != 0) {
+                const option = data.map((item: any) => ({
+                    value: item.id,
+                    label: item.usulan,
+                    alamat: item.alamat,
+                    uraian: item.uraian,
+                    tahun: item.tahun,
+                }))
+                setOptionPokir(option);
+            } else {
+                console.log('dropdown Pokok pikiran kosong');
+            }
+        } catch (err) {
+            console.log(err, 'gagal mendapatkan data dropdown musrenbang, cek endpoint backend atau database server');
+        } finally {
+            setLoadingOption(false);
+        }
+    }
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const formData = {
+        const formDataMusrenbang = {
             //key : value
-            usulan: UsulanMusrenbang?.value,
+            id_usulan: UsulanMusrenbang?.value,
         };
-        console.log(formData);
-        // try{
-        //     setProses(true);
-        //     const response = await fetch(`${API_URL}/gambaran_umum/create/${id_rekin}`, {
-        //         method: "POST",
-        //         headers: {
-        //             Authorization: `${token}`,
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(formData),
-        //     });
-        //     if(response.ok){
-        //         AlertNotification("Berhasil", "Berhasil menambahkan gambaran umum", "success", 1000);
-        //         onClose();
-        //     } else {
-        //         AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
-        //     }
-        // } catch(err){
-        //     AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
-        // } finally {
-        //     setProses(false);
-        // }
+        const formDataPokir = {
+            //key : value
+            id_usulan: UsulanPokir?.value,
+        };
+        const formDataInisiatif = {
+            //key : value
+            usulan: UsulanInisiatif,
+            manfaat: Manfaat,
+            uraian: Uraian,
+            tahun: String(Tahun?.value),
+            rencana_kinerja_id: rekin_id,
+            pegawai_id: User?.nip,
+            kode_opd: User?.kode_opd,
+        };
+        const formDataMandatori = {
+            //key : value
+            usulan: UsulanMandatori,
+            uraian: Uraian,
+            tahun: String(Tahun?.value),
+            peraturan_terkait: PeraturanTerkait,
+            rencana_kinerja_id: rekin_id,
+            pegawai_id: User?.nip,
+            kode_opd: User?.kode_opd,
+        };
+        const getBody = () => {
+            if (JenisUsulan === "musrenbang") return formDataMusrenbang;
+            if (JenisUsulan === "pokir") return formDataPokir;
+            if (JenisUsulan === "mandatori") return formDataMandatori;
+            if (JenisUsulan === "inisiatif") return formDataInisiatif;
+            return {}; // Default jika JenisUsulan tidak sesuai
+        };
+        // JenisUsulan === "musrenbang" && console.log("musrenbang :", formDataMusrenbang);
+        // JenisUsulan === "pokir" && console.log("Pokir :", formDataPokir);
+        // JenisUsulan === "mandatori" && console.log("mandatori :", formDataMandatori);
+        // JenisUsulan === "inisiatif" && console.log("inisiatif :", formDataInisiatif);
+        try{
+            let url = "";
+            if (JenisUsulan === "musrenbang") {
+                url = `usulan_musrebang/create_rekin/${rekin_id}`;
+            } else if (JenisUsulan === "pokir") {
+                url = `usulan_pokok_pikiran/create_rekin/${rekin_id}`;
+            } else if (JenisUsulan === "inisiatif") {
+                url = "usulan_inisiatif/create";
+            } else if (JenisUsulan === "mandatori") {
+                url = "usulan_mandatori/create";
+            } else {
+                url = '';
+            }
+            setProses(true);
+            const response = await fetch(`${API_URL}/${url}`, {
+                method: "POST",
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(getBody()),
+            });
+            if(response.ok){
+                AlertNotification("Berhasil", "Berhasil menambahkan Usulan", "success", 1000);
+                onClose();
+                onSuccess();
+            } else {
+                AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+            }
+        } catch(err){
+            console.error(err);
+            AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+        } finally {
+            setProses(false);
+        }
     };
 
     const handleClose = () => {
@@ -127,6 +238,18 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
         setJenisUsulan('');
         setUsulanMusrenbang(null);
         setUsulanPokir(null);
+    }
+    const handleJenisUsulan = (usulan: string) => {
+        setJenisUsulan(usulan);
+        setOptionMusrenbang([]);
+        setOptionPokir([]);
+        setUsulanMusrenbang(null);
+        setUsulanPokir(null);
+        setUsulanInisiatif('');
+        setUsulanMandatori('');
+        setPeraturanTerkait('');
+        setUraian('');
+        setManfaat('');
     }
 
     if (!isOpen) {
@@ -145,13 +268,12 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
                         className="flex flex-col mx-5 py-5"
                     >
                         <label className="uppercase text-xs font-bold text-gray-700 my-2">pilih jenis usulan yang ingin ditambahkan</label>
+                        {/* BUTTON JENIS USULAN */}
                         <div className="flex gap-3">
                             <button
                                 type="button"
                                 onClick={() =>{
-                                    setJenisUsulan('musrenbang');
-                                    setOptionMusrenbang([]);
-                                    setUsulanPokir(null);
+                                    handleJenisUsulan('musrenbang');
                                 }}
                                 className={`px-2 py-1 rounded-xl border ${JenisUsulan === 'musrenbang' ? "bg-blue-500 text-white" : "bg-white text-blue-500 border border-blue-500 hover:text-white hover:bg-blue-500"}`}
                             >
@@ -160,8 +282,7 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setJenisUsulan('pokir');
-                                    setUsulanMusrenbang(null);
+                                    handleJenisUsulan('pokir');
                                 }}
                                 className={`px-2 py-1 rounded-xl border ${JenisUsulan === 'pokir' ? "bg-blue-500 text-white" : "bg-white text-blue-500 border border-blue-500 hover:text-white hover:bg-blue-500"}`}
                             >
@@ -170,9 +291,7 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setJenisUsulan('inisiatif');
-                                    setUsulanMusrenbang(null);
-                                    setUsulanPokir(null);
+                                    handleJenisUsulan('inisiatif');
                                 }}
                                 className={`px-2 py-1 rounded-xl border ${JenisUsulan === 'inisiatif' ? "bg-blue-500 text-white" : "bg-white text-blue-500 border border-blue-500 hover:text-white hover:bg-blue-500"}`}
                             >
@@ -181,9 +300,7 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setJenisUsulan('mandatori');
-                                    setUsulanMusrenbang(null);
-                                    setUsulanPokir(null);
+                                   handleJenisUsulan('mandatori');
                                 }}
                                 className={`px-2 py-1 rounded-xl border ${JenisUsulan === 'mandatori' ? "bg-blue-500 text-white" : "bg-white text-blue-500 border border-blue-500 hover:text-white hover:bg-blue-500"}`}
                             >
@@ -196,12 +313,12 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
                                 <div className="flex flex-col py-3">
                                     <label
                                         className="uppercase text-xs font-bold text-gray-700 my-2"
-                                        htmlFor="usulan"
+                                        htmlFor="usulan_id"
                                     >
                                         Usulan Musrenbang :
                                     </label>
                                     <Controller
-                                        name="usulan"
+                                        name="usulan_id"
                                         control={control}
                                         rules={{ required: "Wajib Terisi" }}
                                         render={({ field }) => (
@@ -228,15 +345,16 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
                                                         })
                                                     }}
                                                 />
-                                                {errors.usulan &&
+                                                {(errors.usulan_id && JenisUsulan === 'musrenbang') &&
                                                     <h1 className="text-red-500">
-                                                        {errors.usulan.message}
+                                                        {errors.usulan_id.message}
                                                     </h1>
                                                 }
                                             </>
                                         )}
                                     />
                                 </div>
+                                {/* PREVIEW */}
                                 <div className={`transition-all duration-300 ease-in-out ${UsulanMusrenbang ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
                                     preview usulan :
                                     <div className="flex flex-col rounded-lg border border-black p-2 mt-2">
@@ -274,12 +392,12 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
                                 <div className="flex flex-col py-3">
                                     <label
                                         className="uppercase text-xs font-bold text-gray-700 my-2"
-                                        htmlFor="usulan"
+                                        htmlFor="usulan_id"
                                     >
                                         Usulan Pokok Pikiran :
                                     </label>
                                     <Controller
-                                        name="usulan"
+                                        name="usulan_id"
                                         control={control}
                                         rules={{ required: "Wajib Terisi" }}
                                         render={({ field }) => (
@@ -287,17 +405,17 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
                                                 <Select
                                                     {...field}
                                                     placeholder="Pilih usulan Pokok Pikiran"
-                                                    value={UsulanMusrenbang}
-                                                    options={OptionMusrenbang}
+                                                    value={UsulanPokir}
+                                                    options={OptionPokir}
                                                     isLoading={LoadingOption}
                                                     isSearchable
                                                     isClearable
                                                     onMenuOpen={() => {
-                                                        fetchMusrenbang();
+                                                        fetchPokir();
                                                     }}
                                                     onChange={(option) => {
                                                         field.onChange(option);
-                                                        setUsulanMusrenbang(option);
+                                                        setUsulanPokir(option);
                                                     }}
                                                     styles={{
                                                         control: (baseStyles) => ({
@@ -306,16 +424,17 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
                                                         })
                                                     }}
                                                 />
-                                                {errors.usulan &&
+                                                {(errors.usulan_id && JenisUsulan === "pokir") &&
                                                     <h1 className="text-red-500">
-                                                        {errors.usulan.message}
+                                                        {errors.usulan_id.message}
                                                     </h1>
                                                 }
                                             </>
                                         )}
                                     />
                                 </div>
-                                <div className={`transition-all duration-300 ease-in-out ${UsulanMusrenbang ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+                                {/* PREVIEW */}
+                                <div className={`transition-all duration-300 ease-in-out ${UsulanPokir ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
                                     preview usulan :
                                     <div className="flex flex-col rounded-lg border border-black p-2 mt-2">
                                         <table>
@@ -323,22 +442,22 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
                                                 <tr className="border border-black">
                                                     <td className="p-2 font-medium">Usulan</td>
                                                     <td className="p-2">:</td>
-                                                    <td className="p-2"><h1>{UsulanMusrenbang?.label}</h1></td>
+                                                    <td className="p-2"><h1>{UsulanPokir?.label}</h1></td>
                                                 </tr>
                                                 <tr className="border border-black">
                                                     <td className="p-2 font-medium">Alamat</td>
                                                     <td className="p-2">:</td>
-                                                    <td className="p-2"><h1>{UsulanMusrenbang?.alamat}</h1></td>
+                                                    <td className="p-2"><h1>{UsulanPokir?.alamat}</h1></td>
                                                 </tr>
                                                 <tr className="border border-black">
                                                     <td className="p-2 font-medium">Uraian</td>
                                                     <td className="p-2">:</td>
-                                                    <td className="p-2"><h1>{UsulanMusrenbang?.uraian}</h1></td>
+                                                    <td className="p-2"><h1>{UsulanPokir?.uraian}</h1></td>
                                                 </tr>
                                                 <tr className="border border-black">
                                                     <td className="p-2 font-medium">Tahun</td>
                                                     <td className="p-2">:</td>
-                                                    <td className="p-2"><h1>{UsulanMusrenbang?.tahun}</h1></td>
+                                                    <td className="p-2"><h1>{UsulanPokir?.tahun}</h1></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -347,10 +466,180 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose }) => {
                             </>
                         }
                         {(JenisUsulan === 'inisiatif') &&
-                            <h1>inisiatif</h1>
+                            <>
+                                <div className="flex flex-col py-3">
+                                    <label
+                                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                                        htmlFor="usulan"
+                                    >
+                                        Usulan Inisiatif :
+                                    </label>
+                                    <Controller
+                                        name="usulan"
+                                        control={control}
+                                        rules={{ required: "Wajib Terisi" }}
+                                        render={({ field }) => (
+                                            <>
+                                                <input
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    type="text"
+                                                    value={UsulanInisiatif}
+                                                    placeholder="Masukkan Usulan Inisiatif"
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setUsulanInisiatif(e.target.value);
+                                                    }}
+                                                />
+                                                {(errors.usulan && JenisUsulan === "inisiatif") &&
+                                                    <h1 className="text-red-500">
+                                                        {errors.usulan.message}
+                                                    </h1>
+                                                }
+                                            </>
+                                        )}
+                                    />
+                                </div>
+                                <div className="flex flex-col py-3">
+                                    <label
+                                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                                        htmlFor="manfaat"
+                                    >
+                                        Manfaat :
+                                    </label>
+                                    <Controller
+                                        name="manfaat"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <>
+                                                <input
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    type="text"
+                                                    value={Manfaat}
+                                                    placeholder="Masukkan Manfaat"
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setManfaat(e.target.value);
+                                                    }}
+                                                />
+                                            </>
+                                        )}
+                                    />
+                                </div>
+                                <div className="flex flex-col py-3">
+                                    <label
+                                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                                        htmlFor="uraian"
+                                    >
+                                        Uraian :
+                                    </label>
+                                    <Controller
+                                        name="uraian"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <>
+                                                <input
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    type="text"
+                                                    value={Uraian}
+                                                    placeholder="Masukkan Uraian"
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setUraian(e.target.value);
+                                                    }}
+                                                />
+                                            </>
+                                        )}
+                                    />
+                                </div>
+                            </>
                         }
                         {(JenisUsulan === 'mandatori') &&
-                            <h1>mandatori</h1>
+                            <>
+                                <div className="flex flex-col py-3">
+                                    <label
+                                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                                        htmlFor="usulan"
+                                    >
+                                        Usulan Mandatori :
+                                    </label>
+                                    <Controller
+                                        name="usulan"
+                                        control={control}
+                                        rules={{ required: "Wajib Terisi" }}
+                                        render={({ field }) => (
+                                            <>
+                                                <input
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    type="text"
+                                                    value={UsulanMandatori}
+                                                    placeholder="Masukkan Usulan Mandatori"
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setUsulanMandatori(e.target.value);
+                                                    }}
+                                                />
+                                                {(errors.usulan && JenisUsulan === "mandatori") &&
+                                                    <h1 className="text-red-500">
+                                                        {errors.usulan.message}
+                                                    </h1>
+                                                }
+                                            </>
+                                        )}
+                                    />
+                                </div>
+                                <div className="flex flex-col py-3">
+                                    <label
+                                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                                        htmlFor="uraian"
+                                    >
+                                        Uraian :
+                                    </label>
+                                    <Controller
+                                        name="uraian"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <>
+                                                <input
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    type="text"
+                                                    value={Uraian}
+                                                    placeholder="Masukkan Uraian"
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setUraian(e.target.value);
+                                                    }}
+                                                />
+                                            </>
+                                        )}
+                                    />
+                                </div>
+                                <div className="flex flex-col py-3">
+                                    <label
+                                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                                        htmlFor="peraturan_terkait"
+                                    >
+                                        Peraturan Terkait :
+                                    </label>
+                                    <Controller
+                                        name="peraturan_terkait"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <>
+                                                <input
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    type="text"
+                                                    value={PeraturanTerkait}
+                                                    placeholder="Masukkan Peraturan Terkait"
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setPeraturanTerkait(e.target.value);
+                                                    }}
+                                                />
+                                            </>
+                                        )}
+                                    />
+                                </div>
+                            </>
                         }
                         <ButtonSky className="w-full my-3" type="submit">
                             {Proses ?

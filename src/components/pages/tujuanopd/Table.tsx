@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { getOpdTahun } from "@/components/lib/Cookie";
-import { TahunNull } from "@/components/global/OpdTahunNull";
+import { TahunNull, OpdTahunNull } from "@/components/global/OpdTahunNull";
 import { getToken, getUser } from "@/components/lib/Cookie";
 
 interface tujuan {
@@ -135,6 +135,17 @@ const Table = () => {
     } else if(Tahun?.value == undefined){
         return <TahunNull />
     }
+    if (User?.roles == 'super_admin') {
+            if (SelectedOpd?.value == undefined || Tahun?.value == undefined) {
+                return (
+                    <>
+                        <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
+                            <OpdTahunNull />
+                        </div>
+                    </>
+                )
+            }
+        }
 
     return(
         <>

@@ -40,17 +40,23 @@ const GambaranUmum: React.FC<id> = ({id}) => {
         const fetchGambaran = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/gambaran_umum/findall/${id}`, {
+                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${user?.nip}/input_rincian_kak`, {
                     headers: {
                       Authorization: `${token}`,
                       'Content-Type': 'application/json',
                     },
                 });
                 const result = await response.json();
-                const hasil = result.gambaran_umum;
-                if (hasil != null) {
-                    setDataNull(false);
-                    setGambaran(hasil);
+                const hasil = result.rencana_kinerja;
+                if(hasil){
+                    const data = hasil.find((item: any) => item.gambaran_umum);
+                    if(data == null){
+                        setDataNull(true);
+                        setGambaran([]);
+                    } else {
+                        setDataNull(false);
+                        setGambaran(data.gambaran_umum);
+                    }
                 } else {
                     setDataNull(true);
                     setGambaran([]);

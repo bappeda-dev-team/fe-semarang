@@ -4,7 +4,7 @@ import { ButtonSky, ButtonSkyBorder, ButtonRedBorder } from "@/components/global
 import { TbPencil, TbTrash } from "react-icons/tb";
 import { ModalRenaksi } from "../ModalRenaksi";
 import { ModalTahapan } from "../ModalTahapan";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { getUser, getToken, getOpdTahun } from "@/components/lib/Cookie";
 import { LoadingSync } from "@/components/global/Loading";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
@@ -79,7 +79,7 @@ const Renaksi: React.FC<id> = ({ id }) => {
             const hasil = result.rencana_kinerja;
             if (hasil) {
                const data = hasil.find((item: any) => item.rencana_aksis);
-               if (data == null) {
+               if (data.rencana_aksis.rencana_aksi == null) {
                   setDataNull(true);
                   setRenaksi([]);
                } else {
@@ -306,7 +306,7 @@ const Renaksi: React.FC<id> = ({ id }) => {
                               {total.total_bobot}
                            </td>
                         ))}
-                        <td className="border-r border-y px-6 py-1 text-center">
+                        <td colSpan={DataNull ? 40 : 0} className="border-r border-y px-6 py-1 text-center">
                            {TotalAll}
                         </td>
                      </tr>

@@ -87,7 +87,7 @@ const SubKegiatan: React.FC<id> = ({id}) => {
     const fetchOptionSubKegiatan = async() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
-            const response = await fetch(`${API_URL}/sub_kegiatan/pilihan/${user?.kode_opd}`, {
+            const response = await fetch(`${API_URL}/sub_kegiatan/pilihan/${user?.kode_opd}?status=belum_diambil`, {
                 headers: {
                     Authorization: `${token}`
                 }

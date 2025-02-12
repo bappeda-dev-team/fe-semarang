@@ -22,7 +22,8 @@ import {
   TbBulbFilled,
   TbChartBar,
   TbCalendarShare,
-  TbMessageReport
+  TbMessageReport,
+  TbCalendar
 } from "react-icons/tb";
 import Image from 'next/image';
 import { usePathname, useParams } from 'next/navigation';
@@ -47,6 +48,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
   const [DataMaster, setDataMaster] = useState<boolean | null>(null);
     const [MasterOPD, setMasterOPD] = useState<boolean | null>(null);
     const [MasterPegawai, setMasterPegawai] = useState<boolean | null>(null);
+    const [MasterPeriode, setMasterPeriode] = useState<boolean | null>(null);
     const [LevelPohon, setLevelPohon] = useState<boolean | null>(null);
     const [MasterJabatan, setMasterJabatan] = useState<boolean | null>(null);
     const [MasterUser, setMasterUser] = useState<boolean | null>(null);
@@ -132,6 +134,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -199,6 +202,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(true);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -265,6 +269,74 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(true);
+      setMasterPeriode(false);      
+      setLevelPohon(false);
+      setMasterJabatan(false);
+      setMasterUsulanPemda(false);
+      // masterprogramkegiatan
+      setMasterUrusan(false);
+      setMasterBidangUrusan(false);
+      setMasterProgram(false);
+      setMasterKegiatan(false);
+      setMasterSubKegiatan(false);
+      setMasterLembaga(false);
+      setMasterUser(false);
+      setMasterRole(false);
+      // perencanaan pemda
+      setTematikKota(false);
+      setKotaPohonKinerjaKota(false);
+      // RPJMD
+      setTujuanPemda(false);
+      setSasaranPemda(false);
+      setIKU(false);
+      // perencanaan opd
+      setPohonKinerjaOpd(false);
+      setPohonCascadingOpd(false);
+      setUserOpd(false);
+      //Renstra
+      setTujuanOpd(false);
+      setSasaranOpd(false);
+      setIKUOpd(false);
+      setPermasalahanOpd(false);
+      setMasterUsulanOpd(false);
+      //perencanaan asn
+      setRencanaKinerja(false);
+      setPohonCascading(false);
+      setRincianBelanja(false);
+      setPerencanaanManajemenResiko(false);
+      //laporan
+      setLaporanMusrenbang(false);
+      setLaporanPokokPikiran(false);
+      setLaporanMandatori(false);
+      setLaporanInisiatif(false);
+      setSPIP(false);
+      setManajemenResiko(false);
+      setInovasi(false);
+      setRencanaKinerjaKAK(false);
+    }
+    if(url == "/DataMaster/masterperiode"){
+      // SLIDE MENU
+      // super_admin
+      setDataMaster(true);
+      setMasterProgramKegiatan(false);
+      setPerencanaanKota(false);
+      setRPJMD(false);
+      // admin_opd
+      setPerencanaanOPD(false);
+      setMasterUsulanOpd(false);
+      setRenstra(false);
+      // asn
+      setPerencanaan(false);
+      setUsulanLaporan(false);
+      setLaporan(false);
+      setLaporanUsulan(false);
+
+      // HALAMAN
+      setDashboard(false);
+      // data master
+      setMasterOPD(false);
+      setMasterPegawai(false);
+      setMasterPeriode(true);      
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -331,6 +403,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(true);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -398,6 +471,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -464,6 +538,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -530,6 +605,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -596,6 +672,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -662,6 +739,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -728,6 +806,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(true);
       setMasterUsulanPemda(false);
@@ -794,6 +873,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -860,6 +940,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -926,6 +1007,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -993,6 +1075,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -1059,6 +1142,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -1125,6 +1209,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -1191,6 +1276,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -1257,6 +1343,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -1324,6 +1411,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -1373,6 +1461,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setDataMaster(false);
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterProgramKegiatan(false);
       setMasterBidangUrusan(false);
@@ -1414,6 +1503,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setDataMaster(false);
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterProgramKegiatan(false);
       setMasterBidangUrusan(false);
@@ -1455,6 +1545,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setDataMaster(false);
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterProgramKegiatan(false);
       setMasterBidangUrusan(false);
@@ -1496,6 +1587,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setDataMaster(false);
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterProgramKegiatan(false);
       setMasterBidangUrusan(false);
@@ -1554,6 +1646,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -1620,6 +1713,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -1686,6 +1780,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -1758,6 +1853,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -1824,6 +1920,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -1873,6 +1970,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setDataMaster(false);
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterProgramKegiatan(false);
       setMasterBidangUrusan(false);
@@ -1915,6 +2013,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setDataMaster(false);
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterProgramKegiatan(false);
       setMasterBidangUrusan(false);
@@ -1956,6 +2055,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setDataMaster(false);
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterProgramKegiatan(false);
       setMasterBidangUrusan(false);
@@ -1997,6 +2097,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setDataMaster(false);
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterProgramKegiatan(false);
       setMasterBidangUrusan(false);
@@ -2038,6 +2139,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setDataMaster(false);
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterProgramKegiatan(false);
       setMasterBidangUrusan(false);
@@ -2094,6 +2196,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       // data master
       setMasterOPD(false);
       setMasterPegawai(false);
+      setMasterPeriode(false);
       setLevelPohon(false);
       setMasterJabatan(false);
       setMasterUsulanPemda(false);
@@ -2235,6 +2338,12 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${MasterPegawai ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
                   <TbUsers className="text-xl" />
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master Pegawai</span>
+                </li>
+              </Link>
+              <Link href="/DataMaster/masterperiode">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${MasterPeriode ? "bg-white text-gray-800" : "hover:bg-gray-700"}`}>
+                  <TbCalendar className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master Periode</span>
                 </li>
               </Link>
               <Link href="/DataMaster/masteruser">

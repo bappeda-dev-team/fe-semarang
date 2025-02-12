@@ -36,7 +36,7 @@ const RincianRencanaKinerja = () => {
                 <Musrebang id={id_rekin}/>
                 <SubKegiatan id={id_rekin}/>
                 <Sakip id={id_rekin}/>
-                <Renaksi/>
+                <Renaksi id={id_rekin}/>
                 <DasarHukum id={id_rekin}/>
                 <GambaranUmum id={id_rekin}/>
                 <Permasalahan id={id_rekin}/>

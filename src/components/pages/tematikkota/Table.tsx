@@ -13,7 +13,7 @@ interface tematik {
     parent: number;
     tema: string;
     keterangan: string;
-    indikators: indikator[]; 
+    indikator: indikator[]; 
 }
 interface indikator {
     id_indikator: string;
@@ -153,15 +153,15 @@ const Table = () => {
                             <td className="border-r border-b px-6 py-4 text-center">{index + 1}</td>
                             <td className="border-r border-b px-6 py-4 text-center">{data.tema}</td>
                             <td className="border-r border-b px-6 py-4 text-center">{data.keterangan ? data.keterangan : "-"}</td>
-                            {data.indikators ?
+                            {data.indikator ?
                                 <>
                                     <td className="border-r border-b px-6 py-4 text-center">
-                                        {data.indikators.map((item: indikator) => (
+                                        {data.indikator.map((item: indikator) => (
                                             <p key={item.id_indikator}>{item.nama_indikator}</p>
                                         ))}
                                     </td>
                                     <td className="border-r border-b px-6 py-4 text-center">
-                                        {data.indikators.map((item: indikator) => (
+                                        {data.indikator.map((item: indikator) => (
                                             item.targets.map((t: target) => (
                                                 <p key={t.id_target}>{t.target} / {t.satuan}</p>
                                             ))

@@ -35,15 +35,6 @@ const SasaranPemda = () => {
                         <h1 className="uppercase font-bold">Sasaran Pemda</h1>
                         <h1 className="uppercase font-bold ml-1">{Tahun ? Tahun?.label : ""}</h1>
                     </div>
-                    <div className="flex flex-col">
-                        <ButtonSky 
-                            className="flex items-center justify-center"
-                            halaman_url='/tujuanpemda/tambah'
-                        >
-                            <TbCirclePlus className="mr-1"/>
-                            Tambah Sasaran Pemda
-                        </ButtonSky>
-                    </div>
                 </div>
                 <Table />
             </div>

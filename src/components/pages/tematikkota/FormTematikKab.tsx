@@ -403,7 +403,7 @@ export const FormEditTematikKab = () => {
                         setTahun(tahun);
                         reset((prev) => ({ ...prev, tahun: tahun }))
                     }
-                    if(data.indikators){
+                    if(data.indikator){
                         reset({
                             nama_pohon: data.nama_pohon || '',
                             keterangan: data.keterangan || '',
@@ -411,7 +411,7 @@ export const FormEditTematikKab = () => {
                                 value: data.tahun,
                                 label: data.tahun,
                             },
-                            indikator: data.indikators?.map((item: indikator) => ({
+                            indikator: data.indikator?.map((item: indikator) => ({
                                 nama_indikator: item.nama_indikator,
                                 targets: item.targets.map((t: target) => ({
                                     target: t.target,
@@ -419,7 +419,7 @@ export const FormEditTematikKab = () => {
                                 })),
                             })),
                         });
-                        replace(data.indikators.map((item: indikator) => ({
+                        replace(data.indikator.map((item: indikator) => ({
                             indikator: item.nama_indikator,
                             targets: item.targets,
                         })));

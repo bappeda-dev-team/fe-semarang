@@ -56,6 +56,7 @@ const Table = () => {
     const [IdSasaran, setIdSasaran] = useState<number>(0);
     const [IdSubTema, setIdSubTema] = useState<number>(0);
     const [NamaPohon, setNamaPohon] = useState<string>('');
+    const [JenisPohon, setJenisPohon] = useState<string>('');
 
     const [Show, setShow] = useState<{ [key: string]: boolean }>({});
 
@@ -137,28 +138,32 @@ const Table = () => {
         }
     };
 
-    const handleModalNewSasaran = (id: number, nama_pohon: string) => {
+    const handleModalNewSasaran = (id: number, nama_pohon: string, jenis_pohon: string) => {
         if (isOpenNewSasaran) {
             setIsOpenNewSasaran(false);
             setNamaPohon('');
+            setJenisPohon('')
             setIdSubTema(0);
         } else {
             setIsOpenNewSasaran(true);
             setNamaPohon(nama_pohon);
+            setJenisPohon(jenis_pohon)
             setIdSubTema(id);
         }
     }
-    const handleModalEditSasaran = (id: number, subtema: number, nama_pohon: string) => {
+    const handleModalEditSasaran = (id: number, subtema: number, nama_pohon: string, jenis_pohon: string) => {
         if (isOpenEditSasaran) {
             setIsOpenEditSasaran(false);
             setIdSasaran(0);
             setNamaPohon('');
+            setJenisPohon('')
             setIdSubTema(subtema);
         } else {
             setIdSubTema(subtema);
             setIsOpenEditSasaran(true);
             setIdSasaran(id);
             setNamaPohon(nama_pohon);
+            setJenisPohon(jenis_pohon)
         }
     }
 
@@ -223,7 +228,7 @@ const Table = () => {
                                                                         <>
                                                                             <ButtonGreen
                                                                                 className="flex items-center gap-1 w-full"
-                                                                                onClick={() => handleModalEditSasaran(item.id_sasaran, item.subtematik_id, item.nama_subtematik)}
+                                                                                onClick={() => handleModalEditSasaran(item.id_sasaran, item.subtematik_id, item.nama_subtematik, item.jenis_pohon)}
                                                                             >
                                                                                 <TbPencil />
                                                                                 Edit
@@ -245,7 +250,7 @@ const Table = () => {
                                                                         :
                                                                         <ButtonSky
                                                                             className="flex items-center gap-1 w-full"
-                                                                            onClick={() => handleModalNewSasaran(item.subtematik_id, item.nama_subtematik)}
+                                                                            onClick={() => handleModalNewSasaran(item.subtematik_id, item.nama_subtematik, item.jenis_pohon)}
                                                                         >
                                                                             <TbCirclePlus />
                                                                             Tambah
@@ -298,9 +303,10 @@ const Table = () => {
                                         metode="baru"
                                         subtema_id={IdSubTema}
                                         nama_pohon={NamaPohon}
+                                        jenis_pohon={JenisPohon}
                                         tahun={Tahun?.value}
                                         isOpen={isOpenNewSasaran}
-                                        onClose={() => handleModalNewSasaran(0, '')}
+                                        onClose={() => handleModalNewSasaran(0, '', '')}
                                         onSuccess={() => setFetchTrigger((prev) => !prev)}
                                     />
                                     {/* MODAL EDIT TUJUAN */}
@@ -308,10 +314,11 @@ const Table = () => {
                                         metode="lama"
                                         id={IdSasaran}
                                         nama_pohon={NamaPohon}
+                                        jenis_pohon={JenisPohon}
                                         subtema_id={IdSubTema}
                                         tahun={Tahun?.value}
                                         isOpen={isOpenEditSasaran}
-                                        onClose={() => handleModalEditSasaran(0, 0, '')}
+                                        onClose={() => handleModalEditSasaran(0, 0, '', '')}
                                         onSuccess={() => setFetchTrigger((prev) => !prev)}
                                     />
                                 </div>

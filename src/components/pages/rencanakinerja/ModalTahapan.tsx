@@ -38,7 +38,7 @@ export const ModalTahapan: React.FC<modal> = ({ isOpen, onClose, renaksi_id, id,
 
     const [IdPelaksanaan, setIdPelaksanaan] = useState<string>('');
     const [Bobot, setBobot] = useState<number>(0);
-    const [Bulan, setBulan] = useState<number | null>(null);
+    const [BobotSementara, setBobotSementara] = useState<number>(0);
     const [BobotTersedia, setBobotTersedia] = useState<number | null>(null);
 
     const [Proses, setProses] = useState<boolean>(false);
@@ -60,6 +60,7 @@ export const ModalTahapan: React.FC<modal> = ({ isOpen, onClose, renaksi_id, id,
                 }
                 if (hasil.bobot) {
                     setBobot(hasil.bobot);
+                    setBobotSementara(hasil.bobot);
                 }
                 if (hasil.bobot_tersedia) {
                     setBobotTersedia(hasil.bobot_tersedia);
@@ -94,8 +95,9 @@ export const ModalTahapan: React.FC<modal> = ({ isOpen, onClose, renaksi_id, id,
         };
         // metode === 'baru' && console.log("baru :", formDataNew);
         // metode === 'lama' && console.log("lama :", formDataEdit);
-        if(Bobot > bobot_tersedia && metode == 'baru'){
+        if(Bobot > bobot_tersedia_baru && metode == 'baru'){
             AlertNotification("bobot melebihi yang tersedia", "", "error", 1000);
+        } else if(Bobot > bobot_tersedia_lama && metode == 'lama'){
         } else {
             try {
                 let url = "";
@@ -134,7 +136,8 @@ export const ModalTahapan: React.FC<modal> = ({ isOpen, onClose, renaksi_id, id,
         onClose();
         setBobot(0);
     }
-    const bobot_tersedia = 100 - (total_bobot ?? 0);
+    const bobot_tersedia_baru = 100 - (total_bobot ?? 0);
+    const bobot_tersedia_lama = BobotSementara + (BobotTersedia ?? 0);
 
     const hapusBobot = async (id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -175,21 +178,28 @@ export const ModalTahapan: React.FC<modal> = ({ isOpen, onClose, renaksi_id, id,
                         <table>
                             <tbody>
                                 <tr className="rounded-lg border my-1">
-                                    <td className="py-2 px-2">Nama Tahapan</td>
-                                    <td className="py-2 px-2">:</td>
-                                    <td className="py-2 px-2">{nama_renaksi}</td>
+                                    <td className="py-2 px-2 max-w-[50px]">Nama Tahapan</td>
+                                    <td className="py-2 px-2 max-w-[10px]">:</td>
+                                    <td className="py-2 px-2 max-w-[200px]">{nama_renaksi}</td>
                                 </tr>
                                 <tr className="rounded-lg border my-1">
-                                    <td className="py-2 px-2">Bulan</td>
-                                    <td className="py-2 px-2">:</td>
-                                    <td className="py-2 px-2">Ke - {bulan}</td>
+                                    <td className="py-2 px-2 max-w-[50px]">Bulan</td>
+                                    <td className="py-2 px-2 max-w-[10px]">:</td>
+                                    <td className="py-2 px-2 max-w-[200px]">Ke - {bulan}</td>
                                 </tr>
                                 <tr className="rounded-lg border my-1">
-                                    <td className="py-2 px-2">Bobot Tersedia</td>
-                                    <td className="py-2 px-2">:</td>
+                                    <td className="py-2 px-2 max-w-[50px]">Bobot Yang Masih Bisa ditambahkan</td>
+                                    <td className="py-2 px-2 max-w-[10px]">:</td>
                                     <td className="py-2 px-2 flex gap-2 items-center">
-                                        {bobot_tersedia}
-                                        {(metode == 'baru' && Bobot > bobot_tersedia) &&
+                                        {metode == 'baru' && bobot_tersedia_baru}
+                                        {metode == 'lama' && bobot_tersedia_lama}
+                                        {(metode == 'baru' && Bobot > bobot_tersedia_baru) &&
+                                            <p className="text-white p-1 uppercase rounded-xl bg-red-500 flex items-center gap-1">
+                                                <TbAlertTriangle />
+                                                bobot melebihi yang tersedia
+                                            </p>
+                                        }
+                                        {(metode == 'lama' && Bobot > bobot_tersedia_lama) &&
                                             <p className="text-white p-1 uppercase rounded-xl bg-red-500 flex items-center gap-1">
                                                 <TbAlertTriangle />
                                                 bobot melebihi yang tersedia

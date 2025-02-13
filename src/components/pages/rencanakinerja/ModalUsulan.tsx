@@ -472,7 +472,7 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose, rekin_id, onS
                                         className="uppercase text-xs font-bold text-gray-700 my-2"
                                         htmlFor="usulan"
                                     >
-                                        Usulan Inisiatif :
+                                        Usulan Inisiatif Kepala Daerah :
                                     </label>
                                     <Controller
                                         name="usulan"
@@ -590,32 +590,6 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose, rekin_id, onS
                                 <div className="flex flex-col py-3">
                                     <label
                                         className="uppercase text-xs font-bold text-gray-700 my-2"
-                                        htmlFor="uraian"
-                                    >
-                                        Uraian :
-                                    </label>
-                                    <Controller
-                                        name="uraian"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <>
-                                                <input
-                                                    className="border px-4 py-2 rounded-lg"
-                                                    type="text"
-                                                    value={Uraian}
-                                                    placeholder="Masukkan Uraian"
-                                                    onChange={(e) => {
-                                                        field.onChange(e.target.value);
-                                                        setUraian(e.target.value);
-                                                    }}
-                                                />
-                                            </>
-                                        )}
-                                    />
-                                </div>
-                                <div className="flex flex-col py-3">
-                                    <label
-                                        className="uppercase text-xs font-bold text-gray-700 my-2"
                                         htmlFor="peraturan_terkait"
                                     >
                                         Peraturan Terkait :
@@ -633,6 +607,32 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose, rekin_id, onS
                                                     onChange={(e) => {
                                                         field.onChange(e.target.value);
                                                         setPeraturanTerkait(e.target.value);
+                                                    }}
+                                                />
+                                            </>
+                                        )}
+                                    />
+                                </div>
+                                <div className="flex flex-col py-3">
+                                    <label
+                                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                                        htmlFor="uraian"
+                                    >
+                                        Uraian :
+                                    </label>
+                                    <Controller
+                                        name="uraian"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <>
+                                                <input
+                                                    className="border px-4 py-2 rounded-lg"
+                                                    type="text"
+                                                    value={Uraian}
+                                                    placeholder="Masukkan Uraian"
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setUraian(e.target.value);
                                                     }}
                                                 />
                                             </>

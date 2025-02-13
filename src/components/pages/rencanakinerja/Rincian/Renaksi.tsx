@@ -306,7 +306,7 @@ const Renaksi: React.FC<id> = ({ id }) => {
                               {total.total_bobot}
                            </td>
                         ))}
-                        <td colSpan={DataNull ? 40 : 0} className="border-r border-y px-6 py-1 text-center">
+                        <td colSpan={DataNull ? 40 : 0} className={`border-r border-y px-6 py-1 text-center ${TotalAll === 100 ? 'bg-emerald-500' : 'bg-red-500'}`}>
                            {TotalAll}
                         </td>
                      </tr>

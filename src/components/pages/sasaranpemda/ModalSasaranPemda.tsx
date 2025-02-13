@@ -25,13 +25,14 @@ interface modal {
     metode: 'lama' | 'baru';
     id?: number;
     tahun: number;
+    jenis_pohon: string;
     subtema_id: number;
     nama_pohon: string;
     onSuccess: () => void;
 }
 
 
-export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun, subtema_id, nama_pohon, metode, onSuccess }) => {
+export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun, subtema_id, nama_pohon, jenis_pohon, metode, onSuccess }) => {
 
     const {
         control,
@@ -42,6 +43,7 @@ export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun,
     const token = getToken();
 
     const [SasaranPemda, setSasaranPemda] = useState<string>('');
+    const [JenisPohon, setJenisPohon] = useState<string>('');
     const [TujuanPemda, setTujuanPemda] = useState<OptionType | null>(null);
     const [OptionTujuanPemda, setOptionTujuanPemda] = useState<OptionType[]>([]);
 
@@ -69,6 +71,9 @@ export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun,
                         label: hasil.tujuan_pemda,
                     }
                     setTujuanPemda(tujuanpemda);
+                }
+                if(hasil.jenis_pohon){
+                    setJenisPohon(hasil.jenis_pohon);
                 }
             } catch (err) {
                 console.log(err);
@@ -192,7 +197,7 @@ export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun,
                                 className="uppercase text-xs font-bold text-gray-700 my-2"
                                 htmlFor="sasaran_pemda"
                             >
-                                Nama Pohon:
+                                Strategic Pemda ({jenis_pohon}):
                             </label>
                             <div className="border px-4 py-2 rounded-lg">{nama_pohon}</div>
                         </div>

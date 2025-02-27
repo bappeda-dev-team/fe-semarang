@@ -133,6 +133,7 @@ export const ModalPeriode: React.FC<modal> = ({ isOpen, onClose, id, metode, onS
         onClose();
         setTahunAwal('');
         setTahunAkhir('');
+        setJenisPeriode('RPJMD');
     }
 
     if (!isOpen) {
@@ -219,7 +220,7 @@ export const ModalPeriode: React.FC<modal> = ({ isOpen, onClose, id, metode, onS
                                         id="jenis_periode"
                                         type="text"
                                         placeholder="masukkan Jenis Periode"
-                                        value={JenisPeriode}
+                                        value={JenisPeriode || "RPJMD"}
                                         onChange={(e) => {
                                             field.onChange(e);
                                             setJenisPeriode(e.target.value);

@@ -13,6 +13,7 @@ interface Periode {
     tahun_awal: string;
     tahun_akhir: string;
     tahun_list: string;
+    jenis_periode: string;
 }
 
 const Table = () => {
@@ -129,6 +130,7 @@ const Table = () => {
                             <th className="border-r border-b py-3 text-center">No</th>
                             <th className="border-r border-b px-6 py-3 min-w-[100px]">Tahun Awal</th>
                             <th className="border-l border-b px-6 py-3 min-w-[100px]">Tahun Akhir</th>
+                            <th className="border-l border-b px-6 py-3 min-w-[100px]">Jenis Periode</th>
                             <th className="border-l border-b px-6 py-3 min-w-[100px]">Aksi</th>
                         </tr>
                     </thead>
@@ -145,6 +147,7 @@ const Table = () => {
                                     <td className="border-x border-b border-gray-500 py-4 text-center">{index + 1}</td>
                                     <td className="border-x border-b border-gray-500 px-6 py-4 text-center">{item.tahun_awal || "-"}</td>
                                     <td className="border-r border-b border-gray-500 px-6 py-4 text-center">{item.tahun_akhir || "-"}</td>
+                                    <td className="border-r border-b border-gray-500 px-6 py-4 text-center">{item.jenis_periode || "-"}</td>
                                     <td className="border-r border-b border-gray-500 px-6 py-4 flex flex-col gap-1 justify-center">
                                         <ButtonGreen
                                             onClick={() => handleModalEditPeriode(item.id)}

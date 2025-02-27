@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { LoadingSync, LoadingButtonClip } from "@/components/global/Loading";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { TbPencil } from "react-icons/tb";
 
 interface id {
     id: string;
@@ -18,7 +19,7 @@ interface sakip {
     tahun: string;
     status_rencana_kinerja: string;
     catatan: string;
-    operasioanl_daerah: opd;
+    operasional_daerah: opd;
     pegawai_id: string;
     nama_pegawai: string;
     indikator: indikator[];
@@ -117,7 +118,10 @@ const Sakip: React.FC<id> = ({id}) => {
         <div className="mt-3 rounded-t-xl border px-5 py-3">
                 <div className="flex justify-between">
                     <h1 className="font-bold">Sasaran Kinerja</h1>
-                    <ButtonSky halaman_url={`/rencanakinerja/${id}/edit`}>Edit Sasaran</ButtonSky>
+                    <ButtonSky halaman_url={`/rencanakinerja/${id}/edit`}>
+                        <TbPencil className="mr-1"/>
+                        Edit Sasaran
+                    </ButtonSky>
                 </div>
                 <div className="mx-2 my-3">
                     <table className="w-full">
@@ -132,7 +136,7 @@ const Sakip: React.FC<id> = ({id}) => {
                             <>
                                 <tr>
                                     <td className="px-2 py-2 border">OPD </td>
-                                    <td className="px-2 py-2 border">{Sakip?.operasioanl_daerah?.nama_opd || "-"}</td>
+                                    <td className="px-2 py-2 border">{Sakip?.operasional_daerah?.nama_opd || "-"}</td>
                                 </tr>
                                 <tr>
                                     <td className="px-2 py-2 border">ASN </td>

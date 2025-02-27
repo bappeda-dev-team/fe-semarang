@@ -26,7 +26,7 @@ export const ButtonSky: React.FC<button> = ({children, type, className, halaman_
 
     return(
         <button
-            className={`px-3 flex justify-center items-center py-1 bg-gradient-to-r from-[#98B9EC] to-[#3072D6] hover:from-[#071952] hover:to-[#003edab4] text-white rounded-lg ${className}`}
+            className={`px-3 flex justify-center items-center py-1 bg-gradient-to-r from-[#08C2FF] to-[#006BFF] hover:from-[#0584AD] hover:to-[#014CB2] text-white rounded-lg ${className}`}
             disabled={disabled || Loading}
             type={type}
             onClick={onClick || pindahHalaman}
@@ -91,7 +91,7 @@ export const ButtonGreen: React.FC<button> = ({children, type, className, halama
         disabled={disabled || Loading}
         type={type}
         onClick={onClick || pindahHalaman}
-            className={`px-3 flex justify-center items-center py-1 bg-gradient-to-r from-[#00A607] to-[#AFD88F] hover:from-[#AFD88F] hover:to-[#00A607] text-white rounded-lg ${className}`}
+            className={`px-3 flex justify-center items-center py-1 bg-gradient-to-r from-[#1CE978] to-[#11B935] hover:from-[#1EB281] hover:to-[#0D7E5C] text-white rounded-lg ${className}`}
         >
             {Loading ? 
                 (
@@ -212,7 +212,7 @@ export const ButtonRed: React.FC<button> = ({children, type, className, halaman_
 
     return(
         <button
-            className={`px-3 flex justify-center items-center py-1 bg-gradient-to-r from-[#D20606] to-[#D96B6B] hover:from-[#D96B6B] hover:to-[#D20606] text-white rounded-lg ${className}`}
+            className={`px-3 flex justify-center items-center py-1 bg-gradient-to-r from-[#DA415B] to-[#BC163C] hover:from-[#B7384D] hover:to-[#951230] text-white rounded-lg ${className}`}
             disabled={disabled || Loading}
             type={type}
             onClick={onClick || pindahHalaman}

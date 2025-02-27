@@ -5,11 +5,19 @@ import { Controller, SubmitHandler, useForm, useFieldArray } from "react-hook-fo
 import { ButtonSky, ButtonRed, ButtonSkyBorder, ButtonRedBorder } from '@/components/global/Button';
 import { getToken } from "@/components/lib/Cookie";
 import { LoadingButtonClip } from "@/components/global/Loading";
-import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
+import { AlertNotification } from "@/components/global/Alert";
+import Select from 'react-select';
+
+interface OptionType {
+    value: number;
+    label: string;
+}
 
 interface FormValue {
     id: number;
     tujuan_pemda: string;
+    visi: OptionType;
+    misi: OptionType;
     tema_id: number;
     periode_id: number;
     indikator: indikator[];
@@ -25,7 +33,7 @@ type target = {
     target: string;
     satuan: string;
     tahun?: string;
-};
+}
 
 interface modal {
     isOpen: boolean;
@@ -34,7 +42,9 @@ interface modal {
     id?: number; // id tujuan pemda
     tema_id?: number; //id tematik
     periode: number; // id periode
-    tahun?: number; // tahun value header
+    tahun: number;
+    jenis_periode: string;
+    tahun_list: string[]; // tahun value header
     onSuccess: () => void;
 }
 
@@ -42,11 +52,12 @@ interface Periode {
     id: number;
     tahun_awal: string;
     tahun_akhir: string;
+    jenis_periode: string;
     tahun_list: string[];
 }
 
 
-export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id, periode, metode, tahun, onSuccess }) => {
+export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id, periode, jenis_periode, metode, tahun, tahun_list, onSuccess }) => {
 
     const {
         control,
@@ -59,9 +70,14 @@ export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id
 
     const [TujuanPemda, setTujuanPemda] = useState<string>('');
     const [NamaPohon, setNamaPohon] = useState<string>('');
+    const [Visi, setVisi] = useState<OptionType | null>(null);
+    const [Misi, setMisi] = useState<OptionType | null>(null);
+    
+    const [VisiOption, setVisiOption] = useState<OptionType[]>([]);
+    const [MisiOption, setMisiOption] = useState<OptionType[]>([]);
 
     const [Proses, setProses] = useState<boolean>(false);
-    const [Periode, setPeriode] = useState<Periode | null>(null);
+    const [IsLoading, setIsLoading] = useState<boolean>(false);
 
     const { fields, append, remove, replace } = useFieldArray({
         control,
@@ -90,8 +106,22 @@ export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id
                 if (hasil.tujuan_pemda) {
                     setTujuanPemda(hasil.tujuan_pemda);
                 }
-                if (hasil.nama_tema) {
-                    setNamaPohon(hasil.nama_tema);
+                if (hasil.nama_tematik) {
+                    setNamaPohon(hasil.nama_tematik);
+                }
+                if(hasil.id_visi){
+                    const visi = {
+                        label: hasil.visi,
+                        value: hasil.id_visi,
+                    }
+                    setVisi(visi);
+                }
+                if(hasil.id_misi){
+                    const misi = {
+                        value: hasil.id_misi,
+                        label: hasil.misi,
+                    }
+                    setMisi(misi);
                 }
 
                 // Mapping data ke form dengan struktur yang sesuai
@@ -116,7 +146,7 @@ export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id
         };
         const fetchPokinBaru = async () => {
             try {
-                const response = await fetch(`${API_URL}/pohon_kinerja/pokin_with_periode/${tema_id}`, {
+                const response = await fetch(`${API_URL}/pohon_kinerja/pokin_with_periode/${tema_id}/${jenis_periode}`, {
                     headers: {
                         Authorization: `${token}`,
                         'Content-Type': 'application/json',
@@ -148,29 +178,65 @@ export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id
                 console.log(err);
             }
         };
-        const fetchPeriode = async () => {
-            try {
-                const response = await fetch(`${API_URL}/periode/tahun/${tahun}`, {
-                    headers: {
-                        Authorization: `${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const result = await response.json();
-                const hasil = result.data;
-                setPeriode(hasil);
-            } catch (err) {
-                console.error("error fetch periode", err);
-            }
-        };
         if (metode === 'lama' && isOpen) {
             fetchDetailTujuan();
-            fetchPeriode();
         } else if (metode === "baru" && isOpen) {
             fetchPokinBaru();
-            fetchPeriode();
         }
-    }, [id, token, isOpen, metode, reset, replace, tahun, tema_id]);
+    }, [id, token, isOpen, metode, reset, replace, tahun, tema_id, jenis_periode]);
+
+    const fetchVisiOption = async () => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        try {
+            setIsLoading(true);
+            const response = await fetch(`${API_URL}/visi_pemda/findall/tahun/${tahun}/jenisperiode/${jenis_periode}`, {
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const result = await response.json();
+            const hasil = result.data;
+            // console.log(hasil);
+            const data = hasil.map((item: any) => ({
+                value: item.id,
+                label: item.visi,
+            }));
+            setVisiOption(data);
+        } catch (err) {
+            console.error("error fetch option visi", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    const fetchMisiOption = async (id: number) => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        try {
+            setIsLoading(true);
+            const response = await fetch(`${API_URL}/misi_pemda/findbyvisi/${id}`, {
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const result = await response.json();
+            const hasil = result.data.misi_pemda;
+            // console.log(hasil);
+            const data = hasil.map((item: any) => ({
+                label: item.misi,
+                value: item.id,
+                visi: "",
+                awal: "",
+                akhir: "",
+                jenis: "",
+            }));
+            setMisiOption(data);
+        } catch (err) {
+            console.error("error fetch option misi", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -179,6 +245,8 @@ export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id
             tema_id: tema_id,
             periode_id: periode,
             tujuan_pemda: TujuanPemda,
+            id_visi: Visi?.value,
+            id_misi: Misi?.value,
             indikator: data.indikator.map((ind) => ({
                 indikator: ind.indikator,
                 rumus_perhitungan: ind.rumus_perhitungan,
@@ -186,7 +254,7 @@ export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id
                 target: ind.target.map((t, index) => ({
                     target: t.target,
                     satuan: t.satuan,
-                    tahun: Periode?.tahun_list[index],
+                    tahun: tahun_list[index],
                 })),
             })),
         };
@@ -195,6 +263,8 @@ export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id
             id: id,
             periode_id: periode,
             tujuan_pemda: TujuanPemda,
+            id_visi: Visi?.value,
+            id_misi: Misi?.value,
             indikator: data.indikator.map((ind) => ({
                 indikator: ind.indikator,
                 rumus_perhitungan: ind.rumus_perhitungan,
@@ -202,7 +272,7 @@ export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id
                 target: ind.target.map((t, index) => ({
                     target: t.target,
                     satuan: t.satuan,
-                    tahun: Periode?.tahun_list[index],
+                    tahun: tahun_list[index],
                 })),
             })),
         };
@@ -235,6 +305,7 @@ export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id
                 AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Tujuan Pemda`, "success", 1000);
                 onClose();
                 onSuccess();
+                reset();
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server dengan response !ok", "error", 2000);
             }
@@ -296,6 +367,85 @@ export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id
                                             setTujuanPemda(e.target.value);
                                         }}
                                     />
+                                )}
+                            />
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
+                                htmlFor="visi"
+                            >
+                                Visi :
+                            </label>
+                            <Controller
+                                name="visi"
+                                control={control}
+                                render={({ field }) => (
+                                    <>
+                                        <Select
+                                            {...field}
+                                            placeholder="Pilih Visi"
+                                            isLoading={IsLoading}
+                                            options={VisiOption}
+                                            isSearchable
+                                            value={Visi}
+                                            isClearable
+                                            onMenuOpen={() => {
+                                                fetchVisiOption();
+                                            }}
+                                            onChange={(option) => {
+                                                field.onChange(option);
+                                                setVisi(option);
+                                            }}
+                                            styles={{
+                                                control: (baseStyles) => ({
+                                                    ...baseStyles,
+                                                    borderRadius: '8px',
+                                                })
+                                            }}
+                                        />
+                                    </>
+                                )}
+                            />
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
+                                htmlFor="misi"
+                            >
+                                Misi :
+                            </label>
+                            <Controller
+                                name="misi"
+                                control={control}
+                                render={({ field }) => (
+                                    <>
+                                        <Select
+                                            {...field}
+                                            placeholder="Pilih Misi"
+                                            isLoading={IsLoading}
+                                            options={MisiOption}
+                                            isSearchable
+                                            value={Misi}
+                                            isDisabled={!Visi}
+                                            isClearable
+                                            onMenuOpen={() => {
+                                                if(Visi){
+                                                    fetchMisiOption(Visi?.value);
+                                                }
+                                            }}
+                                            onChange={(option) => {
+                                                field.onChange(option);
+                                                setMisi(option);
+                                            }}
+                                            styles={{
+                                                control: (baseStyles) => ({
+                                                    ...baseStyles,
+                                                    borderRadius: '8px',
+                                                })
+                                            }}
+                                        />
+                                    </>
                                 )}
                             />
                         </div>
@@ -365,7 +515,7 @@ export const ModalTujuanPemda: React.FC<modal> = ({ isOpen, onClose, id, tema_id
                                     {field.target.map((_, subindex) => (
                                         <div key={`${index}-${subindex}`} className="flex flex-col py-1 px-3 border border-gray-200 rounded-lg">
                                             <label className="text-base text-center text-gray-700">
-                                                <p>{Periode?.tahun_list[subindex]}</p>
+                                                <p>{tahun_list[subindex]}</p>
                                             </label>
                                             <Controller
                                                 name={`indikator.${index}.target.${subindex}.target`}

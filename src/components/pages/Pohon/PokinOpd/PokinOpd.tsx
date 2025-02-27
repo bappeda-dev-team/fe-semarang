@@ -9,9 +9,8 @@ import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
 import { PohonOpd } from '@/components/lib/Pohon/Opd/PohonOpd';
 import { FormPohonOpd } from '@/components/lib/Pohon/Opd/FormPohonOpd';
 import { getUser, getToken, getOpdTahun } from '@/components/lib/Cookie';
-import Select from 'react-select';
-import { AlertNotification } from '@/components/global/Alert';
 import { ModalPohonPemda, ModalPohonCrosscutting} from './ModalPohonPemda';
+import { ModalTujuanOpd } from '../../tujuanopd/ModalTujuanOpd';
 
 interface OptionType {
     value: number;
@@ -58,6 +57,7 @@ const PokinOpd = () => {
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     
     const [Kendali, setKendali] = useState<boolean>(true);
+    const [OpenModalTujuanOpd, setOpenModalTujuanOpd] = useState<boolean>(false);
     
     //rekapitulasi jumlah pohon dari pemda
     const [JumlahPemdaStrategic, setJumlahPemdaStrategic] = useState<PokinPemda[]>([]);
@@ -73,9 +73,6 @@ const PokinOpd = () => {
     const [PohonCrosscutting, setPohonCrosscutting] = useState<boolean>(false);
     const [CrossPending, setCrossPending] = useState<number | null>(null);
     const [CrossDitolak, setCrossDitolak] = useState<number | null>(null);
-
-    const [PohonParent, setPohonParent] = useState<PokinPemda | null>(null);
-    const [OptionPohonParent, setOptionPohonParent] = useState<PokinPemda[]>([]);
 
     const [error, setError] = useState<string>('');
     const token = getToken();
@@ -152,6 +149,14 @@ const PokinOpd = () => {
     const newChild = () => {
         setFormList([...formList, Date.now()]); // Using unique IDs
     };
+
+    const handleModalNewTujuan = () => {
+        if (OpenModalTujuanOpd) {
+            setOpenModalTujuanOpd(false);
+        } else {
+            setOpenModalTujuanOpd(true);
+        }
+    }
 
     useEffect(() => {
         const fetchPokinOpd = async (url: string) => {
@@ -539,9 +544,9 @@ const PokinOpd = () => {
                                 </div>
                                 {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') &&
                                     <div className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black`}>
-                                        <ButtonSkyBorder halaman_url='/tujuanopd'>
-                                            <TbPencil className="mr-1"/>
-                                            Tujuan OPD
+                                        <ButtonSkyBorder onClick={() => handleModalNewTujuan()}>
+                                            <TbCirclePlus className="mr-1"/>
+                                            Tambah Tujuan OPD
                                         </ButtonSkyBorder>
                                     </div>
                                 }
@@ -549,7 +554,7 @@ const PokinOpd = () => {
                                 {(User?.roles == 'admin_opd' || User?.roles == 'super_admin' || User?.roles == 'level_1') &&
                                     <div className="flex justify-center my-1 py-2">
                                         <ButtonGreenBorder className='border-[#ef4444] hover:bg-[#ef4444] text-[#ef4444] hover:text-white' onClick={newChild}>
-                                            <TbCirclePlus />
+                                            <TbCirclePlus className="mr-1"/>
                                             Strategic
                                         </ButtonGreenBorder>
                                     </div>
@@ -601,6 +606,15 @@ const PokinOpd = () => {
                     {cursorMode === "hand" ? <TbHandStop size={30}/> : <TbPointer size={30}/>}
                   </button>
                 </div>
+                <ModalTujuanOpd
+                    metode="baru"
+                    kode_opd={User?.roles == 'super_admin' ? SelectedOpd?.value : User?.kode_opd}
+                    tahun={Tahun?.value}
+                    special={true}
+                    isOpen={OpenModalTujuanOpd}
+                    onClose={() => handleModalNewTujuan()}
+                    onSuccess={() => setDeleted((prev) => !prev)}
+                />
             </div>
         </>
     )

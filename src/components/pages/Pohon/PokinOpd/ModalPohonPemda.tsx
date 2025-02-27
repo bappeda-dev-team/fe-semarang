@@ -238,28 +238,32 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess, is
             parent: PohonParent ? PohonParent?.value : 0,
             jenis_pohon: PohonPemda?.jenis_pohon,
         }
-        // console.log(formData);
-        try {
-            setProses(true);
-            const response = await fetch(`${API_URL}/pohon_kinerja_admin/clone_pokin_pemda/create`, {
-                method: "POST",
-                headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
-            if (!response.ok) {
-                alert("cant fetch data")
+        if((PohonPemda?.jenis_pohon === "Tactical Pemda" || PohonPemda?.jenis_pohon === "Operational Pemda") && (PohonParent?.value === undefined || PohonParent?.value === null)){
+            AlertNotification("Pohon Parent", "Tactical dan Operational wajib memilih parent", "warning", 2000);
+        } else {
+            // console.log(formData);
+            try {
+                setProses(true);
+                const response = await fetch(`${API_URL}/pohon_kinerja_admin/clone_pokin_pemda/create`, {
+                    method: "POST",
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                })
+                if (!response.ok) {
+                    alert("cant fetch data")
+                }
+                AlertNotification("Berhasil", "Pohon dari pemda di terima", "success", 1000);
+                onClose();
+                onSuccess();
+            } catch (err) {
+                AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+                console.error(err);
+            } finally{
+                setProses(false);
             }
-            AlertNotification("Berhasil", "Pohon dari pemda di terima", "success", 1000);
-            onClose();
-            onSuccess();
-        } catch (err) {
-            AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
-            console.error(err);
-        } finally{
-            setProses(false);
         }
     }
     const tolakPohonPemda = async (id: number) => {

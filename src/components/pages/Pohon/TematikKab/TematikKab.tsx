@@ -85,11 +85,11 @@ const TematikKab = () => {
     const handleSetTematik = (tema: any) => {
         if (!tema) {
             setTematik(null); // Jika tema dihapus, reset Tematik
-            router.push(`/pohonkinerjakota`);
+            router.push(`/pohonkinerjapemda`);
             return;
         }
         setTematik(tema);
-        router.push(`/pohonkinerjakota?tema=${tema.label}&id=${tema.value}`);
+        router.push(`/pohonkinerjapemda?tema=${tema.label}&id=${tema.value}`);
     };
 
     return (

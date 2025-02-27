@@ -169,7 +169,7 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose, rekin_id, onS
             //key : value
             usulan: UsulanInisiatif,
             manfaat: Manfaat,
-            uraian: Uraian,
+            uraian: "",
             tahun: String(Tahun?.value),
             rencana_kinerja_id: rekin_id,
             pegawai_id: User?.nip,
@@ -525,7 +525,7 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose, rekin_id, onS
                                         )}
                                     />
                                 </div>
-                                <div className="flex flex-col py-3">
+                                {/* <div className="flex flex-col py-3">
                                     <label
                                         className="uppercase text-xs font-bold text-gray-700 my-2"
                                         htmlFor="uraian"
@@ -550,7 +550,7 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose, rekin_id, onS
                                             </>
                                         )}
                                     />
-                                </div>
+                                </div> */}
                             </>
                         }
                         {(JenisUsulan === 'mandatori') &&

@@ -38,7 +38,11 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
     if(data){
       setUser(data.user)
     }
-  },[]);
+    // Mengambil path dari URL tanpa domain dan protokol
+    const path = window.location.pathname;
+    // Mengganti judul (title) halaman dengan path (nama halaman)
+    document.title = path.substring(1);
+  },[pathname]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen)

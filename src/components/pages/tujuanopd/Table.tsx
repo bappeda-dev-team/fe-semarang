@@ -1,230 +1,369 @@
 'use client'
 
-import { ButtonRed, ButtonGreen } from "@/components/global/Button";
-import { useEffect, useState } from "react";
+import { ButtonRed, ButtonGreen, ButtonSky } from "@/components/global/Button";
+import React, { useEffect, useState } from "react";
 import { LoadingClip } from "@/components/global/Loading";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
-import { getOpdTahun } from "@/components/lib/Cookie";
 import { TahunNull, OpdTahunNull } from "@/components/global/OpdTahunNull";
-import { getToken, getUser } from "@/components/lib/Cookie";
+import { getToken, getUser, getOpdTahun } from "@/components/lib/Cookie";
+import { TbPencil, TbTrash, TbCirclePlus } from "react-icons/tb";
+import { ModalTujuanOpd } from "./ModalTujuanOpd";
 
-interface tujuan {
-    id_tujuan_opd: string;
-    nama_opd: string;
-    kode_opd: string;
-    tujuan: string;
-    rumus_perhitungan: string;
-    sumber_data: string;
+interface Periode {
+    id: number;
     tahun_awal: string;
     tahun_akhir: string;
-    indikator: indikator[];
 }
-interface indikator {
-    id_indikator: string;
-    nama_indikator: string;
-    targets: target[];
-}
-type target = {
-    id_target: string;
+
+interface Target {
+    id: string;
     target: string;
     satuan: string;
-};
+    tahun: string;
+}
 
-const Table = () => {
+interface Indikator {
+    id: string;
+    indikator: string;
+    rumus_perhitungan: string;
+    sumber_data: string;
+    target: Target[];
+}
+
+interface Periode {
+    id: number;
+    tahun_awal: string;
+    tahun_akhir: string;
+}
+
+interface TujuanOpd {
+    id_tujuan_opd: number;
+    tujuan: string;
+    periode: Periode;
+    indikator: Indikator[];
+}
+
+interface tujuan {
+    kode_urusan: string;
+    urusan: string;
+    kode_bidang_urusan: string;
+    nama_bidang_urusan: string;
+    kode_opd: string;
+    nama_opd: string;
+    tujuan_opd: TujuanOpd[];
+}
+
+interface Periode_Header {
+    id: number;
+    tahun_awal: string;
+    tahun_akhir: string;
+    tahun_list: string[];
+}
+
+interface table {
+    id_periode: number;
+    tahun_awal: string;
+    tahun_akhir: string;
+    jenis: string;
+    tahun_list: string[];
+}
+
+const Table: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, tahun_list }) => {
 
     const [Tujuan, setTujuan] = useState<tujuan[]>([]);
-    const [Loading, setLoading] = useState<boolean | null>(null);
+
+    const [PeriodeNotFound, setPeriodeNotFound] = useState<boolean | null>(null);
     const [Error, setError] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
+    const [Loading, setLoading] = useState<boolean | null>(null);
+
+    const [isOpenNewTujuan, setIsOpenNewTujuan] = useState<boolean>(false);
+    const [isOpenEditTujuan, setIsOpenEditTujuan] = useState<boolean>(false);
+    const [IdTujuan, setIdTujuan] = useState<number>(0);
+    const [IdTema, setIdTema] = useState<number>(0);
+
+    const [FetchTrigger, setFetchTrigger] = useState<boolean>(false);
     const [Tahun, setTahun] = useState<any>(null);
     const [User, setUser] = useState<any>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const token = getToken();
-    
+
     useEffect(() => {
         const data = getOpdTahun();
         const fetchUser = getUser();
         if (fetchUser) {
             setUser(fetchUser.user);
         }
-        if(data.tahun){
+        if (data.tahun) {
             const tahun = {
                 value: data.tahun.value,
                 label: data.tahun.label,
             }
             setTahun(tahun);
         }
-        if(data.opd){
+        if (data.opd) {
             const opd = {
                 value: data.opd.value,
                 label: data.opd.label,
             }
             setSelectedOpd(opd);
         }
-    },[]);
-    
+    }, []);
+
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchTujuan = async() => {
+        let url = '';
+        if (User?.roles == 'super_admin') {
+            url = `tujuan_opd/findall/${SelectedOpd?.value}/tahunawal/${tahun_awal}/tahunakhir/${tahun_akhir}/jenisperiode/${jenis}`
+        } else {
+            url = `tujuan_opd/findall/${User?.kode_opd}/tahunawal/${tahun_awal}/tahunakhir/${tahun_akhir}/jenisperiode/${jenis}`
+        }
+        const fetchTujuanOpd = async () => {
             setLoading(true)
-            try{
-                const url = User?.roles == 'super_admin' ? `tujuan_opd/findall/${SelectedOpd?.value}/${Tahun?.value}` : `tujuan_opd/findall/${User?.kode_opd}/${Tahun?.value}`;
+            try {
                 const response = await fetch(`${API_URL}/${url}`, {
                     headers: {
-                      Authorization: `${token}`,
-                      'Content-Type': 'application/json',
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
                     },
                 });
                 const result = await response.json();
                 const data = result.data;
-                if(data.length == 0){
+                if (data.length == 0) {
                     setDataNull(true);
                     setTujuan([]);
-                } else if(result.code == 500){
-                    setError(true);
-                    console.log("error 500");
+                } else if (result.code == 500) {
+                    setPeriodeNotFound(true);
                     setTujuan([]);
                 } else {
                     setDataNull(false);
                     setTujuan(data);
                 }
-            } catch(err){
+            } catch (err) {
                 setError(true);
                 console.error(err)
-            } finally{
+            } finally {
                 setLoading(false);
             }
         }
-        if(User?.roles !== undefined){
-            fetchTujuan();
+        if (User?.roles !== undefined) {
+            fetchTujuanOpd();
         }
-    }, [token, User, Tahun, SelectedOpd]);
+    }, [token, User, Tahun, FetchTrigger, SelectedOpd, tahun_awal, tahun_akhir, jenis]);
 
-    const hapusTujuan = async(id: any) => {
+    const hapusTujuanOpd = async (id: number) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        try{
+        // console.log(id);
+        try {
             const response = await fetch(`${API_URL}/tujuan_opd/delete/${id}`, {
                 method: "DELETE",
                 headers: {
-                  Authorization: `${token}`,
-                  'Content-Type': 'application/json',
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
                 },
             })
-            if(!response.ok){
-                alert("cant fetch data")
+            if (!response.ok) {
+                alert("response !ok saat hapus data tujuan opd")
             }
-            setTujuan(Tujuan.filter((data) => (data.id_tujuan_opd !== id)))
             AlertNotification("Berhasil", "Data Tujuan OPD Berhasil Dihapus", "success", 1000);
-        } catch(err){
+            setFetchTrigger((prev) => !prev);
+        } catch (err) {
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
+            console.error(err);
         }
     };
 
-    if(Loading){
-        return (    
-            <div className="border p-5 rounded-xl shadow-xl">
-                <LoadingClip className="mx-5 py-5"/>
-            </div>
-        );
-    } else if(Error){
+    const handleModalNewTujuan = () => {
+        if (isOpenNewTujuan) {
+            setIsOpenNewTujuan(false);
+        } else {
+            setIsOpenNewTujuan(true);
+        }
+    }
+    const handleModalEditTujuan = (id: number) => {
+        if (isOpenEditTujuan) {
+            setIsOpenEditTujuan(false);
+            setIdTujuan(0);
+        } else {
+            setIsOpenEditTujuan(true);
+            setIdTujuan(id);
+        }
+    }
+
+    if (Loading) {
         return (
             <div className="border p-5 rounded-xl shadow-xl">
-                <h1 className="text-red-500 mx-5 py-5">Periksa koneksi internet atau database server</h1>
+                <LoadingClip className="mx-5 py-5" />
+            </div>
+        );
+    } else if (Error) {
+        return (
+            <div className="border p-5 rounded-xl shadow-xl">
+                <h1 className="text-red-500 font-bold mx-5 py-5">Periksa koneksi internet atau database server</h1>
             </div>
         )
-    } else if(Tahun?.value == undefined){
+    } else if (PeriodeNotFound && Tahun?.value != undefined) {
+        return (
+            <div className="flex flex-col gap-3 border p-5 rounded-xl shadow-xl">
+                <h1 className="text-yellow-500 font-base mx-5">Tahun {Tahun?.value} tidak tersedia di data periode / periode dengan tahun {Tahun?.value} belum di buat</h1>
+                <h1 className="text-yellow-500 font-bold mx-5">Tambahkan periode dengan tahun {Tahun?.value} di halaman Master Periode (Super Admin)</h1>
+            </div>
+        )
+    } else if (Tahun?.value == undefined) {
         return <TahunNull />
     }
-    if (User?.roles == 'super_admin') {
-            if (SelectedOpd?.value == undefined || Tahun?.value == undefined) {
-                return (
-                    <>
-                        <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
-                            <OpdTahunNull />
-                        </div>
-                    </>
-                )
-            }
-        }
+    if (SelectedOpd?.value == undefined || Tahun?.value == undefined) {
+        return (
+            <>
+                <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
+                    <OpdTahunNull />
+                </div>
+            </>
+        )
+    }
 
-    return(
-        <>
+    return (
+        <div>
+            <div className="flex items-center justify-between px-5 py-2">
+                <ButtonSky onClick={() => handleModalNewTujuan()}>
+                    <TbCirclePlus className="mr-1" />
+                    Tambah Tujuan OPD
+                </ButtonSky>
+            </div>
             <div className="overflow-auto m-2 rounded-t-xl border">
                 <table className="w-full">
                     <thead>
-                        <tr className="bg-[#99CEF5] text-white">
-                            <th className="border-r border-b px-6 py-3 min-w-[50px] text-center">No</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[100px]">Aksi</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Tujuan OPD</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Rumus Perhitungan</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Sumber Data</th>
-                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Indikator</th>
-                            <th className="border-l border-b px-6 py-3 min-w-[200px]">Target/Satuan</th>
+                        <tr className="bg-emerald-500 text-white">
+                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px] text-center">No</th>
+                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[400px]">Urusan & Bidang Urusan</th>
+                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[300px]">Tujuan OPD</th>
+                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Aksi</th>
+                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Indikator</th>
+                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Rumus Perhitungan</th>
+                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Sumber Data</th>
+                            {tahun_list.map((item: any) => (
+                                <th key={item} colSpan={2} className="border-l border-b px-6 py-3 min-w-[100px]">{item}</th>
+                            ))}
+                        </tr>
+                        <tr className="bg-emerald-500 text-white">
+                            {tahun_list.map((item: any) => (
+                                <React.Fragment key={item}>
+                                    <th className="border-l border-b px-6 py-3 min-w-[50px]">Target</th>
+                                    <th className="border-l border-b px-6 py-3 min-w-[50px]">Satuan</th>
+                                </React.Fragment>
+                            ))}
                         </tr>
                     </thead>
                     <tbody>
-                    {DataNull ? 
+                        {DataNull ?
                             <tr>
-                                <td className="px-6 py-3 uppercase" colSpan={13}>
+                                <td className="px-6 py-3" colSpan={30}>
                                     Data Kosong / Belum Ditambahkan
                                 </td>
                             </tr>
-                        :
-                        Tujuan.map((data, index) => (
-                        <tr key={data.id_tujuan_opd}>
-                            <td className="border-r border-b px-6 py-4 text-center">{index + 1}</td>
-                            <td className="border-r border-b px-6 py-4">
-                                <div className="flex flex-col jutify-center items-center gap-2">
-                                    <ButtonGreen className="w-full" halaman_url={`/tujuanopd/${data.id_tujuan_opd}`}>Edit</ButtonGreen>
-                                    <ButtonRed 
-                                        className="w-full"
-                                        onClick={() => {
-                                            AlertQuestion("Hapus?", "Hapus Tujuan OPD yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                                                if(result.isConfirmed){
-                                                    hapusTujuan(data.id_tujuan_opd);
-                                                }
-                                            });
-                                        }}
-                                    >
-                                        Hapus
-                                    </ButtonRed>
-                                </div>
-                            </td>
-                            <td className="border-r border-b px-6 py-4 text-center">{data.tujuan ? data.tujuan : "-"}</td>
-                            <td className="border-r border-b px-6 py-4 text-center">{data.rumus_perhitungan ? data.rumus_perhitungan : "-"}</td>
-                            <td className="border-r border-b px-6 py-4 text-center">{data.sumber_data ? data.sumber_data : "-"}</td>
-                            {data.indikator ? 
-                            <>
-                                <td className="border-r border-b px-6 py-4 text-center">
-                                    {data.indikator.map((item: any) => (
-                                        <p key={item.id_indikator}>{item.nama_indikator}</p>
-                                    ))}
-                                </td>
-                                <td className="border-r border-b px-6 py-4 text-center">
-                                    {data.indikator.map((item: any) => (
-                                        item.targets.map((t: any) => (
-                                            <p key={item.id_target}>{t.target ? t.target : "-"} / {t.satuan ? t.satuan : "-"}</p>
-                                        ))
-                                    ))}
-                                </td>
-                            </>
                             :
-                                <>
-                                    <td className="border-r border-b px-6 py-4 text-center">
-                                    -
-                                    </td>
-                                    <td className="border-r border-b px-6 py-4 text-center">
-                                    -
-                                    </td>
-                                </>
-                            }
-                        </tr>
-                        ))
-                    }
+                            Tujuan.map((data: tujuan, index: number) => {
+
+                                const TotalRow = data.tujuan_opd.reduce((total, item) => total + (item.indikator.length === 0 ? 1 : item.indikator.length), 0) + data.tujuan_opd.length + 1;
+
+                                return (
+                                    // URUSAN DAN BIDANG URUSAN
+                                    <React.Fragment key={index}>
+                                        <tr>
+                                            <td className="border-x border-b border-emerald-500 px-6 py-4 text-center" rowSpan={TotalRow}>{index + 1}</td>
+                                            <td className="border-x border-b border-emerald-500 px-6 py-6" rowSpan={TotalRow}>
+                                                <div className="flex flex-col gap-2">
+                                                    <p className="border-b border-emerald-500 pb-2">{data.urusan ? `${data.kode_urusan} - ${data.urusan}` : "-"}</p>
+                                                    <p>{data.kode_bidang_urusan ? `${data.kode_bidang_urusan} - ${data.nama_bidang_urusan}` : "-"}</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {/* TUJUAN DAN AKSI */}
+                                        {data.tujuan_opd.map((item: TujuanOpd) => (
+                                            <React.Fragment key={item.id_tujuan_opd}>
+                                                <tr>
+                                                    <td className="border-x border-b border-emerald-500 px-6 py-6 h-full" rowSpan={item.indikator.length !== 0 ? item.indikator.length + 1 : 2}>
+                                                        <p className="flex min-h-[100px] bg-white items-center">
+                                                            {item.tujuan || "-"}
+                                                        </p>
+                                                    </td>
+                                                    <td className="border-x border-b border-emerald-500 px-6 py-6" rowSpan={item.indikator.length !== 0 ? item.indikator.length + 1 : 2}>
+                                                        <div className="flex flex-col justify-center items-center gap-2">
+                                                            <ButtonGreen
+                                                                className="flex items-center gap-1 w-full"
+                                                                onClick={() => handleModalEditTujuan(item.id_tujuan_opd)}
+                                                            >
+                                                                <TbPencil />
+                                                                Edit
+                                                            </ButtonGreen>
+                                                            <ButtonRed className="flex items-center gap-1 w-full" onClick={() => {
+                                                                AlertQuestion("Hapus?", "Hapus Tujuan Pemda yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                                                    if (result.isConfirmed) {
+                                                                        hapusTujuanOpd(item.id_tujuan_opd);
+                                                                    }
+                                                                });
+                                                            }}>
+                                                                <TbTrash />
+                                                                Hapus
+                                                            </ButtonRed>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {/* INDIKATOR */}
+                                                {item.indikator.length === 0 ? (
+                                                    <React.Fragment>
+                                                        <tr>
+                                                            <td colSpan={30} className="border-x border-b border-emerald-500 px-6 py-6 bg-yellow-500 text-white">indikator tujuan opd belum di tambahkan</td>
+                                                        </tr>
+                                                    </React.Fragment>
+                                                ) : (
+                                                    item.indikator.map((i: Indikator) => (
+                                                        <tr key={i.id}>
+                                                            <td className="border-x border-b border-emerald-500 px-6 py-6">{i.indikator || "-"}</td>
+                                                            <td className="border-x border-b border-emerald-500 px-6 py-6">{i.rumus_perhitungan || "-"}</td>
+                                                            <td className="border-x border-b border-emerald-500 px-6 py-6">{i.sumber_data || "-"}</td>
+                                                            {i.target.map((t: Target) => (
+                                                                <React.Fragment key={t.id}>
+                                                                    <td className="border-x border-b border-emerald-500 px-6 py-6 text-center">{t.target || "-"}</td>
+                                                                    <td className="border-x border-b border-emerald-500 px-6 py-6 text-center">{t.satuan || "-"}</td>
+                                                                </React.Fragment>
+                                                            ))}
+                                                        </tr>
+                                                    ))
+                                                )}
+                                            </React.Fragment>
+                                        ))}
+                                    </React.Fragment>
+                                )
+                            })
+                        }
                     </tbody>
                 </table>
+                {/* MODAL EDIT TUJUAN */}
+                <ModalTujuanOpd
+                    metode="baru"
+                    kode_opd={User?.roles == 'super_admin' ? SelectedOpd?.value : User?.kode_opd}
+                    tahun={Tahun?.value}
+                    tahun_list={tahun_list}
+                    periode={id_periode}
+                    isOpen={isOpenNewTujuan}
+                    onClose={() => handleModalNewTujuan()}
+                    onSuccess={() => setFetchTrigger((prev) => !prev)}
+                />
+                {/* MODAL EDIT TUJUAN */}
+                <ModalTujuanOpd
+                    metode="lama"
+                    kode_opd={User?.roles == 'super_admin' ? SelectedOpd?.value : User?.kode_opd}
+                    id={IdTujuan}
+                    tahun={Tahun?.value}
+                    tahun_list={tahun_list}
+                    periode={id_periode}
+                    isOpen={isOpenEditTujuan}
+                    onClose={() => handleModalEditTujuan(0)}
+                    onSuccess={() => setFetchTrigger((prev) => !prev)}
+                />
             </div>
-        </>
+        </div>
     )
 }
 

@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { getToken, getUser } from "@/components/lib/Cookie";
 import { LoadingSync } from "@/components/global/Loading";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
+import { TbCirclePlus, TbPencil, TbTrash } from "react-icons/tb";
 
 interface id {
     id: string;
@@ -129,7 +130,10 @@ const DasarHukum: React.FC<id> = ({id}) => {
             {/* Dasar Hukum */}
             <div className="flex flex-wrap justify-between items-center mt-3 rounded-t-xl border px-5 py-3">
                 <h1 className="font-bold">Dasar Hukum</h1>
-                <ButtonSky onClick={handleModalNewDasarHukum}>Tambah Dasar Hukum</ButtonSky>
+                <ButtonSky onClick={handleModalNewDasarHukum}>
+                    <TbCirclePlus className="mr-1"/>
+                    Tambah Dasar Hukum
+                </ButtonSky>
                 <ModalDasarHukumAdd 
                     onClose={handleModalNewDasarHukum} 
                     isOpen={isOpenNewDasarHukum}
@@ -162,7 +166,10 @@ const DasarHukum: React.FC<id> = ({id}) => {
                                         <td className="border px-6 py-3">{data.uraian}</td>
                                         <td className="border px-6 py-3">
                                             <div className="flex flex-col justify-center items-center gap-2">
-                                                <ButtonSkyBorder className="w-full" onClick={() => handleModalEditDasarHukum(data.id)}>Edit</ButtonSkyBorder>
+                                                <ButtonSkyBorder className="w-full" onClick={() => handleModalEditDasarHukum(data.id)}>
+                                                    <TbPencil className="mr-1"/>
+                                                    Edit
+                                                </ButtonSkyBorder>
                                                 <ModalDasarHukumEdit
                                                     onClose={() => handleModalEditDasarHukum('')} 
                                                     isOpen={isOpenEditDasarHukum}
@@ -179,6 +186,7 @@ const DasarHukum: React.FC<id> = ({id}) => {
                                                         });
                                                     }}
                                                 >
+                                                    <TbTrash className="mr-1"/>
                                                     Hapus
                                                 </ButtonRedBorder>
                                             </div>

@@ -1,10 +1,11 @@
 'use client'
 
 import { FiHome } from "react-icons/fi";
-import Table from "@/components/pages/sasaranpemda/Table";
-import { getToken } from "@/components/lib/Cookie";
-import { useState } from "react";
+import TableOpd from "@/components/pages/iku/TableOpd";
+import { getOpdTahun, getToken } from "@/components/lib/Cookie";
+import { useState, useEffect } from "react";
 import Select from 'react-select';
+import { OpdTahunNull } from "@/components/global/OpdTahunNull";
 
 interface Periode {
     value: number;
@@ -16,13 +17,34 @@ interface Periode {
     tahun_list: string[];
 }
 
-const SasaranPemda = () => {
+const IkuOpd = () => {
 
+    const [Tahun, setTahun] = useState<any>(null);
+    const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const token = getToken();
     const [Periode, setPeriode] = useState<Periode | null>(null);
     const [PeriodeOption, setPeriodeOption] = useState<Periode[]>([]);
 
     const [Loading, setLoading] = useState<boolean>(false);
+
+
+    useEffect(() => {
+        const data = getOpdTahun();
+        if (data.tahun) {
+            const tahun = {
+                value: data.tahun.value,
+                label: data.tahun.label,
+            }
+            setTahun(tahun);
+        }
+        if (data.opd) {
+            const opd = {
+                value: data.opd.value,
+                label: data.opd.label,
+            }
+            setSelectedOpd(opd);
+        }
+    }, []);
 
     const fetchPeriode = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -52,18 +74,29 @@ const SasaranPemda = () => {
         }
     };
 
+    if (SelectedOpd?.value == undefined || Tahun?.value == undefined) {
+        return (
+            <>
+                <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
+                    <OpdTahunNull />
+                </div>
+            </>
+        )
+    }
+
     return (
         <>
             <div className="flex items-center">
                 <a href="/" className="mr-1"><FiHome /></a>
-                <p className="mr-1">/ Perencanaan Pemda</p>
-                <p className="mr-1">/ Sasaran Pemda</p>
+                <p className="mr-1">/ Perencanaan OPD</p>
+                <p className="mr-1">/ RENSTRA</p>
+                <p className="mr-1">/ IKU</p>
             </div>
             <div className="mt-3 rounded-xl shadow-lg border">
                 <div className="flex items-center justify-between border-b px-5 py-5">
                     <div className="flex flex-wrap items-end">
-                        <h1 className="uppercase font-bold">Sasaran Pemda</h1>
-                        <h1 className="uppercase font-bold ml-1">(Periode {Periode?.tahun_awal} - {Periode?.tahun_akhir})</h1>
+                        <h1 className="uppercase font-bold">Indikator Utama OPD</h1>
+                        <h1 className="uppercase font-bold ml-1">{Tahun ? Tahun?.label : ""}</h1>
                     </div>
                     <Select
                         styles={{
@@ -89,8 +122,8 @@ const SasaranPemda = () => {
                     />
                 </div>
                 {Periode ?
-                    <Table
-                        id_periode={Periode?.value}
+                    <TableOpd
+                        kode_opd={SelectedOpd?.value}
                         tahun_awal={Periode?.tahun_awal ? Periode?.tahun_awal : ""}
                         tahun_akhir={Periode?.tahun_akhir ? Periode?.tahun_akhir : ""}
                         jenis={Periode?.jenis_periode ? Periode?.jenis_periode : ""}
@@ -106,4 +139,4 @@ const SasaranPemda = () => {
     )
 }
 
-export default SasaranPemda;
+export default IkuOpd;

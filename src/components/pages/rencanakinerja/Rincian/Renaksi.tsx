@@ -1,7 +1,7 @@
 'use client'
 
 import { ButtonSky, ButtonSkyBorder, ButtonRedBorder } from "@/components/global/Button";
-import { TbPencil, TbTrash } from "react-icons/tb";
+import { TbCirclePlus, TbPencil, TbTrash } from "react-icons/tb";
 import { ModalRenaksi } from "../ModalRenaksi";
 import { ModalTahapan } from "../ModalTahapan";
 import React, { useState, useEffect } from "react";
@@ -195,7 +195,10 @@ const Renaksi: React.FC<id> = ({ id }) => {
             <div className="flex flex-wrap justify-between items-center">
                <h1 className="font-bold">Rencana Aksi</h1>
                <div className="flex flex-wrap">
-                  <ButtonSky className="m-1" onClick={handleModalNewRenaksi}>Tambah Tahapan</ButtonSky>
+                  <ButtonSky className="m-1" onClick={handleModalNewRenaksi}>
+                     <TbCirclePlus className="mr-1"/>
+                     Tambah Tahapan
+                  </ButtonSky>
                </div>
             </div>
             <div className="overflow-auto mt-3 rounded-t-xl border">
@@ -352,7 +355,10 @@ const Renaksi: React.FC<id> = ({ id }) => {
                   onSuccess={() => setFetchTrigger((prev) => !prev)}
                />
             </div>
-            <h1 className="my-2">waktu yang dibutuhkan : {TotalWaktu} Bulan</h1>
+            <div className="flex flex-wrap gap-1">
+               <h1 className="my-2">waktu yang dibutuhkan : </h1>
+               <h1 className="my-2 font-bold text-emerald-500">{TotalWaktu} Bulan</h1>
+            </div>
          </div>
       </>
    )

@@ -16,6 +16,7 @@ interface OptionType {
 interface FormValue {
     tahun_awal: string;
     tahun_akhir: string;
+    jenis_periode: string;
 }
 
 interface modal {
@@ -39,13 +40,14 @@ export const ModalPeriode: React.FC<modal> = ({ isOpen, onClose, id, metode, onS
 
     const [TahunAwal, setTahunAwal] = useState<string>('');
     const [TahunAkhir, setTahunAkhir] = useState<string>('');
+    const [JenisPeriode, setJenisPeriode] = useState<string>('');
 
     const [Proses, setProses] = useState<boolean>(false);
     const [Loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchSasaranPemda = async () => {
+        const fetchPeriode = async () => {
             try {
                 const response = await fetch(`${API_URL}/periode/detail/${id}`, {
                     headers: {
@@ -61,12 +63,15 @@ export const ModalPeriode: React.FC<modal> = ({ isOpen, onClose, id, metode, onS
                 if(hasil.tahun_akhir){
                     setTahunAkhir(hasil.tahun_akhir);
                 }
+                if(hasil.jenis_periode){
+                    setJenisPeriode(hasil.jenis_periode);
+                }
             } catch (err) {
                 console.log(err);
             }
         };
         if (isOpen && metode === 'lama') {
-            fetchSasaranPemda();
+            fetchPeriode();
         }
     }, [id, token, isOpen, metode]);
 
@@ -76,53 +81,51 @@ export const ModalPeriode: React.FC<modal> = ({ isOpen, onClose, id, metode, onS
             //key : value
             tahun_awal: String(TahunAwal),
             tahun_akhir: String(TahunAkhir),
+            jenis_periode: JenisPeriode
         };
         const formDataEdit = {
             //key : value
             id: id,
             tahun_awal: String(TahunAwal),
             tahun_akhir: String(TahunAkhir),
+            jenis_periode: JenisPeriode
         };
         const getBody = () => {
             if (metode === "lama") return formDataEdit;
             if (metode === "baru") return formDataNew;
             return {}; // Default jika metode tidak sesuai
         };
-        if(Number(TahunAkhir) - Number(TahunAwal) != 4){
-            AlertNotification("Periode harus per 5 tahun", "", 'warning', 1000);
-        } else {
-            // metode === 'baru' && console.log("baru :", formDataNew);
-            // metode === 'lama' && console.log("lama :", formDataEdit);
-            try {
-                let url = "";
-                if (metode === "lama") {
-                    url = `periode/update/${id}`;
-                } else if (metode === "baru") {
-                    url = `periode/create`;
-                } else {
-                    url = '';
-                }
-                setProses(true);
-                const response = await fetch(`${API_URL}/${url}`, {
-                    method: metode === 'lama' ? "PUT" : "POST",
-                    headers: {
-                        Authorization: `${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(getBody()),
-                });
-                if (response.ok) {
-                    AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Periode`, "success", 1000);
-                    onClose();
-                    onSuccess();
-                } else {
-                    AlertNotification("Gagal", "terdapat kesalahan pada backend / database server dengan response !ok", "error", 2000);
-                }
-            } catch (err) {
-                AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
-            } finally {
-                setProses(false);
+        // metode === 'baru' && console.log("baru :", formDataNew);
+        // metode === 'lama' && console.log("lama :", formDataEdit);
+        try {
+            let url = "";
+            if (metode === "lama") {
+                url = `periode/update/${id}`;
+            } else if (metode === "baru") {
+                url = `periode/create`;
+            } else {
+                url = '';
             }
+            setProses(true);
+            const response = await fetch(`${API_URL}/${url}`, {
+                method: metode === 'lama' ? "PUT" : "POST",
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(getBody()),
+            });
+            if (response.ok) {
+                AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Periode`, "success", 1000);
+                onClose();
+                onSuccess();
+            } else {
+                AlertNotification("Gagal", "terdapat kesalahan pada backend / database server dengan response !ok", "error", 2000);
+            }
+        } catch (err) {
+            AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+        } finally {
+            setProses(false);
         }
     };
 
@@ -141,7 +144,7 @@ export const ModalPeriode: React.FC<modal> = ({ isOpen, onClose, id, metode, onS
                 <div className="fixed inset-0 bg-black opacity-30" onClick={handleClose}></div>
                 <div className={`bg-white rounded-lg p-8 z-10 w-5/6 max-h-[80%] overflow-auto`}>
                     <div className="w-max-[500px] py-2 border-b">
-                        <h1 className="text-xl uppercase text-center">{metode === 'baru' ? "Tambah" : "Edit"} Sasaran Pemda {id}</h1>
+                        <h1 className="text-xl uppercase text-center">{metode === 'baru' ? "Tambah" : "Edit"} Periode</h1>
                     </div>
                     <form
                         onSubmit={handleSubmit(onSubmit)}
@@ -194,6 +197,32 @@ export const ModalPeriode: React.FC<modal> = ({ isOpen, onClose, id, metode, onS
                                         onChange={(e) => {
                                             field.onChange(e);
                                             setTahunAkhir(e.target.value);
+                                        }}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className="flex flex-col py-3">
+                            <label
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
+                                htmlFor="jenis_periode"
+                            >
+                                Jenis Periode:
+                            </label>
+                            <Controller
+                                name="jenis_periode"
+                                control={control}
+                                render={({ field }) => (
+                                    <input
+                                        {...field}
+                                        className="border px-4 py-2 rounded-lg"
+                                        id="jenis_periode"
+                                        type="text"
+                                        placeholder="masukkan Jenis Periode"
+                                        value={JenisPeriode}
+                                        onChange={(e) => {
+                                            field.onChange(e);
+                                            setJenisPeriode(e.target.value);
                                         }}
                                     />
                                 )}

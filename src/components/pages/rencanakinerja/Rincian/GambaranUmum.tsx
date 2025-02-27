@@ -7,6 +7,7 @@ import { LoadingSync } from "@/components/global/Loading";
 import { getToken, getUser } from "@/components/lib/Cookie";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { ModalEditGambaranUmum } from "../ModalGambaranUmum";
+import { TbCirclePlus, TbPencil, TbTrash } from "react-icons/tb";
 
 interface id {
     id: string;
@@ -128,7 +129,10 @@ const GambaranUmum: React.FC<id> = ({id}) => {
             {/* gambaran umum */}
             <div className="flex flex-wrap justify-between items-center mt-3 rounded-t-xl border px-5 py-3">
                 <h1 className="font-bold">Gambaran Umum</h1>
-                <ButtonSky onClick={handleModalNewGambaranUmum}>Tambah Gambaran Umum</ButtonSky>
+                <ButtonSky onClick={handleModalNewGambaranUmum}>
+                    <TbCirclePlus className="mr-1"/>
+                    Tambah Gambaran Umum
+                </ButtonSky>
                 <ModalAddGambaranUmum 
                     onClose={handleModalNewGambaranUmum} 
                     isOpen={isOpenNewGambaranUmum}
@@ -159,7 +163,10 @@ const GambaranUmum: React.FC<id> = ({id}) => {
                                         <td className="border px-6 py-3">{data.gambaran_umum}</td>
                                         <td className="border px-6 py-3">
                                             <div className="flex flex-col justify-center items-center gap-2">
-                                                <ButtonSkyBorder className="w-full" onClick={() => handleModalEditgambaranUmum(data.id)}>Edit</ButtonSkyBorder>
+                                                <ButtonSkyBorder className="w-full" onClick={() => handleModalEditgambaranUmum(data.id)}>
+                                                    <TbPencil className="mr-1"/>
+                                                    Edit
+                                                </ButtonSkyBorder>
                                                 <ModalEditGambaranUmum
                                                     onClose={() => handleModalEditgambaranUmum('')} 
                                                     isOpen={isOpenEditGambaranUmum}
@@ -176,6 +183,7 @@ const GambaranUmum: React.FC<id> = ({id}) => {
                                                         });
                                                     }}
                                                 >
+                                                    <TbTrash className="mr-1"/>
                                                     Hapus
                                                 </ButtonRedBorder>
                                             </div>

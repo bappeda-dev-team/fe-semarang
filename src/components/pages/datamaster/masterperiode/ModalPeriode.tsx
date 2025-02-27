@@ -81,14 +81,14 @@ export const ModalPeriode: React.FC<modal> = ({ isOpen, onClose, id, metode, onS
             //key : value
             tahun_awal: String(TahunAwal),
             tahun_akhir: String(TahunAkhir),
-            jenis_periode: JenisPeriode
+            jenis_periode: JenisPeriode ? JenisPeriode : "RPJMD"
         };
         const formDataEdit = {
             //key : value
             id: id,
             tahun_awal: String(TahunAwal),
             tahun_akhir: String(TahunAkhir),
-            jenis_periode: JenisPeriode
+            jenis_periode: JenisPeriode ? JenisPeriode : "RPJMD"
         };
         const getBody = () => {
             if (metode === "lama") return formDataEdit;

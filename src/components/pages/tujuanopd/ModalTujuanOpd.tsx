@@ -228,43 +228,43 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
             if (metode === "baru") return formDataNew;
             return {}; // Default jika metode tidak sesuai
         };
-        metode === 'baru' && console.log("baru :", formDataNew);
-        metode === 'lama' && console.log("lama :", formDataEdit);
-        // try {
-        //     let url = "";
-        //     if (metode === "lama") {
-        //         url = `tujuan_opd/update/${id}`;
-        //     } else if (metode === "baru") {
-        //         url = `tujuan_opd/create`;
-        //     } else {
-        //         url = '';
-        //     }
-        //     setProses(true);
-        //     const response = await fetch(`${API_URL}/${url}`, {
-        //         method: metode === 'lama' ? "PUT" : "POST",
-        //         headers: {
-        //             Authorization: `${token}`,
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(getBody()),
-        //     });
-        //     const result = await response.json();
-        //     if (result.code === 201 || result.code === 200) {
-        //         AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Tujuan Pemda`, "success", 1000);
-        //         onClose();
-        //         onSuccess();
-        //         reset();
-        //     } else if(result.code === 500) {
-        //         AlertNotification("Gagal", `${result.data}`, "error", 2000);
-        //     } else {
-        //         AlertNotification("Gagal", "terdapat kesalahan pada backend / database server dengan response !ok", "error", 2000);
-        //         console.error(result);
-        //     }
-        // } catch (err) {
-        //     AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
-        // } finally {
-        //     setProses(false);
-        // }
+        // metode === 'baru' && console.log("baru :", formDataNew);
+        // metode === 'lama' && console.log("lama :", formDataEdit);
+        try {
+            let url = "";
+            if (metode === "lama") {
+                url = `tujuan_opd/update/${id}`;
+            } else if (metode === "baru") {
+                url = `tujuan_opd/create`;
+            } else {
+                url = '';
+            }
+            setProses(true);
+            const response = await fetch(`${API_URL}/${url}`, {
+                method: metode === 'lama' ? "PUT" : "POST",
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(getBody()),
+            });
+            const result = await response.json();
+            if (result.code === 201 || result.code === 200) {
+                AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Tujuan Pemda`, "success", 1000);
+                onClose();
+                onSuccess();
+                reset();
+            } else if(result.code === 500) {
+                AlertNotification("Gagal", `${result.data}`, "error", 2000);
+            } else {
+                AlertNotification("Gagal", "terdapat kesalahan pada backend / database server dengan response !ok", "error", 2000);
+                console.error(result);
+            }
+        } catch (err) {
+            AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+        } finally {
+            setProses(false);
+        }
     };
 
     const handleClose = () => {

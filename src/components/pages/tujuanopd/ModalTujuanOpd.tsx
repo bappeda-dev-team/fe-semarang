@@ -149,7 +149,7 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
             const data = result.data;
             const hasil = data.map((item: any) => ({
                 value: item.kode_bidang_urusan,
-                label: item.nama_bidang_urusan,
+                label: `${item.kode_bidang_urusan} - ${item.nama_bidang_urusan}`,
             }));
             setOptionBidangUrusan(hasil);
         } catch (err) {

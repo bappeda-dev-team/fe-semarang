@@ -65,7 +65,7 @@ const TableOpd: React.FC<table> = ({kode_opd, tahun_awal, tahun_akhir, jenis, ta
                 });
                 const result = await response.json();
                 const data = result.data;
-                if (data == null) {
+                if (data.length == 0) {
                     setDataNull(true);
                     setIKU([]);
                 } else {

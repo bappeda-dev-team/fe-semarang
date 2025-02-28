@@ -228,15 +228,16 @@ const Table: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, ta
         )
     } else if (Tahun?.value == undefined) {
         return <TahunNull />
-    }
-    if (SelectedOpd?.value == undefined || Tahun?.value == undefined) {
-        return (
-            <>
-                <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
-                    <OpdTahunNull />
-                </div>
-            </>
-        )
+    } else if(User?.roles == 'super_admin'){
+        if (SelectedOpd?.value == undefined || Tahun?.value == undefined) {
+            return (
+                <>
+                    <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
+                        <OpdTahunNull />
+                    </div>
+                </>
+            )
+        }
     }
 
     return (

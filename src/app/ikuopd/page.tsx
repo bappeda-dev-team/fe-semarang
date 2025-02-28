@@ -2,7 +2,7 @@
 
 import { FiHome } from "react-icons/fi";
 import TableOpd from "@/components/pages/iku/TableOpd";
-import { getOpdTahun, getToken } from "@/components/lib/Cookie";
+import { getUser, getOpdTahun, getToken } from "@/components/lib/Cookie";
 import { useState, useEffect } from "react";
 import Select from 'react-select';
 import { OpdTahunNull } from "@/components/global/OpdTahunNull";
@@ -20,6 +20,7 @@ interface Periode {
 const IkuOpd = () => {
 
     const [Tahun, setTahun] = useState<any>(null);
+    const [User, setUser] = useState<any>(null);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const token = getToken();
     const [Periode, setPeriode] = useState<Periode | null>(null);
@@ -30,6 +31,10 @@ const IkuOpd = () => {
 
     useEffect(() => {
         const data = getOpdTahun();
+        const fetchUser = getUser();
+        if (fetchUser) {
+            setUser(fetchUser.user);
+        }
         if (data.tahun) {
             const tahun = {
                 value: data.tahun.value,
@@ -74,14 +79,16 @@ const IkuOpd = () => {
         }
     };
 
-    if (SelectedOpd?.value == undefined || Tahun?.value == undefined) {
-        return (
-            <>
-                <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
-                    <OpdTahunNull />
-                </div>
-            </>
-        )
+    if (User?.roles == 'super_admin') {
+        if (SelectedOpd?.value == undefined || Tahun?.value == undefined) {
+            return (
+                <>
+                    <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
+                        <OpdTahunNull />
+                    </div>
+                </>
+            )
+        }
     }
 
     return (
@@ -123,7 +130,7 @@ const IkuOpd = () => {
                 </div>
                 {Periode ?
                     <TableOpd
-                        kode_opd={SelectedOpd?.value}
+                        kode_opd={User?.roles == 'super_admin' ? SelectedOpd?.value : User?.kode_opd}
                         tahun_awal={Periode?.tahun_awal ? Periode?.tahun_awal : ""}
                         tahun_akhir={Periode?.tahun_akhir ? Periode?.tahun_akhir : ""}
                         jenis={Periode?.jenis_periode ? Periode?.jenis_periode : ""}

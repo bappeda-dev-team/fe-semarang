@@ -399,7 +399,7 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
                             </div>
                         }
                         <label className="uppercase text-base font-bold text-gray-700 my-2">
-                            indikator Tujuan Pemda :
+                            indikator Tujuan OPD :
                         </label>
                         {fields.map((field, index) => (
                             <React.Fragment key={index}>

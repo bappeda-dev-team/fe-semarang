@@ -1059,7 +1059,7 @@ export const TablePohon = (props: any) => {
     const jenis = props.item.jenis_pohon;
     const indikator = props.item.indikator;
     const status = props.item.status;
-    const review = props.item.review;
+    const review = props.item.jumlah_review;
     const User = props.user;
 
     // REVIEW
@@ -1130,12 +1130,14 @@ export const TablePohon = (props: any) => {
             const data = hasil.data;
             if (hasil.code === 200) {
                 setReview(data);
+                console.log(data);
             } else {
                 console.log('tidak ada review di pohon ini');
                 setReview([]);
             }
         } catch (err) {
-            console.error(err);
+            console.log(`tidak ada review di pohon dengan id : ${id_pohon}`);
+            setReview([]);
         } finally {
             setLoadingReview(false);
         }
@@ -1594,111 +1596,115 @@ export const TablePohon = (props: any) => {
                         <LoadingClip />
                     </div>
                     :
-                    <div className="flex mt-2">
-                        <table className="w-full">
-                            {Review.map((item: Review) => (
-                                <tbody key={item.id}>
-                                    <tr>
-                                        <td
-                                            className={`min-w-[100px] border-r border-b px-2 py-3 bg-yellow-100 text-start rounded-tl-lg
-                                                ${jenis === "Strategic Pemda" && "border-black"}
-                                                ${jenis === "Tactical Pemda" && "border-black"}
-                                                ${jenis === "Operational Pemda" && "border-black"}
-                                                ${jenis === "Strategic" && "border-red-700"}
-                                                ${jenis === "Tactical" && "border-blue-500"}
-                                                ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
-                                            `}
-                                        >
-                                            review
-                                        </td>
-                                        <td
-                                            className={`min-w-[300px] border-b px-2 py-3 bg-yellow-100 text-start
-                                                ${jenis === "Strategic Pemda" && "border-black"}
-                                                ${jenis === "Tactical Pemda" && "border-black"}
-                                                ${jenis === "Operational Pemda" && "border-black"}
-                                                ${jenis === "Strategic" && "border-red-700"}
-                                                ${jenis === "Tactical" && "border-blue-500"}
-                                                ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
-                                            `}
-                                        >
-                                            <div className="flex items-start justify-between gap-1">
-                                                {item.review}
-                                            </div>
-                                        </td>
-                                        <td
-                                            className={`border-l bg-yellow-100 text-start rounded-tr-lg
-                                                ${jenis === "Strategic Pemda" && "border-black"}
-                                                ${jenis === "Tactical Pemda" && "border-black"}
-                                                ${jenis === "Operational Pemda" && "border-black"}
-                                                ${jenis === "Strategic" && "border-red-700"}
-                                                ${jenis === "Tactical" && "border-blue-500"}
-                                                ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
-                                            `}
-                                        >
-                                            <div className="flex items-center justify-center gap-1">
-                                                <ButtonSkyBorder onClick={() => handleEditReview(item.id)}>
-                                                    <TbPencil />
-                                                </ButtonSkyBorder>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            className={`min-w-[100px] border-r border-b border-black px-2 py-3 bg-yellow-100 text-start rounded-bl-lg
-                                                ${jenis === "Strategic Pemda" && "border-black"}
-                                                ${jenis === "Tactical Pemda" && "border-black"}
-                                                ${jenis === "Operational Pemda" && "border-black"}
-                                                ${jenis === "Strategic" && "border-red-700"}
-                                                ${jenis === "Tactical" && "border-blue-500"}
-                                                ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
-                                            `}
-                                        >
-                                            Keterangan
-                                        </td>
-                                        <td
-                                            className={`min-w-[300px] border-b px-2 py-3 bg-yellow-100 text-start flex gap-2
-                                                ${jenis === "Strategic Pemda" && "border-black"}
-                                                ${jenis === "Tactical Pemda" && "border-black"}
-                                                ${jenis === "Operational Pemda" && "border-black"}
-                                                ${jenis === "Strategic" && "border-red-700"}
-                                                ${jenis === "Tactical" && "border-blue-500"}
-                                                ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
-                                            `}
-                                        >
-                                            <p>
-                                                {item.keterangan}
-                                            </p>
-                                            <p className="font-bold">
-                                                {`( ${item.nama_pegawai} )`}
-                                            </p>
-                                        </td>
-                                        <td
-                                            className={`border-l border-b bg-yellow-100 text-start rounded-br-lg
-                                                ${jenis === "Strategic Pemda" && "border-black"}
-                                                ${jenis === "Tactical Pemda" && "border-black"}
-                                                ${jenis === "Operational Pemda" && "border-black"}
-                                                ${jenis === "Strategic" && "border-red-700"}
-                                                ${jenis === "Tactical" && "border-blue-500"}
-                                                ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
-                                            `}
-                                        >
-                                            <div className="flex items-center justify-center gap-1"
-                                                onClick={() => {
-                                                    AlertQuestion("Hapus?", "Hapus Review", "question", "Hapus", "Batal").then((result) => {
-                                                        if (result.isConfirmed) {
-                                                            hapusReview(item.id);
-                                                        }
-                                                    });
-                                                }}>
-                                                <ButtonRedBorder><TbTrash /></ButtonRedBorder>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            ))}
-                        </table>
-                    </div>
-
+                    Review.length == 0 ? 
+                        <div className="flex mt-2 text-center">
+                            <h1 className='text-center bg-white w-full rounded-lg p-2'>tidak ada review</h1>
+                        </div>
+                    :
+                        <div className="flex mt-2">
+                            <table className="w-full">
+                                {Review.map((item: Review) => (
+                                    <tbody key={item.id}>
+                                        <tr>
+                                            <td
+                                                className={`min-w-[100px] border-r border-b px-2 py-3 bg-yellow-100 text-start rounded-tl-lg
+                                                    ${jenis === "Strategic Pemda" && "border-black"}
+                                                    ${jenis === "Tactical Pemda" && "border-black"}
+                                                    ${jenis === "Operational Pemda" && "border-black"}
+                                                    ${jenis === "Strategic" && "border-red-700"}
+                                                    ${jenis === "Tactical" && "border-blue-500"}
+                                                    ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
+                                                `}
+                                            >
+                                                review
+                                            </td>
+                                            <td
+                                                className={`min-w-[300px] border-b px-2 py-3 bg-yellow-100 text-start
+                                                    ${jenis === "Strategic Pemda" && "border-black"}
+                                                    ${jenis === "Tactical Pemda" && "border-black"}
+                                                    ${jenis === "Operational Pemda" && "border-black"}
+                                                    ${jenis === "Strategic" && "border-red-700"}
+                                                    ${jenis === "Tactical" && "border-blue-500"}
+                                                    ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
+                                                `}
+                                            >
+                                                <div className="flex items-start justify-between gap-1">
+                                                    {item.review}
+                                                </div>
+                                            </td>
+                                            <td
+                                                className={`border-l bg-yellow-100 text-start rounded-tr-lg
+                                                    ${jenis === "Strategic Pemda" && "border-black"}
+                                                    ${jenis === "Tactical Pemda" && "border-black"}
+                                                    ${jenis === "Operational Pemda" && "border-black"}
+                                                    ${jenis === "Strategic" && "border-red-700"}
+                                                    ${jenis === "Tactical" && "border-blue-500"}
+                                                    ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
+                                                `}
+                                            >
+                                                <div className="flex items-center justify-center gap-1">
+                                                    <ButtonSkyBorder onClick={() => handleEditReview(item.id)}>
+                                                        <TbPencil />
+                                                    </ButtonSkyBorder>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                className={`min-w-[100px] border-r border-b border-black px-2 py-3 bg-yellow-100 text-start rounded-bl-lg
+                                                    ${jenis === "Strategic Pemda" && "border-black"}
+                                                    ${jenis === "Tactical Pemda" && "border-black"}
+                                                    ${jenis === "Operational Pemda" && "border-black"}
+                                                    ${jenis === "Strategic" && "border-red-700"}
+                                                    ${jenis === "Tactical" && "border-blue-500"}
+                                                    ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
+                                                `}
+                                            >
+                                                Keterangan
+                                            </td>
+                                            <td
+                                                className={`min-w-[300px] border-b px-2 py-3 bg-yellow-100 text-start flex gap-2
+                                                    ${jenis === "Strategic Pemda" && "border-black"}
+                                                    ${jenis === "Tactical Pemda" && "border-black"}
+                                                    ${jenis === "Operational Pemda" && "border-black"}
+                                                    ${jenis === "Strategic" && "border-red-700"}
+                                                    ${jenis === "Tactical" && "border-blue-500"}
+                                                    ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
+                                                `}
+                                            >
+                                                <p>
+                                                    {item.keterangan}
+                                                </p>
+                                                <p className="font-bold">
+                                                    {`( ${item.nama_pegawai} )`}
+                                                </p>
+                                            </td>
+                                            <td
+                                                className={`border-l border-b bg-yellow-100 text-start rounded-br-lg
+                                                    ${jenis === "Strategic Pemda" && "border-black"}
+                                                    ${jenis === "Tactical Pemda" && "border-black"}
+                                                    ${jenis === "Operational Pemda" && "border-black"}
+                                                    ${jenis === "Strategic" && "border-red-700"}
+                                                    ${jenis === "Tactical" && "border-blue-500"}
+                                                    ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}    
+                                                `}
+                                            >
+                                                <div className="flex items-center justify-center gap-1"
+                                                    onClick={() => {
+                                                        AlertQuestion("Hapus?", "Hapus Review", "question", "Hapus", "Batal").then((result) => {
+                                                            if (result.isConfirmed) {
+                                                                hapusReview(item.id);
+                                                            }
+                                                        });
+                                                    }}>
+                                                    <ButtonRedBorder><TbTrash /></ButtonRedBorder>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                ))}
+                            </table>
+                        </div>
             )
             }
             {/* BUTTON REVIEW */}
@@ -1713,18 +1719,17 @@ export const TablePohon = (props: any) => {
                         Tambah Review
                     </ButtonSkyBorder>
                 }
-                {review &&
-                    <button
-                        className={`px-3 flex justify-center items-center py-1 rounded-lg border border-red-400 text-red-400 hover:bg-red-400 hover:text-white`}
-                        onClick={() => {
-                            setShowReview((prev) => (!prev));
-                            fetchReview(id);
-                        }}
-                    >
-                        <TbZoom className="mr-1" />
-                        <p>tampilkan review ({review.length})</p>
-                    </button>
-                }
+                <button
+                    className={`px-3 flex justify-center items-center py-1 rounded-lg border border-red-400 text-red-400 hover:bg-red-400 hover:text-white`}
+                    onClick={() => {
+                        setShowReview((prev) => (!prev));
+                        fetchReview(id);
+                    }}
+                >
+                    <TbZoom className="mr-1" />
+                    <p>{ShowReview ? "sembunyikan review" : "tampilkan review :"} </p>
+                    <p className="text-red-500 text-bold ml-1">{review}</p>
+                </button>
             </div>
             {/* MODAL TAMBAH REVIEW POHON */}
             <ModalReview

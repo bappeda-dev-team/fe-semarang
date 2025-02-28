@@ -339,7 +339,7 @@ export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun,
                             />
                         </div>
                         <label className="uppercase text-base font-bold text-gray-700 my-2">
-                            indikator Tujuan Pemda :
+                            indikator Sasaran Pemda :
                         </label>
                         {fields.map((field, index) => (
                             <React.Fragment key={index}>

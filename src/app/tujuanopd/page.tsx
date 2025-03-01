@@ -22,9 +22,12 @@ const TujuanOpd = () => {
     const [Periode, setPeriode] = useState<Periode | null>(null);
     const [PeriodeOption, setPeriodeOption] = useState<Periode[]>([]);
 
+    const [Loading, setLoading] = useState<boolean>(false);
+
     const fetchPeriode = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try {
+            setLoading(true);
             const response = await fetch(`${API_URL}/periode/findall`, {
                 headers: {
                     Authorization: `${token}`,
@@ -44,6 +47,8 @@ const TujuanOpd = () => {
             setPeriodeOption(data);
         } catch (err) {
             console.error("error fetch periode", err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -74,6 +79,7 @@ const TujuanOpd = () => {
                         }}
                         options={PeriodeOption}
                         isClearable
+                        isLoading={Loading}
                         placeholder="Pilih Periode ..."
                         value={Periode}
                         isSearchable

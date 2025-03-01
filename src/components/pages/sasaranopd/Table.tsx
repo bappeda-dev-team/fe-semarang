@@ -269,7 +269,7 @@ const Table: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, ta
                         {DataNull ?
                             <tr>
                                 <td className="px-6 py-3" colSpan={30}>
-                                    Data Kosong / Belum Ditambahkan
+                                    Data kosong / Belum di tambahkan
                                 </td>
                             </tr>
                             :

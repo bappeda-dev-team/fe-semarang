@@ -254,7 +254,7 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
                 <div className="fixed inset-0 bg-black opacity-30" onClick={handleClose}></div>
                 <div className={`bg-white rounded-lg p-8 z-10 w-5/6 max-h-[80%] overflow-auto`}>
                     <div className="w-max-[500px] py-2 border-b">
-                        <h1 className="text-xl uppercase text-center">{metode === 'baru' ? "Tambah" : "Edit"} Sasaran Pemda</h1>
+                        <h1 className="text-xl uppercase text-center">{metode === 'baru' ? "Tambah" : "Edit"} Sasaran OPD</h1>
                     </div>
                     <form
                         onSubmit={handleSubmit(onSubmit)}
@@ -265,7 +265,7 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
                                 className="uppercase text-xs font-bold text-gray-700 my-2"
                                 htmlFor="sasaran_pemda"
                             >
-                                Strategic Pemda :
+                                Strategic OPD :
                             </label>
                             <div className="border px-4 py-2 rounded-lg">{nama_pohon}</div>
                         </div>

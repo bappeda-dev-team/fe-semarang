@@ -277,7 +277,7 @@ const Table: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, ta
                                 // Cek apakah data.tujuan_pemda ada
                                 const hasPelaksana = data.pelaksana.length != 0;
                                 const hasSasaran = data.rencana_kinerja.length != 0;
-                                const TotalRow = data.rencana_kinerja.reduce((total, item) => total + (item.indikator == null ? 1 : item.indikator.length), 0) + data.rencana_kinerja.length + 1;
+                                const TotalRow = data.rencana_kinerja.reduce((total, item) => total + (item.indikator.length == 0 ? 1 : item.indikator.length), 0) + data.rencana_kinerja.length + 1;
 
                                 return (
                                     <React.Fragment key={index}>
@@ -324,10 +324,10 @@ const Table: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, ta
                                             data.rencana_kinerja.map((item: RencanaKinerja) => (
                                                 <React.Fragment key={item.id}>
                                                     <tr>
-                                                        <td className="border-x border-b border-emerald-500 px-6 py-6 h-[150px]" rowSpan={item.indikator !== null ? item.indikator.length + 1 : 2}>
+                                                        <td className="border-x border-b border-emerald-500 px-6 py-6 h-[150px]" rowSpan={item.indikator.length !== 0 ? item.indikator.length + 1 : 2}>
                                                             {item.nama_rencana_kinerja || "-"} ({item.nip})
                                                         </td>
-                                                        <td className="border-x border-b border-emerald-500 px-6 py-6" rowSpan={item.indikator !== null ? item.indikator.length + 1 : 2}>
+                                                        <td className="border-x border-b border-emerald-500 px-6 py-6" rowSpan={item.indikator.length !== 0 ? item.indikator.length + 1 : 2}>
                                                             <div className="flex flex-col justify-center items-center gap-2">
                                                                 <ButtonGreen
                                                                     className="flex items-center gap-1 w-full"
@@ -353,10 +353,10 @@ const Table: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, ta
                                                         </td>
                                                     </tr>
                                                     {/* INDIKATOR */}
-                                                    {item.indikator === null ? (
+                                                    {item.indikator.length === 0 ? (
                                                         <React.Fragment>
                                                             <tr>
-                                                                <td colSpan={30} className="border-x border-b border-emerald-500 px-6 py-6 bg-yellow-500 text-white">indikator tujuan pemda belum di tambahkan</td>
+                                                                <td colSpan={30} className="border-x border-b border-emerald-500 px-6 py-6 bg-yellow-500 text-white">indikator sasaran opd belum di tambahkan</td>
                                                             </tr>
                                                         </React.Fragment>
                                                     ) : (

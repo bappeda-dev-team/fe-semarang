@@ -1663,7 +1663,7 @@ export const TablePohon = (props: any) => {
                                                 Keterangan
                                             </td>
                                             <td
-                                                className={`min-w-[300px] border-b px-2 py-3 bg-yellow-100 text-start flex gap-2
+                                                className={`min-w-[300px] border-b px-2 py-3 bg-yellow-100 text-start flex flex-wrap gap-2
                                                     ${jenis === "Strategic Pemda" && "border-black"}
                                                     ${jenis === "Tactical Pemda" && "border-black"}
                                                     ${jenis === "Operational Pemda" && "border-black"}
@@ -2539,7 +2539,7 @@ export const TablePohonEdited = (props: any) => {
                                             Keterangan
                                         </td>
                                         <td
-                                            className={`min-w-[300px] border-b px-2 py-3 bg-yellow-100 text-start flex gap-2
+                                            className={`min-w-[300px] border-b px-2 py-3 bg-yellow-100 text-start flex flex-wrap gap-2
                                                 ${jenis === "Strategic Pemda" && "border-black"}
                                                 ${jenis === "Tactical Pemda" && "border-black"}
                                                 ${jenis === "Operational Pemda" && "border-black"}

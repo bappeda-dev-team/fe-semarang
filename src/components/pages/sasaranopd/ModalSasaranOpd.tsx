@@ -134,15 +134,42 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
                 setLoading(false);
             }
         };
-        const SasaranOpdBaru = () => {
-            reset({ indikator: [] });
-        }
+        const fetchPokinBaru = async () => {
+            try {
+                const response = await fetch(`${API_URL}/pohon_kinerja/pokin_with_periode/${id_pohon}/${jenis_periode}`, {
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const result = await response.json();
+                const hasil = result.data;
+                // Mapping data ke form dengan struktur yang sesuai
+                const indikatorData = hasil.indikator?.map((item: any) => ({
+                    id: item.id, // Sesuai dengan struktur API
+                    indikator: item.indikator,
+                    rumus_perhitungan: item.rumus_perhitungan,
+                    sumber_data: item.sumber_data,
+                    target: item.target.map((t: any) => ({
+                        target: t.target,
+                        satuan: t.satuan,
+                    })),
+                })) || [];
+
+                reset({ indikator: indikatorData });
+
+                // Mengisi array field di react-hook-form
+                replace(indikatorData);
+            } catch (err) {
+                console.log(err);
+            }
+        };
         if (isOpen && metode === 'lama') {
             fetchDetailasaranPemda();
         } else if (isOpen && metode === 'baru') {
-            SasaranOpdBaru();
+            fetchPokinBaru();
         }
-    }, [token, isOpen, metode, tahun, id, replace, reset]);
+    }, [token, isOpen, metode, tahun, id, replace, reset, id_pohon, jenis_periode]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;

@@ -363,7 +363,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 }}
                             >
                                 <TbZoom className="mr-1" />
-                                <p>{ShowReview ? "sembunyikan review" : "tampilkan review"} </p>
+                                <p>{ShowReview ? "sembunyikan review" : "tampilkan review"} : {tema.jumlah_review}</p>
                             </button>
                             {/* MODAL TAMBAH REVIEW POHON */}
                             <ModalReview
@@ -860,7 +860,7 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                 }}
                             >
                                 <TbZoom className="mr-1" />
-                                <p>{ShowReview ? "sembunyikan review" : "tampilkan review"} </p>
+                                <p>{ShowReview ? "sembunyikan review" : "tampilkan review"} : {tema.jumlah_review}</p>
                             </button>
                             {/* MODAL TAMBAH REVIEW POHON */}
                             <ModalReview

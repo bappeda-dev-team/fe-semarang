@@ -1728,7 +1728,7 @@ export const TablePohon = (props: any) => {
                 >
                     <TbZoom className="mr-1" />
                     <p>{ShowReview ? "sembunyikan review" : "tampilkan review :"} </p>
-                    <p className="text-red-500 text-bold ml-1">{review}</p>
+                    <p className="text-bold ml-1">{review}</p>
                 </button>
             </div>
             {/* MODAL TAMBAH REVIEW POHON */}

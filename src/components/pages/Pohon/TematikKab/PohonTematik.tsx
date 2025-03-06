@@ -2,7 +2,7 @@ import '@/components/pages/Pohon/treeflex.css'
 import { useState, useEffect } from 'react';
 import { LoadingBeat } from '@/components/global/Loading';
 import {Pohon} from '@/components/lib/Pohon/Pemda/Pohon';
-import { getToken } from '@/components/lib/Cookie';
+import { getToken, getUser } from '@/components/lib/Cookie';
 
 interface pohontematik {
     id: number;
@@ -39,6 +39,14 @@ const PohonTematik = ({id} : pohontematik) => {
     const [error, setError] = useState<string>('');
     const [Deleted, setDeleted] = useState<boolean>(false);
     const token = getToken();
+    const [User, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchUser = getUser();
+        if(fetchUser){
+            setUser(fetchUser.user);
+        }
+    },[])
 
     useEffect(() => {
         const fetchTematikKab = async() => {
@@ -88,7 +96,7 @@ const PohonTematik = ({id} : pohontematik) => {
             <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
                 <div className="tf-tree text-center mt-3">
                     <ul>
-                        <Pohon tema={Pokin} deleteTrigger={() => setDeleted((prev) => !prev)}/>
+                        <Pohon user={User?.roles} tema={Pokin} deleteTrigger={() => setDeleted((prev) => !prev)}/>
                     </ul>
                 </div>
             </div>

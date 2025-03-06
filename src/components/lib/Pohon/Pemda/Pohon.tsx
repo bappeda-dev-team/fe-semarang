@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TbEye, TbArrowGuide, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHourglass, TbPencil, TbTrash, TbBookmarkPlus, TbZoom } from 'react-icons/tb';
-import { ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder } from '@/components/global/Button';
+import { ButtonGreen, ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
 import { FormPohonPemda, FormAmbilPohon, FormEditPohon } from './FormPohonPemda';
 import { getToken } from '../../Cookie';
@@ -10,6 +10,7 @@ import { LoadingClip } from '@/components/global/Loading';
 interface pohon {
     tema: any;
     deleteTrigger: () => void;
+    user?: string;
 }
 
 interface Review {
@@ -20,7 +21,7 @@ interface Review {
     nama_pegawai: string;
 }
 
-export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
+export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user }) => {
 
     const [childPohons, setChildPohons] = useState(tema.childs || []);
     const [PutPohons, setPutPohons] = useState(tema.childs || []);
@@ -213,8 +214,15 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             ${tema.jenis_pohon === "Operational Pemda" && 'border-green-500 text-white bg-gradient-to-r from-[#139052] from-40% to-[#2DCB06]'}
                             `}
                         >
-                            <h1>{tema.jenis_pohon}</h1>
-                        </div>
+                                <h1>{tema.jenis_pohon}</h1>
+                            {/* <div className="flex flex-wrap flex-col items-center justify-center gap-2">
+                                <h1 className={`text-red-500`}>{tema.jenis_pohon} (NON-AKTIF)</h1>
+                                <ButtonGreen className="w-full flex jutify-center items-center gap-1">
+                                    <TbCheck />
+                                    Aktifkan
+                                </ButtonGreen>
+                            </div> */}
+                            </div>
                         {/* BODY */}
                         <div className="flex justify-center my-3">
                             {Edited ?
@@ -242,6 +250,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                                     <tr>
                                                         <td
                                                             className={`min-w-[100px] px-2 py-3 text-start rounded-tl-lg
+                                                                            ${(tema.jenis_pohon === "Tematik" || tema.jenis_pohon === "Sub Tematik" || tema.jenis_pohon === "Sub Sub Tematik" || tema.jenis_pohon === "Super Tematik") && "border border-black"}
                                                                             ${tema.jenis_pohon === "Strategic Pemda" && "border border-black"}
                                                                             ${tema.jenis_pohon === "Tactical Pemda" && "border border-black"}
                                                                             ${tema.jenis_pohon === "Operational Pemda" && "border border-black"}
@@ -254,6 +263,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                                         </td>
                                                         <td
                                                             className={`min-w-[300px] px-2 py-3 text-start
+                                                                            ${(tema.jenis_pohon === "Tematik" || tema.jenis_pohon === "Sub Tematik" || tema.jenis_pohon === "Sub Sub Tematik" || tema.jenis_pohon === "Super Tematik") && "border border-black"}
                                                                             ${tema.jenis_pohon === "Strategic Pemda" && "border border-black"}
                                                                             ${tema.jenis_pohon === "Tactical Pemda" && "border border-black"}
                                                                             ${tema.jenis_pohon === "Operational Pemda" && "border border-black"}
@@ -269,6 +279,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                                         {/* EDIT REVIEW */}
                                                         <td
                                                             className={` text-start rounded-tr-lg
+                                                                            ${(tema.jenis_pohon === "Tematik" || tema.jenis_pohon === "Sub Tematik" || tema.jenis_pohon === "Sub Sub Tematik" || tema.jenis_pohon === "Super Tematik") && "border border-black"}
                                                                             ${tema.jenis_pohon === "Strategic Pemda" && "border border-black"}
                                                                             ${tema.jenis_pohon === "Tactical Pemda" && "border border-black"}
                                                                             ${tema.jenis_pohon === "Operational Pemda" && "border border-black"}
@@ -287,6 +298,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                                     <tr>
                                                         <td
                                                             className={`min-w-[100px] border-black px-2 py-3 text-start rounded-bl-lg
+                                                                            ${(tema.jenis_pohon === "Tematik" || tema.jenis_pohon === "Sub Tematik" || tema.jenis_pohon === "Sub Sub Tematik" || tema.jenis_pohon === "Super Tematik") && "border border-black"}
                                                                             ${tema.jenis_pohon === "Strategic Pemda" && "border border-black"}
                                                                             ${tema.jenis_pohon === "Tactical Pemda" && "border border-black"}
                                                                             ${tema.jenis_pohon === "Operational Pemda" && "border border-black"}
@@ -299,6 +311,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                                         </td>
                                                         <td
                                                             className={`min-w-[300px] px-2 py-3 text-start flex flex-wrap gap-2
+                                                                            ${(tema.jenis_pohon === "Tematik" || tema.jenis_pohon === "Sub Tematik" || tema.jenis_pohon === "Sub Sub Tematik" || tema.jenis_pohon === "Super Tematik") && "border-b border-black"}
                                                                             ${tema.jenis_pohon === "Strategic Pemda" && "border-b border-black"}
                                                                             ${tema.jenis_pohon === "Tactical Pemda" && "border-b border-black"}
                                                                             ${tema.jenis_pohon === "Operational Pemda" && "border-b border-black"}
@@ -317,6 +330,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                                         {/* HAPUS REVIEW */}
                                                         <td
                                                             className={`text-start rounded-br-lg
+                                                                            ${(tema.jenis_pohon === "Tematik" || tema.jenis_pohon === "Sub Tematik" || tema.jenis_pohon === "Sub Sub Tematik" || tema.jenis_pohon === "Super Tematik") && "border border-black"}
                                                                             ${tema.jenis_pohon === "Strategic Pemda" && "border border-black"}
                                                                             ${tema.jenis_pohon === "Tactical Pemda" && "border border-black"}
                                                                             ${tema.jenis_pohon === "Operational Pemda" && "border border-black"}
@@ -393,38 +407,40 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             />
                         </div>
                         {/* BUTTON ACTION INSIDE BOX */}
-                        <div
-                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black
-                            ${tema.jenis_pohon === "Strategic" && 'border-white'}
-                            ${tema.jenis_pohon === "Tactical" && 'border-white'}
-                            ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-white'}
-                        `}
-                        >
-                            {!['Strategic', 'Tactical', 'Operational', 'Operational N'].includes(tema.jenis_pohon) &&
-                                <ButtonSkyBorder onClick={() => setEdit(true)}>
-                                    <TbPencil className="mr-1" />
-                                    Edit
-                                </ButtonSkyBorder>
-                            }
-                            {tema.jenis_pohon !== 'Tematik' &&
-                                <ButtonRedBorder
-                                    onClick={() => {
-                                        AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
-                                            if (result.isConfirmed) {
-                                                if (tema.jenis_pohon === 'Tematik' || 'SubTematik' || 'SubSubTematik' || 'SuperSubTematik') {
-                                                    hapusSubTematik(tema.id);
-                                                } else {
-                                                    hapusPohonOpd(tema.id);
+                        {user != 'reviewer' &&
+                            <div
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black
+                                ${tema.jenis_pohon === "Strategic" && 'border-white'}
+                                ${tema.jenis_pohon === "Tactical" && 'border-white'}
+                                ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-white'}
+                            `}
+                            >
+                                {!['Strategic', 'Tactical', 'Operational', 'Operational N'].includes(tema.jenis_pohon) &&
+                                    <ButtonSkyBorder onClick={() => setEdit(true)}>
+                                        <TbPencil className="mr-1" />
+                                        Edit
+                                    </ButtonSkyBorder>
+                                }
+                                {tema.jenis_pohon !== 'Tematik' &&
+                                    <ButtonRedBorder
+                                        onClick={() => {
+                                            AlertQuestion("Hapus?", "DATA POHON yang terkait kebawah jika ada akan terhapus juga", "question", "Hapus", "Batal").then((result) => {
+                                                if (result.isConfirmed) {
+                                                    if (tema.jenis_pohon === 'Tematik' || 'SubTematik' || 'SubSubTematik' || 'SuperSubTematik') {
+                                                        hapusSubTematik(tema.id);
+                                                    } else {
+                                                        hapusPohonOpd(tema.id);
+                                                    }
                                                 }
-                                            }
-                                        });
-                                    }}
-                                >
-                                    <TbTrash className='mr-1' />
-                                    Hapus
-                                </ButtonRedBorder>
-                            }
-                        </div>
+                                            });
+                                        }}
+                                    >
+                                        <TbTrash className='mr-1' />
+                                        Hapus
+                                    </ButtonRedBorder>
+                                }
+                            </div>
+                        }
                         {/* TOMBOL ADD POHON */}
                         {(
                             tema.jenis_pohon !== 'Operational Pemda' &&
@@ -438,7 +454,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                                     <TbEye className='mr-1' />
                                     {Show ? 'Sembunyikan' : 'Tampilkan'}
                                 </ButtonBlackBorder>
-                                {Show &&
+                                {(Show && user != 'reviewer') &&
                                     <>
                                         {/* TOMBOL ADD POHON SESUAI URUTAN AKARNYA */}
                                         {tema.level_pohon !== 3 &&
@@ -476,10 +492,10 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
             }
             <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
-                    <Pohon tema={dahan} key={index} deleteTrigger={deleteTrigger} />
+                    <Pohon user={user} tema={dahan} key={index} deleteTrigger={deleteTrigger} />
                 ))}
                 {strategicPohons.map((dahan: any, index: any) => (
-                    <Pohon tema={dahan} key={index} deleteTrigger={deleteTrigger} />
+                    <Pohon user={user} tema={dahan} key={index} deleteTrigger={deleteTrigger} />
                 ))}
                 {formList.map((formId) => (
                     <FormPohonPemda
@@ -514,7 +530,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         </li>
     )
 }
-export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
+export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger, user }) => {
 
     const [childPohons, setChildPohons] = useState(tema.childs || []);
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
@@ -980,10 +996,10 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
             }
             <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
-                    <Pohon tema={dahan} key={index} deleteTrigger={deleteTrigger} />
+                    <Pohon user={user} tema={dahan} key={index} deleteTrigger={deleteTrigger} />
                 ))}
                 {strategicPohons.map((dahan: any, index: any) => (
-                    <Pohon tema={dahan} key={index} deleteTrigger={deleteTrigger} />
+                    <Pohon user={user} tema={dahan} key={index} deleteTrigger={deleteTrigger} />
                 ))}
                 {formList.map((formId) => (
                     <FormPohonPemda

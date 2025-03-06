@@ -237,7 +237,7 @@ const PokinOpd = () => {
                 setLoading(false);
             }
         }
-        if (User?.roles == 'super_admin') {
+        if (User?.roles == 'super_admin' || User?.roles == 'reviewer') {
             if (SelectedOpd?.value != undefined && Tahun?.value != undefined) {
                 fetchPokinOpd(`pohon_kinerja_opd/findall/${SelectedOpd?.value}/${Tahun?.value}`);
             }
@@ -272,7 +272,7 @@ const PokinOpd = () => {
             </>
         )
     }
-    if (User?.roles == 'super_admin') {
+    if (User?.roles == 'super_admin' || User?.roles == 'reviewer') {
         if (SelectedOpd?.value == undefined || Tahun?.value == undefined) {
             return (
                 <>

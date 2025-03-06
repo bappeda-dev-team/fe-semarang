@@ -2741,7 +2741,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
             </div>
           }
           {/* LABEL PERENCANAAN PEMDA */}
-          {User?.roles == 'super_admin'&& 
+          {(User?.roles == 'super_admin' || User?.roles == 'reviewer')&& 
           <>
             <li 
               className={`flex font-medium items-center gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-slate-500 transition-all duration-300 ease-in-out`}
@@ -2751,65 +2751,76 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
               <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Perencanaan Pemda</span>
             </li>
             {/* SUB MENU PERENCANAAN PEMDA */}
-            <div className={`transition-all duration-300 ease-in-out ${PerencanaanKota ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
-              <Link href="/tematikkota">
-                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${TematikKota ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                  <TbArrowUpFromArc className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Tematik Pemda</span>
+            {User?.roles != 'reviewer' ?
+              <div className={`transition-all duration-300 ease-in-out ${PerencanaanKota ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+                <Link href="/tematikkota">
+                  <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${TematikKota ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                    <TbArrowUpFromArc className="text-xl" />
+                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Tematik Pemda</span>
+                  </li>
+                </Link>
+                <Link href="/pohonkinerjapemda">
+                  <li className={`flex items-center text-sm gap-x-2 cursor-pointer p-2 rounded-xl ${KotaPohonKinerjaKota ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                    <TbBinaryTree className="text-xl" />
+                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja Pemda</span>
+                  </li>
+                </Link>
+                {/* LABEL RPJMD */}
+                <li 
+                  className={`flex items-center font-medium gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-slate-500 transition-all duration-300 ease-in-out`}
+                  onClick={() => setRPJMD(RPJMD ? false : true)}
+                >
+                  <TbCalendarShare className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>RPJMD</span>
                 </li>
-              </Link>
-              <Link href="/pohonkinerjapemda">
-                <li className={`flex items-center text-sm gap-x-2 cursor-pointer p-2 rounded-xl ${KotaPohonKinerjaKota ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                  <TbBinaryTree className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja Pemda</span>
-                </li>
-              </Link>
-              {/* LABEL RPJMD */}
-              <li 
-                className={`flex items-center font-medium gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-slate-500 transition-all duration-300 ease-in-out`}
-                onClick={() => setRPJMD(RPJMD ? false : true)}
-              >
-                <TbCalendarShare className="text-xl" />
-                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>RPJMD</span>
-              </li>
-              {/* SUB MENU RPJMD */}
-              <div className={`transition-all duration-300 ease-in-out ${RPJMD ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
-                <Link href="/visi">
-                  <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${Visi ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                    <TbHexagonLetterV className="text-xl" />
-                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Visi</span>
-                  </li>
-                </Link>
-                <Link href="/misi">
-                  <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${Misi ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                    <TbHexagonLetterM className="text-xl" />
-                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Misi</span>
-                  </li>
-                </Link>
-                <Link href="/tujuanpemda">
-                  <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${TujuanPemda ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                    <TbMapPin className="text-xl" />
-                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Tujuan Pemda</span>
-                  </li>
-                </Link>
-                <Link href="/sasaranpemda">
-                  <li className={`flex items-center text-sm gap-x-2 cursor-pointer p-2 rounded-xl ${SasaranPemda ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                    <TbTarget className="text-xl" />
-                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Sasaran Pemda</span>
-                  </li>
-                </Link>
-                <Link href="/ikupemda">
-                  <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${IKU ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                    <TbChartBar className="text-xl" />
-                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>IKU</span>
+                {/* SUB MENU RPJMD */}
+                <div className={`transition-all duration-300 ease-in-out ${RPJMD ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+                  <Link href="/visi">
+                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${Visi ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                      <TbHexagonLetterV className="text-xl" />
+                      <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Visi</span>
+                    </li>
+                  </Link>
+                  <Link href="/misi">
+                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${Misi ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                      <TbHexagonLetterM className="text-xl" />
+                      <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Misi</span>
+                    </li>
+                  </Link>
+                  <Link href="/tujuanpemda">
+                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${TujuanPemda ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                      <TbMapPin className="text-xl" />
+                      <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Tujuan Pemda</span>
+                    </li>
+                  </Link>
+                  <Link href="/sasaranpemda">
+                    <li className={`flex items-center text-sm gap-x-2 cursor-pointer p-2 rounded-xl ${SasaranPemda ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                      <TbTarget className="text-xl" />
+                      <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Sasaran Pemda</span>
+                    </li>
+                  </Link>
+                  <Link href="/ikupemda">
+                    <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${IKU ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                      <TbChartBar className="text-xl" />
+                      <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>IKU</span>
+                    </li>
+                  </Link>
+                </div>
+              </div>
+              :
+              <div className={`transition-all duration-300 ease-in-out ${PerencanaanKota ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+                <Link href="/pohonkinerjapemda">
+                  <li className={`flex items-center text-sm gap-x-2 cursor-pointer p-2 rounded-xl ${KotaPohonKinerjaKota ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                    <TbBinaryTree className="text-xl" />
+                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja Pemda</span>
                   </li>
                 </Link>
               </div>
-            </div>
+            }
           </>
           }
           {/* LABEL PERENCANAAN OPD */}
-          {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') && 
+          {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'reviewer') && 
             <li 
               className={`flex font-medium items-center gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-slate-500 transition-all duration-300 ease-in-out`}
               onClick={() => setPerencanaanOPD(PerencanaanOPD ? false : true)}
@@ -2819,7 +2830,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
             </li>
           }
             {/* SUB MENU PERENCANAAN OPD */}
-            {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') && 
+            {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') ?
             <div className={`transition-all duration-300 ease-in-out ${PerencanaanOPD ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
               <Link href="/pohonkinerjaopd">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${pohonKinerjaOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
@@ -2910,7 +2921,16 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
                   </Link>
                 </div>
             </div>
-            }
+            :
+            <div className={`transition-all duration-300 ease-in-out ${PerencanaanOPD ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+              <Link href="/pohonkinerjaopd">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${pohonKinerjaOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbBinaryTree className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Kinerja OPD</span>
+                </li>
+              </Link>
+            </div>
+          }
           {/* LABEL PERENCANAAN ASN */}
           {(User?.roles == 'eselon_1' || User?.roles == 'eselon_2' || User?.roles == 'eselon_3' || User?.roles == 'eselon_4' || User?.roles == 'level_1' || User?.roles == 'level_2' || User?.roles == 'level_3' || User?.roles == 'level_4') &&
             <li 

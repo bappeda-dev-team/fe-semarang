@@ -2,8 +2,8 @@
 
 import '@/components/pages/Pohon/treeflex.css'
 import { useState, useEffect, useRef } from 'react';
-import { TbPencil, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHandStop, TbPointer, TbSettings, TbHourglass } from 'react-icons/tb';
-import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder, ButtonBlackBorder } from '@/components/global/Button';
+import { TbPencil, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHandStop, TbPointer, TbSettings, TbHourglass, TbCopy } from 'react-icons/tb';
+import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder, ButtonBlackBorder, ButtonBlack } from '@/components/global/Button';
 import { LoadingBeat, LoadingButtonClip } from '@/components/global/Loading';
 import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
 import { PohonOpd } from '@/components/lib/Pohon/Opd/PohonOpd';
@@ -11,6 +11,7 @@ import { FormPohonOpd } from '@/components/lib/Pohon/Opd/FormPohonOpd';
 import { getUser, getToken, getOpdTahun } from '@/components/lib/Cookie';
 import { ModalPohonPemda, ModalPohonCrosscutting} from './ModalPohonPemda';
 import { ModalTujuanOpd } from '../../tujuanopd/ModalTujuanOpd';
+import { ModalClone } from '../ModalClone';
 
 interface OptionType {
     value: number;
@@ -73,6 +74,9 @@ const PokinOpd = () => {
     const [PohonCrosscutting, setPohonCrosscutting] = useState<boolean>(false);
     const [CrossPending, setCrossPending] = useState<number | null>(null);
     const [CrossDitolak, setCrossDitolak] = useState<number | null>(null);
+
+    //clone
+    const [Clone, setClone] = useState<boolean>(false);
 
     const [error, setError] = useState<string>('');
     const token = getToken();
@@ -304,7 +308,7 @@ const PokinOpd = () => {
     return (
         <>
             <div className="flex justify-between items-center p-5 border-2 rounded-t-xl mt-2">
-                {User?.roles == 'super_admin' ?
+                {(User?.roles == 'super_admin' || User?.roles === 'reviewer') ?
                     <h1 className="font-bold">Pohon Kinerja {SelectedOpd?.label}</h1>
                     :
                     User?.roles == 'admin_opd' ?
@@ -543,11 +547,25 @@ const PokinOpd = () => {
                                     </table>
                                 </div>
                                 {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') &&
-                                    <div className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black`}>
+                                    <div className={`flex flex-col gap-2 my-3 py-3 rounded-lg bg-white border-black`}>
                                         <ButtonSkyBorder onClick={() => handleModalNewTujuan()}>
                                             <TbCirclePlus className="mr-1"/>
                                             Tambah Tujuan OPD
                                         </ButtonSkyBorder>
+                                        <ButtonBlack 
+                                            className='flex flex-wrap items-center justify-center gap-1'
+                                            onClick={() => setClone(true)}
+                                        >
+                                            <TbCopy />
+                                            Clone Pohon Kinerja
+                                        </ButtonBlack>
+                                        <ModalClone 
+                                            isOpen={Clone}
+                                            onClose={() => setClone(false)}
+                                            jenis='opd'
+                                            nama_opd={SelectedOpd?.label}
+                                            onSuccess={() => setTriggerAfterPokinOutside((prev) => !prev)}
+                                        />
                                     </div>
                                 }
                                 {/* button */}

@@ -95,11 +95,7 @@ const TematikKab = () => {
     return (
         <>
             <div className="flex flex-col p-5 border-2 rounded-xl mt-3">
-                <div className="flex flex-wrap">
-                    <h1 className='text-lg font-bold'>Pohon Kinerja Pemda</h1>
-                    <h1 className='text-lg font-bold ml-1'>{Tahun?.label}</h1>
-                </div>
-                <div className="flex flex-col py-3">
+                <div className="flex flex-col">
                     <label
                         className="uppercase text-xs font-bold mb-2"
                         htmlFor="tematik"
@@ -130,14 +126,9 @@ const TematikKab = () => {
                 </div>
             </div>
             <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
-                <h1 className="font-bold">{Tematik ? Tematik?.label : "Pilih Tema"}</h1>
+                <h1 className="font-bold">{Tematik ? `Tematik - ${Tematik?.label}` : "Pilih Tema"}</h1>
             </div>
             {Tematik &&
-                // <PohonTematik 
-                //     id={searchParams.get('tema') !== undefined 
-                //         ? Number(searchParams.get('id')) 
-                //         : Tematik?.value || 0} 
-                // />
                 <PohonTematik id={Tematik?.value} />
             }
         </>

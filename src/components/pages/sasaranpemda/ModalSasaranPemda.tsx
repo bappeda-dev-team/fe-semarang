@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Controller, SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import { ButtonSky, ButtonRed, ButtonSkyBorder, ButtonRedBorder } from '@/components/global/Button';
 import { getToken } from "@/components/lib/Cookie";
-import { LoadingButtonClip } from "@/components/global/Loading";
+import { LoadingBeat, LoadingButtonClip, LoadingSync } from "@/components/global/Loading";
 import Select from 'react-select';
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 
@@ -66,6 +66,9 @@ export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun,
 
     const [Proses, setProses] = useState<boolean>(false);
     const [Loading, setLoading] = useState<boolean>(false);
+    const [LoadingOption, setLoadingOption] = useState<boolean>(false);
+    const [IdNotFound, setIdNotFound] = useState<boolean>(false);
+    const [TujuanNotFound, setTujuanNotFound] = useState<boolean>(false);
 
     const { fields, append, remove, replace } = useFieldArray({
         control,
@@ -81,6 +84,7 @@ export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun,
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchDetailasaranPemda = async () => {
             try {
+                setLoading(true);
                 const response = await fetch(`${API_URL}/sasaran_pemda/detail/${id}`, {
                     headers: {
                         Authorization: `${token}`,
@@ -88,35 +92,49 @@ export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun,
                     },
                 });
                 const result = await response.json();
-                const hasil = result.data;
-                if (hasil.sasaran_pemda) {
-                    setSasaranPemda(hasil.sasaran_pemda);
-                }
-                if (hasil.tujuan_pemda) {
-                    const tujuanpemda = {
-                        value: hasil.tujuan_pemda_id,
-                        label: hasil.tujuan_pemda,
+                if(result.code === 200 || result.code === 201){
+                    setIdNotFound(false);
+                    setTujuanNotFound(false);
+                    const hasil = result.data;
+                    if (hasil.sasaran_pemda) {
+                        setSasaranPemda(hasil.sasaran_pemda);
                     }
-                    setTujuanPemda(tujuanpemda);
+                    if (hasil.tujuan_pemda) {
+                        const tujuanpemda = {
+                            value: hasil.tujuan_pemda_id,
+                            label: hasil.tujuan_pemda,
+                        }
+                        setTujuanPemda(tujuanpemda);
+                    }
+                    // Mapping data ke form dengan struktur yang sesuai
+                    const indikatorData = hasil.indikator?.map((item: any) => ({
+                        id: item.id, // Sesuai dengan struktur API
+                        indikator: item.indikator,
+                        rumus_perhitungan: item.rumus_perhitungan,
+                        sumber_data: item.sumber_data,
+                        target: item.target.map((t: any) => ({
+                            target: t.target,
+                            satuan: t.satuan,
+                        })),
+                    })) || [];
+    
+                    reset({ indikator: indikatorData });
+    
+                    // Mengisi array field di react-hook-form
+                    replace(indikatorData);
+                } else if (result.code === 400){
+                    setIdNotFound(true);
+                    setTujuanNotFound(false);
+                } else if(result.code === 404){
+                    setIdNotFound(false);
+                    setTujuanNotFound(true);
+                } else {
+                    console.log("error fetch", result);
                 }
-                // Mapping data ke form dengan struktur yang sesuai
-                const indikatorData = hasil.indikator?.map((item: any) => ({
-                    id: item.id, // Sesuai dengan struktur API
-                    indikator: item.indikator,
-                    rumus_perhitungan: item.rumus_perhitungan,
-                    sumber_data: item.sumber_data,
-                    target: item.target.map((t: any) => ({
-                        target: t.target,
-                        satuan: t.satuan,
-                    })),
-                })) || [];
-
-                reset({ indikator: indikatorData });
-
-                // Mengisi array field di react-hook-form
-                replace(indikatorData);
             } catch (err) {
                 console.log(err);
+            } finally {
+                setLoading(false);
             }
         };
         const sasaranPemdaBaru = () => {
@@ -131,7 +149,7 @@ export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun,
 
     const fetchOptionTujuanPemda = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        setLoading(true);
+        setLoadingOption(true);
         try {
             const response = await fetch(`${API_URL}/tujuan_pemda/findall/${tahun}/${jenis_periode}`, {
                 headers: {
@@ -152,7 +170,7 @@ export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun,
         } catch (err) {
             console.log('error saat fetch option tujuan pemda');
         } finally {
-            setLoading(false);
+            setLoadingOption(false);
         }
     }
 
@@ -260,222 +278,243 @@ export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun,
                 <div className="fixed inset-0 bg-black opacity-30" onClick={handleClose}></div>
                 <div className={`bg-white rounded-lg p-8 z-10 w-5/6 max-h-[80%] overflow-auto`}>
                     <div className="w-max-[500px] py-2 border-b">
-                        <h1 className="text-xl uppercase text-center">{metode === 'baru' ? "Tambah" : "Edit"} Sasaran Pemda {id}</h1>
+                        <h1 className="text-xl uppercase text-center">{metode === 'baru' ? "Tambah" : "Edit"} Sasaran Pemda</h1>
                     </div>
-                    <form
-                        onSubmit={handleSubmit(onSubmit)}
-                        className="flex flex-col mx-5 py-5"
-                    >
-                        <div className="flex flex-col py-3">
-                            <label
-                                className="uppercase text-xs font-bold text-gray-700 my-2"
-                                htmlFor="sasaran_pemda"
-                            >
-                                Strategic Pemda ({jenis_pohon}):
-                            </label>
-                            <div className="border px-4 py-2 rounded-lg">{nama_pohon}</div>
+                    {Loading ? 
+                        <div className="mt-3">
+                            <LoadingSync />
                         </div>
-                        <div className="flex flex-col py-3">
-                            <label
-                                className="uppercase text-xs font-bold text-gray-700 my-2"
-                                htmlFor="tujuan_pemda_id"
-                            >
-                                Tujuan Pemda :
-                            </label>
-                            <Controller
-                                name="tujuan_pemda_id"
-                                control={control}
-                                render={({ field }) => (
-                                    <>
-                                        <Select
-                                            {...field}
-                                            placeholder="Pilih Tujuan Pemda"
-                                            options={OptionTujuanPemda}
-                                            isLoading={Loading}
-                                            isSearchable
-                                            isClearable
-                                            value={TujuanPemda}
-                                            onMenuOpen={() => {
-                                                fetchOptionTujuanPemda();
-                                            }}
-                                            onChange={(option) => {
-                                                field.onChange(option);
-                                                setTujuanPemda(option);
-                                            }}
-                                            styles={{
-                                                control: (baseStyles) => ({
-                                                    ...baseStyles,
-                                                    borderRadius: '8px',
-                                                })
-                                            }}
-                                        />
-                                    </>
-                                )}
-                            />
-                        </div>
-                        <div className="flex flex-col py-3">
-                            <label
-                                className="uppercase text-xs font-bold text-gray-700 my-2"
-                                htmlFor="sasaran_pemda"
-                            >
-                                Sasaran Pemda:
-                            </label>
-                            <Controller
-                                name="sasaran_pemda"
-                                control={control}
-                                render={({ field }) => (
-                                    <textarea
-                                        {...field}
-                                        className="border px-4 py-2 rounded-lg"
-                                        id="sasaran_pemda"
-                                        placeholder="masukkan Tujuan Pemda"
-                                        value={SasaranPemda}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            setSasaranPemda(e.target.value);
-                                        }}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <label className="uppercase text-base font-bold text-gray-700 my-2">
-                            indikator Sasaran Pemda :
-                        </label>
-                        {fields.map((field, index) => (
-                            <React.Fragment key={index}>
-                                <div className="flex flex-col bg-gray-300 my-2 py-2 px-2 rounded-lg">
+                    : (
+                        IdNotFound ? 
+                            <div className="flex flex-wrap items-center justify-center">
+                                <h1 className="py-5">Sasaran Pemda dengan ID : {id} tidak ditemukan / telah terhapus. disarankan untuk reload halaman</h1>
+                                <ButtonRed className="w-full my-2" onClick={handleClose}>
+                                    Tutup
+                                </ButtonRed>
+                            </div>
+                            :
+                            TujuanNotFound ? 
+                                <div className="flex flex-wrap items-center justify-center">
+                                    <h1 className="py-5">Tujuan Pemda telah terhapus pada sasaran pemda ini, tambahkan ulang sasaran baru dengan tujuan pemda yang berbeda</h1>
+                                    <ButtonRed className="w-full my-2" onClick={handleClose}>
+                                        Tutup
+                                    </ButtonRed>
+                                </div>
+                            :
+                            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col mx-5 py-5">
+                                <div className="flex flex-col py-3">
+                                    <label
+                                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                                        htmlFor="sasaran_pemda"
+                                    >
+                                        Strategic Pemda ({jenis_pohon}):
+                                    </label>
+                                    <div className="border px-4 py-2 rounded-lg">{nama_pohon}</div>
+                                </div>
+                                <div className="flex flex-col py-3">
+                                    <label
+                                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                                        htmlFor="tujuan_pemda_id"
+                                    >
+                                        Tujuan Pemda :
+                                    </label>
                                     <Controller
-                                        name={`indikator.${index}.indikator`}
+                                        name="tujuan_pemda_id"
                                         control={control}
-                                        defaultValue={field.indikator}
                                         render={({ field }) => (
-                                            <div className="flex flex-col py-3">
-                                                <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                    Nama Indikator {index + 1} :
-                                                </label>
-                                                <input
+                                            <>
+                                                <Select
                                                     {...field}
-                                                    className="border px-4 py-2 rounded-lg"
-                                                    placeholder={`Masukkan nama indikator ${index + 1}`}
+                                                    placeholder="Pilih Tujuan Pemda"
+                                                    options={OptionTujuanPemda}
+                                                    isLoading={LoadingOption}
+                                                    isSearchable
+                                                    isClearable
+                                                    value={TujuanPemda}
+                                                    onMenuOpen={() => {
+                                                        fetchOptionTujuanPemda();
+                                                    }}
+                                                    onChange={(option) => {
+                                                        field.onChange(option);
+                                                        setTujuanPemda(option);
+                                                    }}
+                                                    styles={{
+                                                        control: (baseStyles) => ({
+                                                            ...baseStyles,
+                                                            borderRadius: '8px',
+                                                        })
+                                                    }}
                                                 />
-                                            </div>
+                                            </>
                                         )}
                                     />
                                 </div>
-                                <div key={index} className="flex flex-col border border-gray-200 my-2 py-2 px-2 rounded-lg">
+                                <div className="flex flex-col py-3">
+                                    <label
+                                        className="uppercase text-xs font-bold text-gray-700 my-2"
+                                        htmlFor="sasaran_pemda"
+                                    >
+                                        Sasaran Pemda:
+                                    </label>
                                     <Controller
-                                        name={`indikator.${index}.rumus_perhitungan`}
+                                        name="sasaran_pemda"
                                         control={control}
-                                        defaultValue={field.rumus_perhitungan}
                                         render={({ field }) => (
-                                            <div className="flex flex-col py-3">
-                                                <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                    Rumus Perhitungan :
-                                                </label>
-                                                <input
-                                                    {...field}
-                                                    className="border px-4 py-2 rounded-lg"
-                                                    placeholder={`Masukkan Rumus Perhitungan`}
-                                                />
-                                            </div>
-                                        )}
-                                    />
-                                </div>
-                                <div key={index} className="flex flex-col border border-gray-200 my-2 py-2 px-2 rounded-lg">
-                                    <Controller
-                                        name={`indikator.${index}.sumber_data`}
-                                        control={control}
-                                        defaultValue={field.sumber_data}
-                                        render={({ field }) => (
-                                            <div className="flex flex-col py-3">
-                                                <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                    Sumber Data :
-                                                </label>
-                                                <input
-                                                    {...field}
-                                                    className="border px-4 py-2 rounded-lg"
-                                                    placeholder={`Masukkan Sumber Data`}
-                                                />
-                                            </div>
-                                        )}
-                                    />
-                                </div>
-                                <div className="flex flex-wrap justify-between gap-1">
-                                    {field.target.map((_, subindex) => (
-                                        <div key={`${index}-${subindex}`} className="flex flex-col py-1 px-3 border border-gray-200 rounded-lg">
-                                            <label className="text-base text-center text-gray-700">
-                                                <p>{tahun_list[subindex]}</p>
-                                            </label>
-                                            <Controller
-                                                name={`indikator.${index}.target.${subindex}.target`}
-                                                control={control}
-                                                defaultValue={_.target}
-                                                render={({ field }) => (
-                                                    <div className="flex flex-col py-3">
-                                                        <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                            Target :
-                                                        </label>
-                                                        <input
-                                                            {...field}
-                                                            type="text"
-                                                            className="border px-4 py-2 rounded-lg"
-                                                            placeholder="Masukkan target"
-                                                        />
-                                                    </div>
-                                                )}
+                                            <textarea
+                                                {...field}
+                                                className="border px-4 py-2 rounded-lg"
+                                                id="sasaran_pemda"
+                                                placeholder="masukkan Tujuan Pemda"
+                                                value={SasaranPemda}
+                                                onChange={(e) => {
+                                                    field.onChange(e);
+                                                    setSasaranPemda(e.target.value);
+                                                }}
                                             />
+                                        )}
+                                    />
+                                </div>
+                                <label className="uppercase text-base font-bold text-gray-700 my-2">
+                                    indikator Sasaran Pemda :
+                                </label>
+                                {fields.map((field, index) => (
+                                    <React.Fragment key={index}>
+                                        <div className="flex flex-col bg-gray-300 my-2 py-2 px-2 rounded-lg">
                                             <Controller
-                                                name={`indikator.${index}.target.${subindex}.satuan`}
+                                                name={`indikator.${index}.indikator`}
                                                 control={control}
-                                                defaultValue={_.satuan}
+                                                defaultValue={field.indikator}
                                                 render={({ field }) => (
                                                     <div className="flex flex-col py-3">
                                                         <label className="uppercase text-xs font-bold text-gray-700 mb-2">
-                                                            Satuan :
+                                                            Nama Indikator {index + 1} :
                                                         </label>
                                                         <input
                                                             {...field}
                                                             className="border px-4 py-2 rounded-lg"
-                                                            placeholder="Masukkan satuan"
+                                                            placeholder={`Masukkan nama indikator ${index + 1}`}
                                                         />
                                                     </div>
                                                 )}
                                             />
                                         </div>
-                                    ))}
-                                </div>
-                                {index >= 0 && (
-                                    <ButtonRedBorder
-                                        type="button"
-                                        onClick={() => remove(index)}
-                                        className="w-[200px] mt-3"
-                                    >
-                                        Hapus
-                                    </ButtonRedBorder>
-                                )}
-                            </React.Fragment>
-                        ))}
-                        <ButtonSkyBorder
-                            className="mb-3 mt-3"
-                            type="button"
-                            onClick={handleTambahIndikator}
-                        >
-                            Tambah Indikator
-                        </ButtonSkyBorder>
-                        <ButtonSky className="w-full mt-3" type="submit">
-                            {Proses ?
-                                <span className="flex">
-                                    <LoadingButtonClip />
-                                    Menyimpan...
-                                </span>
-                                :
-                                "Simpan"
-                            }
-                        </ButtonSky>
-                        <ButtonRed className="w-full my-2" onClick={handleClose}>
-                            Batal
-                        </ButtonRed>
-                    </form>
+                                        <div key={index} className="flex flex-col border border-gray-200 my-2 py-2 px-2 rounded-lg">
+                                            <Controller
+                                                name={`indikator.${index}.rumus_perhitungan`}
+                                                control={control}
+                                                defaultValue={field.rumus_perhitungan}
+                                                render={({ field }) => (
+                                                    <div className="flex flex-col py-3">
+                                                        <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                            Rumus Perhitungan :
+                                                        </label>
+                                                        <input
+                                                            {...field}
+                                                            className="border px-4 py-2 rounded-lg"
+                                                            placeholder={`Masukkan Rumus Perhitungan`}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </div>
+                                        <div key={index} className="flex flex-col border border-gray-200 my-2 py-2 px-2 rounded-lg">
+                                            <Controller
+                                                name={`indikator.${index}.sumber_data`}
+                                                control={control}
+                                                defaultValue={field.sumber_data}
+                                                render={({ field }) => (
+                                                    <div className="flex flex-col py-3">
+                                                        <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                            Sumber Data :
+                                                        </label>
+                                                        <input
+                                                            {...field}
+                                                            className="border px-4 py-2 rounded-lg"
+                                                            placeholder={`Masukkan Sumber Data`}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </div>
+                                        <div className="flex flex-wrap justify-between gap-1">
+                                            {field.target.map((_, subindex) => (
+                                                <div key={`${index}-${subindex}`} className="flex flex-col py-1 px-3 border border-gray-200 rounded-lg">
+                                                    <label className="text-base text-center text-gray-700">
+                                                        <p>{tahun_list[subindex]}</p>
+                                                    </label>
+                                                    <Controller
+                                                        name={`indikator.${index}.target.${subindex}.target`}
+                                                        control={control}
+                                                        defaultValue={_.target}
+                                                        render={({ field }) => (
+                                                            <div className="flex flex-col py-3">
+                                                                <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                                    Target :
+                                                                </label>
+                                                                <input
+                                                                    {...field}
+                                                                    type="text"
+                                                                    className="border px-4 py-2 rounded-lg"
+                                                                    placeholder="Masukkan target"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    />
+                                                    <Controller
+                                                        name={`indikator.${index}.target.${subindex}.satuan`}
+                                                        control={control}
+                                                        defaultValue={_.satuan}
+                                                        render={({ field }) => (
+                                                            <div className="flex flex-col py-3">
+                                                                <label className="uppercase text-xs font-bold text-gray-700 mb-2">
+                                                                    Satuan :
+                                                                </label>
+                                                                <input
+                                                                    {...field}
+                                                                    className="border px-4 py-2 rounded-lg"
+                                                                    placeholder="Masukkan satuan"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {index >= 0 && (
+                                            <ButtonRedBorder
+                                                type="button"
+                                                onClick={() => remove(index)}
+                                                className="w-[200px] mt-3"
+                                            >
+                                                Hapus
+                                            </ButtonRedBorder>
+                                        )}
+                                    </React.Fragment>
+                                ))}
+                                <ButtonSkyBorder
+                                    className="mb-3 mt-3"
+                                    type="button"
+                                    onClick={handleTambahIndikator}
+                                >
+                                    Tambah Indikator
+                                </ButtonSkyBorder>
+                                {(!IdNotFound && !TujuanNotFound) &&
+                                    <ButtonSky className="w-full mt-3" type="submit">
+                                        {Proses ?
+                                            <span className="flex">
+                                                <LoadingButtonClip />
+                                                Menyimpan...
+                                            </span>
+                                            :
+                                            "Simpan"
+                                        }
+                                    </ButtonSky>
+                                }
+                                <ButtonRed className="w-full my-2" onClick={handleClose}>
+                                    Batal
+                                </ButtonRed>
+                            </form>
+                    )}
                 </div>
             </div>
         )

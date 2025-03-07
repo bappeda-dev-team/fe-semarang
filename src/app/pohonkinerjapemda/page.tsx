@@ -12,8 +12,8 @@ const pohonkinerjakota = () => {
         >
             <div className="flex flex-wrap items-center">
                 <a href="/" className="mr-1"><FiHome /></a>
-                <p className="mr-1">/ Perencanaan Kabupaten</p>
-                <p className="mr-1">/ Pohon Kinerja Kabupaten</p>
+                <p className="mr-1">/ Perencanaan Pemda</p>
+                <p className="mr-1">/ Pohon Kinerja Pemda</p>
             </div>
             <TematikKab />
         </Suspense>

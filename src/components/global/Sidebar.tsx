@@ -1156,7 +1156,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
       setInovasi(false);
       setRencanaKinerjaKAK(false);
     }
-    if(url == "/tematikkota"){
+    if(url == "/tematikpemda"){
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
@@ -2753,7 +2753,7 @@ export const Sidebar = ({isZoomed, isOpen, toggleSidebar}: SidebarProps) => {
             {/* SUB MENU PERENCANAAN PEMDA */}
             {User?.roles != 'reviewer' ?
               <div className={`transition-all duration-300 ease-in-out ${PerencanaanKota ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
-                <Link href="/tematikkota">
+                <Link href="/tematikpemda">
                   <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${TematikKota ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                     <TbArrowUpFromArc className="text-xl" />
                     <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Tematik Pemda</span>

@@ -96,7 +96,7 @@ export const FormTematikKab = () => {
           });
           if(response.ok){
               AlertNotification("Berhasil", "Berhasil menambahkan data tematik pemda", "success", 1000);
-              router.push("/tematikkota");
+              router.push("/tematikpemda");
           } else {
               AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
           }
@@ -321,7 +321,7 @@ export const FormTematikKab = () => {
                         "Simpan"
                     }
                 </ButtonGreen>
-                <ButtonRed type="button" halaman_url="/tematikkota">
+                <ButtonRed type="button" halaman_url="/tematikpemda">
                     Kembali
                 </ButtonRed>
             </form>
@@ -467,7 +467,7 @@ export const FormEditTematikKab = () => {
             });
             if(response.ok){
                 AlertNotification("Berhasil", "Berhasil edit data tematik kabupaten", "success", 1000);
-                router.push("/tematikkota");
+                router.push("/tematikpemda");
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }
@@ -714,7 +714,7 @@ export const FormEditTematikKab = () => {
                             "Simpan"
                         }
                     </ButtonGreen>
-                    <ButtonRed type="button" halaman_url="/tematikkota">
+                    <ButtonRed type="button" halaman_url="/tematikpemda">
                         Kembali
                     </ButtonRed>
                 </form>

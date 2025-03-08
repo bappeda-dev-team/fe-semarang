@@ -416,6 +416,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, tahun }) => 
                             {/* MODAL TAMBAH REVIEW POHON */}
                             <ModalReview
                                 jenis={'baru'}
+                                pokin="pemda"
                                 isOpen={IsNewReview}
                                 onClose={() => {
                                     setIsNewReview(false);
@@ -430,6 +431,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, tahun }) => 
                             {/* MODAL EDIT REVIEW POHON */}
                             <ModalReview
                                 jenis={'lama'}
+                                pokin="pemda"
                                 id={idReview}
                                 isOpen={IsEditReview}
                                 onClose={() => setIsEditReview(false)}
@@ -955,6 +957,7 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger, user }) => {
                             {/* MODAL TAMBAH REVIEW POHON */}
                             <ModalReview
                                 jenis={'baru'}
+                                pokin="pemda"
                                 isOpen={IsNewReview}
                                 onClose={() => {
                                     setIsNewReview(false);
@@ -969,6 +972,7 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger, user }) => {
                             {/* MODAL EDIT REVIEW POHON */}
                             <ModalReview
                                 jenis={'lama'}
+                                pokin="pemda"
                                 id={idReview}
                                 isOpen={IsEditReview}
                                 onClose={() => setIsEditReview(false)}

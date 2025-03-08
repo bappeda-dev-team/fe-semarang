@@ -1734,6 +1734,7 @@ export const TablePohon = (props: any) => {
             {/* MODAL TAMBAH REVIEW POHON */}
             <ModalReview
                 jenis={'baru'}
+                pokin="opd"
                 isOpen={IsNewReview}
                 onClose={() => {
                     setIsNewReview(false);
@@ -1748,6 +1749,7 @@ export const TablePohon = (props: any) => {
             {/* MODAL EDIT REVIEW POHON */}
             <ModalReview
                 jenis={'lama'}
+                pokin="opd"
                 id={idReview}
                 isOpen={IsEditReview}
                 onClose={() => setIsEditReview(false)}
@@ -2612,6 +2614,7 @@ export const TablePohonEdited = (props: any) => {
             {/* MODAL TAMBAH REVIEW POHON */}
             <ModalReview
                 jenis={'baru'}
+                pokin="opd"
                 isOpen={IsNewReview}
                 onClose={() => {
                     setIsNewReview(false);
@@ -2626,6 +2629,7 @@ export const TablePohonEdited = (props: any) => {
             {/* MODAL EDIT REVIEW POHON */}
             <ModalReview
                 jenis={'lama'}
+                pokin="opd"
                 id={idReview}
                 isOpen={IsEditReview}
                 onClose={() => setIsEditReview(false)}

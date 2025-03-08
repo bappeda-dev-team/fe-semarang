@@ -13,6 +13,7 @@ interface ModalProps {
     id?: number | null;
     idPohon: number;
     jenis?: "baru" | "lama";
+    pokin: "pemda" | "opd";
     onSuccess: () => void;
 }
 
@@ -23,7 +24,7 @@ interface FormValue {
     keterangan: string;
 }
 
-export const ModalReview: React.FC<ModalProps> = ({ isOpen, onClose, id, jenis, idPohon, onSuccess }) => {
+export const ModalReview: React.FC<ModalProps> = ({ isOpen, onClose, id, jenis, idPohon, onSuccess, pokin }) => {
     const { control, handleSubmit, reset } = useForm<FormValue>();
 
     const [IsLoading, setIsLoading] = useState<boolean>(false);
@@ -90,6 +91,7 @@ export const ModalReview: React.FC<ModalProps> = ({ isOpen, onClose, id, jenis, 
             id_pohon_kinerja: idPohon,
             review: data.review,
             keterangan: data.keterangan,
+            jenis_pokin: pokin === "pemda" ? "pokin_pemda" : "pokin_opd",
         };
         // console.log(formData);
         // console.log("endpoint", endpoint);

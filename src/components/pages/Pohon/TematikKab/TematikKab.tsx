@@ -6,6 +6,8 @@ import Select from 'react-select'
 import PohonTematik from './PohonTematik';
 import { TahunNull } from '@/components/global/OpdTahunNull';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { ButtonBlackBorder, ButtonSky } from '@/components/global/Button';
+import { TbEye, TbPrinter } from 'react-icons/tb';
 
 interface OptionType {
     value: number;
@@ -21,6 +23,9 @@ const TematikKab = () => {
     const [IsLoading, setIsLoading] = useState<boolean>(false);
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const token = getToken();
+
+    // SHOW ALL
+    const [ShowAll, setShowAll] = useState<boolean>(false);
 
     useEffect(() => {
         const data = getOpdTahun();
@@ -103,14 +108,21 @@ const TematikKab = () => {
                         Tema :
                     </label>
                     <Select
-                        placeholder="Masukkan Tema"
                         isSearchable
                         isClearable
                         options={TematikOption}
                         isLoading={IsLoading}
-                        onChange={(option) => handleSetTematik(option)}
-                        value={searchParams.get('tema') !== undefined ? { label: "Pilih Tematik", value: "" } : Tematik}
-                        // value={searchParams.get('tema') !== undefined ? { label: searchParams.get('tema'), value: searchParams.get('id') } : Tematik}
+                        onChange={(option) => {
+                            handleSetTematik(option)
+                            setShowAll(false);
+                        }}
+                        placeholder="Masukkan Tema"
+                        value={
+                            searchParams.get('tema') === undefined || !Tematik ?
+                                { label: "Pilih Tematik", value: "" }
+                                :
+                                { label: Tematik?.label, value: Tematik?.value }
+                        }
                         onMenuOpen={() => {
                             if (TematikOption.length == 0) {
                                 fetchTematik();
@@ -125,11 +137,28 @@ const TematikKab = () => {
                     />
                 </div>
             </div>
-            <div className="flex flex-col p-5 border-2 rounded-t-xl mt-2">
-                <h1 className="font-bold">{Tematik ? `Tematik - ${Tematik?.label}` : "Pilih Tema"}</h1>
+            <div className="flex flex-wrap items-center justify-between p-5 border-2 rounded-t-xl mt-2">
+                {!Tematik ?
+                    <h1 className="font-semibold">Pilih Tematik terlebih dahulu</h1>
+                :
+                    <>
+                        <ButtonBlackBorder onClick={() => setShowAll(true)}>
+                            <TbEye className='mr-1' />
+                            Tampilkan Semua Pohon
+                        </ButtonBlackBorder>
+                        <ButtonSky>
+                            <TbPrinter className='mr-1' />
+                            Cetak Pohon Kinerja
+                        </ButtonSky>
+                    </>
+                }
             </div>
             {Tematik &&
-                <PohonTematik id={Tematik?.value} />
+                <PohonTematik
+                    id={Tematik?.value}
+                    show_all={ShowAll}
+                    set_show_all={() => setShowAll(false)}
+                />
             }
         </>
     )

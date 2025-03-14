@@ -8,9 +8,11 @@ import { getToken, getUser } from '../../Cookie';
 interface pohon {
     tema: any;
     deleteTrigger: () => void;
+    show_all?: boolean;
+    set_show_all: () => void;
 }
 
-export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
+export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger, show_all, set_show_all }) => {
 
     const [childPohons, setChildPohons] = useState(tema.childs || []);
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
@@ -25,7 +27,16 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         if(fetchUser){
             setUser(fetchUser.user);
         }
-    },[])
+    },[]);
+
+    useEffect(() => {
+        if(show_all){
+            setShow(true);
+        }
+        if(show_all && (Show === false)){
+            set_show_all();
+        }
+    }, [show_all, Show, set_show_all]);
     
     const handleEditSuccess = (data: any) => {
       setEdited(data);
@@ -178,7 +189,13 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger }) => {
             }
             <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
-                    <PohonCascading tema={dahan} key={index} deleteTrigger={deleteTrigger}/>
+                    <PohonCascading 
+                        tema={dahan} 
+                        key={index} 
+                        deleteTrigger={deleteTrigger}
+                        show_all={show_all}
+                        set_show_all={() => set_show_all()}
+                    />
                 ))}
                 {formList.map((formId) => (
                     <FormCascading

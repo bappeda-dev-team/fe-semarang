@@ -97,7 +97,8 @@ export const ModalClone: React.FC<modal> = ({ isOpen, onClose, onSuccess, id, na
         } else if (TahunTarget?.value === undefined) {
             AlertNotification("Tahun Tujuan Wajib Diisi", "", "warning", 2000);
         } else {
-            console.log(formData);
+            AlertNotification("Fitur Clone dalam pengembangan", "", "error", 2000);
+            // console.log(formData);
             // try{
             //     const response = await fetch(`${API_URL}/pohon_kinerja_opd/pindah_parent/${id}`, {
             //         method: "POST",

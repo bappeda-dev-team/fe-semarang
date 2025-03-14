@@ -7,7 +7,7 @@ import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { getOpdTahun } from "@/components/lib/Cookie";
 import { TahunNull } from "@/components/global/OpdTahunNull";
 import { getToken, getUser } from "@/components/lib/Cookie";
-import { TbPencil, TbTrash, TbCirclePlus, TbArrowBadgeDownFilled } from "react-icons/tb";
+import { TbPencil, TbTrash, TbCirclePlus, TbArrowBadgeDownFilled, TbX } from "react-icons/tb";
 import { ModalTujuanPemda } from "./ModalTujuanPemda";
 
 interface Periode {
@@ -51,6 +51,7 @@ interface tujuan {
     level_pohon: number;
     keterangan: string;
     tahun_pokin: string;
+    is_active: boolean;
     tujuan_pemda: TujuanPemda[];
 }
 
@@ -249,16 +250,29 @@ const Table: React.FC<table> = ({id_periode, tahun_awal, tahun_akhir, jenis, tah
                                                     {data.nama_tematik || "-"}
                                                     <div className="flex items center gap-1 border-t border-emerald-500 pt-3">
                                                         <div className="flex flex-col justify-between  gap-2 h-full w-full">
-                                                            <button
-                                                                className="flex justify-between gap-1 rounded-full p-1 bg-sky-500 text-white border border-sky-500 hover:bg-white hover:text-sky-500 hover:border hover:border-sky-500"
-                                                                onClick={() => handleModalNewTujuan(data.pokin_id)}
-                                                            >
-                                                                <div className="flex gap-1">
-                                                                    <TbCirclePlus />
-                                                                    <p className="text-xs">Tambah Tujuan Baru</p>
-                                                                </div>
-                                                                <TbArrowBadgeDownFilled className="-rotate-90" />
-                                                            </button>
+                                                            {data.is_active === false ? 
+                                                                <button
+                                                                    className="flex justify-between gap-1 rounded-full p-1 bg-red-500 text-white cursor-not-allowed"
+                                                                    onClick={() => handleModalNewTujuan(data.pokin_id)}
+                                                                >
+                                                                    <div className="flex gap-1">
+                                                                        <TbX />
+                                                                        <p className="text-xs">Tematik NON-AKTIF</p>
+                                                                    </div>
+                                                                    <TbArrowBadgeDownFilled className="-rotate-90" />
+                                                                </button>
+                                                            :
+                                                                <button
+                                                                    className="flex justify-between gap-1 rounded-full p-1 bg-sky-500 text-white border border-sky-500 hover:bg-white hover:text-sky-500 hover:border hover:border-sky-500"
+                                                                    onClick={() => handleModalNewTujuan(data.pokin_id)}
+                                                                >
+                                                                    <div className="flex gap-1">
+                                                                        <TbCirclePlus />
+                                                                        <p className="text-xs">Tambah Tujuan Baru</p>
+                                                                    </div>
+                                                                    <TbArrowBadgeDownFilled className="-rotate-90" />
+                                                                </button>
+                                                            }
                                                         </div>
                                                     </div>
                                                 </div>

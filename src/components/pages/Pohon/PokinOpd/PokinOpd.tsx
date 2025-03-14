@@ -2,14 +2,14 @@
 
 import '@/components/pages/Pohon/treeflex.css'
 import { useState, useEffect, useRef } from 'react';
-import { TbPencil, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHandStop, TbPointer, TbSettings, TbHourglass, TbCopy } from 'react-icons/tb';
-import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder, ButtonBlackBorder, ButtonBlack } from '@/components/global/Button';
+import { TbPencil, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHandStop, TbPointer, TbSettings, TbHourglass, TbCopy, TbEye, TbPrinter } from 'react-icons/tb';
+import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder, ButtonBlackBorder, ButtonBlack, ButtonSky } from '@/components/global/Button';
 import { LoadingBeat, LoadingButtonClip } from '@/components/global/Loading';
 import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
 import { PohonOpd } from '@/components/lib/Pohon/Opd/PohonOpd';
 import { FormPohonOpd } from '@/components/lib/Pohon/Opd/FormPohonOpd';
 import { getUser, getToken, getOpdTahun } from '@/components/lib/Cookie';
-import { ModalPohonPemda, ModalPohonCrosscutting} from './ModalPohonPemda';
+import { ModalPohonPemda, ModalPohonCrosscutting } from './ModalPohonPemda';
 import { ModalTujuanOpd } from '../../tujuanopd/ModalTujuanOpd';
 import { ModalClone } from '../ModalClone';
 
@@ -55,21 +55,21 @@ const PokinOpd = () => {
     const [SelectedOpd, setSelectedOpd] = useState<any>(null);
     const [Pokin, setPokin] = useState<pokin | null>(null);
     const [Loading, setLoading] = useState<boolean | null>(null);
-    const [IsLoading, setIsLoading] = useState<boolean>(false);
-    
+    const [LoadingCetak, setLoadingCetak] = useState<boolean>(false);
+
     const [Kendali, setKendali] = useState<boolean>(true);
     const [OpenModalTujuanOpd, setOpenModalTujuanOpd] = useState<boolean>(false);
-    
+
     //rekapitulasi jumlah pohon dari pemda
     const [JumlahPemdaStrategic, setJumlahPemdaStrategic] = useState<PokinPemda[]>([]);
     const [JumlahPemdaTactical, setJumlahPemdaTactical] = useState<PokinPemda[]>([]);
     const [JumlahPemdaOperational, setJumlahPemdaOperational] = useState<PokinPemda[]>([]);
-    
+
     //pohon pemda
     const [PohonPemda, setPohonPemda] = useState<boolean>(false);
     const [TriggerAfterPokinOutside, setTriggerAfterPokinOutside] = useState<boolean>(false);
     const [LevelPemda, setLevelPemda] = useState<number>(0);
-    
+
     //pohon cross opd lain
     const [PohonCrosscutting, setPohonCrosscutting] = useState<boolean>(false);
     const [CrossPending, setCrossPending] = useState<number | null>(null);
@@ -77,7 +77,11 @@ const PokinOpd = () => {
 
     //clone
     const [Clone, setClone] = useState<boolean>(false);
-
+    
+    //show all
+    const [ShowAll, setShowAll] = useState<boolean>(false);
+    const [ShowAllDetail, setShowAllDetail] = useState<boolean>(false);
+    
     const [error, setError] = useState<string>('');
     const token = getToken();
 
@@ -112,32 +116,32 @@ const PokinOpd = () => {
         }
     }, []);
 
-    const toggleCursorMode = () =>{
-      setCursorMode((prevMode) => (prevMode === "normal" ? "hand" : "normal"));
+    const toggleCursorMode = () => {
+        setCursorMode((prevMode) => (prevMode === "normal" ? "hand" : "normal"));
     }
     const handleMouseDown = (e: React.MouseEvent) => {
-      if (cursorMode === "normal") return; // Ignore if cursor is normal
-  
-      setIsDragging(true);
-      setDragStart({ x: e.clientX, y: e.clientY });
-      if (containerRef.current) {
-        setScrollStart({
-          x: containerRef.current.scrollLeft,
-          y: containerRef.current.scrollTop,
-        });
-      }
+        if (cursorMode === "normal") return; // Ignore if cursor is normal
+
+        setIsDragging(true);
+        setDragStart({ x: e.clientX, y: e.clientY });
+        if (containerRef.current) {
+            setScrollStart({
+                x: containerRef.current.scrollLeft,
+                y: containerRef.current.scrollTop,
+            });
+        }
     };
-  
+
     const handleMouseMove = (e: React.MouseEvent) => {
-      if (!isDragging || !containerRef.current) return;
-      const dx = dragStart.x - e.clientX;
-      const dy = dragStart.y - e.clientY;
-      containerRef.current.scrollLeft = scrollStart.x + dx;
-      containerRef.current.scrollTop = scrollStart.y + dy;
+        if (!isDragging || !containerRef.current) return;
+        const dx = dragStart.x - e.clientX;
+        const dy = dragStart.y - e.clientY;
+        containerRef.current.scrollLeft = scrollStart.x + dx;
+        containerRef.current.scrollTop = scrollStart.y + dy;
     };
-  
+
     const handleMouseUp = () => setIsDragging(false);
-    
+
     const handleModalPohonPemda = (level: number) => {
         setPohonPemda((prev) => !prev);
         setLevelPemda(level);
@@ -316,12 +320,12 @@ const PokinOpd = () => {
                         :
                         <h1 className="font-bold">Pohon Cascading {Pokin?.nama_opd}</h1>
                 }
-                {(User?.roles == 'admin_opd' || User?.roles == 'super_admin') && 
-                    <ButtonBlackBorder onClick={() => setKendali((prev) => !prev)}>{Kendali ? <span className='flex gap-1 items-center'><TbSettings />Sembunyikan</span> : <span className='flex gap-1 items-center'><TbSettings/>Tampilkan</span> }</ButtonBlackBorder>
+                {(User?.roles == 'admin_opd' || User?.roles == 'super_admin') &&
+                    <ButtonBlackBorder onClick={() => setKendali((prev) => !prev)}>{Kendali ? <span className='flex gap-1 items-center'><TbSettings />Sembunyikan</span> : <span className='flex gap-1 items-center'><TbSettings />Tampilkan</span>}</ButtonBlackBorder>
                 }
             </div>
             <div className="flex flex-col py-3 px-3 border-b-2 border-x-2 rounded-b-xl relative w-full h-[calc(100vh-50px)] max-h-screen overflow-auto">
-                {(User?.roles == 'admin_opd' || User?.roles == 'super_admin') && 
+                {(User?.roles == 'admin_opd' || User?.roles == 'super_admin') &&
                     <div className={`flex flex-wrap justify-between gap-2 transition-all duration-300 ease-in-out ${Kendali ? "max-h-screen opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}>
                         {/* PEMDA */}
                         <div className="flex flex-col justify-between border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-xl">
@@ -427,7 +431,7 @@ const PokinOpd = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            <ModalPohonPemda isOpen={PohonPemda} isLevel={LevelPemda} onClose={() => {handleModalPohonPemda(4)}} onSuccess={handleTriggerAfterPokinOutside}/>
+                            <ModalPohonPemda isOpen={PohonPemda} isLevel={LevelPemda} onClose={() => { handleModalPohonPemda(4) }} onSuccess={handleTriggerAfterPokinOutside} />
                         </div>
                         {/* CROSS OPD */}
                         <div className="flex flex-col justify-between border-2 max-w-[400px] min-w-[300px] px-3 py-2 rounded-xl">
@@ -440,7 +444,7 @@ const PokinOpd = () => {
                                         <tr className="flex items-center">
                                             <td className="border-l border-t px-2 py-1 bg-white text-start rounded-tl-lg min-w-[150px]">
                                                 <h1 className="font-semibold">
-                                                    Ditolak 
+                                                    Ditolak
                                                 </h1>
                                             </td>
                                             <td className="border-t py-1">
@@ -475,21 +479,21 @@ const PokinOpd = () => {
                                 </table>
                             </div>
                             <ButtonSkyBorder className="w-full" onClick={handleModalCrosscutting}>
-                                <TbSettings className='mr-1'/>
+                                <TbSettings className='mr-1' />
                                 Edit
                             </ButtonSkyBorder>
-                            <ModalPohonCrosscutting isOpen={PohonCrosscutting} onClose={handleModalCrosscutting} onSuccess={handleTriggerAfterPokinOutside}/>
+                            <ModalPohonCrosscutting isOpen={PohonCrosscutting} onClose={handleModalCrosscutting} onSuccess={handleTriggerAfterPokinOutside} />
                         </div>
                     </div>
                 }
-                <div 
+                <div
                     className={`tf-tree text-center mt-3 transition-all duration-300 ease-in-out ${cursorMode === 'hand' ? "select-none" : ""}`}
                     ref={containerRef}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
                     style={{
-                      cursor: cursorMode === "hand" ? (isDragging ? "grabbing" : "grab") : "default", // Cursor style
+                        cursor: cursorMode === "hand" ? (isDragging ? "grabbing" : "grab") : "default", // Cursor style
                     }}
                 >
                     <ul>
@@ -509,14 +513,14 @@ const PokinOpd = () => {
                                                 <td className="min-w-[100px] border px-2 py-3 border-black text-start">Kode OPD</td>
                                                 <td className="min-w-[300px] border px-2 py-3 border-black text-start">{Pokin?.kode_opd}</td>
                                             </tr>
-                                            {Pokin?.tujuan_opd ? 
+                                            {Pokin?.tujuan_opd ?
                                                 Pokin?.tujuan_opd.map((item: any) => (
                                                     <>
                                                         <tr key={item.id}>
                                                             <td className="min-w-[100px] border px-2 py-3 border-black text-start bg-gray-100">Tujuan OPD</td>
                                                             <td className="min-w-[300px] border px-2 py-3 border-black text-start bg-gray-100">{item.tujuan}</td>
                                                         </tr>
-                                                        {item.indikator ? 
+                                                        {item.indikator ?
                                                             <>
                                                                 {item.indikator.map((i: any) => (
                                                                     <tr key={item.id}>
@@ -525,15 +529,15 @@ const PokinOpd = () => {
                                                                     </tr>
                                                                 ))}
                                                             </>
-                                                        :
-                                                                    <tr key={item.id}>
-                                                                        <td className="min-w-[100px] border px-2 py-3 border-black text-start">Indikator</td>
-                                                                        <td className="min-w-[300px] border px-2 py-3 border-black text-start">-</td>
-                                                                    </tr>
+                                                            :
+                                                            <tr key={item.id}>
+                                                                <td className="min-w-[100px] border px-2 py-3 border-black text-start">Indikator</td>
+                                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start">-</td>
+                                                            </tr>
                                                         }
                                                     </>
                                                 ))
-                                            :
+                                                :
                                                 <tr>
                                                     <td className="min-w-[100px] border px-2 py-3 border-black text-start">Tujuan OPD</td>
                                                     <td className="min-w-[300px] border px-2 py-3 border-black text-start">-</td>
@@ -549,17 +553,27 @@ const PokinOpd = () => {
                                 {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') &&
                                     <div className={`flex flex-col gap-2 my-3 py-3 rounded-lg bg-white border-black`}>
                                         <ButtonSkyBorder onClick={() => handleModalNewTujuan()}>
-                                            <TbCirclePlus className="mr-1"/>
+                                            <TbCirclePlus className="mr-1" />
                                             Tambah Tujuan OPD
                                         </ButtonSkyBorder>
-                                        <ButtonBlack 
+                                        <ButtonBlack
                                             className='flex flex-wrap items-center justify-center gap-1'
                                             onClick={() => setClone(true)}
                                         >
-                                            <TbCopy />
+                                            <TbCopy className='mr-1'/>
                                             Clone Pohon Kinerja
                                         </ButtonBlack>
-                                        <ModalClone 
+                                        <ButtonSky
+                                            className='flex flex-wrap items-center justify-center gap-1'
+                                            onClick={() => {
+                                                setShowAllDetail(true)
+                                                setShowAll(true);
+                                            }}
+                                        >
+                                            <TbPrinter className='mr-1'/>
+                                            Cetak Pohon Kinerja
+                                        </ButtonSky>
+                                        <ModalClone
                                             isOpen={Clone}
                                             onClose={() => setClone(false)}
                                             jenis='opd'
@@ -569,20 +583,34 @@ const PokinOpd = () => {
                                     </div>
                                 }
                                 {/* button */}
-                                {(User?.roles == 'admin_opd' || User?.roles == 'super_admin' || User?.roles == 'level_1') &&
+                                <div className="flex items-center justify-evenly">
                                     <div className="flex justify-center my-1 py-2">
-                                        <ButtonGreenBorder className='border-[#ef4444] hover:bg-[#ef4444] text-[#ef4444] hover:text-white' onClick={newChild}>
-                                            <TbCirclePlus className="mr-1"/>
-                                            Strategic
-                                        </ButtonGreenBorder>
+                                        <ButtonBlackBorder onClick={() => setShowAll(true)}>
+                                            <TbEye className="mr-1" />
+                                            Tampilkan Semua
+                                        </ButtonBlackBorder>
                                     </div>
-                                }
+                                    {(User?.roles == 'admin_opd' || User?.roles == 'super_admin' || User?.roles == 'level_1') &&
+                                        <div className="flex justify-center my-1 py-2">
+                                            <ButtonRedBorder onClick={newChild}>
+                                                <TbCirclePlus className="mr-1" />
+                                                Strategic
+                                            </ButtonRedBorder>
+                                        </div>
+                                    }
+                                </div>
                             </div>
                             {Pokin?.childs ? (
                                 <ul>
                                     {Pokin.childs.map((data: any) => (
                                         <li key={data.id}>
-                                            <PohonOpd tema={data} deleteTrigger={() => setDeleted((prev) => !prev)} />
+                                            <PohonOpd 
+                                                tema={data}
+                                                deleteTrigger={() => setDeleted((prev) => !prev)}
+                                                show_all={ShowAll}
+                                                set_show_all={() => setShowAll(false)}
+                                                show_detail={ShowAllDetail}
+                                            />
                                         </li>
                                     ))}
                                     {formList.map((formId) => (
@@ -615,14 +643,13 @@ const PokinOpd = () => {
                 </div>
                 {/* BUTTON HAND TOOL */}
                 <div className="fixed flex items-center mr-2 mb-2 bottom-0 right-0">
-                  <button
-                    onClick={toggleCursorMode}
-                    className={`p-2 rounded ${
-                      cursorMode === "hand" ? "bg-green-500 text-white" : "bg-gray-300 text-black"
-                    }`}
-                  >
-                    {cursorMode === "hand" ? <TbHandStop size={30}/> : <TbPointer size={30}/>}
-                  </button>
+                    <button
+                        onClick={toggleCursorMode}
+                        className={`p-2 rounded ${cursorMode === "hand" ? "bg-green-500 text-white" : "bg-gray-300 text-black"
+                            }`}
+                    >
+                        {cursorMode === "hand" ? <TbHandStop size={30} /> : <TbPointer size={30} />}
+                    </button>
                 </div>
                 <ModalTujuanOpd
                     metode="baru"

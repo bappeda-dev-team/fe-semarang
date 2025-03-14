@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TbEye, TbArrowGuide, TbCheck, TbX, TbCircleLetterXFilled, TbCirclePlus, TbHourglass, TbPencil, TbTrash, TbBookmarkPlus, TbZoom, TbCopy } from 'react-icons/tb';
 import { ButtonGreen, ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder, ButtonBlack } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
@@ -12,7 +12,8 @@ interface pohon {
     tema: any;
     deleteTrigger: () => void;
     user?: string;
-    tahun?: number;
+    show_all?: boolean;
+    set_show_all: () => void;
 }
 
 interface Review {
@@ -23,7 +24,7 @@ interface Review {
     nama_pegawai: string;
 }
 
-export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, tahun }) => {
+export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, set_show_all }) => {
 
     const [childPohons, setChildPohons] = useState(tema.childs || []);
     const [PutPohons, setPutPohons] = useState(tema.childs || []);
@@ -32,9 +33,11 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, tahun }) => 
     const [FormStrategic, setFormStrategic] = useState<number[]>([]); // List of form IDs
     const [strategicPohons, setStrategicPohons] = useState(tema.strategics || []);
     const [edit, setEdit] = useState<boolean>(false);
-    const [Show, setShow] = useState<boolean>(false);
     const [Edited, setEdited] = useState<any | null>(null);
     const token = getToken();
+    
+    // SHOW ALL
+    const [Show, setShow] = useState<boolean>(false);
 
     // REVIEW
     const [IsNewReview, setIsNewReview] = useState<boolean>(false);
@@ -64,6 +67,15 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, tahun }) => 
     const handleShow = () => {
         setShow((prev) => !prev);
     }
+
+    useEffect(() => {
+        if(show_all){
+            setShow(true);
+        }
+        if(show_all && (Show === false)){
+            set_show_all();
+        }
+    }, [show_all, Show, set_show_all]);
 
     const handleNewReview = () => {
         if (IsNewReview) {
@@ -524,7 +536,8 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, tahun }) => 
                             tema.jenis_pohon !== 'Operational N'
                         ) &&
                             <div className="flex flex-wrap gap-3 justify-evenly my-3 py-3">
-                                <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                                <ButtonBlackBorder 
+                                    className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
                                     onClick={handleShow}
                                 >
                                     <TbEye className='mr-1' />
@@ -568,10 +581,24 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, tahun }) => 
             }
             <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
-                    <Pohon user={user} tema={dahan} key={index} deleteTrigger={deleteTrigger} />
+                    <Pohon 
+                        user={user}
+                        tema={dahan} 
+                        key={index} 
+                        deleteTrigger={deleteTrigger} 
+                        show_all={show_all}
+                        set_show_all={set_show_all}
+                    />
                 ))}
                 {strategicPohons.map((dahan: any, index: any) => (
-                    <Pohon user={user} tema={dahan} key={index} deleteTrigger={deleteTrigger} />
+                    <Pohon 
+                        user={user} 
+                        tema={dahan} 
+                        key={index} 
+                        deleteTrigger={deleteTrigger}
+                        show_all={show_all}
+                        set_show_all={set_show_all}
+                    />
                 ))}
                 {formList.map((formId) => (
                     <FormPohonPemda
@@ -606,7 +633,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, tahun }) => 
         </li>
     )
 }
-export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger, user }) => {
+export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, set_show_all }) => {
 
     const [childPohons, setChildPohons] = useState(tema.childs || []);
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
@@ -1074,10 +1101,24 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger, user }) => {
             }
             <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
-                    <Pohon user={user} tema={dahan} key={index} deleteTrigger={deleteTrigger} />
+                    <Pohon 
+                        user={user} 
+                        tema={dahan} 
+                        key={index} 
+                        deleteTrigger={deleteTrigger}
+                        show_all={show_all}
+                        set_show_all={set_show_all}
+                    />
                 ))}
                 {strategicPohons.map((dahan: any, index: any) => (
-                    <Pohon user={user} tema={dahan} key={index} deleteTrigger={deleteTrigger} />
+                    <Pohon 
+                        user={user} 
+                        tema={dahan} 
+                        key={index} 
+                        deleteTrigger={deleteTrigger} 
+                        show_all={show_all}
+                        set_show_all={set_show_all}
+                    />
                 ))}
                 {formList.map((formId) => (
                     <FormPohonPemda

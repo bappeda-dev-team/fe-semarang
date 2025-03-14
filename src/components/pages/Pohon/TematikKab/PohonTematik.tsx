@@ -6,6 +6,8 @@ import { getToken, getUser } from '@/components/lib/Cookie';
 
 interface pohontematik {
     id: number;
+    show_all: boolean;
+    set_show_all: () => void;
   }
   interface opd {
     kode_opd: string;
@@ -32,7 +34,7 @@ interface pohontematik {
     strategics: childs[];
   }
 
-const PohonTematik = ({id} : pohontematik) => {
+const PohonTematik = ({id, show_all, set_show_all} : pohontematik) => {
 
     const [Pokin, setPokin] = useState<tematik[]>([]);
     const [Loading, setLoading] = useState<boolean | null>(null);
@@ -96,7 +98,13 @@ const PohonTematik = ({id} : pohontematik) => {
             <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl">
                 <div className="tf-tree text-center mt-3">
                     <ul>
-                        <Pohon user={User?.roles} tema={Pokin} deleteTrigger={() => setDeleted((prev) => !prev)}/>
+                        <Pohon 
+                            user={User?.roles} 
+                            tema={Pokin} 
+                            deleteTrigger={() => setDeleted((prev) => !prev)}
+                            show_all={show_all}
+                            set_show_all={set_show_all}
+                        />
                     </ul>
                 </div>
             </div>

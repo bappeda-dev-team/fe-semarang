@@ -224,7 +224,11 @@ export const FormPohonPemda: React.FC<{
     return (
         <li>
             {IsAdded && DataAdd ?
-                <PohonEdited tema={DataAdd} deleteTrigger={() => setDeleted((prev) => !prev)}/>
+                <PohonEdited 
+                    tema={DataAdd}
+                    deleteTrigger={() => setDeleted((prev) => !prev)}
+                    set_show_all={() => null}
+                />
             :
             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
                 <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
@@ -681,7 +685,11 @@ export const FormAmbilPohon: React.FC<{
     return (
         <li>
             {IsAdded && DataAdd ?
-                <PohonEdited tema={DataAdd} deleteTrigger={() => setDeleted((prev) => !prev)}/>
+                <PohonEdited 
+                    tema={DataAdd}
+                    deleteTrigger={() => setDeleted((prev) => !prev)}
+                    set_show_all={() => null}    
+                />
             :
             <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
                 <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">
@@ -1056,7 +1064,11 @@ export const FormEditPohon: React.FC<{
     return (
         <>
         {IsEdited && DataEdit ?
-            <PohonEdited tema={DataEdit} deleteTrigger={() => setDeleted((prev) => !prev)}/>
+            <PohonEdited 
+                tema={DataEdit} 
+                deleteTrigger={() => setDeleted((prev) => !prev)}
+                set_show_all={() => null}
+            />
         :
         <div className="tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg shadow-slate-500">
             <div className="flex pt-3 justify-center font-bold text-lg uppercase border my-3 py-3 border-black rounded-lg">

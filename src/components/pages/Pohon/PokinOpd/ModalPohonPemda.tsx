@@ -334,6 +334,7 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess, is
                             isSearchable
                             isClearable
                             isLoading={IsLoading}
+                            menuPortalTarget={document.body}
                             onMenuOpen={() => {
                                 if(isLevel){
                                     fetchPohonPemda(isLevel)
@@ -348,6 +349,9 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess, is
                                     ...baseStyles,
                                     borderRadius: '8px',
                                     textAlign: 'start',
+                                }),
+                                menuPortal: (base) => ({ 
+                                    ...base, zIndex: 9999 
                                 })
                             }}
                         />
@@ -850,6 +854,7 @@ export const ModalPohonCrosscutting: React.FC<modal> = ({isOpen, onClose, onSucc
                             isSearchable
                             isClearable
                             isLoading={IsLoading}
+                            menuPortalTarget={document.body} // Render menu ke document.body
                             onMenuOpen={() => {
                                 if (OptionPohonCross.length === 0) {
                                     fetchPohonCross();
@@ -863,6 +868,9 @@ export const ModalPohonCrosscutting: React.FC<modal> = ({isOpen, onClose, onSucc
                                     ...baseStyles,
                                     borderRadius: '8px',
                                     textAlign: 'start',
+                                }),
+                                menuPortal: (base) => ({ 
+                                    ...base, zIndex: 9999 
                                 })
                             }}
                         />

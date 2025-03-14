@@ -12,6 +12,9 @@ import { LoadingClip } from '@/components/global/Loading';
 interface pohon {
     tema: any;
     deleteTrigger: () => void;
+    show_all?: boolean;
+    show_detail?: boolean;
+    set_show_all: () => void;
 }
 interface Target {
     id_target: string;
@@ -48,7 +51,7 @@ interface Review {
     nama_pegawai: string;
 }
 
-export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
+export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_detail, set_show_all }) => {
 
     const [childPohons, setChildPohons] = useState(tema.childs || []);
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
@@ -69,7 +72,16 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
         if (fetchUser) {
             setUser(fetchUser.user);
         }
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if(show_all){
+            setShow(true);
+        }
+        if(show_all && (Show === false)){
+            set_show_all();
+        }
+    }, [show_all, Show, set_show_all]);
 
     // Adds a new form entry
     const newChild = () => {
@@ -212,11 +224,14 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             {Edited ?
                                 <TablePohonEdited
                                     item={Edited}
-                                    user={User?.roles} />
+                                    user={User?.roles} 
+                                    ShowDetail={show_detail}
+                                />
                                 :
                                 <TablePohon
                                     item={tema}
                                     user={User?.roles}
+                                    ShowDetail={show_detail}
                                 />
                             }
                         </div>
@@ -545,7 +560,14 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger }) => {
             }
             <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
-                    <PohonOpd tema={dahan} key={index} deleteTrigger={deleteTrigger} />
+                    <PohonOpd 
+                        tema={dahan}
+                        key={index} 
+                        deleteTrigger={deleteTrigger}
+                        show_all={show_all}
+                        show_detail={show_detail}
+                        set_show_all={() => set_show_all()}
+                    />
                 ))}
                 {formList.map((formId) => (
                     <FormPohonOpd
@@ -1061,6 +1083,7 @@ export const TablePohon = (props: any) => {
     const status = props.item.status;
     const review = props.item.jumlah_review;
     const User = props.user;
+    const ShowDetail = props.ShowDetail;
 
     // REVIEW
     const [IsNewReview, setIsNewReview] = useState<boolean>(false);
@@ -1142,6 +1165,14 @@ export const TablePohon = (props: any) => {
             setLoadingReview(false);
         }
     }
+
+    useEffect(() => {
+        if(ShowDetail){
+            setShow(true);
+        } else {
+            setShow(false);
+        }
+    }, [ShowDetail]);
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -2029,6 +2060,7 @@ export const TablePohonEdited = (props: any) => {
     const status = props.item.status;
     const review = props.item.review;
     const User = props.user;
+    const ShowDetail = props.ShowDetail;
 
     // REVIEW
     const [IsNewReview, setIsNewReview] = useState<boolean>(false);
@@ -2108,6 +2140,14 @@ export const TablePohonEdited = (props: any) => {
             setLoadingReview(false);
         }
     }
+
+    useEffect(() => {
+        if(ShowDetail){
+            setShow(true);
+        }else {
+            setShow(false);
+        }
+    }, [ShowDetail]);
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;

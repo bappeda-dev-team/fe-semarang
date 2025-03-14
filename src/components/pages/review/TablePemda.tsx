@@ -129,6 +129,7 @@ const TablePemda: React.FC<table> = ({ tahun }) => {
                                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Nama Pohon</td>
                                                 <td className="border-r border-b px-6 py-3 min-w-[400px] text-center">Review</td>
                                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Keterangan</td>
+                                                <td className="border-r border-b px-6 py-3 min-w-[200px]">User Pembuat</td>
                                                 <td className="border-r border-b px-6 py-3 min-w-[200px]">Waktu Review</td>
                                             </tr>
                                         </thead>
@@ -153,10 +154,13 @@ const TablePemda: React.FC<table> = ({ tahun }) => {
                                                                     <p className="uppercase text-emerald-500 text-xs">{item.jenis_pohon}</p>
                                                                 </td>
                                                                 <td className="border border-emerald-500 px-6 py-4">
-                                                                    <p>{item.review} ({item.created_by})</p>
+                                                                    <p>{item.review}</p>
                                                                 </td>
                                                                 <td className="border border-emerald-500 px-6 py-4">
                                                                     <p>{item.keterangan}</p>
+                                                                </td>
+                                                                <td className="border border-emerald-500 px-6 py-4">
+                                                                    <p>{item.created_by}</p>
                                                                 </td>
                                                                 <td className="border border-emerald-500 px-6 py-4">
                                                                     {item.created_at === item.updated_at ?

@@ -94,6 +94,7 @@ const Table: React.FC<table> = ({ tahun, kode_opd }) => {
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Nama Pohon</th>
                             <th className="border-r border-b px-6 py-3 min-w-[400px]">Review</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Keterangan</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">User Pembuat</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Waktu Review</th>
                         </tr>
                     </thead>
@@ -118,10 +119,13 @@ const Table: React.FC<table> = ({ tahun, kode_opd }) => {
                                                 <p className="uppercase text-emerald-500 text-xs">{data.jenis_pohon}</p>
                                             </td>
                                             <td className="border border-emerald-500 px-6 py-4">
-                                                <p>{data.review || "-"} ({data.created_by})</p>
+                                                <p>{data.review || "-"}</p>
                                             </td>
                                             <td className="border border-emerald-500 px-6 py-4">
                                                 <p>{data.keterangan || "-"}</p>
+                                            </td>
+                                            <td className="border border-emerald-500 px-6 py-4">
+                                                <p>{data.created_by}</p>
                                             </td>
                                             <td className="border border-emerald-500 px-6 py-4">
                                                 {data.created_at === data.updated_at ?

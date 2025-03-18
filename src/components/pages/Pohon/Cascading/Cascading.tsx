@@ -4,12 +4,14 @@ import '@/components/pages/Pohon/treeflex.css'
 import { getOpdTahun } from '@/components/lib/Cookie';
 import { useState, useEffect, useRef } from 'react';
 import { TbEye, TbHandStop, TbPointer, TbPrinter } from 'react-icons/tb';
-import { LoadingBeat } from '@/components/global/Loading';
+import { LoadingBeat, LoadingButtonClip } from '@/components/global/Loading';
 import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
 import { FormPohonOpd } from '@/components/lib/Pohon/Opd/FormPohonOpd';
 import { getUser, getToken } from '@/components/lib/Cookie';
 import { PohonCascading } from '@/components/lib/Pohon/Cascading/PohonCascading';
 import { ButtonBlackBorder, ButtonSky } from '@/components/global/Button';
+import html2canvas from 'html2canvas';
+import { AlertQuestion, AlertQuestion2 } from '@/components/global/Alert';
 
 interface OptionType {
     value: number;
@@ -48,6 +50,7 @@ const Cascading = () => {
 
     const [formList, setFormList] = useState<number[]>([]); // List of form IDs
     const [Deleted, setDeleted] = useState<boolean>(false);
+    const [LoadingCetak, setLoadingCetak] = useState<boolean>(false);
 
     // SHOW ALL
     const [ShowAll, setShowAll] = useState<boolean>(false);
@@ -81,6 +84,62 @@ const Cascading = () => {
         }
     }, []);
 
+    const handleDownloadPdf = async () => {
+        if (!containerRef.current) return;
+
+        const elementsToHide = document.querySelectorAll(".hide-on-capture") as NodeListOf<HTMLElement>;
+        elementsToHide.forEach((el) => (el.style.display = "none"));
+
+        try {
+            setLoadingCetak(true);
+            const element = containerRef.current;
+            const canvas = await html2canvas(element, {
+                scale: 2, // Higher scale for better quality
+                width: element.scrollWidth + 50, // Use full scrollable width
+                height: element.scrollHeight + 250, // Use full scrollable height
+                windowWidth: element.scrollWidth + 50, // Force full width rendering
+                windowHeight: element.scrollHeight + 250, // Force full height rendering
+                useCORS: true, // For cross-origin images
+            });
+
+            // Create a new canvas with extra padding
+            const paddingTop = 50 // Extra padding for the top of the canvas
+            const newCanvas = document.createElement("canvas");
+            newCanvas.width = canvas.width;
+            newCanvas.height = canvas.height + paddingTop;
+
+            const ctx = newCanvas.getContext("2d");
+            if (ctx) {
+                ctx.fillStyle = "white"; // Optional: Background color
+                ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+                ctx.drawImage(canvas, 0, paddingTop);
+                
+                //hitung posisi horizontal untuk centering
+                const horizontalOffset = (newCanvas.width - canvas.width) / 2;
+
+                // Gambar canvas di tengah horizontal
+                ctx.drawImage(canvas, horizontalOffset, paddingTop);
+            }
+
+            const imgData = newCanvas.toDataURL("image/png");
+            const link = document.createElement("a");
+            link.href = imgData;
+            link.download =
+                User?.roles == 'super_admin'
+                    ? `cascading_${SelectedOpd?.value ?? 'opd_undetected'}_${Tahun?.label ?? 'tahun_undetected'
+                    }.png`
+                    : `cascading_${User?.kode_opd ?? 'opd_undetected'}_${Tahun?.label ?? 'tahun_undetected'
+                    }.png`;
+            link.click();
+        } catch (error) {
+            alert("Error capturing the element");
+            console.error("Error capturing the element:", error);
+        } finally {
+            // Ensure elements are restored even if an error occurs
+            elementsToHide.forEach((el) => (el.style.display = ""));
+            setLoadingCetak(false);
+        }
+    };
     const toggleCursorMode = () => {
         setCursorMode((prevMode) => (prevMode === "normal" ? "hand" : "normal"));
     }
@@ -242,20 +301,29 @@ const Cascading = () => {
                                         </tbody>
                                     </table>
                                 </div>
-                                <ButtonSky 
-                                    className='w-full mb-2'
+                                <ButtonSky
+                                    className='w-full mb-2 hide-on-capture'
+                                    disabled={LoadingCetak}
                                     onClick={() => {
-                                        setShowAll(true);
+                                        AlertQuestion2("Sembunyikan Sidebar untuk hasil cetak penuh", "", "warning", "Cetak", "Batal").then((result) => {
+                                            if (result.isConfirmed) {
+                                                handleDownloadPdf();
+                                            }
+                                        })
                                     }}
                                 >
-                                    <TbPrinter className='mr-1'/>
+                                    {LoadingCetak ?
+                                        <LoadingButtonClip className="mr-1" />
+                                        :
+                                        <TbPrinter className='mr-1' />
+                                    }
                                     Cetak Pohon Cascading
                                 </ButtonSky>
-                                <ButtonBlackBorder 
-                                    className='w-full mb-2'
+                                <ButtonBlackBorder
+                                    className='w-full mb-2 hide-on-capture'
                                     onClick={() => setShowAll(true)}
                                 >
-                                    <TbEye className='mr-1'/>
+                                    <TbEye className='mr-1' />
                                     Tampilkan Semua Pohon
                                 </ButtonBlackBorder>
                             </div>
@@ -263,9 +331,9 @@ const Cascading = () => {
                                 <ul>
                                     {Pokin.childs.map((data: any) => (
                                         <li key={data.id}>
-                                            <PohonCascading 
-                                                tema={data} 
-                                                deleteTrigger={() => setDeleted((prev) => !prev)} 
+                                            <PohonCascading
+                                                tema={data}
+                                                deleteTrigger={() => setDeleted((prev) => !prev)}
                                                 show_all={ShowAll}
                                                 set_show_all={() => setShowAll(false)}
                                             />

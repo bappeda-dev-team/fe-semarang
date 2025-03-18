@@ -119,13 +119,13 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger, show_all,
                     </div>
                     {/* BUTTON ACTION TAMPILKAN DAN PELAKSANA*/}
                         <div 
-                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                 ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
                                 ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
                                 ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
                                 `}
                         >
-                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg hide-on-capture`}
                                 onClick={handleShow}
                             >
                                 <TbEye className='mr-1' />
@@ -133,7 +133,7 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger, show_all,
                             </ButtonBlackBorder>
                             {/* BUTTON PELAKSANA SUPER ADMIN, ADMIN OPD, ASN LEVEL 1 */}
                             {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'level_1')&& 
-                            <ButtonGreenBorder onClick={() => setEdit(true)}>
+                            <ButtonGreenBorder className="hide-on-capture" onClick={() => setEdit(true)}>
                                 <TbUsersPlus className="mr-1"/>
                                 Pelaksana
                             </ButtonGreenBorder>
@@ -151,7 +151,7 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger, show_all,
                                     tema.jenis_pohon === 'Operational N Pemda' ||
                                     tema.jenis_pohon === 'Operational N Crosscutting'
                                 )) &&
-                                <ButtonGreenBorder onClick={() => setEdit(true)}>
+                                <ButtonGreenBorder className="hide-on-capture" onClick={() => setEdit(true)}>
                                     <TbUsersPlus className="mr-1"/>
                                     Pelaksana
                                 </ButtonGreenBorder>
@@ -166,7 +166,7 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger, show_all,
                                     tema.jenis_pohon === 'Operational N Pemda' ||
                                     tema.jenis_pohon === 'Operational N Crosscutting'
                                 )) &&
-                                <ButtonGreenBorder onClick={() => setEdit(true)}>
+                                <ButtonGreenBorder className="hide-on-capture" onClick={() => setEdit(true)}>
                                     <TbUsersPlus className="mr-1"/>
                                     Pelaksana
                                 </ButtonGreenBorder>
@@ -178,7 +178,7 @@ export const PohonCascading: React.FC<pohon> = ({ tema, deleteTrigger, show_all,
                                     tema.jenis_pohon === 'Operational N Pemda' ||
                                     tema.jenis_pohon === 'Operational N Crosscutting'
                                 )) &&
-                                <ButtonGreenBorder onClick={() => setEdit(true)}>
+                                <ButtonGreenBorder className="hide-on-capture" onClick={() => setEdit(true)}>
                                     <TbUsersPlus className="mr-1"/>
                                     Pelaksana
                                 </ButtonGreenBorder>
@@ -313,13 +313,13 @@ export const PohonCascadingEdited: React.FC<pohon> = ({ tema, deleteTrigger }) =
                     </div>
                     {/* BUTTON ACTION TAMPILKAN DAN PELAKSANA*/}
                         <div 
-                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                 ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
                                 ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
                                 ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
                                 `}
                         >
-                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
+                            <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg hide-on-capture`}
                                 onClick={handleShow}
                             >
                                 <TbEye className='mr-1' />
@@ -474,7 +474,7 @@ export const TablePohon = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -504,7 +504,7 @@ export const TablePohon = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -531,7 +531,7 @@ export const TablePohon = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -555,7 +555,7 @@ export const TablePohon = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -602,7 +602,7 @@ export const TablePohon = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -632,7 +632,7 @@ export const TablePohon = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -659,7 +659,7 @@ export const TablePohon = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -683,7 +683,7 @@ export const TablePohon = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -806,7 +806,7 @@ export const TablePohonEdited = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -836,7 +836,7 @@ export const TablePohonEdited = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -863,7 +863,7 @@ export const TablePohonEdited = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -887,7 +887,7 @@ export const TablePohonEdited = (props: any) => {
                                                 }
                                             });
                                         }}
-                                        className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                        className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                             ${jenis === "Strategic" && "border-red-700"}
                                             ${jenis === "Tactical" && "border-blue-500"}
                                             ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -936,7 +936,7 @@ export const TablePohonEdited = (props: any) => {
                                             }
                                         });
                                     }}
-                                    className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                    className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                         ${jenis === "Strategic" && "border-red-700"}
                                         ${jenis === "Tactical" && "border-blue-500"}
                                         ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -966,7 +966,7 @@ export const TablePohonEdited = (props: any) => {
                                             }
                                         });
                                     }}
-                                    className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                    className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                         ${jenis === "Strategic" && "border-red-700"}
                                         ${jenis === "Tactical" && "border-blue-500"}
                                         ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -993,7 +993,7 @@ export const TablePohonEdited = (props: any) => {
                                             }
                                         });
                                     }}
-                                    className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                    className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                         ${jenis === "Strategic" && "border-red-700"}
                                         ${jenis === "Tactical" && "border-blue-500"}
                                         ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
@@ -1017,7 +1017,7 @@ export const TablePohonEdited = (props: any) => {
                                             }
                                         });
                                     }}
-                                    className={`min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
+                                    className={`hide-on-capture min-w-[50px] p-4 border bg-white text-center text-red-500 rounded-r-lg cursor-pointer hover:bg-red-500 hover:text-white
                                         ${jenis === "Strategic" && "border-red-700"}
                                         ${jenis === "Tactical" && "border-blue-500"}
                                         ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}

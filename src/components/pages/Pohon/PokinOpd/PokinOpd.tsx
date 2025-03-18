@@ -12,6 +12,8 @@ import { getUser, getToken, getOpdTahun } from '@/components/lib/Cookie';
 import { ModalPohonPemda, ModalPohonCrosscutting } from './ModalPohonPemda';
 import { ModalTujuanOpd } from '../../tujuanopd/ModalTujuanOpd';
 import { ModalClone } from '../ModalClone';
+import html2canvas from 'html2canvas';
+import { AlertQuestion2 } from '@/components/global/Alert';
 
 interface OptionType {
     value: number;
@@ -77,11 +79,11 @@ const PokinOpd = () => {
 
     //clone
     const [Clone, setClone] = useState<boolean>(false);
-    
+
     //show all
     const [ShowAll, setShowAll] = useState<boolean>(false);
     const [ShowAllDetail, setShowAllDetail] = useState<boolean>(false);
-    
+
     const [error, setError] = useState<string>('');
     const token = getToken();
 
@@ -116,6 +118,62 @@ const PokinOpd = () => {
         }
     }, []);
 
+    const handleDownloadPdf = async () => {
+        if (!containerRef.current) return;
+
+        const elementsToHide = document.querySelectorAll(".hide-on-capture") as NodeListOf<HTMLElement>;
+        elementsToHide.forEach((el) => (el.style.display = "none"));
+
+        try {
+            setLoadingCetak(true);
+            const element = containerRef.current;
+            const canvas = await html2canvas(element, {
+                scale: 2, // Higher scale for better quality
+                width: element.scrollWidth + 50, // Use full scrollable width
+                height: element.scrollHeight + 250, // Use full scrollable height
+                windowWidth: element.scrollWidth + 50, // Force full width rendering
+                windowHeight: element.scrollHeight + 250, // Force full height rendering
+                useCORS: true, // For cross-origin images
+            });
+
+            // Create a new canvas with extra padding
+            const paddingTop = 50 // Extra padding for the top of the canvas
+            const newCanvas = document.createElement("canvas");
+            newCanvas.width = canvas.width;
+            newCanvas.height = canvas.height + paddingTop;
+
+            const ctx = newCanvas.getContext("2d");
+            if (ctx) {
+                ctx.fillStyle = "white"; // Optional: Background color
+                ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+                ctx.drawImage(canvas, 0, paddingTop);
+
+                //hitung posisi horizontal untuk centering
+                const horizontalOffset = (newCanvas.width - canvas.width) / 2;
+
+                // Gambar canvas di tengah horizontal
+                ctx.drawImage(canvas, horizontalOffset, paddingTop);
+            }
+
+            const imgData = newCanvas.toDataURL("image/png");
+            const link = document.createElement("a");
+            link.href = imgData;
+            link.download =
+                User?.roles == 'super_admin'
+                    ? `pohon_kinerja_opd_${SelectedOpd?.value ?? 'opd_undetected'}_${Tahun?.label ?? 'tahun_undetected'
+                    }.png`
+                    : `pohon_kinerja_opd_${User?.kode_opd ?? 'opd_undetected'}_${Tahun?.label ?? 'tahun_undetected'
+                    }.png`;
+            link.click();
+        } catch (error) {
+            alert("Error capturing the element");
+            console.error("Error capturing the element:", error);
+        } finally {
+            // Ensure elements are restored even if an error occurs
+            elementsToHide.forEach((el) => (el.style.display = ""));
+            setLoadingCetak(false);
+        }
+    };
     const toggleCursorMode = () => {
         setCursorMode((prevMode) => (prevMode === "normal" ? "hand" : "normal"));
     }
@@ -551,7 +609,7 @@ const PokinOpd = () => {
                                     </table>
                                 </div>
                                 {(User?.roles == 'super_admin' || User?.roles == 'admin_opd') &&
-                                    <div className={`flex flex-col gap-2 my-3 py-3 rounded-lg bg-white border-black`}>
+                                    <div className={`flex flex-col gap-2 my-3 py-3 rounded-lg bg-white border-black hide-on-capture`}>
                                         <ButtonSkyBorder onClick={() => handleModalNewTujuan()}>
                                             <TbCirclePlus className="mr-1" />
                                             Tambah Tujuan OPD
@@ -560,17 +618,22 @@ const PokinOpd = () => {
                                             className='flex flex-wrap items-center justify-center gap-1'
                                             onClick={() => setClone(true)}
                                         >
-                                            <TbCopy className='mr-1'/>
+                                            <TbCopy className='mr-1' />
                                             Clone Pohon Kinerja
                                         </ButtonBlack>
                                         <ButtonSky
                                             className='flex flex-wrap items-center justify-center gap-1'
                                             onClick={() => {
-                                                setShowAllDetail(true)
-                                                setShowAll(true);
+                                                setShowAllDetail(true);
+                                                AlertQuestion2("Sembunyikan Sidebar untuk hasil cetak penuh", "", "warning", "Cetak", "Batal").then((result) => {
+                                                    if(result.isConfirmed){
+                                                        handleDownloadPdf();
+                                                        console.log(containerRef.current);
+                                                    }
+                                                })
                                             }}
                                         >
-                                            <TbPrinter className='mr-1'/>
+                                            <TbPrinter className='mr-1' />
                                             Cetak Pohon Kinerja
                                         </ButtonSky>
                                         <ModalClone
@@ -583,7 +646,7 @@ const PokinOpd = () => {
                                     </div>
                                 }
                                 {/* button */}
-                                <div className="flex items-center justify-evenly">
+                                <div className="flex items-center justify-evenly hide-on-capture">
                                     <div className="flex justify-center my-1 py-2">
                                         <ButtonBlackBorder onClick={() => setShowAll(true)}>
                                             <TbEye className="mr-1" />
@@ -604,7 +667,7 @@ const PokinOpd = () => {
                                 <ul>
                                     {Pokin.childs.map((data: any) => (
                                         <li key={data.id}>
-                                            <PohonOpd 
+                                            <PohonOpd
                                                 tema={data}
                                                 deleteTrigger={() => setDeleted((prev) => !prev)}
                                                 show_all={ShowAll}

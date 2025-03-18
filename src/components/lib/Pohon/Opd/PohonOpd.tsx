@@ -239,7 +239,7 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
                         {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'level_1') &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                         ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
                                     `}
                             >
@@ -282,7 +282,7 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                         ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
                                     `}
                             >
@@ -323,7 +323,7 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                         ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
                                     `}
                             >
@@ -362,7 +362,7 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                         ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
                                         ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
                                         ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
@@ -419,7 +419,7 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
                         {/* BUTTON ACTION INSIDE BOX CEK CROSSCUTTING */}
                         {!['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                     ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
                                     ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
                                     ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
@@ -438,7 +438,7 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
                             </div>
                         }
                         {/* footer */}
-                        <div className="flex justify-evenly my-3 py-3">
+                        <div className="flex justify-evenly my-3 py-3 hide-on-capture">
                             {(tema.level_pohon != 4 && (
                                 User?.roles == 'super_admin' ||
                                 User?.roles == 'admin_opd' ||
@@ -756,7 +756,7 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'level_1') &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                         ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
                                     `}
                             >
@@ -799,7 +799,7 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                         ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
                                     `}
                             >
@@ -840,7 +840,7 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                         ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
                                     `}
                             >
@@ -879,7 +879,7 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             )) &&
                             !['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                         ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
                                         ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
                                         ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
@@ -916,7 +916,7 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         {/* DETAIL DATA CROSSCUTTING */}
                         {DetailCross &&
                             <>
-                                <div className="flex justify-center my-3">
+                                <div className="flex justify-center my-3 hide-on-capture">
                                     {CrossLoading ? (
                                         <p className="bg-white w-full rounded-lg py-3 text-center">Loading...</p>
                                     ) : PohonCross.length === 0 ? (
@@ -936,7 +936,7 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                         {/* BUTTON ACTION INSIDE BOX CEK CROSSCUTTING */}
                         {!['Strategic Pemda', 'Tactical Pemda', 'Operational Pemda'].includes(tema.jenis_pohon) &&
                             <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                                     ${tema.jenis_pohon === "Strategic Pemda" && 'border-black'}
                                     ${tema.jenis_pohon === "Tactical Pemda" && 'border-black'}
                                     ${tema.jenis_pohon === "Operational Pemda" && 'border-black'}
@@ -955,7 +955,7 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             </div>
                         }
                         {/* footer */}
-                        <div className="flex justify-evenly my-3 py-3">
+                        <div className="flex justify-evenly my-3 py-3 hide-on-capture">
                             {(tema.level_pohon != 4 && (
                                 User?.roles == 'super_admin' ||
                                 User?.roles == 'admin_opd' ||
@@ -1605,7 +1605,7 @@ export const TablePohon = (props: any) => {
                     }
                 </tbody>
             </table>
-            <div className="flex mt-2 w-full justify-center bg-white p-3 rounded-lg">
+            <div className="flex mt-2 w-full justify-center bg-white p-3 rounded-lg hide-on-capture">
                 <ButtonGreenBorder className='w-full' onClick={() => setShow((prev) => !prev)}>
                     {Show ?
                         <div className="flex items-center gap-1">
@@ -1740,7 +1740,7 @@ export const TablePohon = (props: any) => {
             }
             {/* BUTTON REVIEW */}
             <div
-                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                         ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
                         `}
             >
@@ -2497,7 +2497,7 @@ export const TablePohonEdited = (props: any) => {
                     }
                 </tbody>
             </table>
-            <div className="flex mt-2 w-full justify-center bg-white p-3 rounded-lg">
+            <div className="flex mt-2 w-full justify-center bg-white p-3 rounded-lg hide-on-capture">
                 <ButtonGreenBorder className='w-full' onClick={() => setShow((prev) => !prev)}>
                     {Show ?
                         <div className="flex items-center gap-1">
@@ -2628,7 +2628,7 @@ export const TablePohonEdited = (props: any) => {
             }
             {/* BUTTON REVIEW */}
             <div
-                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                         ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
                         `}
             >

@@ -405,7 +405,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, se
                         }
                         {/* BUTTON REVIEW */}
                         <div
-                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black
+                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black hide-on-capture
                             ${tema.jenis_pohon === "Strategic" && 'border-white'}
                             ${tema.jenis_pohon === "Tactical" && 'border-white'}
                             ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-white'}
@@ -457,7 +457,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, se
                         {/* BUTTON ACTION INSIDE BOX */}
                         {user != 'reviewer' &&
                             <div
-                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black
+                                className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black hide-on-capture
                                 ${tema.jenis_pohon === "Strategic" && 'border-white'}
                                 ${tema.jenis_pohon === "Tactical" && 'border-white'}
                                 ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-white'}
@@ -535,7 +535,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, se
                             tema.jenis_pohon !== 'Operational' &&
                             tema.jenis_pohon !== 'Operational N'
                         ) &&
-                            <div className="flex flex-wrap gap-3 justify-evenly my-3 py-3">
+                            <div className="flex flex-wrap gap-3 justify-evenly my-3 py-3 hide-on-capture">
                                 <ButtonBlackBorder 
                                     className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
                                     onClick={handleShow}
@@ -961,7 +961,7 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger, user, show_a
                         }
                         {/* BUTTON REVIEW */}
                         <div
-                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black
+                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white border-black hide-on-capture
                             ${tema.jenis_pohon === "Strategic" && 'border-white'}
                             ${tema.jenis_pohon === "Tactical" && 'border-white'}
                             ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-white'}
@@ -1012,7 +1012,7 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger, user, show_a
                         </div>
                         {/* BUTTON ACTION INSIDE BOX */}
                         <div
-                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white
+                            className={`flex justify-evenly border my-3 py-3 rounded-lg bg-white hide-on-capture
                             ${tema.jenis_pohon === "Tematik" && 'border-black'}
                             ${tema.jenis_pohon === "Sub Tematik" && 'border-black'}
                             ${tema.jenis_pohon === "Sub Sub Tematik" && 'border-black'}
@@ -1056,7 +1056,7 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger, user, show_a
                             tema.jenis_pohon !== 'Operational' &&
                             tema.jenis_pohon !== 'Operational N'
                         ) &&
-                            <div className="flex flex-wrap gap-3 justify-evenly my-3 py-3">
+                            <div className="flex flex-wrap gap-3 justify-evenly my-3 py-3 hide-on-capture">
                                 <ButtonBlackBorder className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
                                     onClick={handleShow}
                                 >

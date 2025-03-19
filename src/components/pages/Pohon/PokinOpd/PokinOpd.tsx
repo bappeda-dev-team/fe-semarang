@@ -634,7 +634,7 @@ const PokinOpd = () => {
                                             }}
                                         >
                                             <TbPrinter className='mr-1' />
-                                            Cetak Pohon Kinerja
+                                            Cetak Penuh Pohon Kinerja
                                         </ButtonSky>
                                         <ModalClone
                                             isOpen={Clone}

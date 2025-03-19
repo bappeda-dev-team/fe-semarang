@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { TbEye, TbArrowGuide, TbCheck, TbX, TbCircleLetterXFilled, TbCirclePlus, TbHourglass, TbPencil, TbTrash, TbBookmarkPlus, TbZoom, TbCopy } from 'react-icons/tb';
-import { ButtonGreen, ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder, ButtonBlack } from '@/components/global/Button';
+import { TbEye, TbArrowGuide, TbCheck, TbX, TbCircleLetterXFilled, TbCirclePlus, TbHourglass, TbPencil, TbTrash, TbBookmarkPlus, TbZoom, TbCopy, TbPrinter } from 'react-icons/tb';
+import { ButtonGreen, ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder, ButtonBlack, ButtonSky } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
 import { FormPohonPemda, FormAmbilPohon, FormEditPohon } from './FormPohonPemda';
 import { getToken } from '../../Cookie';
 import { ModalReview } from '@/components/pages/Pohon/ModalReview';
 import { LoadingClip } from '@/components/global/Loading';
 import { ModalClone } from '@/components/pages/Pohon/ModalClone';
+import { ModalCetak } from '@/components/pages/Pohon/ModalCetak';
 
 interface pohon {
     tema: any;
@@ -35,9 +36,11 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, se
     const [edit, setEdit] = useState<boolean>(false);
     const [Edited, setEdited] = useState<any | null>(null);
     const token = getToken();
-    
+
     // SHOW ALL
     const [Show, setShow] = useState<boolean>(false);
+    // CETAK
+    const [IsCetak, setIsCetak] = useState<boolean>(false);
 
     // REVIEW
     const [IsNewReview, setIsNewReview] = useState<boolean>(false);
@@ -69,10 +72,10 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, se
     }
 
     useEffect(() => {
-        if(show_all){
+        if (show_all) {
             setShow(true);
         }
-        if(show_all && (Show === false)){
+        if (show_all && (Show === false)) {
             set_show_all();
         }
     }, [show_all, Show, set_show_all]);
@@ -463,52 +466,61 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, se
                                 ${(tema.jenis_pohon === "Operational" || tema.jenis_pohon === "Operational N") && 'border-white'}
                             `}
                             >
-                                {!['Strategic', 'Tactical', 'Operational', 'Operational N'].includes(tema.jenis_pohon) &&
-                                    <React.Fragment>
+                                <React.Fragment>
+                                    {!['Strategic', 'Tactical', 'Operational', 'Operational N'].includes(tema.jenis_pohon) &&
                                         <ButtonSkyBorder onClick={() => setEdit(true)}>
                                             <TbPencil className="mr-1" />
                                             Edit
                                         </ButtonSkyBorder>
-                                        {tema.jenis_pohon === 'Tematik' &&
-                                            <>
-                                                <button
-                                                    className={`border px-3 py-1 rounded-lg flex jutify-center items-center gap-1
+                                    }
+                                    {tema.level_pohon !== 0 &&
+                                        <ButtonSky 
+                                            className='flex items-center gap-1'
+                                            onClick={() => setIsCetak(true)}
+                                        >
+                                            <TbPrinter />
+                                            Cetak
+                                        </ButtonSky>
+                                    }
+                                    {tema.jenis_pohon === 'Tematik' &&
+                                        <>
+                                            <button
+                                                className={`border px-3 py-1 rounded-lg flex jutify-center items-center gap-1
                                                         ${tema.is_active === false ?
-                                                            'border-green-500 text-green-500 hover:bg-green-500 hover:text-white'
-                                                            :
-                                                            'border-red-500 text-red-500 hover:bg-red-500 hover:text-white'
-                                                        }    
+                                                        'border-green-500 text-green-500 hover:bg-green-500 hover:text-white'
+                                                        :
+                                                        'border-red-500 text-red-500 hover:bg-red-500 hover:text-white'
+                                                    }    
                                                     `}
-                                                    onClick={() => {
-                                                        AlertQuestion(`${tema.is_active === true ? 'NON AKTIFKAN' : 'AKTIFKAN'}`, `${tema.is_active === false ? 'Aktifkan tematik?' : 'non aktifkan tematik'}`, "question", `${tema.is_active === false ? 'Aktifkan' : 'Non Aktifkan'}`, "Batal").then((result) => {
-                                                            if (result.isConfirmed) {
-                                                                AktifasiTematik(tema.id, tema.is_active);
-                                                            }
-                                                        });
-                                                    }}
-                                                >
-                                                    {tema.is_active === false ? <TbCheck /> : <TbX />}
-                                                    {tema.is_active === false ? 'Aktifkan tematik' : 'Non Aktifkan tematik'}
-                                                </button>
-                                                <ButtonBlack
-                                                    className='flex justify-center items-center gap-1'
-                                                    onClick={() => setIsClone(true)}
-                                                >
-                                                    <TbCopy />
-                                                    Clone
-                                                </ButtonBlack>
-                                                <ModalClone
-                                                    jenis="pemda"
-                                                    isOpen={IsClone}
-                                                    onClose={() => setIsClone(false)}
-                                                    nama_pohon={tema.tema}
-                                                    id={tema.id}
-                                                    onSuccess={deleteTrigger}
-                                                />
-                                            </>
-                                        }
-                                    </React.Fragment>
-                                }
+                                                onClick={() => {
+                                                    AlertQuestion(`${tema.is_active === true ? 'NON AKTIFKAN' : 'AKTIFKAN'}`, `${tema.is_active === false ? 'Aktifkan tematik?' : 'non aktifkan tematik'}`, "question", `${tema.is_active === false ? 'Aktifkan' : 'Non Aktifkan'}`, "Batal").then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            AktifasiTematik(tema.id, tema.is_active);
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                {tema.is_active === false ? <TbCheck /> : <TbX />}
+                                                {tema.is_active === false ? 'Aktifkan tematik' : 'Non Aktifkan tematik'}
+                                            </button>
+                                            <ButtonBlack
+                                                className='flex justify-center items-center gap-1'
+                                                onClick={() => setIsClone(true)}
+                                            >
+                                                <TbCopy />
+                                                Clone
+                                            </ButtonBlack>
+                                            <ModalClone
+                                                jenis="pemda"
+                                                isOpen={IsClone}
+                                                onClose={() => setIsClone(false)}
+                                                nama_pohon={tema.tema}
+                                                id={tema.id}
+                                                onSuccess={deleteTrigger}
+                                            />
+                                        </>
+                                    }
+                                </React.Fragment>
                                 {tema.jenis_pohon !== 'Tematik' &&
                                     <ButtonRedBorder
                                         onClick={() => {
@@ -536,7 +548,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, se
                             tema.jenis_pohon !== 'Operational N'
                         ) &&
                             <div className="flex flex-wrap gap-3 justify-evenly my-3 py-3 hide-on-capture">
-                                <ButtonBlackBorder 
+                                <ButtonBlackBorder
                                     className={`px-3 bg-white flex justify-center items-center py-1 bg-gradient-to-r rounded-lg`}
                                     onClick={handleShow}
                                 >
@@ -581,20 +593,20 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, se
             }
             <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
-                    <Pohon 
+                    <Pohon
                         user={user}
-                        tema={dahan} 
-                        key={index} 
-                        deleteTrigger={deleteTrigger} 
+                        tema={dahan}
+                        key={index}
+                        deleteTrigger={deleteTrigger}
                         show_all={show_all}
                         set_show_all={set_show_all}
                     />
                 ))}
                 {strategicPohons.map((dahan: any, index: any) => (
-                    <Pohon 
-                        user={user} 
-                        tema={dahan} 
-                        key={index} 
+                    <Pohon
+                        user={user}
+                        tema={dahan}
+                        key={index}
                         deleteTrigger={deleteTrigger}
                         show_all={show_all}
                         set_show_all={set_show_all}
@@ -630,6 +642,12 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, se
                     />
                 ))}
             </ul>
+            <ModalCetak
+                jenis='non_cascading'
+                onClose={() => setIsCetak(false)}
+                isOpen={IsCetak}
+                pohon={tema}
+            />
         </li>
     )
 }
@@ -1101,21 +1119,21 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger, user, show_a
             }
             <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
-                    <Pohon 
-                        user={user} 
-                        tema={dahan} 
-                        key={index} 
+                    <Pohon
+                        user={user}
+                        tema={dahan}
+                        key={index}
                         deleteTrigger={deleteTrigger}
                         show_all={show_all}
                         set_show_all={set_show_all}
                     />
                 ))}
                 {strategicPohons.map((dahan: any, index: any) => (
-                    <Pohon 
-                        user={user} 
-                        tema={dahan} 
-                        key={index} 
-                        deleteTrigger={deleteTrigger} 
+                    <Pohon
+                        user={user}
+                        tema={dahan}
+                        key={index}
+                        deleteTrigger={deleteTrigger}
                         show_all={show_all}
                         set_show_all={set_show_all}
                     />

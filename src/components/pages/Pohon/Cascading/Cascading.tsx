@@ -317,7 +317,7 @@ const Cascading = () => {
                                         :
                                         <TbPrinter className='mr-1' />
                                     }
-                                    Cetak Pohon Cascading
+                                    Cetak Penuh Pohon Cascading
                                 </ButtonSky>
                                 <ButtonBlackBorder
                                     className='w-full mb-2 hide-on-capture'

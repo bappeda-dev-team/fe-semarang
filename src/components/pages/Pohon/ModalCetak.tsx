@@ -3,21 +3,38 @@
 import { useState, useEffect, useRef } from "react";
 import { ButtonSky, ButtonRed } from '@/components/global/Button';
 import { TbPrinter, TbXboxX } from "react-icons/tb";
-import { PohonOpd } from "@/components/lib/Pohon/Opd/PohonOpd";
 import html2canvas from "html2canvas";
+import { PohonCetak } from "./PohonCetak";
 import { LoadingButtonClip } from "@/components/global/Loading";
+import { getOpdTahun } from "@/components/lib/Cookie";
 
 interface modal {
+    jenis: 'cascading' | 'non_cascading';
     isOpen: boolean;
     onClose: () => void;
-    onSuccess: () => void;
     pohon: any;
 }
+interface tahun {
+    label: string;
+    value: number;
+}
 
-export const ModalCetak: React.FC<modal> = ({ isOpen, onClose, onSuccess, pohon }) => {
+export const ModalCetak: React.FC<modal> = ({ jenis, isOpen, onClose, pohon }) => {
 
     const modalRef = useRef<HTMLDivElement | null>(null);
     const [LoadingCetak, setLoadingCetak] = useState<boolean>(false);
+    const [Tahun, setTahun] = useState<tahun | null>(null);
+
+    useEffect(() => {
+        const data = getOpdTahun();
+        if(data.tahun){
+            const tahun = {
+                value: data.tahun.value,
+                label: data.tahun.label,
+            }
+            setTahun(tahun);
+        }
+    }, [])
 
     const handleDownloadPdf = async () => {
         if (!modalRef.current) return;
@@ -59,7 +76,7 @@ export const ModalCetak: React.FC<modal> = ({ isOpen, onClose, onSuccess, pohon 
             const imgData = newCanvas.toDataURL("image/png");
             const link = document.createElement("a");
             link.href = imgData;
-            link.download = `${pohon.nama_pohon}.jpg`;
+            link.download = `${pohon.nama_pohon !== undefined ? pohon.nama_pohon : pohon.tema}_${Tahun?.value}${jenis === 'cascading' ? '_cascading' : ''}.jpg`;
             link.click();
         } catch (error) {
             alert("Error capturing the element");
@@ -82,7 +99,7 @@ export const ModalCetak: React.FC<modal> = ({ isOpen, onClose, onSuccess, pohon 
         return (
             <div className="fixed inset-0 flex items-center justify-center z-50">
                 <div className={`fixed inset-0 bg-black opacity-30`} onClick={handleClose}></div>
-                <div className={`bg-white rounded-lg p-5 z-10 w-[98%] min-h-[98%] max-h-[98%] text-start overflow-auto`}>
+                <div className={`bg-white rounded-lg p-5 z-10 w-[98%] min-h-[98%] max-h-[98%] text-start overflow-y-hidden`}>
                     <div className="flex flex-wrap justify-between items-center border-b pb-2">
                         <ButtonSky
                             className="flex flex-wrap items-center gap-2"
@@ -104,12 +121,14 @@ export const ModalCetak: React.FC<modal> = ({ isOpen, onClose, onSuccess, pohon 
                             <TbXboxX className="text-2xl" />
                         </ButtonRed>
                     </div>
-                    <div ref={modalRef} className="flex py-3 justify-center items-center">
-                        <PohonOpd
-                            tema={pohon}
-                            deleteTrigger={handleClose}
-                            set_show_all={() => null}
-                        />
+                    <div className="flex py-3 relative justify-center items-center h-[calc(100vh-50px)]">
+                        <div ref={modalRef} className="flex flex-wrap justify-evenly w-full max-h-full overflow-auto pr-5">
+                            <PohonCetak
+                                jenis={jenis === 'cascading' ? "cascading" : "non_cascading"}
+                                tema={pohon}
+                                closeTrigger={handleClose}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

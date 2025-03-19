@@ -81,9 +81,9 @@ const LaporanRenstra = () => {
             <div className="mt-3 rounded-xl shadow-lg border">
                 <div className="flex items-center justify-between border-b px-5 py-5">
                     <div className="flex flex-wrap items-end">
-                        <h1 className="uppercase font-bold">Laporan Renstra</h1>
+                        <h1 className="uppercase font-bold">Laporan Renstra |</h1>
                         {User?.roles == 'super_admin' &&
-                            <h1 className="uppercase font-bold ml-1">{SelectedOpd?.label}</h1>
+                            <h1 className="uppercase font-bold ml-1">{SelectedOpd?.label} |</h1>
                         }
                         <h1 className="uppercase font-bold ml-1">(Periode {Periode?.tahun_awal} - {Periode?.tahun_akhir})</h1>
                     </div>
@@ -116,8 +116,8 @@ const LaporanRenstra = () => {
                 ) : (
                     Periode ?
                         <div className="p-5">
-                            {/* <Maintenance /> */}
-                            <TableRenstra />
+                            <Maintenance />
+                            {/* <TableRenstra /> */}
                         </div>
                         :
                         <div className="m-5">

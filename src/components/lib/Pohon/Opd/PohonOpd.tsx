@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TbLayersLinked, TbBookmarkPlus, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHourglass, TbPencil, TbTrash, TbEye, TbEyeClosed, TbArrowAutofitWidth, TbDeviceTabletSearch, TbZoom } from 'react-icons/tb';
+import { TbPrinter, TbLayersLinked, TbBookmarkPlus, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHourglass, TbPencil, TbTrash, TbEye, TbEyeClosed, TbArrowAutofitWidth, TbDeviceTabletSearch, TbZoom } from 'react-icons/tb';
 import { ButtonSky, ButtonSkyBorder, ButtonRed, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
 import { FormPohonOpd, FormEditPohon, FormCrosscutingOpd } from './FormPohonOpd';
@@ -7,6 +7,7 @@ import { getToken, getUser } from '../../Cookie';
 import { ModalAddCrosscutting } from '@/components/pages/Pohon/ModalCrosscutting';
 import { ModalPindahPohonOpd } from '@/components/pages/Pohon/ModalPindahPohonOpd';
 import { ModalReview } from '@/components/pages/Pohon/ModalReview';
+import { ModalCetak } from '@/components/pages/Pohon/ModalCetak';
 import { LoadingClip } from '@/components/global/Loading';
 
 interface pohon {
@@ -66,6 +67,7 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
     const [Edited, setEdited] = useState<any | null>(null);
     const [User, setUser] = useState<any>(null);
     const token = getToken();
+    const [IsCetak, setIsCetak] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchUser = getUser();
@@ -75,10 +77,10 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
     }, []);
 
     useEffect(() => {
-        if(show_all){
+        if (show_all) {
             setShow(true);
         }
-        if(show_all && (Show === false)){
+        if (show_all && (Show === false)) {
             set_show_all();
         }
     }, [show_all, Show, set_show_all]);
@@ -224,7 +226,7 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
                             {Edited ?
                                 <TablePohonEdited
                                     item={Edited}
-                                    user={User?.roles} 
+                                    user={User?.roles}
                                     ShowDetail={show_detail}
                                 />
                                 :
@@ -426,6 +428,13 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
                                     ${tema.jenis_pohon === "Operational N" && 'border-green-500'}
                                 `}
                             >
+                                <ButtonBlackBorder
+                                    className='flex items-center gap-1'
+                                    onClick={() => setIsCetak(true)}
+                                >
+                                    <TbPrinter />
+                                    Cetak
+                                </ButtonBlackBorder>
                                 <ButtonSkyBorder
                                     onClick={() => {
                                         fetchPohonCross(tema.id);
@@ -560,9 +569,9 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
             }
             <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
-                    <PohonOpd 
+                    <PohonOpd
                         tema={dahan}
-                        key={index} 
+                        key={index}
                         deleteTrigger={deleteTrigger}
                         show_all={show_all}
                         show_detail={show_detail}
@@ -589,6 +598,12 @@ export const PohonOpd: React.FC<pohon> = ({ tema, deleteTrigger, show_all, show_
                     />
                 ))}
             </ul>
+            <ModalCetak
+                onClose={() => setIsCetak(false)}
+                isOpen={IsCetak}
+                onSuccess={() => null}
+                pohon={tema}
+            />
         </li>
     )
 }
@@ -743,12 +758,12 @@ export const PohonOpdEdited: React.FC<pohon> = ({ tema, deleteTrigger }) => {
                             {Edited ?
                                 <TablePohonEdited
                                     item={Edited}
-                                    user={User?.roles  }
+                                    user={User?.roles}
                                 />
                                 :
-                                <TablePohon 
+                                <TablePohon
                                     item={tema}
-                                    user={User?.roles  }
+                                    user={User?.roles}
                                 />
                             }
                         </div>
@@ -1167,7 +1182,7 @@ export const TablePohon = (props: any) => {
     }
 
     useEffect(() => {
-        if(ShowDetail){
+        if (ShowDetail) {
             setShow(true);
         } else {
             setShow(false);
@@ -1627,11 +1642,11 @@ export const TablePohon = (props: any) => {
                         <LoadingClip />
                     </div>
                     :
-                    Review.length == 0 ? 
+                    Review.length == 0 ?
                         <div className="flex mt-2 text-center">
                             <h1 className='text-center bg-white w-full rounded-lg p-2'>tidak ada review</h1>
                         </div>
-                    :
+                        :
                         <div className="flex mt-2">
                             <table className="w-full">
                                 {Review.map((item: Review) => (
@@ -2142,9 +2157,9 @@ export const TablePohonEdited = (props: any) => {
     }
 
     useEffect(() => {
-        if(ShowDetail){
+        if (ShowDetail) {
             setShow(true);
-        }else {
+        } else {
             setShow(false);
         }
     }, [ShowDetail]);

@@ -16,15 +16,12 @@ export const PohonCetak: React.FC<pohon> = ({ jenis, tema, closeTrigger }) => {
         <li key={tema.id}>
             <>
                 <div
-                    className={`tf-nc tf flex flex-col w-[600px] rounded-lg shadow-lg
-                            ${tema.jenis_pohon === "Strategic Pemda" && 'shadow-slate-500'}
-                            ${tema.jenis_pohon === "Tactical Pemda" && 'shadow-slate-500'}
-                            ${tema.jenis_pohon === "OperationalPemda" && 'shadow-slate-500'}
-                            ${tema.jenis_pohon === "Strategic" && 'shadow-red-500 bg-red-700'}
-                            ${tema.jenis_pohon === "Tactical" && 'shadow-blue-500 bg-blue-500'}
-                            ${tema.jenis_pohon === "Operational" && 'shadow-green-500 bg-green-500'}
-                            ${tema.jenis_pohon === "Operational N" && 'shadow-slate-500 bg-white'}
-                            ${(tema.jenis_pohon === "Strategic Crosscutting" || tema.jenis_pohon === "Tactical Crosscutting" || tema.jenis_pohon === "Operational Crosscutting" || tema.jenis_pohon === "Operational N Crosscutting") && 'shadow-yellow-700 bg-yellow-700'}
+                    className={`tf-nc tf flex flex-col w-[600px] rounded-lg
+                            ${tema.jenis_pohon === "Strategic" && 'bg-red-700'}
+                            ${tema.jenis_pohon === "Tactical" && 'bg-blue-500'}
+                            ${tema.jenis_pohon === "Operational" && 'bg-green-500'}
+                            ${tema.jenis_pohon === "Operational N" && 'bg-white'}
+                            ${(tema.jenis_pohon === "Strategic Crosscutting" || tema.jenis_pohon === "Tactical Crosscutting" || tema.jenis_pohon === "Operational Crosscutting" || tema.jenis_pohon === "Operational N Crosscutting") && 'bg-yellow-700'}
                         `}
                 >
                     {/* HEADER */}

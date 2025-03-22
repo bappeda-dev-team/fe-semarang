@@ -265,15 +265,23 @@ export const TheadMatrix: React.FC<Thead> = ({ jenis, tahun_list }) => {
                 ${jenis === "Kegiatan" && "bg-green-500"}
                 ${jenis === "Sub Kegiatan" && "bg-emerald-500"}
             `}>
-                {tahun_list.map((item: string) => (
-                    <React.Fragment key={item}>
-                        <td className="border-l border-b px-6 py-3 min-w-[300px] text-center">indikator</td>
-                        <td className="border-l border-b px-6 py-3 min-w-[50px]">Target</td>
-                        <td className="border-l border-b px-6 py-3 min-w-[50px]">Satuan</td>
-                        <td className="border-l border-b px-6 py-3 min-w-[200px] text-center">Pagu</td>
-                        <td className="border-l border-b px-6 py-3 min-w-[50px] text-center">Aksi</td>
-                    </React.Fragment>
-                ))}
+                {(jenis === 'Urusan' || jenis === 'Bidang Urusan') ? 
+                    tahun_list.map((item: string) => (
+                        <React.Fragment key={item}>
+                            <td colSpan={5} className="border-l border-b px-6 py-3 min-w-[200px] text-center">Pagu</td>
+                        </React.Fragment>
+                    ))
+                :
+                    tahun_list.map((item: string) => (
+                        <React.Fragment key={item}>
+                            <td className="border-l border-b px-6 py-3 min-w-[300px] text-center">indikator</td>
+                            <td className="border-l border-b px-6 py-3 min-w-[50px]">Target</td>
+                            <td className="border-l border-b px-6 py-3 min-w-[50px]">Satuan</td>
+                            <td className="border-l border-b px-6 py-3 min-w-[200px] text-center">Pagu</td>
+                            <td className="border-l border-b px-6 py-3 min-w-[50px] text-center">Aksi</td>
+                        </React.Fragment>
+                    ))
+                }
             </tr>
         </thead>
     )
@@ -317,41 +325,53 @@ export const TrMatrix: React.FC<Tr> = ({ jenis, kode_opd, kode, nama, indikator,
     return (
         // terdapat error hidrasi disini
         <>
-            <tr>
-                <td className={`border-r border-b px-6 py-4 font-semibold`}>{kode}</td>
-                <td className={`border-r border-b px-6 py-4 w-full`}>{nama}</td>
-                {indikator.map((i: Indikator, index: number) => (
-                    <React.Fragment key={i.id || index}>
-                        <td className={`border-r border-b px-6 py-4 w-full`}>{i.indikator || "-"}</td>
-                        {i.target.map((t: Target, sub_index: number) => (
-                            <React.Fragment key={sub_index}>
-                                <td className={`border-r border-b px-6 py-4 w-full text-center`}>{t.target || "-"}</td>
-                                <td className={`border-r border-b px-6 py-4 w-full text-center`}>{t.satuan || "-"}</td>
-                            </React.Fragment>
-                        ))}
-                        <td className={`border-r border-b px-6 py-4 w-full`}>Rp.{formatRupiah(i.pagu_anggaran)}</td>
-                        <td className={`border-r border-b px-6 py-4 w-full`}>
-                            {i.id !== "" ?
-                                <ButtonGreenBorder
-                                    className="flex items-center gap-1"
-                                    onClick={() => handleModalEdit(i.id, i.tahun)}
-                                >
-                                    <TbPencil />
-                                    Edit
-                                </ButtonGreenBorder>
-                                :
-                                <ButtonSkyBorder
-                                    className="flex items-center gap-1"
-                                    onClick={() => handleModalTambah(i.tahun)}
-                                >
-                                    <TbPencil />
-                                    Edit
-                                </ButtonSkyBorder>
-                            }
-                        </td>
-                    </React.Fragment>
-                ))}
-            </tr>
+            {(jenis === 'Urusan' || jenis === 'Bidang Urusan') ? 
+                <tr>
+                    <td className={`border-r border-b px-6 py-4 font-semibold`}>{kode}</td>
+                    <td className={`border-r border-b px-6 py-4 w-full`}>{nama}</td>
+                    {indikator.map((i: Indikator, index: number) => (
+                        <React.Fragment key={i.id || index}>
+                            <td colSpan={5} className={`border-r border-b px-6 py-4 w-full text-center`}>Rp.{formatRupiah(i.pagu_anggaran)}</td>
+                        </React.Fragment>
+                    ))}
+                </tr>
+            :
+                <tr>
+                    <td className={`border-r border-b px-6 py-4 font-semibold`}>{kode}</td>
+                    <td className={`border-r border-b px-6 py-4 w-full`}>{nama}</td>
+                    {indikator.map((i: Indikator, index: number) => (
+                        <React.Fragment key={i.id || index}>
+                            <td className={`border-r border-b px-6 py-4 w-full`}>{i.indikator || "-"}</td>
+                            {i.target.map((t: Target, sub_index: number) => (
+                                <React.Fragment key={sub_index}>
+                                    <td className={`border-r border-b px-6 py-4 w-full text-center`}>{t.target || "-"}</td>
+                                    <td className={`border-r border-b px-6 py-4 w-full text-center`}>{t.satuan || "-"}</td>
+                                </React.Fragment>
+                            ))}
+                            <td className={`border-r border-b px-6 py-4 w-full`}>Rp.{formatRupiah(i.pagu_anggaran)}</td>
+                            <td className={`border-r border-b px-6 py-4 w-full`}>
+                                {i.id !== "" ?
+                                    <ButtonGreenBorder
+                                        className="flex items-center gap-1"
+                                        onClick={() => handleModalEdit(i.id, i.tahun)}
+                                    >
+                                        <TbPencil />
+                                        Edit
+                                    </ButtonGreenBorder>
+                                    :
+                                    <ButtonSkyBorder
+                                        className="flex items-center gap-1"
+                                        onClick={() => handleModalTambah(i.tahun)}
+                                    >
+                                        <TbPencil />
+                                        Edit
+                                    </ButtonSkyBorder>
+                                }
+                            </td>
+                        </React.Fragment>
+                    ))}
+                </tr>
+            }
             {/* MODAL TAMBAH */}
             <ModalMatrix
                 isOpen={ModalTambah}

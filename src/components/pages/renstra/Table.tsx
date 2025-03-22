@@ -148,12 +148,12 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
                             </tbody>
                             {item.urusan.bidang_urusan &&
                                 <React.Fragment>
-                                    <TheadMatrix
-                                        tahun_list={tahun_list}
-                                        jenis="Bidang Urusan"
-                                    />
                                     {item.urusan.bidang_urusan.map((br: renstra, br_index: number) => (
                                         <React.Fragment key={br_index}>
+                                            <TheadMatrix
+                                                tahun_list={tahun_list}
+                                                jenis="Bidang Urusan"
+                                            />
                                             <tbody>
                                                 <TrMatrix
                                                     jenis="Bidang Urusan"
@@ -166,12 +166,12 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
                                             </tbody>
                                             {br.program &&
                                                 <React.Fragment>
-                                                    <TheadMatrix
-                                                        tahun_list={tahun_list}
-                                                        jenis="Program"
-                                                    />
                                                     {br.program.map((p: renstra, p_index: number) => (
                                                         <React.Fragment key={p_index}>
+                                                            <TheadMatrix
+                                                                tahun_list={tahun_list}
+                                                                jenis="Program"
+                                                            />
                                                             <tbody>
                                                                 <TrMatrix
                                                                     jenis="Program"
@@ -184,12 +184,12 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
                                                             </tbody>
                                                             {p.kegiatan &&
                                                                 <React.Fragment>
-                                                                    <TheadMatrix
-                                                                        tahun_list={tahun_list}
-                                                                        jenis="Kegiatan"
-                                                                    />
                                                                     {p.kegiatan.map((k: renstra, k_index: number) => (
                                                                         <React.Fragment key={k_index}>
+                                                                            <TheadMatrix
+                                                                                tahun_list={tahun_list}
+                                                                                jenis="Kegiatan"
+                                                                            />
                                                                             <tbody>
                                                                                 <TrMatrix
                                                                                     jenis="Kegiatan"
@@ -383,6 +383,14 @@ export const TrMatrix: React.FC<Tr> = ({ jenis, kode_opd, kode, nama, indikator,
     )
 }
 export const TableTotalPagu: React.FC<TablePagu> = ({ tahun_list, pagu_total }) => {
+
+    function formatRupiah(angka: number) {
+        if (typeof angka !== 'number') {
+            return String(angka); // Jika bukan angka, kembalikan sebagai string
+        }
+        return angka.toLocaleString('id-ID'); // 'id-ID' untuk format Indonesia
+    }
+
     return (
         <table className="w-full">
             <tbody>
@@ -394,7 +402,7 @@ export const TableTotalPagu: React.FC<TablePagu> = ({ tahun_list, pagu_total }) 
                 </tr>
                 <tr>
                     {pagu_total.map((item: pagu, index: number) => (
-                        <td key={index} className="border-r border-b px-6 py-4 font-semibold text-center">Rp.{item.pagu_indikatif}</td>
+                        <td key={index} className="border-r border-b px-6 py-4 font-semibold text-center">Rp.{formatRupiah(item.pagu_indikatif)}</td>
                     ))}
                 </tr>
             </tbody>

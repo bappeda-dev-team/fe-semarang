@@ -47,7 +47,7 @@ interface modal {
     isOpen: boolean;
     onClose: () => void;
     metode: 'lama' | 'baru';
-    id?: number; // id tujuan pemda
+    id?: number; // id tujuan opd
     periode?: number; // id periode
     tahun?: number; // tahun value header
     tahun_list?: string[];
@@ -250,7 +250,7 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
             });
             const result = await response.json();
             if (result.code === 201 || result.code === 200) {
-                AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Tujuan Pemda`, "success", 1000);
+                AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Tujuan OPD`, "success", 1000);
                 onClose();
                 onSuccess();
                 reset();
@@ -305,7 +305,7 @@ export const ModalTujuanOpd: React.FC<modal> = ({ isOpen, onClose, id, kode_opd,
                                         {...field}
                                         className="border px-4 py-2 rounded-lg"
                                         id="tujuan"
-                                        placeholder="masukkan Tujuan Pemda"
+                                        placeholder="masukkan Tujuan OPD"
                                         value={TujuanOpd}
                                         onChange={(e) => {
                                             field.onChange(e);

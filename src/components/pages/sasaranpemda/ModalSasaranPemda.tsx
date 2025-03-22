@@ -364,7 +364,7 @@ export const ModalSasaranPemda: React.FC<modal> = ({ isOpen, onClose, id, tahun,
                                                 {...field}
                                                 className="border px-4 py-2 rounded-lg"
                                                 id="sasaran_pemda"
-                                                placeholder="masukkan Tujuan Pemda"
+                                                placeholder="masukkan Sasaran Pemda"
                                                 value={SasaranPemda}
                                                 onChange={(e) => {
                                                     field.onChange(e);

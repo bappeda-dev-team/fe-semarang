@@ -1,34 +1,17 @@
 'use client'
 
-import { ButtonGreen, ButtonRed } from "@/components/global/Button";
+import { ButtonGreen, ButtonRed, ButtonSky } from "@/components/global/Button";
 import React, { useState, useEffect } from "react";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { LoadingClip } from "@/components/global/Loading";
 import { getToken } from "@/components/lib/Cookie";
-import { TbPencil, TbTrash } from "react-icons/tb";
-
-interface Target {
-    id_target: string;
-    indikator_id: string;
-    target: string;
-    satuan: string;
-}
-
-interface Indikator {
-    id_indikator: string;
-    nama_indikator: string;
-    targets: Target[];
-}
+import { TbPencil, TbTrash, TbCirclePlus } from "react-icons/tb";
+import { ModalSubKegiatan } from "./ModalSubKegiatan";
 
 interface SubKegiatan {
-    subkegiatanterpilih_id: string;
     id: string;
-    status: string;
+    kode_subkegiatan: string;
     nama_sub_kegiatan: string;
-    kode_opd: string;
-    nama_opd: string;
-    tahun: string;
-    indikator: Indikator[];
 }
 
 const Table = () => {
@@ -38,6 +21,22 @@ const Table = () => {
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [DataNull, setDataNull] = useState<boolean | null>(null);
     const token = getToken();
+    
+    // MODAL
+    const [ModalTambah, setModalTambah] = useState<boolean>(false);
+    const [ModalEdit, setModalEdit] = useState<boolean>(false);
+    const [IdSubKegiatan, setIdSubKegiatan] = useState<string>('');
+    const [FetchTrigger, setFetchTrigger] = useState<boolean>(false);
+
+    const handleEdit = (id: string) => {
+        if(ModalEdit){
+            setModalEdit(false);
+            setIdSubKegiatan('');
+        } else {
+            setModalEdit(true);
+            setIdSubKegiatan(id);
+        }
+    }
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -71,7 +70,7 @@ const Table = () => {
             }
         }
         fetchSubKegiatan();
-    }, [token]);
+    }, [token, FetchTrigger]);
 
     const hapusSubKegiatan = async (id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -110,20 +109,21 @@ const Table = () => {
 
     return (
         <>
+            <ButtonSky 
+                onClick={() => setModalTambah(true)}
+                className="flex items-center gap-1 m-2"
+            >
+                <TbCirclePlus />
+                Tambah Sub Kegiatan
+            </ButtonSky>
             <div className="overflow-auto m-2 rounded-t-xl border">
                 <table className="w-full">
                     <thead>
                         <tr className="bg-[#99CEF5] text-white">
-                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
-                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Aksi</th>
-                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[300px]">Nama Sub Kegiatan</th>
-                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Tahun</th>
-                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Perangkat Daerah</th>
-                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Indikator</th>
-                        </tr>
-                        <tr className="bg-[#99CEF5] text-white">
-                            <th className="border-l border-b px-6 py-3 min-w-[50px]">Target</th>
-                            <th className="border-l border-b px-6 py-3 min-w-[50px]">Satuan</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Kode</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[300px]">Nama Sub Kegiatan</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[70px]">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -135,77 +135,61 @@ const Table = () => {
                             </tr>
                             :
                             SubKegiatan.map((item: SubKegiatan, index: number) => {
-                                // Cek apakah item.tujuan_pemda ada
-                                const hasIndikator = !!item.indikator;
-                                const indikatorLength = hasIndikator ? item.indikator.length : 0;
 
                                 return (
-                                    <React.Fragment key={item.id || index}>
-                                        {/* Baris Utama */}
-                                        <tr>
-                                            <td className="border-x border-b px-6 py-4 text-center" rowSpan={indikatorLength + 1}>{index + 1}</td>
-                                            <td className="border-r border-b px-6 py-4" rowSpan={indikatorLength + 1}>
-                                                <div className="flex flex-col justify-center items-center gap-2">
-                                                    <ButtonGreen
-                                                        className="flex items-center gap-1 w-full"
-                                                        halaman_url={`/DataMaster/masterprogramkegiatan/subkegiatan/${item.id}`}
-                                                    >
-                                                        <TbPencil />
-                                                        Edit
-                                                    </ButtonGreen>
-                                                    <ButtonRed
-                                                        className="flex items-center gap-1 w-full"
-                                                        onClick={() => {
-                                                            AlertQuestion("Hapus?", "Hapus Sub Kegiatan yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                                                                if (result.isConfirmed) {
-                                                                    hapusSubKegiatan(item.id);
-                                                                }
-                                                            });
-                                                        }}
-                                                    >
-                                                        <TbTrash />
-                                                        Hapus
-                                                    </ButtonRed>
-                                                </div>
-                                            </td>
-                                            <td className="border-r border-b px-6 py-4" rowSpan={indikatorLength + 1}>
-                                                {item.nama_sub_kegiatan || "-"}
-                                            </td>
-                                            <td className="border-r border-b px-6 py-4 text-center" rowSpan={indikatorLength + 1}>
-                                                {item.tahun || "-"}
-                                            </td>
-                                            <td className="border-r border-b px-6 py-4" rowSpan={indikatorLength + 1}>
-                                                {item.nama_opd || "-"}
-                                            </td>
-                                            {!hasIndikator &&
-                                                <React.Fragment>
-                                                    <td className="border-r border-b px-6 py-4 text-center">-</td>
-                                                    <td className="border-r border-b px-6 py-4 text-center">-</td>
-                                                    <td className="border-r border-b px-6 py-4 text-center">-</td>
-                                                </React.Fragment>
-                                            }
-                                        </tr>
-
-                                        {/* Baris Indikator (hanya jika item.indikator ada) */}
-                                        {hasIndikator &&
-                                            item.indikator.map((i: Indikator, indikatorIndex: number) => (
-                                                <tr key={i.id_indikator || indikatorIndex}>
-                                                    <td className="border-r border-b px-6 py-4">{i.nama_indikator || "-"}</td>
-                                                    {i?.targets.map((t: Target) => (
-                                                        <React.Fragment key={t.id_target}>
-                                                            <td className="border-r border-b px-6 py-4 text-center">{t.target || "-"}</td>
-                                                            <td className="border-r border-b px-6 py-4 text-center">{t.satuan || "-"}</td>
-                                                        </React.Fragment>
-                                                    ))}
-                                                </tr>
-                                            ))
-                                        }
-                                    </React.Fragment>
+                                    <tr key={item.id || index}>
+                                        <td className="border-x border-b px-6 py-4 text-center">{index + 1}</td>
+                                        <td className="border-r border-b px-6 py-4">
+                                            {item.kode_subkegiatan || "-"}
+                                        </td>
+                                        <td className="border-r border-b px-6 py-4">
+                                            {item.nama_sub_kegiatan || "-"}
+                                        </td>
+                                        <td className="border-r border-b px-6 py-4">
+                                            <div className="flex flex-col justify-center items-center gap-2">
+                                                <ButtonGreen
+                                                    className="flex items-center gap-1 w-full"
+                                                    onClick={() => handleEdit(item.id)}
+                                                >
+                                                    <TbPencil />
+                                                    Edit
+                                                </ButtonGreen>
+                                                <ButtonRed
+                                                    className="flex items-center gap-1 w-full"
+                                                    onClick={() => {
+                                                        AlertQuestion("Hapus?", "Hapus Sub Kegiatan?", "question", "Hapus", "Batal").then((result) => {
+                                                            if (result.isConfirmed) {
+                                                                hapusSubKegiatan(item.id);
+                                                            }
+                                                        });
+                                                    }}
+                                                >
+                                                    <TbTrash />
+                                                    Hapus
+                                                </ButtonRed>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 );
                             })
                         }
                     </tbody>
                 </table>
+                {/* MODAL TAMBAH */}
+                <ModalSubKegiatan
+                    metode="baru"
+                    onClose={() => setModalTambah(false)}
+                    isOpen={ModalTambah}
+                    onSuccess={() => setFetchTrigger((prev) => !prev)}
+                />
+                {/* MODAL EDIT */}
+                <ModalSubKegiatan
+                    id={IdSubKegiatan}
+                    metode="lama"
+                    onClose={() => setModalEdit(false)}
+                    isOpen={ModalEdit}
+                    onSuccess={() => setFetchTrigger((prev) => !prev)}
+                />
             </div>
         </>
     )

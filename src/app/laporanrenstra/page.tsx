@@ -115,9 +115,15 @@ const LaporanRenstra = () => {
                     <OpdNull />
                 ) : (
                     Periode ?
-                        <div className="p-5">
-                            <Maintenance />
-                            {/* <TableRenstra /> */}
+                        <div className="p-1">
+                            {/* <Maintenance /> */}
+                            <TableRenstra
+                                jenis="Urusan"
+                                tahun_awal={Periode?.tahun_awal ? Periode?.tahun_awal : ""}
+                                tahun_akhir={Periode?.tahun_akhir ? Periode?.tahun_akhir : ""}
+                                tahun_list={Periode?.tahun_list ? Periode?.tahun_list : []}
+                                kode_opd={(User?.roles == 'super_admin' || User?.roles == 'reviewer') ? SelectedOpd?.value : User?.kode_opd}
+                            />
                         </div>
                         :
                         <div className="m-5">

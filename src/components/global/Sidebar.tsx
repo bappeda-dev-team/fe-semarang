@@ -29,10 +29,11 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
   const [User, setUser] = useState<any>(null);
   const { id } = useParams();
   const url = usePathname();
+
   //state menu, submenu, subsmenu
   const [Dashboard, setDashboard] = useState<boolean | null>(null);
   const [DataMaster, setDataMaster] = useState<boolean | null>(null);
-    // DATA MASTER
+  // DATA MASTER
   const [MasterOPD, setMasterOPD] = useState<boolean | null>(null);
   const [MasterPegawai, setMasterPegawai] = useState<boolean | null>(null);
   const [MasterPeriode, setMasterPeriode] = useState<boolean | null>(null);
@@ -48,6 +49,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
   const [MasterKegiatan, setMasterKegiatan] = useState<boolean | null>(null);
   const [MasterSubKegiatan, setMasterSubKegiatan] = useState<boolean | null>(null);
   const [MasterLembaga, setMasterLembaga] = useState<boolean | null>(null);
+  // PERENCANAAN PEMDA
   const [PerencanaanKota, setPerencanaanKota] = useState<boolean | null>(null);
   const [TematikKota, setTematikKota] = useState<boolean | null>(null);
   const [SubTematik, setSubTematik] = useState<boolean | null>(null);
@@ -58,6 +60,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
   const [TujuanPemda, setTujuanPemda] = useState<boolean | null>(null);
   const [SasaranPemda, setSasaranPemda] = useState<boolean | null>(null);
   const [IKU, setIKU] = useState<boolean | null>(null);
+  // PERENCANAAN OPD
   const [PerencanaanOPD, setPerencanaanOPD] = useState<boolean | null>(null);
   const [pohonKinerjaOpd, setPohonKinerjaOpd] = useState<boolean | null>(null);
   const [PohonCascadingOpd, setPohonCascadingOpd] = useState<boolean | null>(null);
@@ -67,6 +70,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
   const [SasaranOpd, setSasaranOpd] = useState<boolean | null>(null);
   const [IKUOpd, setIKUOpd] = useState<boolean | null>(null);
   const [PermasalahanOpd, setPermasalahanOpd] = useState<boolean | null>(null);
+  const [SubKegiatanOpd, setSubKegiatanOpd] = useState<boolean | null>(null);
   const [MasterUsulanOpd, setMasterUsulanOpd] = useState<boolean | null>(null);
   const [MasterUsulanMusrenbang, setMasterUsulanMusrenbang] = useState<boolean | null>(null);
   const [MasterUsulanPokir, setMasterUsulanPokir] = useState<boolean | null>(null);
@@ -165,6 +169,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -194,6 +199,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -239,6 +245,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -267,6 +274,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -312,6 +320,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -340,6 +349,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -385,6 +395,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -413,6 +424,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -458,6 +470,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -487,6 +500,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -532,6 +546,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -560,6 +575,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -605,6 +621,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -633,6 +650,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -678,6 +696,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -706,6 +725,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -751,6 +771,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -779,6 +800,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -824,6 +846,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -852,6 +875,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -897,6 +921,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -925,6 +950,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -970,6 +996,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -998,6 +1025,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -1043,6 +1071,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -1071,6 +1100,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -1116,6 +1146,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -1145,6 +1176,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -1190,6 +1222,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -1218,6 +1251,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -1263,6 +1297,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -1291,6 +1326,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(true);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -1336,6 +1372,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -1364,6 +1401,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(true);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -1409,6 +1447,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -1437,6 +1476,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(true);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -1482,6 +1522,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -1510,6 +1551,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(true);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -1555,6 +1597,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -1583,6 +1626,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(true);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -1628,6 +1672,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -1657,6 +1702,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(true);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(true);
       // asn
@@ -1702,6 +1748,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -1730,6 +1777,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(true);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(true);
       // asn
@@ -1775,6 +1823,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(true);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -1803,6 +1852,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(true);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(true);
       // asn
@@ -1848,6 +1898,82 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(true);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      //perencanaan asn
+      setRencanaKinerja(false);
+      setPohonCascading(false);
+      setRincianBelanja(false);
+      setPerencanaanManajemenResiko(false);
+      //laporan
+      setReviewPemda(false);
+      setReviewOpd(false);
+      setLaporanMusrenbang(false);
+      setLaporanPokokPikiran(false);
+      setLaporanMandatori(false);
+      setLaporanInisiatif(false);
+      setSPIP(false);
+      setManajemenResiko(false);
+      setInovasi(false);
+      setRencanaKinerjaKAK(false);
+      setLaporanRenstra(false);
+    }
+    if (url == "/subkegiatanopd") {
+      // SLIDE MENU
+      // super_admin
+      setDataMaster(false);
+      setMasterProgramKegiatan(false);
+      setPerencanaanKota(false);
+      setRPJMD(false);
+      // admin_opd
+      setPerencanaanOPD(true);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      setRenstra(false);
+      // asn
+      setPerencanaan(false);
+      setUsulanLaporan(false);
+      setLaporan(false);
+      setLaporanUsulan(false);
+      setReview(false);
+
+      // HALAMAN
+      setDashboard(false);
+      // data master
+      setMasterOPD(false);
+      setMasterPegawai(false);
+      setMasterPeriode(false);
+      setLevelPohon(false);
+      setMasterJabatan(false);
+      setMasterUsulanPemda(false);
+      // masterprogramkegiatan
+      setMasterUrusan(false);
+      setMasterBidangUrusan(false);
+      setMasterProgram(false);
+      setMasterKegiatan(false);
+      setMasterSubKegiatan(false);
+      setMasterLembaga(false);
+      setMasterUser(false);
+      setMasterRole(false);
+      // perencanaan pemda
+      setTematikKota(false);
+      setKotaPohonKinerjaKota(false);
+      // RPJMD
+      setVisi(false);
+      setMisi(false);
+      setTujuanPemda(false);
+      setSasaranPemda(false);
+      setIKU(false);
+      // perencanaan opd
+      setPohonKinerjaOpd(false);
+      setPohonCascadingOpd(false);
+      setUserOpd(false);
+      //Renstra
+      setTujuanOpd(false);
+      setSasaranOpd(false);
+      setIKUOpd(false);
+      setPermasalahanOpd(false);
+      setSubKegiatanOpd(true);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -2048,6 +2174,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(true);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -2093,6 +2220,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -2121,6 +2249,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(true);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -2166,6 +2295,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -2194,6 +2324,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(true);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -2239,6 +2370,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -2273,6 +2405,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -2318,6 +2451,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(true);
@@ -2346,6 +2480,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -2391,6 +2526,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -2431,6 +2567,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSubTematik(false);
       setPerencanaanKota(false);
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setMasterUsulanMusrenbang(false);
       setMasterUsulanMandatori(false);
@@ -2475,6 +2612,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSubTematik(false);
       setPerencanaanKota(true);
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setMasterUsulanMusrenbang(false);
       setMasterUsulanMandatori(false);
@@ -2518,6 +2656,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSubTematik(false);
       setPerencanaanKota(true);
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setMasterUsulanMusrenbang(false);
       setMasterUsulanMandatori(false);
@@ -2561,6 +2700,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSubTematik(false);
       setPerencanaanKota(true);
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setMasterUsulanMusrenbang(false);
       setMasterUsulanMandatori(false);
@@ -2604,6 +2744,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSubTematik(false);
       setPerencanaanKota(true);
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setMasterUsulanMusrenbang(false);
       setMasterUsulanMandatori(false);
@@ -2633,6 +2774,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -2678,6 +2820,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -2706,6 +2849,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -2751,6 +2895,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -2779,6 +2924,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -2824,6 +2970,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -2852,6 +2999,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setRPJMD(false);
       // admin_opd
       setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
       // asn
@@ -2897,6 +3045,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setSasaranOpd(false);
       setIKUOpd(false);
       setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
       setRencanaKinerja(false);
@@ -3231,6 +3380,12 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                   </li>
                 </Link>
               </div>
+              <Link href="/subkegiatanopd">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${SubKegiatanOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbFileCode2 className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Sub Kegiatan OPD</span>
+                </li>
+              </Link>
               <Link href="#">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PermasalahanOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                   <TbMessageReport className="text-xl" />

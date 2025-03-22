@@ -119,11 +119,13 @@ export const FormSubKegiatan = () => {
                 },
                 body: JSON.stringify(formData),
             });
-            if (response.ok) {
+            const result = await response.json();
+            if (result.code === 200 || result.code === 201) {
                 AlertNotification("Berhasil", "Berhasil menambahkan data master sub kegiatan", "success", 1000);
                 router.push("/DataMaster/masterprogramkegiatan/subkegiatan");
             } else {
-                AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+                AlertNotification("Gagal", `${result.sub_kegiatan}`, "error", 3000);
+                console.log(result);
             }
         } catch (err) {
             AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
@@ -533,11 +535,13 @@ export const FormEditSubKegiatan = () => {
                 },
                 body: JSON.stringify(formData),
             });
-            if (response.ok) {
+            const result = await response.json();
+            if (result.code === 200 || result.code === 201) {
                 AlertNotification("Berhasil", "Berhasil edit data master sub kegiatan", "success", 1000);
                 router.push("/DataMaster/masterprogramkegiatan/subkegiatan");
             } else {
-                AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+                AlertNotification("Gagal", `${result.sub_kegiatan}`, "error", 3000);
+                console.log(result);
             }
         } catch (err) {
             AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);

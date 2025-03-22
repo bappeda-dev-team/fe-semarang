@@ -1,7 +1,5 @@
 import { FiHome } from "react-icons/fi"
 import Table from "@/components/pages/datamaster/masterprogramkegiatan/subkegiatan/Table";
-import { ButtonSky } from "@/components/global/Button";
-import { TbCirclePlus } from "react-icons/tb";
 
 const subkegiatan = () => {
     return(
@@ -16,15 +14,6 @@ const subkegiatan = () => {
                 <div className="flex flex-wrap items-center justify-between border-b px-5 py-5">
                     <div className="flex flex-col items-end">
                         <h1 className="uppercase font-bold">Master Sub Kegiatan</h1>
-                    </div>
-                    <div className="flex flex-col">
-                        <ButtonSky 
-                            className="flex items-center justify-center"
-                            halaman_url='/DataMaster/masterprogramkegiatan/subkegiatan/tambah'
-                        >
-                            <TbCirclePlus className="mr-1"/>
-                            Tambah Sub kegiatan
-                        </ButtonSky>
                     </div>
                 </div>
                 <Table />

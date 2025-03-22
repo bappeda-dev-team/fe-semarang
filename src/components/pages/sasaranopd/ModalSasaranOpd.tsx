@@ -89,7 +89,7 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        const fetchDetailasaranPemda = async () => {
+        const fetchDetailasaranOpd = async () => {
             try {
                 setLoading(true);
                 const response = await fetch(`${API_URL}/sasaran_opd/detail/${id}`, {
@@ -165,7 +165,7 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
             }
         };
         if (isOpen && metode === 'lama') {
-            fetchDetailasaranPemda();
+            fetchDetailasaranOpd();
         } else if (isOpen && metode === 'baru') {
             fetchPokinBaru();
         }
@@ -229,7 +229,7 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
         if (Pelaksana?.value == null || Pelaksana?.value == undefined) {
             AlertNotification("", "Pilih 1 Pelaksana", "warning", 2000);
         } else if(SasaranOpd === ''){
-            AlertNotification("", "Sasaran Pemda wajib Terisi", "warning", 2000);
+            AlertNotification("", "Sasaran OPD wajib Terisi", "warning", 2000);
         } else {
             try {
                 let url = "";
@@ -250,7 +250,7 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
                     body: JSON.stringify(getBody()),
                 });
                 if (response.ok) {
-                    AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Sasaran Pemda`, "success", 1000);
+                    AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Sasaran OPD`, "success", 1000);
                     onClose();
                     onSuccess();
                     reset();
@@ -290,7 +290,6 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
                         <div className="flex flex-col py-3">
                             <label
                                 className="uppercase text-xs font-bold text-gray-700 my-2"
-                                htmlFor="sasaran_pemda"
                             >
                                 Strategic OPD :
                             </label>

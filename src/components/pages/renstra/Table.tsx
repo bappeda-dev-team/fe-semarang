@@ -22,7 +22,7 @@ interface matrix {
     tahun_awal: string;
     tahun_akhir: string;
     pagu_total: pagu[];
-    urusan: renstra;
+    urusan: renstra[];
 }
 interface Indikator {
     id: string;
@@ -136,104 +136,108 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
                                 tahun_list={tahun_list}
                                 jenis="Urusan"
                             />
-                            <tbody>
-                                <TrMatrix
-                                    jenis="Urusan"
-                                    indikator={item.urusan.indikator}
-                                    kode={item.urusan.kode}
-                                    nama={item.urusan.nama}
-                                    kode_opd={item.kode_opd}
-                                    fetchTrigger={() => setFetchTrigger((prev) => !prev)}
-                                />
-                            </tbody>
-                            {item.urusan.bidang_urusan &&
-                                <React.Fragment>
-                                    {item.urusan.bidang_urusan.map((br: renstra, br_index: number) => (
-                                        <React.Fragment key={br_index}>
-                                            <TheadMatrix
-                                                tahun_list={tahun_list}
-                                                jenis="Bidang Urusan"
-                                            />
-                                            <tbody>
-                                                <TrMatrix
-                                                    jenis="Bidang Urusan"
-                                                    indikator={br.indikator}
-                                                    kode={br.kode}
-                                                    nama={br.nama}
-                                                    kode_opd={kode_opd}
-                                                    fetchTrigger={() => setFetchTrigger((prev) => !prev)}
-                                                />
-                                            </tbody>
-                                            {br.program &&
-                                                <React.Fragment>
-                                                    {br.program.map((p: renstra, p_index: number) => (
-                                                        <React.Fragment key={p_index}>
-                                                            <TheadMatrix
-                                                                tahun_list={tahun_list}
-                                                                jenis="Program"
-                                                            />
-                                                            <tbody>
-                                                                <TrMatrix
-                                                                    jenis="Program"
-                                                                    indikator={p.indikator}
-                                                                    kode={p.kode}
-                                                                    nama={p.nama}
-                                                                    kode_opd={kode_opd}
-                                                                    fetchTrigger={() => setFetchTrigger((prev) => !prev)}
-                                                                />
-                                                            </tbody>
-                                                            {p.kegiatan &&
-                                                                <React.Fragment>
-                                                                    {p.kegiatan.map((k: renstra, k_index: number) => (
-                                                                        <React.Fragment key={k_index}>
-                                                                            <TheadMatrix
-                                                                                tahun_list={tahun_list}
-                                                                                jenis="Kegiatan"
-                                                                            />
-                                                                            <tbody>
-                                                                                <TrMatrix
-                                                                                    jenis="Kegiatan"
-                                                                                    indikator={k.indikator}
-                                                                                    kode={k.kode}
-                                                                                    nama={k.nama}
-                                                                                    kode_opd={kode_opd}
-                                                                                    fetchTrigger={() => setFetchTrigger((prev) => !prev)}
-                                                                                />
-                                                                            </tbody>
-                                                                            {k.subkegiatan &&
-                                                                                <React.Fragment>
+                            {item.urusan.map((u: renstra, u_index: number) => (
+                                <React.Fragment key={u_index}>
+                                    <tbody>
+                                        <TrMatrix
+                                            jenis="Urusan"
+                                            indikator={u.indikator}
+                                            kode={u.kode}
+                                            nama={u.nama}
+                                            kode_opd={item.kode_opd}
+                                            fetchTrigger={() => setFetchTrigger((prev) => !prev)}
+                                        />
+                                    </tbody>
+                                    {u.bidang_urusan &&
+                                        <React.Fragment>
+                                            {u.bidang_urusan.map((br: renstra, br_index: number) => (
+                                                <React.Fragment key={br_index}>
+                                                    <TheadMatrix
+                                                        tahun_list={tahun_list}
+                                                        jenis="Bidang Urusan"
+                                                    />
+                                                    <tbody>
+                                                        <TrMatrix
+                                                            jenis="Bidang Urusan"
+                                                            indikator={br.indikator}
+                                                            kode={br.kode}
+                                                            nama={br.nama}
+                                                            kode_opd={kode_opd}
+                                                            fetchTrigger={() => setFetchTrigger((prev) => !prev)}
+                                                        />
+                                                    </tbody>
+                                                    {br.program &&
+                                                        <React.Fragment>
+                                                            {br.program.map((p: renstra, p_index: number) => (
+                                                                <React.Fragment key={p_index}>
+                                                                    <TheadMatrix
+                                                                        tahun_list={tahun_list}
+                                                                        jenis="Program"
+                                                                    />
+                                                                    <tbody>
+                                                                        <TrMatrix
+                                                                            jenis="Program"
+                                                                            indikator={p.indikator}
+                                                                            kode={p.kode}
+                                                                            nama={p.nama}
+                                                                            kode_opd={kode_opd}
+                                                                            fetchTrigger={() => setFetchTrigger((prev) => !prev)}
+                                                                        />
+                                                                    </tbody>
+                                                                    {p.kegiatan &&
+                                                                        <React.Fragment>
+                                                                            {p.kegiatan.map((k: renstra, k_index: number) => (
+                                                                                <React.Fragment key={k_index}>
                                                                                     <TheadMatrix
                                                                                         tahun_list={tahun_list}
-                                                                                        jenis="Sub Kegiatan"
+                                                                                        jenis="Kegiatan"
                                                                                     />
-                                                                                    {k.subkegiatan.map((sk: renstra, sk_index: number) => (
-                                                                                        <React.Fragment key={sk_index}>
-                                                                                            <tbody>
-                                                                                                <TrMatrix
-                                                                                                    jenis="Sub Kegiatan"
-                                                                                                    indikator={sk.indikator}
-                                                                                                    kode={sk.kode}
-                                                                                                    nama={sk.nama}
-                                                                                                    kode_opd={kode_opd}
-                                                                                                    fetchTrigger={() => setFetchTrigger((prev) => !prev)}
-                                                                                                />
-                                                                                            </tbody>
+                                                                                    <tbody>
+                                                                                        <TrMatrix
+                                                                                            jenis="Kegiatan"
+                                                                                            indikator={k.indikator}
+                                                                                            kode={k.kode}
+                                                                                            nama={k.nama}
+                                                                                            kode_opd={kode_opd}
+                                                                                            fetchTrigger={() => setFetchTrigger((prev) => !prev)}
+                                                                                        />
+                                                                                    </tbody>
+                                                                                    {k.subkegiatan &&
+                                                                                        <React.Fragment>
+                                                                                            <TheadMatrix
+                                                                                                tahun_list={tahun_list}
+                                                                                                jenis="Sub Kegiatan"
+                                                                                            />
+                                                                                            {k.subkegiatan.map((sk: renstra, sk_index: number) => (
+                                                                                                <React.Fragment key={sk_index}>
+                                                                                                    <tbody>
+                                                                                                        <TrMatrix
+                                                                                                            jenis="Sub Kegiatan"
+                                                                                                            indikator={sk.indikator}
+                                                                                                            kode={sk.kode}
+                                                                                                            nama={sk.nama}
+                                                                                                            kode_opd={kode_opd}
+                                                                                                            fetchTrigger={() => setFetchTrigger((prev) => !prev)}
+                                                                                                        />
+                                                                                                    </tbody>
+                                                                                                </React.Fragment>
+                                                                                            ))}
                                                                                         </React.Fragment>
-                                                                                    ))}
+                                                                                    }
                                                                                 </React.Fragment>
-                                                                            }
+                                                                            ))}
                                                                         </React.Fragment>
-                                                                    ))}
+                                                                    }
                                                                 </React.Fragment>
-                                                            }
+                                                            ))}
                                                         </React.Fragment>
-                                                    ))}
+                                                    }
                                                 </React.Fragment>
-                                            }
+                                            ))}
                                         </React.Fragment>
-                                    ))}
+                                    }
                                 </React.Fragment>
-                            }
+                            ))}
                         </table>
                     </div>
                 </React.Fragment>
@@ -265,13 +269,13 @@ export const TheadMatrix: React.FC<Thead> = ({ jenis, tahun_list }) => {
                 ${jenis === "Kegiatan" && "bg-green-500"}
                 ${jenis === "Sub Kegiatan" && "bg-emerald-500"}
             `}>
-                {(jenis === 'Urusan' || jenis === 'Bidang Urusan') ? 
+                {(jenis === 'Urusan' || jenis === 'Bidang Urusan') ?
                     tahun_list.map((item: string) => (
                         <React.Fragment key={item}>
                             <td colSpan={5} className="border-l border-b px-6 py-3 min-w-[200px] text-center">Pagu</td>
                         </React.Fragment>
                     ))
-                :
+                    :
                     tahun_list.map((item: string) => (
                         <React.Fragment key={item}>
                             <td className="border-l border-b px-6 py-3 min-w-[300px] text-center">indikator</td>
@@ -325,17 +329,21 @@ export const TrMatrix: React.FC<Tr> = ({ jenis, kode_opd, kode, nama, indikator,
     return (
         // terdapat error hidrasi disini
         <>
-            {(jenis === 'Urusan' || jenis === 'Bidang Urusan') ? 
+            {(jenis === 'Urusan' || jenis === 'Bidang Urusan') ?
                 <tr>
                     <td className={`border-r border-b px-6 py-4 font-semibold`}>{kode}</td>
                     <td className={`border-r border-b px-6 py-4 w-full`}>{nama}</td>
                     {indikator.map((i: Indikator, index: number) => (
                         <React.Fragment key={i.id || index}>
-                            <td colSpan={5} className={`border-r border-b px-6 py-4 w-full text-center`}>Rp.{formatRupiah(i.pagu_anggaran)}</td>
+                            <td className={`border-b px-6 py-4 w-full text-center`}></td>
+                            <td className={`border-b px-6 py-4 w-full text-center`}></td>
+                            <td className={`border-r border-b px-6 py-4 w-full text-center`}></td>
+                            <td className={`border-b px-6 py-4 w-full`}>Rp.{formatRupiah(i.pagu_anggaran)}</td>
+                            <td className={`border-r border-b px-6 py-4 w-full`}></td>
                         </React.Fragment>
                     ))}
                 </tr>
-            :
+                :
                 <tr>
                     <td className={`border-r border-b px-6 py-4 font-semibold`}>{kode}</td>
                     <td className={`border-r border-b px-6 py-4 w-full`}>{nama}</td>

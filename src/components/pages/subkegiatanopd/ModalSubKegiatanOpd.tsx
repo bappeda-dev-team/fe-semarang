@@ -49,7 +49,7 @@ export const ModalSubKegiatanOpd: React.FC<ModalProps> = ({ isOpen, onClose, kod
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         setLoadingOption(true);
         try {
-            const response = await fetch(`${API_URL}/sub_kegiatan/findall`, {
+            const response = await fetch(`${API_URL}/subkegiatanopd/bidangurusan/${kode_opd}`, {
                 headers: {
                     Authorization: `${token}`,
                     'Content-Type': 'application/json',
@@ -59,14 +59,14 @@ export const ModalSubKegiatanOpd: React.FC<ModalProps> = ({ isOpen, onClose, kod
                 throw new Error('error fetch option master sub kegiatan dengan response !ok');
             }
             const result = await response.json();
-            const hasil = result.sub_kegiatan;
+            const hasil = result.data;
             const data = hasil.map((item: any) => ({
                 value: item.kode_subkegiatan,
                 label: `${item.kode_subkegiatan} - ${item.nama_sub_kegiatan}`,
             }));
             setOptionSubKegiatan(data);
         } catch (err) {
-            console.log('error saat fetch option Master Sub Kegaitan');
+            console.log('error saat fetch option Master Sub Kegaitan', err);
         } finally {
             setLoadingOption(false);
         }

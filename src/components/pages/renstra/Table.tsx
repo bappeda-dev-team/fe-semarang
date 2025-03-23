@@ -132,12 +132,12 @@ export const TableRenstra: React.FC<table> = ({ jenis, tahun_awal, tahun_akhir, 
                     </div>
                     <div className="overflow-auto m-2 rounded-t-xl border">
                         <table className="w-full">
-                            <TheadMatrix
-                                tahun_list={tahun_list}
-                                jenis="Urusan"
-                            />
                             {item.urusan.map((u: renstra, u_index: number) => (
                                 <React.Fragment key={u_index}>
+                                    <TheadMatrix
+                                        tahun_list={tahun_list}
+                                        jenis="Urusan"
+                                    />
                                     <tbody>
                                         <TrMatrix
                                             jenis="Urusan"

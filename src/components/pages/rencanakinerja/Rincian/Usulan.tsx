@@ -1,15 +1,15 @@
 'use client'
 
 import { ButtonSky, ButtonRed } from "@/components/global/Button";
-import Select from 'react-select';
 import { useState, useEffect } from "react";
 import { getUser, getToken } from "@/components/lib/Cookie";
 import { LoadingSync } from "@/components/global/Loading";
 import { ModalAddUsulan } from "../ModalUsulan";
 import { AlertQuestion, AlertNotification } from "@/components/global/Alert";
 
-interface id {
+interface table {
     id: string;
+    nip: string;
 }
 
 interface usulan {
@@ -21,22 +21,14 @@ interface usulan {
     tahun: string;
 }
 
-const Usulan: React.FC<id> = ({id}) => {
+const Usulan: React.FC<table> = ({ id, nip }) => {
 
     const [Usulan, setUsulan] = useState<usulan[]>([]);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
     const [fetchTrigger, setFetchTrigger] = useState<boolean>(false);
     const [ModalAdd, setModalAdd] = useState<boolean>(false);
     const [Loading, setLoading] = useState<boolean | null>(null);
-    const [user, setUser] = useState<any>(null);
     const token = getToken();
-    
-    useEffect(() => {
-        const fetchUser = getUser();
-        if(fetchUser){
-            setUser(fetchUser.user);
-        }
-    },[]);
 
     const handleModalAddUsulan = () => {
         setModalAdd((prev) => !prev);
@@ -47,7 +39,7 @@ const Usulan: React.FC<id> = ({id}) => {
         const fetchUsulan = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${user?.nip}/input_rincian_kak`, {
+                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${nip}/input_rincian_kak`, {
                     headers: {
                       Authorization: `${token}`,
                       'Content-Type': 'application/json',
@@ -74,10 +66,10 @@ const Usulan: React.FC<id> = ({id}) => {
                 setLoading(false);
             }
         };
-        if(user?.roles != undefined){    
+        if(nip != undefined){    
             fetchUsulan();
         }
-    },[id, user, token, fetchTrigger]);
+    },[id, nip, token, fetchTrigger]);
 
     const hapusUsulanMusrenbang = async(id: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -89,11 +81,16 @@ const Usulan: React.FC<id> = ({id}) => {
                   'Content-Type': 'application/json',
                 },
             })
+            const result = await response.json();
             if(!response.ok){
                 alert("cant fetch data")
             }
-            setUsulan(Usulan.filter((data) => (data.id !== id)))
-            AlertNotification("Berhasil", "Data Usulan Musrenbang Berhasil Dihapus", "success", 1000);
+            if(result.code === 200){
+                setUsulan(Usulan.filter((data) => (data.id !== id)))
+                AlertNotification("Berhasil", "Data Usulan Musrenbang Berhasil Dihapus", "success", 1000);
+            } else {
+                AlertNotification("Gagal", `${result.status}`, "error", 2000);
+            }
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
         }
@@ -107,12 +104,17 @@ const Usulan: React.FC<id> = ({id}) => {
                   Authorization: `${token}`,
                   'Content-Type': 'application/json',
                 },
-            })
+            });
+            const result = await response.json();
             if(!response.ok){
                 alert("cant fetch data")
             }
-            setUsulan(Usulan.filter((data) => (data.id !== id)))
-            AlertNotification("Berhasil", "Data Usulan Musrenbang Berhasil Dihapus", "success", 1000);
+            if(result.code === 200){
+                setUsulan(Usulan.filter((data) => (data.id !== id)))
+                AlertNotification("Berhasil", "Data Usulan Musrenbang Berhasil Dihapus", "success", 1000);
+            } else {
+                AlertNotification("Gagal", `${result.status}`, "error", 2000);
+            }
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
         }
@@ -126,12 +128,17 @@ const Usulan: React.FC<id> = ({id}) => {
                   Authorization: `${token}`,
                   'Content-Type': 'application/json',
                 },
-            })
+            });
+            const result = await response.json();
             if(!response.ok){
                 alert("cant fetch data")
             }
-            setUsulan(Usulan.filter((data) => (data.id !== id)))
-            AlertNotification("Berhasil", "Data Usulan Musrenbang Berhasil Dihapus", "success", 1000);
+            if(result.code === 200){
+                setUsulan(Usulan.filter((data) => (data.id !== id)))
+                AlertNotification("Berhasil", "Data Usulan Musrenbang Berhasil Dihapus", "success", 1000);
+            } else {
+                AlertNotification("Gagal", `${result.status}`, "error", 2000);
+            }
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
         }
@@ -145,12 +152,17 @@ const Usulan: React.FC<id> = ({id}) => {
                   Authorization: `${token}`,
                   'Content-Type': 'application/json',
                 },
-            })
+            });
+            const result = await response.json();
             if(!response.ok){
                 alert("cant fetch data")
             }
-            setUsulan(Usulan.filter((data) => (data.id !== id)))
-            AlertNotification("Berhasil", "Data Usulan Musrenbang Berhasil Dihapus", "success", 1000);
+            if(result.code === 200){
+                setUsulan(Usulan.filter((data) => (data.id !== id)))
+                AlertNotification("Berhasil", "Data Usulan Musrenbang Berhasil Dihapus", "success", 1000);
+            } else {
+                AlertNotification("Gagal", `${result.status}`, "error", 2000);
+            }
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet atau database server", "error", 2000);
         }

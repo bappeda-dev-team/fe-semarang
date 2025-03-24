@@ -342,6 +342,9 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose, rekin_id, onS
                                                         control: (baseStyles) => ({
                                                             ...baseStyles,
                                                             borderRadius: '8px',
+                                                        }),
+                                                        menuPortal: (base) => ({ 
+                                                            ...base, zIndex: 9999 
                                                         })
                                                     }}
                                                 />
@@ -421,6 +424,9 @@ export const ModalAddUsulan: React.FC<modal> = ({ isOpen, onClose, rekin_id, onS
                                                         control: (baseStyles) => ({
                                                             ...baseStyles,
                                                             borderRadius: '8px',
+                                                        }),
+                                                        menuPortal: (base) => ({ 
+                                                            ...base, zIndex: 9999 
                                                         })
                                                     }}
                                                 />

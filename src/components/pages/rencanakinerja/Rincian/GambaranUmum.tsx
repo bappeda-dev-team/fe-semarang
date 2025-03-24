@@ -9,15 +9,16 @@ import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { ModalEditGambaranUmum } from "../ModalGambaranUmum";
 import { TbCirclePlus, TbPencil, TbTrash } from "react-icons/tb";
 
-interface id {
+interface table {
     id: string;
+    nip: string;
 }
 interface gambaran_umum {
     id : string;
     gambaran_umum : string;
 }
 
-const GambaranUmum: React.FC<id> = ({id}) => {
+const GambaranUmum: React.FC<table> = ({ id, nip }) => {
 
     const [isOpenNewGambaranUmum, setIsOpenNewGambaranUmum] = useState<boolean>(false);
     const [isOpenEditGambaranUmum, setIsOpenEditGambaranUmum] = useState<boolean>(false);
@@ -26,22 +27,14 @@ const GambaranUmum: React.FC<id> = ({id}) => {
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [Deleted, setDeleted] = useState<boolean>(false);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
-    const [user, setUser] = useState<any>(null);
-    const token = getToken();
-
-    useEffect(() => {
-        const fetchUser = getUser();
-        if(fetchUser){
-            setUser(fetchUser.user);
-        }
-    },[]);
+    const token = getToken();;
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchGambaran = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${user?.nip}/input_rincian_kak`, {
+                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${nip}/input_rincian_kak`, {
                     headers: {
                       Authorization: `${token}`,
                       'Content-Type': 'application/json',
@@ -68,10 +61,10 @@ const GambaranUmum: React.FC<id> = ({id}) => {
                 setLoading(false);
             }
         };
-        if(user?.roles != undefined){    
+        if(nip != undefined){
             fetchGambaran();
         }
-    },[id, user, token, Deleted, isOpenEditGambaranUmum, isOpenNewGambaranUmum]);
+    },[id, nip, token, Deleted, isOpenEditGambaranUmum, isOpenNewGambaranUmum]);
 
     const handleModalNewGambaranUmum = () => {
         if(isOpenNewGambaranUmum){
@@ -90,10 +83,10 @@ const GambaranUmum: React.FC<id> = ({id}) => {
         }
     }
 
-    const hapusGambaranUmum = async(id: any) => {
+    const hapusGambaranUmum = async(id_gu: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
-            const response = await fetch(`${API_URL}/gambaran_umum/delete/${id}`, {
+            const response = await fetch(`${API_URL}/gambaran_umum/delete/${id_gu}`, {
                 method: "DELETE",
                 headers: {
                   Authorization: `${token}`,
@@ -103,7 +96,6 @@ const GambaranUmum: React.FC<id> = ({id}) => {
             if(!response.ok){
                 alert("cant fetch data")
             }
-            setGambaran(gambaran.filter((data) => (data.id !== id)))
             AlertNotification("Berhasil", "Gambaran Umum Berhasil Dihapus", "success", 1000);
             setDeleted((prev) => !prev);
         } catch(err){

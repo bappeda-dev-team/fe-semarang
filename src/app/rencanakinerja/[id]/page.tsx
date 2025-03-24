@@ -10,11 +10,30 @@ import GambaranUmum from '@/components/pages/rencanakinerja/Rincian/GambaranUmum
 import Inovasi from '@/components/pages/rencanakinerja/Rincian/Inovasi';
 import Permasalahan from '@/components/pages/rencanakinerja/Rincian/Permasalahan';
 import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { getUser, getOpdTahun } from '@/components/lib/Cookie';
 
 const RincianRencanaKinerja = () => {
 
     const params = useParams();
     const id_rekin = params.id as string;
+    const [User, setUser] = useState<any>(null);
+    const [Tahun, setTahun] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchUser = getUser();
+        const data = getOpdTahun();
+        if(fetchUser){
+            setUser(fetchUser.user);
+        }
+        if(data.tahun){
+            const tahun = {
+                value: data.tahun.value,
+                label: data.tahun.label,
+            }
+            setTahun(tahun);
+        }
+    },[]);
 
     return(
         <>
@@ -33,13 +52,30 @@ const RincianRencanaKinerja = () => {
                     <button className="w-full uppercase bg-emerald-500 rounded-lg py-1 font-bold my-1">manrisk siap diverifikasi</button>
                     <div className="my-3 border"></div>
                 </div> */}
-                <Musrebang id={id_rekin}/>
-                <SubKegiatan id={id_rekin}/>
+                <Musrebang 
+                    id={id_rekin}
+                    nip={User?.nip}
+                />
+                <SubKegiatan
+                    id={id_rekin}
+                    tahun={Tahun?.value}
+                    nip={User?.nip}
+                    kode_opd={User?.kode_opd}
+                />
                 <Sakip id={id_rekin}/>
                 <Renaksi id={id_rekin}/>
-                <DasarHukum id={id_rekin}/>
-                <GambaranUmum id={id_rekin}/>
-                <Permasalahan id={id_rekin}/>
+                <DasarHukum 
+                    id={id_rekin}
+                    nip={User?.nip}
+                />
+                <GambaranUmum 
+                    id={id_rekin}
+                    nip={User?.nip}
+                />
+                <Permasalahan 
+                    id={id_rekin}
+                    nip={User?.nip}
+                />
                 {/* <Inovasi id={id_rekin}/> */}
             </div>
         </>

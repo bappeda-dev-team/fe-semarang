@@ -8,8 +8,9 @@ import { LoadingSync } from "@/components/global/Loading";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { TbCirclePlus, TbPencil, TbTrash } from "react-icons/tb";
 
-interface id {
+interface table {
     id: string;
+    nip: string;
 }
 interface dasar_hukum {
     id : string;
@@ -18,7 +19,7 @@ interface dasar_hukum {
     urutan: number;
 }
 
-const DasarHukum: React.FC<id> = ({id}) => {
+const DasarHukum: React.FC<table> = ({ id, nip }) => {
 
     const [isOpenNewDasarHukum, setIsOpenNewDasarHukum] = useState<boolean>(false);
     const [isOpenEditDasarHukum, setIsOpenEditDasarHukum] = useState<boolean>(false);
@@ -27,22 +28,14 @@ const DasarHukum: React.FC<id> = ({id}) => {
     const [Loading, setLoading] = useState<boolean | null>(null);
     const [Deleted, setDeleted] = useState<boolean>(false);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
-    const [user, setUser] = useState<any>(null);
     const token = getToken();
-
-    useEffect(() => {
-        const fetchUser = getUser();
-        if(fetchUser){
-            setUser(fetchUser.user);
-        }
-    },[]);
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchDasarHukum = async() => {
             setLoading(true);
             try{
-                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${user?.nip}/input_rincian_kak`, {
+                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${nip}/input_rincian_kak`, {
                     headers: {
                       Authorization: `${token}`,
                       'Content-Type': 'application/json',
@@ -69,10 +62,10 @@ const DasarHukum: React.FC<id> = ({id}) => {
                 setLoading(false);
             }
         };
-        if(user?.roles != undefined){    
+        if(nip != undefined){    
             fetchDasarHukum();
         }
-    },[token, id, user, isOpenNewDasarHukum, isOpenEditDasarHukum, Deleted]);
+    },[token, id, nip, isOpenNewDasarHukum, isOpenEditDasarHukum, Deleted]);
 
     const handleModalNewDasarHukum = () => {
         if(isOpenNewDasarHukum){
@@ -91,10 +84,10 @@ const DasarHukum: React.FC<id> = ({id}) => {
         }
     }
 
-    const hapusDasarHukum = async(id: any) => {
+    const hapusDasarHukum = async(id_ds: any) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try{
-            const response = await fetch(`${API_URL}/dasar_hukum/delete/${id}`, {
+            const response = await fetch(`${API_URL}/dasar_hukum/delete/${id_ds}`, {
                 method: "DELETE",
                 headers: {
                   Authorization: `${token}`,
@@ -104,7 +97,6 @@ const DasarHukum: React.FC<id> = ({id}) => {
             if(!response.ok){
                 alert("response !ok ketika gagal hapus dasar hukum");
             }
-            setDasarHukum(dasarHukum.filter((data) => (data.id !== id)))
             AlertNotification("Berhasil", "Dasar Hukum Berhasil Dihapus", "success", 1000);
             setDeleted((prev) => !prev);
         } catch(err){

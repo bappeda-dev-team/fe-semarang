@@ -9,12 +9,16 @@ import { getToken, getUser } from "@/components/lib/Cookie";
 import { AlertNotification, AlertQuestion } from "@/components/global/Alert";
 import { TbCirclePlus, TbTrash } from "react-icons/tb";
 
-interface id {
+interface table {
     id: string;
+    tahun: string;
+    nip: string;
+    kode_opd: string;
 }
-interface OptionTypeString {
+interface OptionTypeSk {
     value: string;
     label: string;
+    kode: string;
 }
 interface subkegiatan {
     subkegiatanterpilih_id: string;
@@ -38,37 +42,31 @@ interface targets {
     satuan: string;
 }
 interface formValue {
-    sub_kegiatan: OptionTypeString;
+    sub_kegiatan: OptionTypeSk;
 }
 
-const SubKegiatan: React.FC<id> = ({ id }) => {
+const SubKegiatan: React.FC<table> = ({ id, tahun, kode_opd, nip }) => {
 
     const { control, handleSubmit } = useForm<formValue>();
 
     const [subKegiatan, setSubKegiatan] = useState<subkegiatan[]>([]);
-    const [InputSubKegiatan, setInputSubKegiatan] = useState<OptionTypeString | null>(null);
-    const [OptionSubKegiatan, setOptionSubKegiatan] = useState<OptionTypeString[]>([]);
+    const [InputSubKegiatan, setInputSubKegiatan] = useState<OptionTypeSk | null>(null);
+    const [OptionSubKegiatan, setOptionSubKegiatan] = useState<OptionTypeSk[]>([]);
 
     const [Loading, setLoading] = useState<boolean>(false);
+    const [LoadingOption, setLoadingOption] = useState<boolean>(false);
+    
     const [Proses, setProses] = useState<boolean>(false);
     const [Deleted, setDeleted] = useState<boolean>(false);
     const [dataNull, setDataNull] = useState<boolean | null>(null);
-    const [user, setUser] = useState<any>(null);
     const token = getToken();
-
-    useEffect(() => {
-        const fetchUser = getUser();
-        if (fetchUser) {
-            setUser(fetchUser.user);
-        }
-    }, []);
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const fetchSubKegiatan = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${user?.nip}/input_rincian_kak`, {
+                const response = await fetch(`${API_URL}/rencana_kinerja/${id}/pegawai/${nip}/input_rincian_kak`, {
                     headers: {
                         Authorization: `${token}`,
                         'Content-Type': 'application/json',
@@ -95,42 +93,49 @@ const SubKegiatan: React.FC<id> = ({ id }) => {
                 setLoading(false);
             }
         };
-        if (user?.roles != undefined) {
+        if (nip != undefined) {
             fetchSubKegiatan();
         }
-    }, [id, user, token, Deleted]);
+    }, [id, nip, token, Deleted]);
 
     const fetchOptionSubKegiatan = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         try {
-            const response = await fetch(`${API_URL}/sub_kegiatan/pilihan/${user?.kode_opd}?status=belum_diambil`, {
+            setLoadingOption(true);
+            const response = await fetch(`${API_URL}/subkegiatanopd/findall/${kode_opd}/${tahun}`, {
                 headers: {
-                    Authorization: `${token}`
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
                 }
             });
             if (!response.ok) {
                 throw new Error("terdapat kesalahan pada endpoint backend");
             }
             const hasil = await response.json();
-            const data = hasil.sub_kegiatan;
+            const data = hasil.data;
             if (data.length === 0) {
-                console.log("data sub kegiatan kosong / belum ditambahkan");
+                console.log("data sub kegiatan kosong / belum ditambahkan di menu subkegaitan opd");
             } else {
                 const hasilData = data.map((sk: any) => ({
                     value: sk.id,
-                    label: sk.nama_sub_kegiatan
+                    label: `${sk.kode_subkegiatan} - ${sk.nama_subkegiatan}`,
+                    kode: sk.kode_subkegiatan,
                 }));
                 setOptionSubKegiatan(hasilData);
             }
         } catch (err) {
             console.log("gagal mendapatkan data sub kegiatan, periksa endpoint backend atau internet server");
+            console.log("tahun", tahun, "kode_opd", kode_opd);
+        } finally {
+            setLoadingOption(false);
         }
     }
 
     const onSubmit: SubmitHandler<formValue> = async (data) => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
-            id_subkegiatan: data.sub_kegiatan?.value
+            id: data.sub_kegiatan?.value,
+            kode_subkegiatan: data.sub_kegiatan?.kode,
         }
         // console.log(formData);
         try {
@@ -143,8 +148,10 @@ const SubKegiatan: React.FC<id> = ({ id }) => {
                 },
                 body: JSON.stringify(formData),
             });
-            if (response.ok) {
+            const result = await response.json();
+            if (result.code === 200 || result.code === 201) {
                 AlertNotification("Berhasil", "menambahkan sub kegiatan ke rencana kinerja", "success", 2000);
+                setInputSubKegiatan(null);
                 setDeleted((prev) => !prev);
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada endpoint backend / internet server", "error", 2000);
@@ -210,9 +217,10 @@ const SubKegiatan: React.FC<id> = ({ id }) => {
                                 <Select
                                     id="sub_kegiatan"
                                     isClearable
-                                    isLoading={Loading}
+                                    isLoading={LoadingOption}
                                     value={InputSubKegiatan}
                                     options={OptionSubKegiatan}
+                                    noOptionsMessage={() => `Kosong, Sub Kegiatan tahun ${tahun} belum ditambahkan di Perencanaan OPD`}
                                     onMenuOpen={fetchOptionSubKegiatan}
                                     onMenuClose={() => setOptionSubKegiatan([])}
                                     onChange={(option) => {
@@ -224,6 +232,9 @@ const SubKegiatan: React.FC<id> = ({ id }) => {
                                             ...baseStyles,
                                             borderRadius: '8px',
                                             marginTop: '4px'
+                                        }),
+                                        menuPortal: (base) => ({ 
+                                            ...base, zIndex: 9999 
                                         })
                                     }}
                                     placeholder={"Pilih sub kegiatan"}
@@ -249,7 +260,7 @@ const SubKegiatan: React.FC<id> = ({ id }) => {
                     <table className="w-full">
                         <thead>
                             <tr className="bg-gray-300">
-                                <td className="border-r border-b px-6 py-3 min-w-[200px]">Sub Kegiatan</td>
+                                <td className="border-r border-b px-6 py-3 min-w-[200px] text-center">Sub Kegiatan</td>
                                 <td colSpan={2} className="border-r border-b px-6 py-3 min-w-[200px] text-center">Aksi</td>
                             </tr>
                         </thead>
@@ -264,7 +275,7 @@ const SubKegiatan: React.FC<id> = ({ id }) => {
                                 subKegiatan.map((data: any) => (
                                     <React.Fragment key={data.id}>
                                         <tr>
-                                            <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.nama_sub_kegiatan || "-"}</td>
+                                            <td className="border-r border-b px-6 py-3 min-w-[200px]">{data.kode_subkegiatan || ""} - {data.nama_sub_kegiatan || "-"}</td>
                                             <td colSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">
                                                 <ButtonRedBorder
                                                     className="w-full"
@@ -291,30 +302,6 @@ const SubKegiatan: React.FC<id> = ({ id }) => {
                                                 </ButtonRedBorder>
                                             </td>
                                         </tr>
-                                        <tr className="bg-gray-300">
-                                            <td className="border-r border-b px-6 py-3 min-w-[200px]">Indikator</td>
-                                            <td className="border-r border-b px-6 py-3 min-w-[200px] text-center">Target</td>
-                                            <td className="border-r border-b px-6 py-3 min-w-[200px] text-center">Satuan</td>
-                                        </tr>
-                                        {data.indikator ?
-                                            data.indikator.map((i: indikator) => (
-                                                <tr key={i.id_indikator}>
-                                                    <td className="border-r border-b px-6 py-3 min-w-[200px]">{i.nama_indikator || "-"}</td>
-                                                    {i.targets.map((t: targets) => (
-                                                        <React.Fragment key={t.id_target}>
-                                                            <td className="border-r border-b px-6 py-3 min-w-[200px]">{t.target}</td>
-                                                            <td className="border-r border-b px-6 py-3 min-w-[200px]">{t.satuan}</td>
-                                                        </React.Fragment>
-                                                    ))}
-                                                </tr>
-                                            ))
-                                            :
-                                            <tr>
-                                                <td className="border-r border-b px-6 py-3 min-w-[200px]">-</td>
-                                                <td className="border-r border-b px-6 py-3 min-w-[200px]">-</td>
-                                                <td className="border-r border-b px-6 py-3 min-w-[200px]">-</td>
-                                            </tr>
-                                        }
                                     </React.Fragment>
                                 ))
                             }

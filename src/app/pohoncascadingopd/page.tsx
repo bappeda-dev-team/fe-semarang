@@ -5,7 +5,7 @@ const pohoncascadingopd = () => {
     return(
         <>
             <Cascading 
-                jenis="laporan"
+                jenis="non-laporan"
             />
         </>
     )

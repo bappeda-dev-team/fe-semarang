@@ -4,7 +4,9 @@ import Cascading from "@/components/pages/Pohon/Cascading/Cascading";
 const pohoncascading = () => {
     return(
         <>
-            <Cascading />
+            <Cascading 
+                jenis="non-laporan"
+            />
         </>
     )
 }

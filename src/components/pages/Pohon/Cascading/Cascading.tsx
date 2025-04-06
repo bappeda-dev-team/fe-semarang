@@ -2,20 +2,20 @@
 
 import '@/components/pages/Pohon/treeflex.css'
 import { getOpdTahun } from '@/components/lib/Cookie';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TbEye, TbHandStop, TbPointer, TbPrinter } from 'react-icons/tb';
 import { LoadingBeat, LoadingButtonClip } from '@/components/global/Loading';
 import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
 import { FormPohonOpd } from '@/components/lib/Pohon/Opd/FormPohonOpd';
 import { getUser, getToken } from '@/components/lib/Cookie';
 import { PohonCascading } from '@/components/lib/Pohon/Cascading/PohonCascading';
+import { PohonLaporan } from '@/components/lib/Pohon/Cascading/PohonLaporan';
 import { ButtonBlackBorder, ButtonSky } from '@/components/global/Button';
 import html2canvas from 'html2canvas';
 import { AlertQuestion, AlertQuestion2 } from '@/components/global/Alert';
 
-interface OptionType {
-    value: number;
-    label: string;
+interface cascading {
+    jenis: 'laporan' | 'non-laporan';
 }
 interface opd {
     kode_opd: string;
@@ -38,7 +38,7 @@ interface childs {
     childs: childs[];
 }
 
-const Cascading = () => {
+const Cascading: React.FC<cascading> = ({ jenis }) => {
 
     const [User, setUser] = useState<any>(null);
     const [Tahun, setTahun] = useState<any>(null);
@@ -113,7 +113,7 @@ const Cascading = () => {
                 ctx.fillStyle = "white"; // Optional: Background color
                 ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
                 ctx.drawImage(canvas, 0, paddingTop);
-                
+
                 //hitung posisi horizontal untuk centering
                 const horizontalOffset = (newCanvas.width - canvas.width) / 2;
 
@@ -263,7 +263,7 @@ const Cascading = () => {
                     <h1 className="font-bold">Pohon Cascading {Pokin?.nama_opd}</h1>
                 }
             </div>
-            <div className="flex flex-col p-5 border-b-2 border-x-2 rounded-b-xl relative w-full h-[calc(100vh-100px)] max-h-screen overflow-auto">
+            <div className="flex flex-col p-3 border-b-2 border-x-2 rounded-b-xl relative w-full h-[calc(100vh-100px)] max-h-screen overflow-auto">
                 <div className={`tf-tree text-center mt-3 ${cursorMode === 'hand' ? "select-none" : ""}`}
                     ref={containerRef}
                     onMouseDown={handleMouseDown}
@@ -327,43 +327,42 @@ const Cascading = () => {
                                     Tampilkan Semua Pohon
                                 </ButtonBlackBorder>
                             </div>
-                            {Pokin?.childs ? (
-                                <ul>
-                                    {Pokin.childs.map((data: any) => (
-                                        <li key={data.id}>
-                                            <PohonCascading
-                                                tema={data}
-                                                deleteTrigger={() => setDeleted((prev) => !prev)}
-                                                show_all={ShowAll}
-                                                set_show_all={() => setShowAll(false)}
-                                            />
-                                        </li>
-                                    ))}
-                                    {formList.map((formId) => (
-                                        <FormPohonOpd
-                                            level={3}
-                                            id={null}
-                                            key={formId}
-                                            formId={formId}
-                                            pokin={'opd'}
-                                            onCancel={() => setFormList(formList.filter((id) => id !== formId))}
-                                        />
-                                    ))}
-                                </ul>
-                            ) : (
-                                <ul>
-                                    {formList.map((formId) => (
-                                        <FormPohonOpd
-                                            level={3}
-                                            id={null}
-                                            key={formId}
-                                            formId={formId}
-                                            pokin={'opd'}
-                                            onCancel={() => setFormList(formList.filter((id) => id !== formId))}
-                                        />
-                                    ))}
-                                </ul>
-                            )}
+                            {jenis === 'laporan' ?
+                                <React.Fragment>
+                                    {Pokin?.childs ? (
+                                        <ul>
+                                            {Pokin.childs.map((data: any) => (
+                                                <React.Fragment key={data.id}>
+                                                    <PohonLaporan
+                                                        tema={data}
+                                                        show_all={ShowAll}
+                                                        set_show_all={() => setShowAll(false)}
+                                                    />
+                                                </React.Fragment>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <ul></ul>
+                                    )}
+                                </React.Fragment>
+                                :
+                                <React.Fragment>
+                                    {Pokin?.childs &&
+                                        <ul>
+                                            {Pokin.childs.map((data: any) => (
+                                                <React.Fragment key={data.id}>
+                                                    <PohonCascading
+                                                        tema={data}
+                                                        deleteTrigger={() => setDeleted((prev) => !prev)}
+                                                        show_all={ShowAll}
+                                                        set_show_all={() => setShowAll(false)}
+                                                    />
+                                                </React.Fragment>
+                                            ))}
+                                        </ul>
+                                    }
+                                </React.Fragment>
+                            }
                         </li>
                     </ul>
                 </div>
@@ -371,8 +370,7 @@ const Cascading = () => {
                 <div className="fixed flex items-center mr-2 mb-2 bottom-0 right-0">
                     <button
                         onClick={toggleCursorMode}
-                        className={`p-2 rounded ${cursorMode === "hand" ? "bg-green-500 text-white" : "bg-gray-300 text-black"
-                            }`}
+                        className={`p-2 rounded ${cursorMode === "hand" ? "bg-green-500 text-white" : "bg-gray-300 text-black"}`}
                     >
                         {cursorMode === "hand" ? <TbHandStop size={30} /> : <TbPointer size={30} />}
                     </button>

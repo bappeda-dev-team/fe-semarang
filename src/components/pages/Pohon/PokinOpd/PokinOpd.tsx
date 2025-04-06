@@ -1,7 +1,7 @@
 'use client'
 
 import '@/components/pages/Pohon/treeflex.css'
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TbPencil, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHandStop, TbPointer, TbSettings, TbHourglass, TbCopy, TbEye, TbPrinter } from 'react-icons/tb';
 import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder, ButtonBlackBorder, ButtonBlack, ButtonSky } from '@/components/global/Button';
 import { LoadingBeat, LoadingButtonClip } from '@/components/global/Loading';
@@ -573,27 +573,27 @@ const PokinOpd = () => {
                                             </tr>
                                             {Pokin?.tujuan_opd ?
                                                 Pokin?.tujuan_opd.map((item: any) => (
-                                                    <>
-                                                        <tr key={item.id}>
+                                                    <React.Fragment key={item.id}>
+                                                        <tr>
                                                             <td className="min-w-[100px] border px-2 py-3 border-black text-start bg-gray-100">Tujuan OPD</td>
                                                             <td className="min-w-[300px] border px-2 py-3 border-black text-start bg-gray-100">{item.tujuan}</td>
                                                         </tr>
                                                         {item.indikator ?
-                                                            <>
+                                                            <React.Fragment>
                                                                 {item.indikator.map((i: any) => (
                                                                     <tr key={item.id}>
                                                                         <td className="min-w-[100px] border px-2 py-3 border-black text-start">Indikator</td>
                                                                         <td className="min-w-[300px] border px-2 py-3 border-black text-start">{i.indikator}</td>
                                                                     </tr>
                                                                 ))}
-                                                            </>
+                                                            </React.Fragment>
                                                             :
                                                             <tr key={item.id}>
                                                                 <td className="min-w-[100px] border px-2 py-3 border-black text-start">Indikator</td>
                                                                 <td className="min-w-[300px] border px-2 py-3 border-black text-start">-</td>
                                                             </tr>
                                                         }
-                                                    </>
+                                                    </React.Fragment>
                                                 ))
                                                 :
                                                 <tr>
@@ -666,7 +666,7 @@ const PokinOpd = () => {
                             {Pokin?.childs ? (
                                 <ul>
                                     {Pokin.childs.map((data: any) => (
-                                        <li key={data.id}>
+                                        <React.Fragment key={data.id}>
                                             <PohonOpd
                                                 tema={data}
                                                 deleteTrigger={() => setDeleted((prev) => !prev)}
@@ -674,22 +674,25 @@ const PokinOpd = () => {
                                                 set_show_all={() => setShowAll(false)}
                                                 show_detail={ShowAllDetail}
                                             />
-                                        </li>
+                                        </React.Fragment>
                                     ))}
                                     {formList.map((formId) => (
-                                        <FormPohonOpd
-                                            level={3}
-                                            id={null}
-                                            key={formId}
-                                            formId={formId}
-                                            pokin={'opd'}
-                                            onCancel={() => setFormList(formList.filter((id) => id !== formId))}
-                                        />
+                                        <React.Fragment key={formId}>
+                                            <FormPohonOpd
+                                                level={3}
+                                                id={null}
+                                                key={formId}
+                                                formId={formId}
+                                                pokin={'opd'}
+                                                onCancel={() => setFormList(formList.filter((id) => id !== formId))}
+                                            />
+                                        </React.Fragment>
                                     ))}
                                 </ul>
                             ) : (
                                 <ul>
                                     {formList.map((formId) => (
+                                    <React.Fragment key={formId}>
                                         <FormPohonOpd
                                             level={3}
                                             id={null}
@@ -698,6 +701,7 @@ const PokinOpd = () => {
                                             pokin={'opd'}
                                             onCancel={() => setFormList(formList.filter((id) => id !== formId))}
                                         />
+                                    </React.Fragment>
                                     ))}
                                 </ul>
                             )}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TbEye, TbPrinter } from 'react-icons/tb';
 import { ButtonSky, ButtonGreenBorder, ButtonBlackBorder } from '@/components/global/Button';
 import { ModalCetak } from '@/components/pages/Pohon/ModalCetak';
+import { ModalIndikator } from '@/components/pages/Pohon/ModalIndikator';
 
 interface pohon {
     tema: any;
@@ -116,6 +117,25 @@ export const TablePohon = (props: any) => {
     const jenis = props.item.jenis_pohon;
     const pelaksana = props.item.pelaksana;
 
+    const [ModalCekIndikator, setModalCekIndikator] = useState<boolean>(false);
+    const [Isi, setIsi] = useState<string>('');
+    const [Target, setTarget] = useState<string>('');
+    const [Satuan, setSatuan] = useState<string>('');
+
+    const handleModalIndikator = (isi: string, target: string, satuan: string) => {
+        if(ModalCekIndikator){
+            setModalCekIndikator(false);
+            setIsi('');
+            setTarget('');
+            setSatuan('');
+        } else {
+            setModalCekIndikator(true);
+            setIsi(isi);
+            setTarget(target);
+            setSatuan(satuan);
+        }
+    }
+
     return (
         <div className="flex flex-col w-full">
             <table className='mb-2'>
@@ -207,6 +227,67 @@ export const TablePohon = (props: any) => {
                                             Contoh Rencana Kinerja
                                         </td>
                                     </tr>
+                                    {(jenis === 'Operational' || jenis === 'Operational Pemda') &&
+                                        <React.Fragment>
+                                            <tr>
+                                                <td
+                                                    className={`min-w-[100px] border px-2 py-1 bg-white text-start
+                                                    ${jenis === "Strategic" && "border-red-700"}
+                                                    ${jenis === "Tactical" && "border-blue-500"}
+                                                    ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                                    ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                                    ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}   
+                                                `}
+                                                >
+                                                    Anggaran
+                                                </td>
+                                                <td
+                                                    className={`min-w-[300px] border px-2 py-3 bg-white text-start
+                                                    ${jenis === "Strategic" && "border-red-700"}
+                                                    ${jenis === "Tactical" && "border-blue-500"}
+                                                    ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                                    ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                                    ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"} 
+                                                `}
+                                                >
+                                                    Rp. 1947102974
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td
+                                                    className={`min-w-[100px] border px-2 py-1 bg-white text-start
+                                                    ${jenis === "Strategic" && "border-red-700"}
+                                                    ${jenis === "Tactical" && "border-blue-500"}
+                                                    ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                                    ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                                    ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"}   
+                                                `}
+                                                >
+                                                    Sub Kegiatan
+                                                </td>
+                                                <td
+                                                    className={`min-w-[300px] items-center border px-2 py-3 bg-white text-start
+                                                    ${jenis === "Strategic" && "border-red-700"}
+                                                    ${jenis === "Tactical" && "border-blue-500"}
+                                                    ${(jenis === "Operational" || jenis === "Operational N") && "border-green-500"}
+                                                    ${(jenis === "Strategic Pemda" || jenis === "Tactical Pemda" || jenis === "Operational Pemda") && "border-black"}
+                                                    ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"} 
+                                                `}
+                                                >
+                                                    <div className="flex flex-col gap-2">
+                                                        <p>contoh sub kegiatan</p>
+                                                        <ButtonBlackBorder 
+                                                            className='flex items-center gap-1'
+                                                            onClick={() => handleModalIndikator('contoh program', 'target', 'satuan')}
+                                                        >
+                                                            <TbEye />
+                                                            cek indikator
+                                                        </ButtonBlackBorder>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </React.Fragment>
+                                    }
                                     <tr>
                                         <td
                                             className={`min-w-[100px] border px-2 py-1 bg-white text-start
@@ -292,6 +373,14 @@ export const TablePohon = (props: any) => {
                     </tbody>
                 </table>
             }
+            <ModalIndikator
+                isOpen={ModalCekIndikator}
+                onClose={() => handleModalIndikator('','','')}
+                jenis='Sub Kegiatan'
+                isi={Isi}
+                target={Target}
+                satuan={Satuan}
+            />
         </div>
     )
 }
@@ -322,6 +411,26 @@ export const Pagu:React.FC<{jenis: string}> = ({ jenis }) => {
     )
 }
 export const ProgramKegiatan:React.FC<{jenis: string}> = ({ jenis }) => {
+
+    const [ModalCekIndikator, setModalCekIndikator] = useState<boolean>(false);
+    const [Isi, setIsi] = useState<string>('');
+    const [Target, setTarget] = useState<string>('');
+    const [Satuan, setSatuan] = useState<string>('');
+
+    const handleModalIndikator = (isi: string, target: string, satuan: string) => {
+        if(ModalCekIndikator){
+            setModalCekIndikator(false);
+            setIsi('');
+            setTarget('');
+            setSatuan('');
+        } else {
+            setModalCekIndikator(true);
+            setIsi(isi);
+            setTarget(target);
+            setSatuan(satuan);
+        }
+    }
+
     return (
         <div className="flex flex-col w-full">
             <table>
@@ -347,7 +456,10 @@ export const ProgramKegiatan:React.FC<{jenis: string}> = ({ jenis }) => {
                             ${jenis === 'Operational N' && 'border-x border-b border-green-500 rounded-b-lg'}    
                         `}>
                             <p>PROGRAM KOORDINASI DAN SINKRONISASI PERENCANAAN PEMBANGUNAN DAERAH (5.01.03)</p>
-                            <ButtonGreenBorder className='flex items-center gap-1'>
+                            <ButtonGreenBorder 
+                                className='flex items-center gap-1'
+                                onClick={() => handleModalIndikator('contoh isi indikator', 'target', 'satuan')}
+                            >
                                 <TbEye />
                                 Tampilkan indikator
                             </ButtonGreenBorder>
@@ -355,6 +467,16 @@ export const ProgramKegiatan:React.FC<{jenis: string}> = ({ jenis }) => {
                     </tr>
                 </tbody>
             </table>
+            <ModalIndikator
+                isOpen={ModalCekIndikator}
+                onClose={() => handleModalIndikator('','','')}
+                jenis={
+                    (jenis === 'Strategic' || jenis === 'Tactical' || jenis === 'Strategic Pemda' || jenis === 'Tactical Pemda') ? 'Program' : 'Kegiatan'
+                }
+                isi={Isi}
+                target={Target}
+                satuan={Satuan}
+            />
         </div>
     )
 }

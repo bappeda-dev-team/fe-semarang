@@ -287,7 +287,7 @@ export const ModalMatrix: React.FC<modal> = ({ isOpen, onClose, id, kode, kode_o
                                         <input
                                             {...field}
                                             className="border px-4 py-2 rounded-lg"
-                                            id="pagu_anggara"
+                                            id="pagu_anggaran"
                                             placeholder="masukkan Pagu Anggaran"
                                             value={Pagu === null ? "" : Pagu}
                                             type="number"

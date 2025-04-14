@@ -208,54 +208,56 @@ const SubKegiatan: React.FC<table> = ({ id, tahun, kode_opd, nip }) => {
                 <h1 className="font-bold">Sub Kegiatan</h1>
             </div>
             <div className="rounded-b-xl shadow-lg border-x border-b px-5 py-3">
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="my-2">
-                        <Controller
-                            name="sub_kegiatan"
-                            control={control}
-                            render={({ field }) => (
-                                <Select
-                                    id="sub_kegiatan"
-                                    isClearable
-                                    isLoading={LoadingOption}
-                                    value={InputSubKegiatan}
-                                    options={OptionSubKegiatan}
-                                    noOptionsMessage={() => `Kosong, Sub Kegiatan tahun ${tahun} belum ditambahkan di Perencanaan OPD`}
-                                    onMenuOpen={fetchOptionSubKegiatan}
-                                    onMenuClose={() => setOptionSubKegiatan([])}
-                                    onChange={(option) => {
-                                        field.onChange(option);
-                                        setInputSubKegiatan(option);
-                                    }}
-                                    styles={{
-                                        control: (baseStyles) => ({
-                                            ...baseStyles,
-                                            borderRadius: '8px',
-                                            marginTop: '4px'
-                                        }),
-                                        menuPortal: (base) => ({ 
-                                            ...base, zIndex: 9999 
-                                        })
-                                    }}
-                                    placeholder={"Pilih sub kegiatan"}
-                                />
-                            )}
-                        />
-                    </div>
-                    <ButtonSky type="submit" className="w-full mt-2" disabled={Proses}>
-                        {Proses ?
-                            <span className="flex">
-                                <LoadingButtonClip />
-                                Menambahkan...
-                            </span>
-                            :
-                            <span className="flex items-center">
-                                <TbCirclePlus className='mr-1' />
-                                Tambahkan
-                            </span>
-                        }
-                    </ButtonSky>
-                </form>
+                {dataNull === true &&
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="my-2">
+                            <Controller
+                                name="sub_kegiatan"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select
+                                        id="sub_kegiatan"
+                                        isClearable
+                                        isLoading={LoadingOption}
+                                        value={InputSubKegiatan}
+                                        options={OptionSubKegiatan}
+                                        noOptionsMessage={() => `Kosong, Sub Kegiatan tahun ${tahun} belum ditambahkan di Perencanaan OPD`}
+                                        onMenuOpen={fetchOptionSubKegiatan}
+                                        onMenuClose={() => setOptionSubKegiatan([])}
+                                        onChange={(option) => {
+                                            field.onChange(option);
+                                            setInputSubKegiatan(option);
+                                        }}
+                                        styles={{
+                                            control: (baseStyles) => ({
+                                                ...baseStyles,
+                                                borderRadius: '8px',
+                                                marginTop: '4px'
+                                            }),
+                                            menuPortal: (base) => ({ 
+                                                ...base, zIndex: 9999 
+                                            })
+                                        }}
+                                        placeholder={"Pilih sub kegiatan"}
+                                    />
+                                )}
+                            />
+                        </div>
+                        <ButtonSky type="submit" className="w-full mt-2" disabled={Proses}>
+                            {Proses ?
+                                <span className="flex">
+                                    <LoadingButtonClip />
+                                    Menambahkan...
+                                </span>
+                                :
+                                <span className="flex items-center">
+                                    <TbCirclePlus className='mr-1' />
+                                    Tambahkan
+                                </span>
+                            }
+                        </ButtonSky>
+                    </form>
+                }
                 <div className="overflow-auto mt-3 rounded-t-xl border">
                     <table className="w-full">
                         <thead>

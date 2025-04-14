@@ -48,7 +48,7 @@ export const ModalIndikator: React.FC<modal> = ({ isOpen, onClose, data, isi }) 
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.length === 0 ?
+                                {(data.length === 0 || data === null) ?
                                     <tr>
                                         <td colSpan={3} className="border border-black px-6 py-4">
                                             <p>indikator belum di tambahkan</p>

@@ -95,35 +95,39 @@ export const ModalRenaksi: React.FC<modal> = ({isOpen, onClose, id, rekin_id, me
         };
         // metode === 'baru' && console.log("baru :", formDataNew);
         // metode === 'lama' && console.log("lama :", formDataEdit);
-        try{
-            let url = "";
-            if (metode === "lama") {
-                url = `rencana_aksi/update/rencanaaksi/${id}`;
-            } else if (metode === "baru") {
-                url = `rencana_aksi/create/rencanaaksi/${rekin_id}`;
-            } else {
-                url = '';
+        if(urutan === 0){
+            AlertNotification("Urutan tidak boleh kosong", "", "warning", 2000);
+        } else {
+            try{
+                let url = "";
+                if (metode === "lama") {
+                    url = `rencana_aksi/update/rencanaaksi/${id}`;
+                } else if (metode === "baru") {
+                    url = `rencana_aksi/create/rencanaaksi/${rekin_id}`;
+                } else {
+                    url = '';
+                }
+                setProses(true);
+                const response = await fetch(`${API_URL}/${url}`, {
+                    method: metode === 'lama' ? "PUT" : "POST",
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(getBody()),
+                });
+                if(response.ok){
+                    AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Tahapan Rencana Aksi`, "success", 1000);
+                    onClose();
+                    onSuccess();
+                } else {
+                    AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+                }
+            } catch(err){
+                AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+            } finally {
+                setProses(false);
             }
-            setProses(true);
-            const response = await fetch(`${API_URL}/${url}`, {
-                method: metode === 'lama' ? "PUT" : "POST",
-                headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(getBody()),
-            });
-            if(response.ok){
-                AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Tahapan Rencana Aksi`, "success", 1000);
-                onClose();
-                onSuccess();
-            } else {
-                AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
-            }
-        } catch(err){
-            AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
-        } finally {
-            setProses(false);
         }
     };
 

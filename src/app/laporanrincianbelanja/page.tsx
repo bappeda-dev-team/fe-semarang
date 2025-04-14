@@ -1,6 +1,6 @@
 'use client'
 
-import { TableLaporan } from '@/components/pages/rincianbelanja/Table';
+import { TableLaporan } from '@/components/pages/rincianbelanja/TableLaporan';
 import { FiHome } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { getOpdTahun, getUser } from '@/components/lib/Cookie';
@@ -60,14 +60,20 @@ const LaporanRincianBelanja = () => {
                                 <OpdTahunNull />
                             </div>
                             :
-                            <Maintenance />
+                            <TableLaporan
+                                tahun={Tahun?.value}
+                                kode_opd={(User?.roles == 'super_admin' || User?.roles == 'reviewer') ? SelectedOpd?.value : User?.kode_opd}
+                            />
                         :
                         (Tahun?.value === undefined) ?
                             <div className="w-full">
                                 <TahunNull />
                             </div>
                             :
-                            <Maintenance />
+                            <TableLaporan
+                                tahun={Tahun?.value}
+                                kode_opd={(User?.roles == 'super_admin' || User?.roles == 'reviewer') ? SelectedOpd?.value : User?.kode_opd}
+                            />
                     }
                 </div>
             </div>

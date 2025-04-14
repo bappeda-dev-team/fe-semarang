@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ButtonSky, ButtonRed } from '@/components/global/Button';
 import { getToken } from "@/components/lib/Cookie";
@@ -8,7 +8,7 @@ import { LoadingButtonClip } from "@/components/global/Loading";
 import { AlertNotification } from "@/components/global/Alert";
 
 interface FormValue {
-    anggaran: string;
+    anggaran: number;
 }
 
 interface modal {
@@ -17,11 +17,12 @@ interface modal {
     metode: 'lama' | 'baru';
     id?: string;
     nama_renaksi: string;
+    anggaran: number | null;
     onSuccess: () => void;
 }
 
 
-export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, id, metode, onSuccess }) => {
+export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, anggaran, id, metode, onSuccess }) => {
 
     const {
         control,
@@ -30,19 +31,24 @@ export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, 
     } = useForm<FormValue>();
     const token = getToken();
 
-    const [urutan, setUrutan] = useState<number | null>(null);
+    const [Anggaran, setAnggaran] = useState<number | null>(null);
     const [Proses, setProses] = useState<boolean>(false);
+
+    useEffect(() => {
+        setAnggaran(anggaran);
+    }, [anggaran]);
 
     const onSubmit: SubmitHandler<FormValue> = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formDataNew = {
             //key : value
-            urutan: urutan,
+            renaksi_id: id,
+            anggaran: Anggaran,
         };
         const formDataEdit = {
             //key : value
-            id: id,
-            urutan: urutan,
+            renaksi_id: id,
+            anggaran: Anggaran,
         };
         const getBody = () => {
             if (metode === "lama") return formDataEdit;
@@ -51,41 +57,47 @@ export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, 
         };
         // metode === 'baru' && console.log("baru :", formDataNew);
         // metode === 'lama' && console.log("lama :", formDataEdit);
-        try {
-            let url = "";
-            if (metode === "lama") {
-                url = `rencana_aksi/update/rencanaaksi/${id}`;
-            } else if (metode === "baru") {
-                url = `rencana_aksi/create/rencanaaksi/${id}`;
-            } else {
-                url = '';
+        if(Anggaran === 0 || Anggaran === null){
+            AlertNotification("Anggaran tidak boleh 0", "", "warning", 3000);
+        } else {
+            try {
+                let url = "";
+                if (metode === "lama") {
+                    url = `rincian_belanja/update/${id}`;
+                } else if (metode === "baru") {
+                    url = `rincian_belanja/create`;
+                } else {
+                    url = '';
+                }
+                setProses(true);
+                const response = await fetch(`${API_URL}/${url}`, {
+                    method: metode === 'lama' ? "PUT" : "POST",
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(getBody()),
+                });
+                const result = await response.json();
+                if (result.code === 200 || result.code === 201) {
+                    AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Anggaran Renaksi`, "success", 1000);
+                    onClose();
+                    onSuccess();
+                } else {
+                    AlertNotification("Gagal", `${result.data}`, "error", 2000);
+                }
+            } catch (err) {
+                AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+            } finally {
+                setProses(false);
             }
-            setProses(true);
-            const response = await fetch(`${API_URL}/${url}`, {
-                method: metode === 'lama' ? "PUT" : "POST",
-                headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(getBody()),
-            });
-            if (response.ok) {
-                AlertNotification("Berhasil", `Berhasil ${metode === 'baru' ? "Menambahkan" : "Mengubah"} Anggaran Renaksi`, "success", 1000);
-                onClose();
-                onSuccess();
-            } else {
-                AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
-            }
-        } catch (err) {
-            AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
-        } finally {
-            setProses(false);
         }
     };
 
     const handleClose = () => {
         onClose();
-        setUrutan(0);
+        onSuccess();
+        setAnggaran(0);
     }
 
     if (!isOpen) {
@@ -128,10 +140,10 @@ export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, 
                                         id="anggaran"
                                         type="number"
                                         placeholder="masukkan anggaran tahapan renaksi"
-                                        value={urutan === null ? "" : urutan}
+                                        value={Anggaran === null ? "" : Anggaran}
                                         onChange={(e) => {
                                             field.onChange(e);
-                                            setUrutan(Number(e.target.value));
+                                            setAnggaran(Number(e.target.value));
                                         }}
                                     />
                                 )}

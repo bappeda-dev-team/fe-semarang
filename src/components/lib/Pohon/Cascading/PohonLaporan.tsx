@@ -17,6 +17,22 @@ interface ProgramKegiatan {
     kode?: string;
     indikator?: indikator[];
 }
+interface rencana_kinerja {
+    id_rencana_kinerja: string;
+    id_pohon: number;
+    nama_pohon: string;
+    nama_rencana_kinerja: string;
+    tahun: string; // Tahun dalam JSON adalah string
+    indikator: indikator[]; // Array yang berisi objek IndikatorItem
+    pegawai_id: string;
+    nama_pegawai: string;
+    kode_subkegiatan: string;
+    nama_subkegiatan: string;
+    indikator_subkegiatan: indikator[]; // Secara eksplisit null
+    kode_kegiatan: string;
+    nama_kegiatan: string;
+    indikator_kegiatan: indikator[]; // Secara eksplisit null
+}
 interface indikator {
     id_indikator: string;
     id_rekin: string;
@@ -203,7 +219,7 @@ export const TablePohonLaporan = (props: any) => {
                 </tbody>
             </table>
             {pelaksana ?
-                pelaksana.map((item: any, index: number) => (
+                pelaksana.map((item: rencana_kinerja, index: number) => (
                     <React.Fragment key={index}>
                         <table className='mt-2'>
                             <tbody className='rounded-lg'>
@@ -343,7 +359,7 @@ export const TablePohonLaporan = (props: any) => {
                                                     {(tipe === 'non-cetak' && item.kode_subkegiatan) &&
                                                         <ButtonBlackBorder
                                                             className='flex items-center gap-1'
-                                                            onClick={() => handleModalIndikator(item.indikator_subkegiatan, `${item.nama_subkegiatan} - ${item.kode_subkegiatan}`)}
+                                                            onClick={() => handleModalIndikator(item.indikator_subkegiatan === null ? [] : item.indikator_subkegiatan, `${item.nama_subkegiatan} - ${item.kode_subkegiatan}`)}
                                                         >
                                                             <TbEye />
                                                             cek indikator

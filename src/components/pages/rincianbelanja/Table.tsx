@@ -147,7 +147,7 @@ export const TableAsn: React.FC<TableAsn> = ({ tahun, nip }) => {
                 :
                 Rincian.map((data: Rincian, index: number) => (
                     <React.Fragment key={index}>
-                        <div className={`flex gap-2 items-center justify-between w-full p-3 border hover:bg-gray-200 cursor-pointer z-0 ${ShowRekin ? 'rounded-t-xl rounded-bl-xl' : 'rounded-xl'}`} onClick={handleShowRekin}>
+                        <div className={`flex gap-2 items-center justify-between w-full p-3 border hover:bg-gray-200 cursor-pointer z-0 ${ShowRekin ? 'rounded-t-xl rounded-bl-xl' : 'rounded-xl'}`}>
                             <div className="flex flex-wrap items-center gap-2">
                                 <p className="font-bold">{index + 1}. Sub Kegiatan : ({data.kode_subkegiatan || "no code"}) {data.nama_subkegiatan}</p>
                                 <ButtonBlackBorder

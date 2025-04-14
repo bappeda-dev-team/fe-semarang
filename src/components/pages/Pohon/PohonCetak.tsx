@@ -57,7 +57,10 @@ export const PohonCetak: React.FC<pohon> = ({ jenis, tema, closeTrigger }) => {
                                         tipe="cetak"
                                     />
                                     <div className="mt-3">
-                                        <Pagu jenis={tema.jenis_pohon} />
+                                        <Pagu 
+                                            jenis={tema.jenis_pohon} 
+                                            anggaran={tema.total_anggaran || tema.pagu_anggaran}
+                                        />
                                     </div>
                                     <div className="mt-5">
                                         <ProgramKegiatan jenis={tema.jenis_pohon} tipe="cetak" />

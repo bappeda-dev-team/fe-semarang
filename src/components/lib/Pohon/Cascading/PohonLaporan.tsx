@@ -28,6 +28,7 @@ interface rencana_kinerja {
     nama_pegawai: string;
     kode_subkegiatan: string;
     nama_subkegiatan: string;
+    anggaran: number;
     indikator_subkegiatan: indikator[]; // Secara eksplisit null
     kode_kegiatan: string;
     nama_kegiatan: string;
@@ -107,7 +108,10 @@ export const PohonLaporan: React.FC<pohon> = ({ tema, show_all, set_show_all }) 
                 <div className="flex flex-col justify-center my-3">
                     <TablePohonLaporan item={tema} tipe="non-cetak" />
                     <div className="mt-3">
-                        <Pagu jenis={tema.jenis_pohon} />
+                        <Pagu 
+                            jenis={tema.jenis_pohon} 
+                            anggaran={tema.total_anggaran || tema.pagu_anggaran}
+                        />
                     </div>
                     {tema.program &&
                         <div className="mt-5">
@@ -183,6 +187,13 @@ export const TablePohonLaporan = (props: any) => {
             setDataIndikator(data);
             setIsi(isi);
         }
+    }
+
+    function formatRupiah(angka: number) {
+        if (typeof angka !== 'number') {
+            return String(angka); // Jika bukan angka, kembalikan sebagai string
+        }
+        return angka.toLocaleString('id-ID'); // 'id-ID' untuk format Indonesia
     }
 
     return (
@@ -330,7 +341,7 @@ export const TablePohonLaporan = (props: any) => {
                                                     ${(jenis === "Strategic Crosscutting" || jenis === "Tactical Crosscutting" || jenis === "Operational Crosscutting" || jenis === "Operational N Crosscutting") && "border-yellow-700"} 
                                                 `}
                                             >
-                                                Rp. 1947102974
+                                                Rp. {formatRupiah(item.anggaran)}
                                             </td>
                                         </tr>
                                         <tr>
@@ -450,7 +461,15 @@ export const TablePohonLaporan = (props: any) => {
         </div>
     )
 }
-export const Pagu: React.FC<{ jenis: string }> = ({ jenis }) => {
+export const Pagu: React.FC<{ jenis: string, anggaran: number }> = ({ jenis, anggaran }) => {
+
+    function formatRupiah(angka: number) {
+        if (typeof angka !== 'number') {
+            return String(angka); // Jika bukan angka, kembalikan sebagai string
+        }
+        return angka.toLocaleString('id-ID'); // 'id-ID' untuk format Indonesia
+    }
+
     return (
         <div className="flex flex-col w-full">
             <table>
@@ -467,7 +486,7 @@ export const Pagu: React.FC<{ jenis: string }> = ({ jenis }) => {
                                 ${(jenis === 'Operational Pemda' || jenis === 'Operational') && 'text-white bg-green-500'}
                                 ${jenis === 'Operational N' && 'text-black border border-green-500'}
                             `}>
-                                Rp. 2934823948
+                                Rp. {formatRupiah(anggaran)}
                             </div>
                         </td>
                     </tr>

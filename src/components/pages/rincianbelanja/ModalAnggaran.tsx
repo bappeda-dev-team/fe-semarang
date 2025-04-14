@@ -96,7 +96,6 @@ export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, 
 
     const handleClose = () => {
         onClose();
-        onSuccess();
         setAnggaran(0);
     }
 

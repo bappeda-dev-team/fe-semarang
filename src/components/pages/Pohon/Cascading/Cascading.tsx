@@ -155,11 +155,6 @@ const Cascading: React.FC<cascading> = ({ jenis, nama_opd, kode_opd, tahun, user
     const handleMouseUp = () => setIsDragging(false);
 
     useEffect(() => {
-        console.log("kode opd: ", kode_opd);
-        console.log("user role: ", user);
-    }, [kode_opd, user]);
-
-    useEffect(() => {
         const fetchPokinOpd = async (url: string) => {
             const API_URL = process.env.NEXT_PUBLIC_API_URL;
             setLoading(true);

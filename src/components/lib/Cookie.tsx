@@ -29,8 +29,8 @@ export const login = async (username: string, password: string): Promise<boolean
       body: JSON.stringify({ username, password }),
     });
 
-    if (response.status === 200) {
-      const data = await response.json();
+    const data = await response.json();
+    if (data.code === 200) {
       // console.log('data dari response : ,', data);
       const token = data.data.token;
       try {
@@ -38,22 +38,23 @@ export const login = async (username: string, password: string): Promise<boolean
         // Simpan token di cookie
         document.cookie = `token=${token}; path=/;`;
         document.cookie = `user=${JSON.stringify(decoded)}; path=/;`;
-        AlertNotification("Login Berhasil", "Berhasil Login" , "success", 1000)
+        AlertNotification("Login Berhasil", "" , "success", 1000)
         return true;
       } catch (decodeError) {
-        AlertNotification("Login Gagal", "Gagal Login" , "error", 1000)
-        console.error('Error decoding token:', decodeError);
+        AlertNotification("Login Gagal", `${data.data}` , "error", 1000)
+        console.error('Error decoding token:', data.code);
         return false;
       }
-    } else if (response.status === 400) {
-        AlertNotification("Login Gagal", "NIP atau Password Salah" , "error", 1000)
-      return false;
-    } else {
-      console.log(`Login gagal: Status ${response.status}`);
-      return false;
-    }
-  } catch (err) {
-    console.error('Login gagal:', err);
+    } else if (data.code === 400) {
+        AlertNotification("Login Gagal", `${data.data}` , "error", 1000)
+        return false;
+      } else {
+        console.log(`Login gagal: Status ${data.data}`);
+        return false;
+      }
+    } catch (err) {
+      AlertNotification("Login Gagal", "terdapat kesalahan server / koneksi internet" , "error", 2000)
+      console.error('Login gagal dengan error:', err);
     return false;
   }
 };

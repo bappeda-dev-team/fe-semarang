@@ -133,7 +133,7 @@ export const TablePerencanaan = () => {
         <div className="overflow-auto m-2 rounded-t-xl border">
             <table className="w-full">
                 <thead>
-                    <tr className="bg-[#99CEF5] text-white">
+                    <tr className="bg-gray-700 text-white">
                         <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
                         <th className="border-r border-b px-6 py-3 min-w-[300px]">Pohon Kinerja</th>
                         <th className="border-r border-b px-6 py-3 min-w-[400px]">Rencana Kinerja</th>

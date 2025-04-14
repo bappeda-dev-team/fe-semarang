@@ -26,11 +26,8 @@ const LoginPage = () => {
         setProses(true);
         try{
             const isLoggedIn = await login(data.username, data.password);
-      
             if (isLoggedIn) {
               router.push('/'); // Redirect ke halaman dashboard jika login berhasil
-            } else {
-              console.log('Login gagal');
             }
         } catch(error) {
             console.error(error)

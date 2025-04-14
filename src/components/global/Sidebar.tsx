@@ -106,6 +106,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
   const [Inovasi, setInovasi] = useState<boolean | null>(null);
   const [RencanaKinerjaKAK, setRencanaKinerjaKAK] = useState<boolean | null>(null);
   const [RincianBelanja, setRincianBelanja] = useState<boolean | null>(null);
+  const [LaporanRincianBelanja, setLaporanRincianBelanja] = useState<boolean | null>(null);
   const [LaporanRenstra, setLaporanRenstra] = useState<boolean>(false);
   const [LaporanCascadingOpd, setLaporanCascadingOpd] = useState<boolean>(false);
 
@@ -189,6 +190,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -266,6 +268,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -342,6 +345,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -418,6 +422,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -494,6 +499,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -571,6 +577,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -647,6 +654,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -723,6 +731,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -799,6 +808,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -875,6 +885,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -951,6 +962,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1027,6 +1039,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1103,6 +1116,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1179,6 +1193,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1256,6 +1271,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1332,6 +1348,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1408,6 +1425,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1484,6 +1502,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1560,6 +1579,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1636,6 +1656,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1712,6 +1733,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1789,6 +1811,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1865,6 +1888,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -1941,6 +1965,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -2017,6 +2042,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -2054,6 +2080,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporan(false);
       setUsulanLaporan(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
       setMusrenbang(false);
@@ -2098,6 +2125,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporan(false);
       setUsulanLaporan(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
       setMusrenbang(false);
@@ -2142,6 +2170,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporan(false);
       setUsulanLaporan(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
       setMusrenbang(false);
@@ -2186,6 +2215,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporan(false);
       setUsulanLaporan(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
       setMusrenbang(false);
@@ -2269,6 +2299,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -2345,6 +2376,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -2421,6 +2453,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -2503,6 +2536,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -2521,7 +2555,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // asn
       setPerencanaan(true);
       setUsulanLaporan(false);
-      setLaporan(true);
+      setLaporan(false);
       setLaporanUsulan(false);
       setReview(false);
 
@@ -2579,6 +2613,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -2620,6 +2655,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setMandatori(false);
       setInisiatif(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
       setManajemenResiko(false);
@@ -2668,6 +2704,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setPohonCascading(false);
       setPohonCascadingOpd(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
       setManajemenResiko(false);
@@ -2713,6 +2750,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setPohonCascading(false);
       setPohonCascadingOpd(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
       setManajemenResiko(false);
@@ -2758,6 +2796,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setPohonCascading(false);
       setPohonCascadingOpd(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
       setManajemenResiko(false);
@@ -2795,6 +2834,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setUserOpd(false);
       setUsulanLaporan(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
       setRencanaKinerja(false);
@@ -2879,6 +2919,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -2955,6 +2996,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -3031,6 +3073,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(true);
       setLaporanCascadingOpd(false);
     }
@@ -3107,6 +3150,84 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
+      setLaporanRenstra(false);
+      setLaporanCascadingOpd(false);
+    }
+    if (url == "/laporanrincianbelanja") {
+      // SLIDE MENU
+      // super_admin
+      setDataMaster(false);
+      setMasterProgramKegiatan(false);
+      setPerencanaanKota(false);
+      setRPJMD(false);
+      // admin_opd
+      setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      setRenstra(false);
+      // asn
+      setPerencanaan(false);
+      setUsulanLaporan(false);
+      setLaporan(true);
+      setLaporanUsulan(false);
+      setReview(false);
+
+      // HALAMAN
+      setDashboard(false);
+      // data master
+      setMasterOPD(false);
+      setMasterPegawai(false);
+      setMasterPeriode(false);
+      setLevelPohon(false);
+      setMasterJabatan(false);
+      setMasterUsulanPemda(false);
+      // masterprogramkegiatan
+      setMasterUrusan(false);
+      setMasterBidangUrusan(false);
+      setMasterProgram(false);
+      setMasterKegiatan(false);
+      setMasterSubKegiatan(false);
+      setMasterLembaga(false);
+      setMasterUser(false);
+      setMasterRole(false);
+      // perencanaan pemda
+      setTematikKota(false);
+      setKotaPohonKinerjaKota(false);
+      // RPJMD
+      setVisi(false);
+      setMisi(false);
+      setTujuanPemda(false);
+      setSasaranPemda(false);
+      setIKU(false);
+      // perencanaan opd
+      setPohonKinerjaOpd(false);
+      setPohonCascadingOpd(false);
+      setUserOpd(false);
+      //Renstra
+      setTujuanOpd(false);
+      setSasaranOpd(false);
+      setIKUOpd(false);
+      setPermasalahanOpd(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      //perencanaan asn
+      setRencanaKinerja(false);
+      setPohonCascading(false);
+      setRincianBelanja(false);
+      setPerencanaanManajemenResiko(false);
+      //laporan
+      setReviewPemda(false);
+      setReviewOpd(false);
+      setLaporanMusrenbang(false);
+      setLaporanPokokPikiran(false);
+      setLaporanMandatori(false);
+      setLaporanInisiatif(false);
+      setSPIP(false);
+      setManajemenResiko(false);
+      setInovasi(false);
+      setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(true)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
@@ -3183,6 +3304,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
       setLaporanRenstra(false);
       setLaporanCascadingOpd(true);
     }
@@ -3726,8 +3848,8 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Rencana Kinerja KAK</span>
               </li>
             </Link>
-            <Link href="/rincianbelanja">
-              <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${RincianBelanja ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+            <Link href="/laporanrincianbelanja">
+              <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${LaporanRincianBelanja ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                 <TbShoppingCartDollar className="text-xl" />
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Rincian Belanja</span>
               </li>
@@ -3744,16 +3866,16 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Inovasi</span>
               </li>
             </Link>
-            <Link href="/laporancascadingopd">
-              <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${LaporanCascadingOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                <TbListDetails className="text-xl" />
-                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Cascading OPD</span>
-              </li>
-            </Link>
             <Link href="/laporanrenstra">
               <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${LaporanRenstra ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                 <TbFileAnalytics className="text-xl" />
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Matrix Renstra</span>
+              </li>
+            </Link>
+            <Link href="/laporancascadingopd">
+              <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${LaporanCascadingOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                <TbListDetails className="text-xl" />
+                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Cascading OPD</span>
               </li>
             </Link>
           </div>

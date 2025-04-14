@@ -9,7 +9,7 @@ import { LoadingButtonClip } from "@/components/global/Loading";
 import { getOpdTahun } from "@/components/lib/Cookie";
 
 interface modal {
-    jenis: 'cascading' | 'non_cascading';
+    jenis: 'cascading' | 'non_cascading' | 'laporan';
     isOpen: boolean;
     onClose: () => void;
     pohon: any;
@@ -124,7 +124,7 @@ export const ModalCetak: React.FC<modal> = ({ jenis, isOpen, onClose, pohon }) =
                     <div className="flex py-3 relative justify-center items-center h-[calc(100vh-50px)]">
                         <div ref={modalRef} className="flex flex-wrap justify-evenly w-full max-h-full overflow-auto pr-5">
                             <PohonCetak
-                                jenis={jenis === 'cascading' ? "cascading" : "non_cascading"}
+                                jenis={jenis === 'cascading' ? "cascading" : jenis === 'non_cascading' ? "non_cascading" : "laporan"}
                                 tema={pohon}
                                 closeTrigger={handleClose}
                             />

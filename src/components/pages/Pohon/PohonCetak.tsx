@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { TbCheck, TbCircleLetterXFilled, TbHourglass } from 'react-icons/tb';
 import { getToken } from '@/components/lib/Cookie';
+import { TablePohonLaporan, Pagu, ProgramKegiatan } from '@/components/lib/Pohon/Cascading/PohonLaporan';
 
 interface pohon {
-    jenis: 'cascading' | 'non_cascading';
+    jenis: 'cascading' | 'non_cascading' | 'laporan';
     tema: any;
     closeTrigger: () => void;
 }
@@ -44,15 +45,28 @@ export const PohonCetak: React.FC<pohon> = ({ jenis, tema, closeTrigger }) => {
                         }
                     </div>
                     {/* BODY */}
-                    <div className="flex justify-center my-3">
+                    <div className="flex flex-col justify-center my-3">
                         {jenis === 'cascading' ?
                             <TableCetakCascading
                                 item={tema}
                             />
-                            :
-                            <TableCetakPohon
-                                item={tema}
-                            />
+                            : jenis === 'laporan' ?
+                                <>
+                                    <TablePohonLaporan
+                                        item={tema}
+                                        tipe="cetak"
+                                    />
+                                    <div className="mt-3">
+                                        <Pagu jenis={tema.jenis_pohon} />
+                                    </div>
+                                    <div className="mt-5">
+                                        <ProgramKegiatan jenis={tema.jenis_pohon} tipe="cetak" />
+                                    </div>
+                                </>
+                                :
+                                <TableCetakPohon
+                                    item={tema}
+                                />
                         }
                     </div>
                 </div>
@@ -61,7 +75,7 @@ export const PohonCetak: React.FC<pohon> = ({ jenis, tema, closeTrigger }) => {
                 {childPohons.map((dahan: any, indexChild: number) => (
                     <React.Fragment key={indexChild}>
                         <PohonCetak
-                            jenis={jenis === 'non_cascading' ? 'non_cascading' : 'cascading'}
+                            jenis={jenis === 'cascading' ? "cascading" : jenis === 'non_cascading' ? "non_cascading" : "laporan"}
                             tema={dahan}
                             closeTrigger={closeTrigger}
                         />

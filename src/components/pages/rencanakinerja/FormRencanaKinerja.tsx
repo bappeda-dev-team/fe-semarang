@@ -122,7 +122,7 @@ export const FormRencanaKinerja = () => {
             const data = await response.json();
             const pokin = data.data.map((item: any) => ({
                 value: item.id,
-                label: item.nama_pohon,
+                label: `${item.nama_pohon} - ${item.jenis_pohon}`,
                 nama_pohon: item.nama_pohon,
                 jenis_pohon: item.jenis_pohon,
                 level_pohon: item.level_pohon,

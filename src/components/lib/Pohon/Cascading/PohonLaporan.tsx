@@ -110,7 +110,7 @@ export const PohonLaporan: React.FC<pohon> = ({ tema, show_all, set_show_all }) 
                     <div className="mt-3">
                         <Pagu 
                             jenis={tema.jenis_pohon} 
-                            anggaran={tema.total_anggaran || tema.pagu_anggaran || 'Rp.0'}
+                            anggaran={tema.total_anggaran || tema.pagu_anggaran || '0'}
                         />
                     </div>
                     {tema.program &&

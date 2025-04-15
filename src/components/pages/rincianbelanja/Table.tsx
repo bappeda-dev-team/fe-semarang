@@ -94,7 +94,7 @@ export const TableAsn: React.FC<TableAsn> = ({ tahun, nip }) => {
                 setLoading(false);
             }
         }
-        if(tahun != undefined && nip != undefined){
+        if (tahun != undefined && nip != undefined) {
             fetchRincianBelanja();
         }
     }, [tahun, nip, token, FetchTrigger]);
@@ -151,7 +151,7 @@ export const TableAsn: React.FC<TableAsn> = ({ tahun, nip }) => {
                             <div className="flex flex-wrap items-center gap-2">
                                 <p className="font-bold">{index + 1}. Sub Kegiatan : ({data.kode_subkegiatan || "no code"}) {data.nama_subkegiatan}</p>
                                 <ButtonBlackBorder
-                                    onClick={() => handleModalIndikator(`${data.nama_subkegiatan} - ${data.kode_subkegiatan}`, data.indikator_subkegiatan)}
+                                    onClick={() => handleModalIndikator(`${data.nama_subkegiatan} - ${data.kode_subkegiatan}`, (data.indikator_subkegiatan ? data.indikator_subkegiatan : []))}
                                     className="flex items-center gap-1 z-10"
                                 >
                                     <TbEye />
@@ -224,19 +224,25 @@ export const TableRekinAsn: React.FC<TableRekinAsn> = ({ renaksi, fetchTrigger }
 
     return (
         <>
-            {renaksi.map((r: Renaksi, r_index: number) => (
-                <React.Fragment key={r.renaksi_id || r_index}>
-                    <div className="flex flex-wrap items-center border-green-500 justify-between rounded-tl-xl rounded-bl-xl border-y border-l py-3 pl-3 w-full">
-                        <p>renaksi ke {r_index + 1} : {r.renaksi}</p>
-                        <div
-                            onClick={() => handleModalOpen(r.renaksi_id, r.renaksi, r.anggaran)}
-                            className="p-2 min-w-[200px] border border-green-500 rounded-xl text-center text-green-500 cursor-pointer hover:bg-green-600 hover:text-white"
-                        >
-                            Rp.{formatRupiah(r.anggaran || 0)}
+            {(renaksi.length === 0 || renaksi === null) ?
+                <div className="flex flex-wrap items-center border-red-500 justify-between rounded-tl-xl rounded-bl-xl border-y border-l py-3 pl-3 w-full">
+                    <p>Renaksi belum di tambahkan di rincian rencana kinerja</p>
+                </div>
+                :
+                renaksi.map((r: Renaksi, r_index: number) => (
+                    <React.Fragment key={r.renaksi_id || r_index}>
+                        <div className="flex flex-wrap items-center border-green-500 justify-between rounded-tl-xl rounded-bl-xl border-y border-l py-3 pl-3 w-full">
+                            <p>Renaksi ke {r_index + 1} : {r.renaksi}</p>
+                            <div
+                                onClick={() => handleModalOpen(r.renaksi_id, r.renaksi, r.anggaran)}
+                                className="p-2 min-w-[200px] border border-green-500 rounded-xl text-center text-green-500 cursor-pointer hover:bg-green-600 hover:text-white"
+                            >
+                                Rp.{formatRupiah(r.anggaran || 0)}
+                            </div>
                         </div>
-                    </div>
-                </React.Fragment>
-            ))}
+                    </React.Fragment>
+                ))
+            }
             <ModalAnggaran
                 metode={Anggaran === 0 ? 'baru' : 'lama'}
                 isOpen={ModalOpen}

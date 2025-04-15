@@ -33,7 +33,7 @@ export const TableLaporan: React.FC<TableLaporan> = ({ tahun }) => {
     const [FetchTrigger, setFetchTrigger] = useState<boolean>(false);
 
     const handleIndikator = (isi: string, indikator: indikator[]) => {
-        if(ModalOpen){
+        if (ModalOpen) {
             setModalOpen(false);
             setIsi('');
             setDataIndikator([]);
@@ -61,18 +61,8 @@ export const TableLaporan: React.FC<TableLaporan> = ({ tahun }) => {
                 <tbody>
                     <tr>
                         <td className="border-r border-b px-6 py-4">1</td>
-                        <td colSpan={5} className="border-r border-b px-6 py-4">
-                            <div className="flex items-center gap-2">
-                                Subkegiatan: penyusunan dokumen perencanaan perangkat daerah (1.123.123)
-                                <ButtonBlackBorder
-                                    onClick={() => handleIndikator('penysunan dokumen perencanaan perangkat daerah (1.123.123)', [])}
-                                    className="flex items-center gap-2"
-                                >
-                                    <TbEye />
-                                    cek indikator
-                                </ButtonBlackBorder>
-                            </div>
-                        </td>
+                        <td colSpan={4} className="border-r border-b px-6 py-4">Subkegiatan: penyusunan dokumen perencanaan perangkat daerah (1.123.123)</td>
+                        <td className="border-r border-b px-6 py-4 text-center">20 %</td>
                         <td className="border-r border-b px-6 py-4">Rp. 0,0</td>
                     </tr>
                     <tr>
@@ -100,18 +90,8 @@ export const TableLaporan: React.FC<TableLaporan> = ({ tahun }) => {
                 <tbody>
                     <tr>
                         <td className="border-r border-b px-6 py-4">1</td>
-                        <td colSpan={5} className="border-r border-b px-6 py-4">
-                            <div className="flex items-center gap-2">
-                                Subkegiatan: penyusunan dokumen perencanaan perangkat daerah (1.123.123)
-                                <ButtonBlackBorder
-                                    onClick={() => handleIndikator('penysunan dokumen perencanaan perangkat daerah (1.123.123)', [])}
-                                    className="flex items-center gap-2"
-                                >
-                                    <TbEye />
-                                    cek indikator
-                                </ButtonBlackBorder>
-                            </div>
-                        </td>
+                        <td colSpan={4} className="border-r border-b px-6 py-4">Subkegiatan: penyusunan dokumen perencanaan perangkat daerah (1.123.123)</td>
+                        <td className="border-r border-b px-6 py-4 text-center">20 %</td>
                         <td className="border-r border-b px-6 py-4">Rp. 0,0</td>
                     </tr>
                     <tr>
@@ -137,7 +117,7 @@ export const TableLaporan: React.FC<TableLaporan> = ({ tahun }) => {
                     </tr>
                 </tbody>
             </table>
-            <ModalIndikator 
+            <ModalIndikator
                 isOpen={ModalOpen}
                 onClose={() => handleIndikator('', [])}
                 isi={Isi}

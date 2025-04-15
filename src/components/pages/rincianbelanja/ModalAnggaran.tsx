@@ -35,7 +35,11 @@ export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, 
     const [Proses, setProses] = useState<boolean>(false);
 
     useEffect(() => {
-        setAnggaran(anggaran);
+        if (anggaran === 0) {
+            setAnggaran(null);
+        } else {
+            setAnggaran(anggaran);
+        }
     }, [anggaran]);
 
     const onSubmit: SubmitHandler<FormValue> = async () => {
@@ -55,11 +59,11 @@ export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, 
             if (metode === "baru") return formDataNew;
             return {}; // Default jika metode tidak sesuai
         };
-        // metode === 'baru' && console.log("baru :", formDataNew);
-        // metode === 'lama' && console.log("lama :", formDataEdit);
-        if(Anggaran === 0 || Anggaran === null){
+        if (Anggaran === 0 || Anggaran === null) {
             AlertNotification("Anggaran tidak boleh 0", "", "warning", 3000);
         } else {
+            // metode === 'baru' && console.log("baru :", formDataNew);
+            // metode === 'lama' && console.log("lama :", formDataEdit);
             try {
                 let url = "";
                 if (metode === "lama") {
@@ -96,8 +100,23 @@ export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, 
 
     const handleClose = () => {
         onClose();
-        setAnggaran(0);
+        setAnggaran(null);
     }
+    const formatNumberWithDots = (value: number | string | null) => {
+        if (value === null || value === undefined || value === '') return '';
+        // Hapus karakter non-digit yang mungkin sudah ada (termasuk titik atau spasi)
+        const numberString = String(value).replace(/\D/g, '');
+        if (numberString === '') return '';
+        // Format dengan TITIK sebagai pemisah ribuan
+        return numberString.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Ganti ' ' menjadi '.'
+    };
+    const unformatNumber = (value: number | string) => {
+        if (value === null || value === undefined || value === '') return null;
+        // Hapus spasi, titik, dan karakter non-digit lainnya
+        const numberString = String(value).replace(/\D/g, '');
+        // Kembalikan null jika string kosong, atau angka jika valid
+        return numberString === '' ? null : Number(numberString);
+    };
 
     if (!isOpen) {
         return null;
@@ -120,7 +139,7 @@ export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, 
                             >
                                 Nama Tahapan Rencana Aksi :
                             </label>
-                            <div className="border px-4 py-2 rounded-lg">{nama_renaksi}</div>
+                            <div className="border px-4 py-2 rounded-lg">{nama_renaksi || "-"}</div>
                         </div>
                         <div className="flex flex-col py-3">
                             <label
@@ -132,20 +151,28 @@ export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, 
                             <Controller
                                 name="anggaran"
                                 control={control}
-                                render={({ field }) => (
-                                    <input
-                                        {...field}
-                                        className="border px-4 py-2 rounded-lg"
-                                        id="anggaran"
-                                        type="number"
-                                        placeholder="masukkan anggaran tahapan renaksi"
-                                        value={Anggaran === null ? "" : Anggaran}
-                                        onChange={(e) => {
-                                            field.onChange(e);
-                                            setAnggaran(Number(e.target.value));
-                                        }}
-                                    />
-                                )}
+                                render={({ field }) => {
+                                    const handleInputChange = (e: any) => {
+                                        const inputValue = e.target.value;
+                                        const numericValue = unformatNumber(inputValue);
+                                        field.onChange(numericValue);
+                                        setAnggaran(unformatNumber(inputValue));
+                                    };
+                                    const displayValue = formatNumberWithDots(Anggaran);
+                                    return (
+                                        <input
+                                            ref={field.ref}
+                                            onBlur={field.onBlur}
+                                            className="border px-4 py-2 rounded-lg"
+                                            id="anggaran"
+                                            type="text"
+                                            inputMode="numeric"
+                                            placeholder="masukkan anggaran tahapan renaksi"
+                                            value={displayValue === null ? "" : displayValue}
+                                            onChange={handleInputChange}
+                                        />
+                                    )
+                                }}
                             />
                         </div>
                         <ButtonSky className="w-full mt-3 mb-2" type="submit">

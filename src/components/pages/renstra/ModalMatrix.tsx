@@ -291,6 +291,7 @@ export const ModalMatrix: React.FC<modal> = ({ isOpen, onClose, id, kode, kode_o
                                             placeholder="masukkan Pagu Anggaran"
                                             value={Pagu === null ? "" : Pagu}
                                             type="number"
+                                            inputMode="numeric"
                                             onChange={(e) => {
                                                 field.onChange(e);
                                                 setPagu(Number(e.target.value));

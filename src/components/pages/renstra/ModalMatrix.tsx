@@ -323,7 +323,7 @@ export const ModalMatrix: React.FC<modal> = ({ isOpen, onClose, id, kode, kode_o
                                         />
                                     </div>
                                 }
-                                <ButtonSky className="w-full mt-3" type="submit">
+                                <ButtonSky className="w-full mt-3" type="submit" disabled={Proses}>
                                     {Proses ?
                                         <span className="flex">
                                             <LoadingButtonClip />

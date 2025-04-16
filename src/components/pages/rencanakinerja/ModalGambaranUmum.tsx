@@ -246,7 +246,7 @@ export const ModalEditGambaranUmum: React.FC<modal> = ({isOpen, onClose, id_reki
                             )}
                         />
                     </div>
-                    <ButtonSky className="w-full my-3" type="submit">
+                    <ButtonSky className="w-full my-3" type="submit" disabled={Proses}>
                         {Proses ? 
                             <span className="flex">
                                 <LoadingButtonClip />

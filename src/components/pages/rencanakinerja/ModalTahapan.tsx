@@ -256,7 +256,7 @@ export const ModalTahapan: React.FC<modal> = ({ isOpen, onClose, renaksi_id, id,
                                 )}
                             />
                         </div>
-                        <ButtonSky type="submit" className="w-full mt-3 flex gap-1">
+                        <ButtonSky type="submit" className="w-full mt-3 flex gap-1" disabled={Proses}>
                             <TbCopyCheckFilled />
                             {Proses ?
                                 <span className="flex">

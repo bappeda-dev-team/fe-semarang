@@ -175,7 +175,7 @@ export const ModalAnggaran: React.FC<modal> = ({ isOpen, onClose, nama_renaksi, 
                                 }}
                             />
                         </div>
-                        <ButtonSky className="w-full mt-3 mb-2" type="submit">
+                        <ButtonSky className="w-full mt-3 mb-2" type="submit" disabled={Proses}>
                             {Proses ?
                                 <span className="flex">
                                     <LoadingButtonClip />

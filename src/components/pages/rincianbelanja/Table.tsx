@@ -147,7 +147,7 @@ export const TableAsn: React.FC<TableAsn> = ({ tahun, nip }) => {
                 :
                 Rincian.map((data: Rincian, index: number) => (
                     <React.Fragment key={index}>
-                        <div className={`flex gap-2 items-center justify-between w-full p-3 border hover:bg-gray-200 cursor-pointer z-0 ${ShowRekin ? 'rounded-t-xl rounded-bl-xl' : 'rounded-xl'}`}>
+                        <div className={`flex gap-2 items-center justify-between w-full p-3 border border-black hover:bg-gray-200 cursor-pointer mt-2 z-0 ${ShowRekin ? 'rounded-t-xl rounded-bl-xl' : 'rounded-xl'}`}>
                             <div className="flex flex-col flex-wrap items-start gap-2">
                                 <p className="font-bold">{index + 1}. Sub Kegiatan : ({data.kode_subkegiatan || "no code"}) {data.nama_subkegiatan}</p>
                                 <ButtonBlackBorder
@@ -161,9 +161,9 @@ export const TableAsn: React.FC<TableAsn> = ({ tahun, nip }) => {
                             <p className="p-2 bg-green-500 rounded-xl min-w-[200px] text-center text-white">{data.total_anggaran ? `Rp.${formatRupiah(data.total_anggaran)}` : "Rp. 0"}</p>
                         </div>
                         {data.rincian_belanja.map((r: RincianBelanja, r_index: number) => (
-                            <div key={r_index} className={`flex flex-wrap gap-2 items-center justify-between transition-all duration-300 ease-in-out border-x border-b ${ShowRekin ? 'opacity-100 ml-3 p-3' : 'max-h-0 opacity-0 pointer-events-none'}`}>
-                                <div className="flex flex-wrap items-center gap-2 w-full justify-between">
-                                    <div className="flex flex-col flex-wrap items-start gap-2">
+                            <div key={r_index} className={`flex flex-wrap gap-2 items-center justify-between transition-all duration-300 ease-in-out border-x border-b border-black ${ShowRekin ? 'opacity-100 ml-3 p-3' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+                                <div className="flex items-center gap-2 w-full justify-between">
+                                    <div className="flex flex-col items-start gap-2">
                                         <p className="font-semibold">{index + 1}.{r_index + 1} {r.rencana_kinerja}</p>
                                         <ButtonBlackBorder
                                             onClick={() => handleModalIndikator(r.rencana_kinerja, r.indikator)}
@@ -231,7 +231,7 @@ export const TableRekinAsn: React.FC<TableRekinAsn> = ({ renaksi, fetchTrigger }
                 :
                 renaksi.map((r: Renaksi, r_index: number) => (
                     <React.Fragment key={r.renaksi_id || r_index}>
-                        <div className="flex flex-wrap items-center border-green-500 justify-between rounded-tl-xl rounded-bl-xl border-y border-l py-3 pl-3 w-full">
+                        <div className="flex items-center gap-2 border-green-500 justify-between rounded-tl-xl rounded-bl-xl border-y border-l py-3 pl-3 w-full">
                             <p>Renaksi ke {r_index + 1} : {r.renaksi}</p>
                             <div
                                 onClick={() => handleModalOpen(r.renaksi_id, r.renaksi, r.anggaran)}

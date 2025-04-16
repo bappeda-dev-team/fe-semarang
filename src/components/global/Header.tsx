@@ -126,7 +126,7 @@ const Header = () => {
                     :
                     <h1 className="font-light text-sm">{user?.email}</h1>
                 }
-                <h1 className="font-light text-sm">{Tahun ? Tahun?.value : "Pilih Tahun"} - Kab. Madiun</h1>
+                {/* <h1 className="font-light text-sm">{Tahun ? Tahun?.value : "Pilih Tahun"} - Kab. Madiun</h1> */}
             </div>
             <div className="flex flex-wrap items-center">
                 {(user?.roles == 'super_admin' || user?.roles == 'reviewer') &&

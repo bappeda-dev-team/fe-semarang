@@ -42,13 +42,14 @@ const LoginPage = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-8 rounded-lg shadow-md w-96">
                 <div className="flex flex-col items-center">
                     <Image 
-                        src="/logo.png"
+                        // src="/logo.png"
+                        src="/universal.png"
                         alt="logo" 
                         width={90}
                         height={90} 
                     />
                     <h1 className="text-2xl font-bold mt-3 text-center">KINERJA PEMBANGUNAN DAERAH</h1>
-                    <h1 className="text-lg font-thin mb-6 text-center">Kabupaten Madiun</h1>
+                    {/* <h1 className="text-lg font-thin mb-6 text-center">Kabupaten Madiun</h1> */}
                 </div>
                 {/* NIP */}
                 <div className="mb-4">

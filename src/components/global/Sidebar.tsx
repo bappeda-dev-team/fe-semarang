@@ -3327,7 +3327,8 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
         <div className="flex items-center justify-center">
           <Image
             className="mb-3 transition-all duration-300 ease-in-out"
-            src="/logo.png"
+            // src="/logo.png"
+            src="/universal.png"
             alt="logo"
             width={!isZoomed ? 80 : 80}
             height={!isZoomed ? 80 : 80}
@@ -3348,9 +3349,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
             <h2 className='font-bold'>
               KINERJA PEMBANGUNAN DAERAH
             </h2>
-            <h3 className='font-thin text-lg'>
-              Kabupaten Madiun
-            </h3>
+            {/* <h3 className='font-thin text-lg'>Kabupaten Madiun</h3> */}
           </div>
         </div>
 

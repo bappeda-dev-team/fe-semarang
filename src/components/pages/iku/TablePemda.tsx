@@ -10,6 +10,7 @@ interface IKU {
     indikator_id: string;
     asal_iku: string;
     sumber: string;
+    is_active: boolean;
     rumus_perhitungan: string;
     sumber_data: string;
     indikator: string;
@@ -137,7 +138,10 @@ const TablePemda: React.FC<table> = ({id_periode, tahun_awal, tahun_akhir, jenis
                                         {index + 1}
                                     </td>
                                     <td className="border-r border-b border-emerald-500 px-6 py-4">
-                                        <p>{item.indikator || "-"}</p>
+                                        <div className="flex gap-2 items-center">
+                                            <p>{item.indikator || "-"}</p>
+                                            <p className="text-red-500">{item.is_active === false ? "(tidak aktif)" : ""}</p>
+                                        </div>
                                         <p className="text-gray-500 text-xs">({item.asal_iku || "-"})</p>
                                     </td>
                                     <td className="border-r border-b border-emerald-500 px-6 py-4">

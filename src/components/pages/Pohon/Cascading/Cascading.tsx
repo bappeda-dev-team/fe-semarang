@@ -301,6 +301,12 @@ const Cascading: React.FC<cascading> = ({ jenis, nama_opd, kode_opd, tahun, user
                                             {Pokin?.tujuan_opd ?
                                                 Pokin?.tujuan_opd.map((item: any) => (
                                                     <React.Fragment key={item.id}>
+                                                        {item.kode_bidang_urusan &&
+                                                            <tr>
+                                                                <td className="min-w-[100px] border px-2 py-3 border-black text-start bg-gray-100">Bidang Urusan</td>
+                                                                <td className="min-w-[300px] border px-2 py-3 border-black text-start bg-gray-100">({item.kode_bidang_urusan} - {item.nama_bidang_urusan})</td>
+                                                            </tr>
+                                                        }
                                                         <tr>
                                                             <td className="min-w-[100px] border px-2 py-3 border-black text-start bg-gray-100">Tujuan OPD</td>
                                                             <td className="min-w-[300px] border px-2 py-3 border-black text-start bg-gray-100">{item.tujuan}</td>

@@ -60,7 +60,11 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
         <head>
           <title>KAK Pemda</title>
           <meta name="description" content="Aplikasi Kinerja Pembangunan Daerah Pemda" />
-          <link rel="icon" href="/universal.png" />
+          <link 
+            rel="icon" 
+            href="/logo.png" 
+            // href="/universal.png" 
+          />
         </head>
         <body>
           <NextTopLoader 
@@ -77,7 +81,11 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
       <head>
         <title>KAK Pemda</title>
         <meta name="description" content="Aplikasi KAK" />
-        <link rel="icon" href="/universal.png" />
+        <link 
+          rel="icon" 
+          href="/logo.png" 
+          // href="/universal.png" 
+        />
       </head>
       <body className="flex">
         <NextTopLoader 

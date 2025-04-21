@@ -151,13 +151,11 @@ export const FormUserOpd = () => {
                 body: JSON.stringify(formData),
             });
             const data = await response.json();
-            if(data.code == 201){
+            if(data.code === 201 || data.code === 200){
                 AlertNotification("Berhasil", "Berhasil menambahkan data user", "success", 1000);
                 router.push("/useropd");
-            } else if(data.code == 400) {
-                AlertNotification("Gagal", "NIP sudah terdaftar sebagai user / terdapat kesamaan NIP dengan pegawai lain", "error", 3000, true);
             } else {
-                AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+                AlertNotification("Gagal", `${data.data}`, "error", 3000, true);
             }
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
@@ -188,6 +186,7 @@ export const FormUserOpd = () => {
                         <>
                             <Select
                                 {...field}
+                                ref={field.ref}
                                 placeholder="Pilih Pegawai untuk user"
                                 value={Nip}
                                 options={PegawaiOption}
@@ -212,6 +211,7 @@ export const FormUserOpd = () => {
                                     textAlign: 'start',
                                     })
                                 }}
+                                filterOption={() => false}
                             />
                         </>
                         )}
@@ -536,11 +536,13 @@ export const FormEditUserOpd = () => {
                 },
                 body: JSON.stringify(formData),
             });
-            if(response.ok){
+            const result = await response.json();
+            if(result.code === 200 || result.code === 201){
                 AlertNotification("Berhasil", "Berhasil mengubah data user", "success", 1000);
                 router.push("/useropd");
             } else {
-                AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
+                AlertNotification("Gagal", `${result.data}`, "error", 2000);
+                console.log(result);
             }
         } catch(err){
             AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);

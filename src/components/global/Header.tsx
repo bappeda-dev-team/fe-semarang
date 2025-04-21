@@ -147,7 +147,7 @@ const Header = () => {
                         isLoading={IsLoading}
                         isSearchable
                         onMenuOpen={() => {
-                            if (OpdOption.length == 0) {
+                            if (OpdOption.length === 0) {
                                 fetchOpd();
                             }
                         }}

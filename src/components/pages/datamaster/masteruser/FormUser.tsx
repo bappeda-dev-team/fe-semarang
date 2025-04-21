@@ -256,6 +256,7 @@ export const FormUser = () => {
                                     textAlign: 'start',
                                     })
                                 }}
+                                filterOption={() => false}
                             />
                         </>
                         )}

@@ -277,7 +277,7 @@ const Table = () => {
                         <tr className="bg-[#99CEF5] text-white">
                             <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">NIP</th>
-                            {/* <th className="border-r border-b px-6 py-3 min-w-[200px]">Email</th> */}
+                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Email</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Status</th>
                             <th className="border-r border-b px-6 py-3 min-w-[300px]">Roles</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</th>
@@ -295,7 +295,7 @@ const Table = () => {
                         <tr key={data.id}>
                             <td className="border-r border-b px-6 py-4">{index + 1}</td>
                             <td className="border-r border-b px-6 py-4">{data.nip? data.nip : "-"}</td>
-                            {/* <td className="border-r border-b px-6 py-4 text-center">{data.email ? data.email : "-"}</td> */}
+                            <td className="border-r border-b px-6 py-4 text-center">{data.email ? data.email : "-"}</td>
                             <td className="border-r border-b px-6 py-4 text-center">{data.is_active === true ? 'Aktif' : 'tidak aktif'}</td>
                             {data.role ? 
                                 <td className="border-r border-b px-6 py-4 text-center">

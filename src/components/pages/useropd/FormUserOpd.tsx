@@ -107,13 +107,16 @@ export const FormUserOpd = () => {
         if(!response.ok){
           throw new Error('cant fetch data opd');
         }
-        console.log(kode_opd);
         const data = await response.json();
-        const pegawai = data.data.map((item: any) => ({
-          value : item.nip,
-          label : item.nama_pegawai,
-        }));
-        setPegawaiOption(pegawai);
+        if(data.code === 200){
+            const pegawai = data.data.map((item: any) => ({
+              value : item.nip,
+              label : item.nama_pegawai,
+            }));
+            setPegawaiOption(pegawai);
+        } else {
+            console.log(data.data);
+        }
       } catch (err){
         console.log('gagal mendapatkan data pegawai');
       } finally {
@@ -211,7 +214,6 @@ export const FormUserOpd = () => {
                                     textAlign: 'start',
                                     })
                                 }}
-                                filterOption={() => false}
                             />
                         </>
                         )}

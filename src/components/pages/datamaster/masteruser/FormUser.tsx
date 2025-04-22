@@ -165,11 +165,11 @@ export const FormUser = () => {
                 body: JSON.stringify(formData),
             });
             const data = await response.json();
-            if(data.code == 201){
+            if(data.code == 201 || data.code === 200){
                 AlertNotification("Berhasil", "Berhasil menambahkan data user", "success", 1000);
                 router.push("/DataMaster/masteruser");
             } else if(data.code == 400){
-                AlertNotification("Gagal", "NIP sudah terdaftar sebagai user / terdapat kesamaan NIP dengan pegawai lain", "error", 3000, true);
+                AlertNotification("Gagal", `${data.data}`, "error", 3000, true);
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }
@@ -582,9 +582,12 @@ export const FormEditUser = () => {
                 },
                 body: JSON.stringify(formData),
             });
-            if(response.ok){
+            const result = await response.json();
+            if(result.code === 200 || result.code === 201){
                 AlertNotification("Berhasil", "Berhasil mengubah data user", "success", 1000);
                 router.push("/DataMaster/masteruser");
+            } else if(result.code === 400) {
+                AlertNotification("Gagal", `${result.data}`, "error", 2000);
             } else {
                 AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
             }

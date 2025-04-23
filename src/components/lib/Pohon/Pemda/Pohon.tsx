@@ -14,6 +14,7 @@ interface pohon {
     deleteTrigger: () => void;
     user?: string;
     show_all?: boolean;
+    tahun? : string;
     set_show_all: () => void;
 }
 
@@ -25,7 +26,7 @@ interface Review {
     nama_pegawai: string;
 }
 
-export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, set_show_all }) => {
+export const Pohon: React.FC<pohon> = ({ tema, tahun, deleteTrigger, user, show_all, set_show_all }) => {
 
     const [childPohons, setChildPohons] = useState(tema.childs || []);
     const [PutPohons, setPutPohons] = useState(tema.childs || []);
@@ -515,6 +516,7 @@ export const Pohon: React.FC<pohon> = ({ tema, deleteTrigger, user, show_all, se
                                                 isOpen={IsClone}
                                                 onClose={() => setIsClone(false)}
                                                 nama_pohon={tema.tema}
+                                                tahun={tahun || "0"}
                                                 id={tema.id}
                                                 onSuccess={deleteTrigger}
                                             />

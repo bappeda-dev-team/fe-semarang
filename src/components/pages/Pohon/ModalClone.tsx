@@ -3,14 +3,10 @@
 import { useState, useEffect } from "react";
 import { Controller, SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import { ButtonSky, ButtonRed } from '@/components/global/Button';
-import { AlertNotification } from "@/components/global/Alert";
+import { AlertNotification, AlertQuestion2 } from "@/components/global/Alert";
 import { getOpdTahun, getToken } from "@/components/lib/Cookie";
 import Select from 'react-select';
 
-interface OptionType {
-    value: number;
-    label: string;
-}
 interface OptionTypeString {
     value: string;
     label: string;
@@ -22,22 +18,17 @@ interface modal {
     id?: number;
     nama_pohon?: string;
     nama_opd?: string;
+    kode_opd?: string;
+    tahun: string;
     onSuccess: () => void;
 }
 interface FormValue {
-    tahun_awal: number;
-    tahun_tujuan: OptionType;
+    kode_opd: string;
+    tahun_sumber: string;
+    tahun_tujuan: OptionTypeString;
 }
-interface indikator {
-    nama_indikator: string;
-    targets: target[];
-}
-type target = {
-    target: string;
-    satuan: string;
-};
 
-export const ModalClone: React.FC<modal> = ({ isOpen, onClose, onSuccess, id, nama_pohon, nama_opd, jenis }) => {
+export const ModalClone: React.FC<modal> = ({ isOpen, onClose, onSuccess, id, tahun, nama_pohon, kode_opd, nama_opd, jenis }) => {
 
     const {
         control,
@@ -45,23 +36,10 @@ export const ModalClone: React.FC<modal> = ({ isOpen, onClose, onSuccess, id, na
         formState: { errors },
     } = useForm<FormValue>();
 
-    const [TahunTarget, setTahunTarget] = useState<OptionType | null>(null);
+    const [TahunTarget, setTahunTarget] = useState<OptionTypeString | null>(null);
 
     const [Proses, setProses] = useState<boolean>(false);
-
-    const [Tahun, setTahun] = useState<any>(null);
     const token = getToken();
-
-    useEffect(() => {
-        const data = getOpdTahun();
-        if(data.tahun){
-            const tahun = {
-                value: data.tahun.value,
-                label: data.tahun.label,
-            }
-            setTahun(tahun);
-        }
-    },[])
 
     const handleClose = () => {
         setTahunTarget(null);
@@ -69,56 +47,85 @@ export const ModalClone: React.FC<modal> = ({ isOpen, onClose, onSuccess, id, na
     }
 
     const tahunOption = [
-        { label: "2019", value: 2019 },
-        { label: "2020", value: 2020 },
-        { label: "2021", value: 2021 },
-        { label: "2022", value: 2022 },
-        { label: "2023", value: 2023 },
-        { label: "2024", value: 2024 },
-        { label: "2025", value: 2025 },
-        { label: "2026", value: 2026 },
-        { label: "2027", value: 2027 },
-        { label: "2028", value: 2028 },
-        { label: "2029", value: 2029 },
-        { label: "2030", value: 2030 },
+        { label: "2019", value: "2019" },
+        { label: "2020", value: "2020" },
+        { label: "2021", value: "2021" },
+        { label: "2022", value: "2022" },
+        { label: "2023", value: "2023" },
+        { label: "2024", value: "2024" },
+        { label: "2025", value: "2025" },
+        { label: "2026", value: "2026" },
+        { label: "2027", value: "2027" },
+        { label: "2028", value: "2028" },
+        { label: "2029", value: "2029" },
+        { label: "2030", value: "2030" },
     ];
 
-    const onSubmit: SubmitHandler<FormValue> = async (data) => {
+    const clonePokin = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         const formData = {
             //key : value
-            id: id,
-            tahun_awal: Tahun?.value,
+            kode_opd: kode_opd,
+            tahun_sumber: String(tahun),
             tahun_tujuan: TahunTarget?.value,
-            jenis: jenis,
         };
-        if (Tahun?.value === TahunTarget?.value) {
+        // console.log(formData);
+        try {
+            setProses(true);
+            const response = await fetch(`${API_URL}/pohon_kinerja_opd/clone`, {
+                method: "POST",
+                headers: {
+                    Authorization: `${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            const result = await response.json();
+            if (result.code === 200 || result.code === 201) {
+                AlertNotification("Berhasil", "", "success", 1000);
+                handleClose();
+            } else {
+                AlertNotification(`Gagal`, `${result.data}`, "error", 2000);
+                console.log(result);
+            }
+        } catch (err) {
+            AlertNotification("Gagal", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
+        } finally {
+            setProses(false);
+        }
+    }
+
+    const onSubmit: SubmitHandler<FormValue> = async () => {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL;
+        
+        if (Number(tahun) === Number(TahunTarget?.value)) {
             AlertNotification("Tahun Sekarang sama dengan Tahun Tujuan", "", "warning", 2000);
         } else if (TahunTarget?.value === undefined) {
             AlertNotification("Tahun Tujuan Wajib Diisi", "", "warning", 2000);
         } else {
-            AlertNotification("Fitur Clone dalam pengembangan", "", "error", 2000);
-            // console.log(formData);
-            // try{
-            //     const response = await fetch(`${API_URL}/pohon_kinerja_opd/pindah_parent/${id}`, {
-            //         method: "POST",
-            //         headers: {
-            //             Authorization: `${token}`,
-            //             "Content-Type" : "application/json",
-            //         },
-            //         body: JSON.stringify(formData),
-            //     });
-            //     if(response.ok){
-            //         AlertNotification("Berhasil", "Berhasil Pindah Pohon", "success", 1000);
-            //         onClose();
-            //         onSuccess();
-            //     } else {
-            //         AlertNotification("Gagal", "terdapat kesalahan pada backend / database server", "error", 2000);
-            //     }
-            // } catch(err){
-            //     AlertNotification("Error", "cek koneksi internet/terdapat kesalahan pada database server", "error", 2000);
-            //     console.error(err);
-            // }
+            // CHECKER TRUE FALSE
+            try {
+                const response = await fetch(`${API_URL}/pohon_kinerja_opd/check_pokin/${kode_opd}/${TahunTarget?.value}`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                const hasil_check = await response.json();
+                if (hasil_check.data === true) {
+                    AlertQuestion2("Peringatan", `data pohon di tahun ${TahunTarget?.value} sudah ada (cloning tidak akan menghapus data pohon yang sudah ada di tahun ${TahunTarget?.value}), lanjutkan cloning?`, "question", "Clone", "Batal").then((result) => {
+                        if (result.isConfirmed) {
+                            clonePokin();
+                        }
+                    });
+                } else {
+                    clonePokin();
+                }
+            } catch (err) {
+                AlertNotification("Error at Checker Pokin", "terdapat kesalahan pada backend / database server, cek koneksi internet", "error", 2000);
+                console.error(err);
+            }
         }
     };
 
@@ -165,11 +172,11 @@ export const ModalClone: React.FC<modal> = ({ isOpen, onClose, onSuccess, id, na
                             >
                                 Tahun Sekarang
                             </label>
-                            <div className="border px-4 py-2 rounded-lg">{Tahun?.value}</div>
+                            <div className="border px-4 py-2 rounded-lg">{tahun}</div>
                         </div>
                         <div className="flex flex-col justify-center pr-2 pb-5">
                             <label
-                                className="uppercase text-xs font-medium text-gray-700 my-2"
+                                className="uppercase text-xs font-bold text-gray-700 my-2"
                                 htmlFor="tahun_tujuan"
                             >
                                 Tahun Tujuan Clone
@@ -199,8 +206,8 @@ export const ModalClone: React.FC<modal> = ({ isOpen, onClose, onSuccess, id, na
                                                     borderRadius: '8px',
                                                     textAlign: 'start',
                                                 }),
-                                                menuPortal: (base) => ({ 
-                                                    ...base, zIndex: 9999 
+                                                menuPortal: (base) => ({
+                                                    ...base, zIndex: 9999
                                                 })
                                             }}
                                         />
@@ -208,10 +215,10 @@ export const ModalClone: React.FC<modal> = ({ isOpen, onClose, onSuccess, id, na
                                 )}
                             />
                         </div>
-                        <ButtonSky type="submit" className="w-full my-3">
+                        <ButtonSky type="submit" className="w-full my-3" disabled={Proses}>
                             Simpan
                         </ButtonSky>
-                        <ButtonRed className="w-full my-3" onClick={handleClose}>
+                        <ButtonRed className="w-full my-3" onClick={handleClose} disabled={Proses}>
                             Batal
                         </ButtonRed>
                     </form>

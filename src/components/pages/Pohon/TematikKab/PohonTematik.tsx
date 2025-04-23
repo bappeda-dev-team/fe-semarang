@@ -2,7 +2,7 @@ import '@/components/pages/Pohon/treeflex.css'
 import { useState, useEffect, useRef } from 'react';
 import { LoadingBeat } from '@/components/global/Loading';
 import { Pohon } from '@/components/lib/Pohon/Pemda/Pohon';
-import { getToken, getUser } from '@/components/lib/Cookie';
+import { getOpdTahun, getToken, getUser } from '@/components/lib/Cookie';
 
 interface pohontematik {
     id: number;
@@ -42,13 +42,22 @@ const PohonTematik = ({ id, show_all, set_show_all }: pohontematik) => {
     const [Deleted, setDeleted] = useState<boolean>(false);
     const token = getToken();
     const [User, setUser] = useState<any>(null);
+    const [Tahun, setTahun] = useState<any>(null);
 
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         const fetchUser = getUser();
+        const data = getOpdTahun();
         if (fetchUser) {
             setUser(fetchUser.user);
+        }
+        if(data.tahun){
+            const tahun = {
+                value: data.tahun.value,
+                label: data.tahun.label,
+            }
+            setTahun(tahun);
         }
     }, [])
 
@@ -97,6 +106,7 @@ const PohonTematik = ({ id, show_all, set_show_all }: pohontematik) => {
                 <Pohon
                     user={User?.roles}
                     tema={Pokin}
+                    tahun={Tahun?.value}
                     deleteTrigger={() => setDeleted((prev) => !prev)}
                     show_all={show_all}
                     set_show_all={set_show_all}

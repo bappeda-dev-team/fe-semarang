@@ -403,12 +403,12 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess, is
                                 {ButtonDetailPohonPemda ? 
                                     <div className="flex items-center justify-center gap-1">
                                         <TbEye />
-                                        Sembunyikan Detail Pohon Pemda
+                                        Sembunyikan Asal Relasi Pohon
                                     </div>
                                     :
                                     <div className="flex items-center justify-center gap-1">
                                         <TbEyeClosed />
-                                        Tampilkan Detail Pohon Pemda
+                                        Tampilkan Asal Relasi Pohon
                                     </div>
                                 }
                             </ButtonBlackBorder>

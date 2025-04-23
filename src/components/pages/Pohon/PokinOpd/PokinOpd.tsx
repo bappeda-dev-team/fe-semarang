@@ -72,6 +72,10 @@ const PokinOpd = () => {
     const [TriggerAfterPokinOutside, setTriggerAfterPokinOutside] = useState<boolean>(false);
     const [LevelPemda, setLevelPemda] = useState<number>(0);
 
+    const [StrategicPemdaLength, setStrategicPemdaLenght] = useState<number>(0);
+    const [TacticalPemdaLength, setTacticalPemdaLenght] = useState<number>(0);
+    const [OperationalPemdaLength, setOperationalPemdaLenght] = useState<number>(0);
+
     //pohon cross opd lain
     const [PohonCrosscutting, setPohonCrosscutting] = useState<boolean>(false);
     const [CrossPending, setCrossPending] = useState<number | null>(null);
@@ -271,7 +275,7 @@ const PokinOpd = () => {
                     setJumlahPemdaOperational(Operational);
                 }
             } catch (err) {
-                setError('gagal mendapatkan data, terdapat kesalahan backend/server saat mengambil data pohon kinerja perangkat daerah');
+                setError('gagal mendapatkan data status pohon pemda, terdapat kesalahan backend/server saat mengambil data pohon kinerja perangkat daerah');
                 console.error(err);
             } finally {
                 setLoading(false);
@@ -297,7 +301,35 @@ const PokinOpd = () => {
                     setCrossDitolak(ditolak.length);
                 }
             } catch (err) {
-                setError('gagal mendapatkan data, terdapat kesalahan backend/server saat mengambil data pohon kinerja perangkat daerah');
+                setError('gagal mendapatkan data status pohon crosscutting, terdapat kesalahan backend/server saat mengambil data pohon kinerja perangkat daerah');
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+            //FETCH JUMLAH POHON PEMDA YANG DITERIMA
+            try {
+                const url = User?.roles == 'super_admin' ? `pohon_kinerja_opd/count_pokin_pemda/${SelectedOpd?.value}/${Tahun?.value}` : `pohon_kinerja_opd/count_pokin_pemda/${User?.kode_opd}/${Tahun?.value}`;
+                const response = await fetch(`${API_URL}/${url}`, {
+                    headers: {
+                        Authorization: `${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error('terdapat kesalahan di koneksi backend');
+                }
+                const result = await response.json();
+                const data = result.data.detail_level || [];
+                if (data.length !== 0) {
+                        // console.log('strategic : ', data[0].jumlah_pemda, 'tactical : ', data[0].jumlah_pemda, 'operatiocal : ', data[0].jumlah_pemda);
+                        setStrategicPemdaLenght(data[0].jumlah_pemda);
+                        setTacticalPemdaLenght(data[1].jumlah_pemda);
+                        setOperationalPemdaLenght(data[2].jumlah_pemda);
+                } else {
+                    return null;
+                }
+            } catch (err) {
+                setError('gagal mendapatkan data pohon pemda yang diterima, terdapat kesalahan backend/server saat mengambil data pohon kinerja perangkat daerah');
                 console.error(err);
             } finally {
                 setLoading(false);
@@ -419,7 +451,7 @@ const PokinOpd = () => {
                                             </td>
                                             <td className='flex justify-center px-2 py-1 text-center w-full'>
                                                 <h1 className="flex items-center gap-1 font-semibold">
-                                                    0
+                                                    {StrategicPemdaLength || 0}
                                                     <TbCheck />
                                                 </h1>
                                             </td>
@@ -450,7 +482,7 @@ const PokinOpd = () => {
                                             </td>
                                             <td className='flex justify-center px-2 py-1 text-center w-full'>
                                                 <h1 className="flex items-center gap-1 font-semibold">
-                                                    0
+                                                    {TacticalPemdaLength || 0}
                                                     <TbCheck />
                                                 </h1>
                                             </td>
@@ -481,7 +513,7 @@ const PokinOpd = () => {
                                             </td>
                                             <td className='flex justify-center px-2 py-1 text-center w-full'>
                                                 <h1 className="flex gap-1 items-center font-semibold">
-                                                    0
+                                                    {OperationalPemdaLength || 0}
                                                     <TbCheck />
                                                 </h1>
                                             </td>
@@ -640,7 +672,9 @@ const PokinOpd = () => {
                                             isOpen={Clone}
                                             onClose={() => setClone(false)}
                                             jenis='opd'
+                                            tahun={Tahun?.value}
                                             nama_opd={SelectedOpd?.label}
+                                            kode_opd={SelectedOpd?.value}
                                             onSuccess={() => setTriggerAfterPokinOutside((prev) => !prev)}
                                         />
                                     </div>

@@ -10,6 +10,7 @@ interface User {
     id: string;
     nip: string;
     email: string;
+    nama_pegawai: string;
     is_active: boolean;
     role: roles[];
 }
@@ -173,13 +174,14 @@ const Table = () => {
             <div className="overflow-auto m-2 rounded-t-xl border">
                 <table className="w-full">
                     <thead>
-                        <tr className="bg-[#99CEF5] text-white">
+                        <tr className="bg-emerald-500 text-white">
                             <th className="border-r border-b px-6 py-3 min-w-[50px]">No</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[300px]">Nama</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">NIP</th>
                             <th className="border-r border-b px-6 py-3 min-w-[200px]">Email</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Status</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[300px]">Roles</th>
-                            <th className="border-r border-b px-6 py-3 min-w-[200px]">Aksi</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[100px]">Status</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[100px]">Roles</th>
+                            <th className="border-r border-b px-6 py-3 min-w-[100px]">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -192,8 +194,9 @@ const Table = () => {
                     :
                         User.map((data, index) => (
                         <tr key={data.id}>
-                            <td className="border-r border-b px-6 py-4">{index + 1}</td>
-                            <td className="border-r border-b px-6 py-4">{data.nip? data.nip : "-"}</td>
+                            <td className="border-r border-b px-6 py-4 text-center">{index + 1}</td>
+                            <td className="border-r border-b px-6 py-4">{data.nama_pegawai? data.nama_pegawai : "-"}</td>
+                            <td className="border-r border-b px-6 py-4 text-center">{data.nip? data.nip : "-"}</td>
                             <td className="border-r border-b px-6 py-4 text-center">{data.email ? data.email : "-"}</td>
                             <td className="border-r border-b px-6 py-4 text-center">{data.is_active === true ? 'Aktif' : 'tidak aktif'}</td>
                             {data.role ? 

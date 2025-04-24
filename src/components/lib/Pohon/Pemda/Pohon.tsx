@@ -595,53 +595,63 @@ export const Pohon: React.FC<pohon> = ({ tema, tahun, deleteTrigger, user, show_
             }
             <ul style={{ display: Show ? '' : 'none' }}>
                 {childPohons.map((dahan: any, index: any) => (
-                    <Pohon
-                        user={user}
-                        tema={dahan}
-                        key={index}
-                        deleteTrigger={deleteTrigger}
-                        show_all={show_all}
-                        set_show_all={set_show_all}
-                    />
+                    <React.Fragment key={index}>
+                        <Pohon
+                            user={user}
+                            tema={dahan}
+                            key={index}
+                            deleteTrigger={deleteTrigger}
+                            show_all={show_all}
+                            set_show_all={set_show_all}
+                        />
+                    </React.Fragment>
                 ))}
                 {strategicPohons.map((dahan: any, index: any) => (
-                    <Pohon
-                        user={user}
-                        tema={dahan}
-                        key={index}
-                        deleteTrigger={deleteTrigger}
-                        show_all={show_all}
-                        set_show_all={set_show_all}
-                    />
+                    <React.Fragment key={index}>
+                        <Pohon
+                            user={user}
+                            tema={dahan}
+                            key={index}
+                            deleteTrigger={deleteTrigger}
+                            show_all={show_all}
+                            set_show_all={set_show_all}
+                        />
+                    </React.Fragment>
                 ))}
-                {formList.map((formId) => (
-                    <FormPohonPemda
-                        level={tema.level_pohon}
-                        id={tema.id}
-                        key={formId}
-                        formId={formId}
-                        pokin={'pemda'}
-                        onCancel={() => setFormList(formList.filter((id) => id !== formId))}
-                    />
+                {formList.map((formId: number) => (
+                    <React.Fragment key={formId}>
+                        <FormPohonPemda
+                            level={tema.level_pohon}
+                            id={tema.id}
+                            key={formId}
+                            formId={formId}
+                            pokin={'pemda'}
+                            onCancel={() => setFormList(formList.filter((id) => id !== formId))}
+                        />
+                    </React.Fragment>
                 ))}
-                {FormStrategic.map((formId) => (
-                    <FormPohonPemda
-                        level={3}
-                        id={tema.id}
-                        key={formId}
-                        formId={formId}
-                        pokin={'pemda'}
-                        onCancel={() => setFormStrategic(FormStrategic.filter((id) => id !== formId))}
-                    />
+                {FormStrategic.map((formId: number) => (
+                    <React.Fragment key={formId}>
+                        <FormPohonPemda
+                            level={3}
+                            id={tema.id}
+                            key={formId}
+                            formId={formId}
+                            pokin={'pemda'}
+                            onCancel={() => setFormStrategic(FormStrategic.filter((id) => id !== formId))}
+                        />
+                    </React.Fragment>
                 ))}
-                {PutList.map((formId) => (
-                    <FormAmbilPohon
-                        level={tema.level_pohon}
-                        id={tema.id}
-                        key={formId}
-                        formId={formId}
-                        onCancel={() => setPutList(PutList.filter((id) => id !== formId))}
-                    />
+                {PutList.map((formId: number) => (
+                    <React.Fragment key={formId}>
+                        <FormAmbilPohon
+                            level={tema.level_pohon}
+                            id={tema.id}
+                            key={formId}
+                            formId={formId}
+                            onCancel={() => setPutList(PutList.filter((id) => id !== formId))}
+                        />
+                    </React.Fragment>
                 ))}
             </ul>
             <ModalCetak
@@ -1120,54 +1130,64 @@ export const PohonEdited: React.FC<pohon> = ({ tema, deleteTrigger, user, show_a
                 </>
             }
             <ul style={{ display: Show ? '' : 'none' }}>
-                {childPohons.map((dahan: any, index: any) => (
-                    <Pohon
-                        user={user}
-                        tema={dahan}
-                        key={index}
-                        deleteTrigger={deleteTrigger}
-                        show_all={show_all}
-                        set_show_all={set_show_all}
-                    />
+                {childPohons.map((dahan: any, index: number) => (
+                    <React.Fragment key={index}>
+                        <Pohon
+                            user={user}
+                            tema={dahan}
+                            key={index}
+                            deleteTrigger={deleteTrigger}
+                            show_all={show_all}
+                            set_show_all={set_show_all}
+                        />
+                    </React.Fragment>
                 ))}
-                {strategicPohons.map((dahan: any, index: any) => (
-                    <Pohon
-                        user={user}
-                        tema={dahan}
-                        key={index}
-                        deleteTrigger={deleteTrigger}
-                        show_all={show_all}
-                        set_show_all={set_show_all}
-                    />
+                {strategicPohons.map((dahan: any, index: number) => (
+                    <React.Fragment key={index}>
+                        <Pohon
+                            user={user}
+                            tema={dahan}
+                            key={index}
+                            deleteTrigger={deleteTrigger}
+                            show_all={show_all}
+                            set_show_all={set_show_all}
+                        />
+                    </React.Fragment>
                 ))}
                 {formList.map((formId) => (
-                    <FormPohonPemda
-                        level={tema.level_pohon}
-                        id={tema.id}
-                        key={formId}
-                        formId={formId}
-                        pokin={'pemda'}
-                        onCancel={() => setFormList(formList.filter((id) => id !== formId))}
-                    />
+                    <React.Fragment key={formId}>
+                        <FormPohonPemda
+                            level={tema.level_pohon}
+                            id={tema.id}
+                            key={formId}
+                            formId={formId}
+                            pokin={'pemda'}
+                            onCancel={() => setFormList(formList.filter((id) => id !== formId))}
+                        />
+                    </React.Fragment>
                 ))}
                 {FormStrategic.map((formId) => (
-                    <FormPohonPemda
-                        level={3}
-                        id={tema.id}
-                        key={formId}
-                        formId={formId}
-                        pokin={'pemda'}
-                        onCancel={() => setFormStrategic(FormStrategic.filter((id) => id !== formId))}
-                    />
+                    <React.Fragment key={formId}>
+                        <FormPohonPemda
+                            level={3}
+                            id={tema.id}
+                            key={formId}
+                            formId={formId}
+                            pokin={'pemda'}
+                            onCancel={() => setFormStrategic(FormStrategic.filter((id) => id !== formId))}
+                        />
+                    </React.Fragment>
                 ))}
                 {PutList.map((formId) => (
-                    <FormAmbilPohon
-                        level={tema.level_pohon}
-                        id={tema.id}
-                        key={formId}
-                        formId={formId}
-                        onCancel={() => setPutList(PutList.filter((id) => id !== formId))}
-                    />
+                    <React.Fragment key={formId}>
+                        <FormAmbilPohon
+                            level={tema.level_pohon}
+                            id={tema.id}
+                            key={formId}
+                            formId={formId}
+                            onCancel={() => setPutList(PutList.filter((id) => id !== formId))}
+                        />
+                    </React.Fragment>
                 ))}
             </ul>
         </li>

@@ -24,8 +24,10 @@ interface Target {
 interface Indikator {
     id: string;
     indikator: string;
-    rumus_perhitungan: string;
-    sumber_data: string;
+    manual_ik: {
+        formula: string;
+        sumber_data: string;
+    }
     target: Target[];
 }
 
@@ -370,8 +372,8 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                                                         item.indikator.map((i: Indikator) => (
                                                             <tr key={i.id}>
                                                                 <td className="border-x border-b border-emerald-500 px-6 py-6">{i.indikator || "-"}</td>
-                                                                <td className="border-x border-b border-emerald-500 px-6 py-6">{i.rumus_perhitungan || "-"}</td>
-                                                                <td className="border-x border-b border-emerald-500 px-6 py-6">{i.sumber_data || "-"}</td>
+                                                                <td className="border-x border-b border-emerald-500 px-6 py-6">{i.manual_ik.formula || "-"}</td>
+                                                                <td className="border-x border-b border-emerald-500 px-6 py-6">{i.manual_ik.sumber_data || "-"}</td>
                                                                 {i.target.map((t: Target) => (
                                                                     <React.Fragment key={t.id}>
                                                                         <td className="border-x border-b border-emerald-500 px-6 py-6 text-center">{t.target || "-"}</td>

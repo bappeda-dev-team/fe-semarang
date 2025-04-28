@@ -32,13 +32,15 @@ interface FormValue {
 }
 
 interface indikator {
-    id_indikator?: string;
+    id?: string;
     indikator: string;
     rumus_perhitungan: string;
     sumber_data: string;
     target: target[];
 }
 type target = {
+    id_target: string;
+    id_indikator: string;
     target: string;
     satuan: string;
     tahun?: string;
@@ -115,7 +117,7 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
                 }
                 reset({
                     indikator: hasil.indikator?.map((item: indikator) => ({
-                        id_indikator: item.id_indikator,
+                        id: item.id,
                         indikator: item.indikator,
                         rumus_perhitungan: item.rumus_perhitungan,
                         sumber_data: item.sumber_data,
@@ -128,7 +130,7 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
 
                 // Replace the fields to avoid duplication
                 replace(hasil.indikator.map((item: indikator) => ({
-                    id_indikator: item.id_indikator,
+                    id: item.id,
                     indikator: item.indikator,
                     rumus_perhitungan: item.rumus_perhitungan,
                     sumber_data: item.sumber_data,
@@ -218,7 +220,7 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
             kode_opd: kode_opd,
             pegawai_id: Pelaksana?.value,
             indikator: data.indikator.map((ind) => ({
-                id_indikator: ind.id_indikator,
+                id_indikator: ind.id,
                 nama_indikator: ind.indikator,
                 rumus_perhitungan: ind.rumus_perhitungan,
                 sumber_data: ind.sumber_data,
@@ -291,7 +293,7 @@ export const ModalSasaranOpd: React.FC<modal> = ({ isOpen, onClose, id, id_pohon
                 <div className="fixed inset-0 bg-black opacity-30" onClick={handleClose}></div>
                 <div className={`bg-white rounded-lg p-8 z-10 w-5/6 max-h-[80%] overflow-auto`}>
                     <div className="w-max-[500px] py-2 border-b">
-                        <h1 className="text-xl uppercase text-center">{metode === 'baru' ? "Tambah" : "Edit"} Sasaran OPD</h1>
+                        <h1 className="text-xl uppercase text-center">{metode === 'baru' ? "Tambah" : "Edit"} Sasaran OPD {id}</h1>
                     </div>
                     <form
                         onSubmit={handleSubmit(onSubmit)}

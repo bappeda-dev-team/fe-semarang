@@ -71,7 +71,6 @@ const Table = () => {
                     setJabatan(data);
                 }
                 setJabatan(data);
-                console.log(`${SelectedOpd?.value}`)
             } catch(err){
                 setError(true);
                 console.error(err)

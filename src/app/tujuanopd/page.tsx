@@ -90,6 +90,7 @@ const TujuanOpd = () => {
                 </div>
                 {Periode ?
                     <Table
+                        tipe="opd"
                         id_periode={Periode?.value}
                         tahun_awal={Periode?.tahun_awal ? Periode?.tahun_awal : ""}
                         tahun_akhir={Periode?.tahun_akhir ? Periode?.tahun_akhir : ""}

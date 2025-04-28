@@ -7,7 +7,7 @@ import { FiHome } from 'react-icons/fi';
 import { ButtonSkyBorder } from "@/components/global/Button";
 import { TbCirclePlus } from "react-icons/tb";
 import { AlertNotification } from '@/components/global/Alert';
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { TahunNull } from '@/components/global/OpdTahunNull';
 import { LoadingButtonClip } from '@/components/global/Loading';
 
@@ -21,11 +21,11 @@ const RencanaKinerja = () => {
     useEffect(() => {
         const fetchUser = getUser();
         const data = getOpdTahun();
-        if(fetchUser){
+        if (fetchUser) {
             setUser(fetchUser.user);
         }
-        if(data){
-            if(data.tahun){
+        if (data) {
+            if (data.tahun) {
                 const tahun_value = {
                     value: data.tahun.value,
                     label: data.tahun.label,
@@ -33,18 +33,18 @@ const RencanaKinerja = () => {
                 setTahun(tahun_value);
             }
         }
-    },[])
+    }, [])
 
     const TambahRencanaKinerja = () => {
-        if(Tahun?.value == undefined){
+        if (Tahun?.value == undefined) {
             AlertNotification("Pilih Tahun", "Pilih tahun di header terlebih dahulu", "warning", 1000);
         } else {
             setLoading(true);
             router.push('/rencanakinerja/tambah');
         }
     }
-    if(Tahun?.value == undefined){
-        return(
+    if (Tahun?.value == undefined) {
+        return (
             <>
                 <div className="mt-3 rounded-xl shadow-lg border">
                     <TahunNull />
@@ -53,7 +53,7 @@ const RencanaKinerja = () => {
         )
     }
 
-    return(
+    return (
         <>
             <div className="flex items-center">
                 <a href="/" className="mr-1"><FiHome /></a>
@@ -63,19 +63,22 @@ const RencanaKinerja = () => {
             <div className="mt-3 rounded-xl shadow-lg border">
                 <div className="flex items-center justify-between border-b px-5 py-5">
                     <div className="flex flex-col">
-                        <h1 className="font-bold text-2xl uppercase">rencana kinerja {Tahun?.label}</h1>
+                        <div className="flex items-center gap-1">
+                            <h1 className="font-bold text-2xl uppercase">Rencana Kinerja</h1>
+                            <h1 className="font-bold text-2xl uppercase text-green-500">{Tahun?.label}</h1>
+                        </div>
                         {User?.roles != 'level_1' &&
-                            <ButtonSkyBorder 
+                            <ButtonSkyBorder
                                 className="flex items-center justify-center"
                                 onClick={TambahRencanaKinerja}
                                 disabled={Loading}
                             >
-                                {Loading ? 
-                                    <LoadingButtonClip className="mr-1"/>
-                                :
-                                    <TbCirclePlus className="mr-1"/>
+                                {Loading ?
+                                    <LoadingButtonClip className="mr-1" />
+                                    :
+                                    <TbCirclePlus className="mr-1" />
                                 }
-                                Rencana kinerja baru
+                                Tambah Rencana kinerja
                             </ButtonSkyBorder>
                         }
                     </div>

@@ -58,6 +58,7 @@ interface Sasaran {
 }
 
 interface table {
+    tipe: "laporan" | "opd";
     id_periode: number
     tahun_awal: string;
     tahun_akhir: string;
@@ -65,7 +66,7 @@ interface table {
     tahun_list: string[];
 }
 
-const Table: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, tahun_list }) => {
+const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jenis, tahun_list }) => {
 
     const [Sasaran, setSasaran] = useState<Sasaran[]>([]);
 
@@ -250,7 +251,9 @@ const Table: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, ta
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[300px]">Strategic OPD</th>
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[300px]">Pemilik</th>
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[300px]">Sasaran OPD</th>
-                            <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Aksi</th>
+                            {tipe === "opd" &&
+                                <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[100px]">Aksi</th>
+                            }
                             <th rowSpan={2} className="border-r border-b px-6 py-3 min-w-[200px]">Indikator</th>
                             {tahun_list.map((item: any) => (
                                 <th key={item} colSpan={2} className="border-l border-b px-6 py-3 min-w-[100px]">{item}</th>
@@ -289,7 +292,7 @@ const Table: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, ta
                                             <td className="border-r border-b border-emerald-500 px-6 py-4" rowSpan={data.rencana_kinerja.length === 0 ? 2 : TotalRow}>
                                                 <div className="flex flex-col gap-2">
                                                     {data.nama_pohon || "-"}
-                                                    {hasPelaksana &&
+                                                    {(hasPelaksana && tipe === "opd") &&
                                                         <div className="flex items center gap-1 border-t border-emerald-500 pt-3">
                                                             <div className="flex flex-col justify-between  gap-2 h-full w-full">
                                                                 <button
@@ -327,30 +330,32 @@ const Table: React.FC<table> = ({ id_periode, tahun_awal, tahun_akhir, jenis, ta
                                                         <td className="border-x border-b border-emerald-500 px-6 py-6 h-[150px]" rowSpan={item.indikator.length !== 0 ? item.indikator.length + 1 : 2}>
                                                             {item.nama_rencana_kinerja || "-"} ({item.nip})
                                                         </td>
-                                                        <td className="border-x border-b border-emerald-500 px-6 py-6" rowSpan={item.indikator.length !== 0 ? item.indikator.length + 1 : 2}>
-                                                            <div className="flex flex-col justify-center items-center gap-2">
-                                                                <ButtonGreen
-                                                                    className="flex items-center gap-1 w-full"
-                                                                    onClick={() => {
-                                                                        handleModalEditSasaran(item.id, data.id, data.nama_pohon);
-                                                                        fetchOptionPelaksana(data.pelaksana);
-                                                                    }}
-                                                                >
-                                                                    <TbPencil />
-                                                                    Edit
-                                                                </ButtonGreen>
-                                                                <ButtonRed className="flex items-center gap-1 w-full" onClick={() => {
-                                                                    AlertQuestion("Hapus?", "Hapus Sasaran Pemda yang dipilih?", "question", "Hapus", "Batal").then((result) => {
-                                                                        if (result.isConfirmed) {
-                                                                            hapusSasaranOpd(item.id);
-                                                                        }
-                                                                    });
-                                                                }}>
-                                                                    <TbTrash />
-                                                                    Hapus
-                                                                </ButtonRed>
-                                                            </div>
-                                                        </td>
+                                                        {tipe === "opd" &&
+                                                            <td className="border-x border-b border-emerald-500 px-6 py-6" rowSpan={item.indikator.length !== 0 ? item.indikator.length + 1 : 2}>
+                                                                <div className="flex flex-col justify-center items-center gap-2">
+                                                                    <ButtonGreen
+                                                                        className="flex items-center gap-1 w-full"
+                                                                        onClick={() => {
+                                                                            handleModalEditSasaran(item.id, data.id, data.nama_pohon);
+                                                                            fetchOptionPelaksana(data.pelaksana);
+                                                                        }}
+                                                                    >
+                                                                        <TbPencil />
+                                                                        Edit
+                                                                    </ButtonGreen>
+                                                                    <ButtonRed className="flex items-center gap-1 w-full" onClick={() => {
+                                                                        AlertQuestion("Hapus?", "Hapus Sasaran Pemda yang dipilih?", "question", "Hapus", "Batal").then((result) => {
+                                                                            if (result.isConfirmed) {
+                                                                                hapusSasaranOpd(item.id);
+                                                                            }
+                                                                        });
+                                                                    }}>
+                                                                        <TbTrash />
+                                                                        Hapus
+                                                                    </ButtonRed>
+                                                                </div>
+                                                            </td>
+                                                        }
                                                     </tr>
                                                     {/* INDIKATOR */}
                                                     {item.indikator.length === 0 ? (

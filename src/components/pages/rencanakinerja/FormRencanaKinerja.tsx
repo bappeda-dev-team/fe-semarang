@@ -466,6 +466,7 @@ export const FormRencanaKinerja = () => {
                         <ButtonSkyBorder
                             className="mb-3"
                             type="button"
+                            disabled={Proses}
                             onClick={() => append({ nama_indikator: "", targets: [{ target: "", satuan: "" }] })}
                         >
                             Tambah Indikator
@@ -480,7 +481,7 @@ export const FormRencanaKinerja = () => {
                                 "Simpan"
                             }
                         </ButtonGreen>
-                        <ButtonRed type="button" halaman_url="/rencanakinerja">
+                        <ButtonRed type="button" halaman_url="/rencanakinerja" disabled={Proses}>
                             Kembali
                         </ButtonRed>
                     </form>
@@ -1003,6 +1004,7 @@ export const FormEditRencanaKinerja = () => {
                         <ButtonSkyBorder
                             className="mb-3"
                             type="button"
+                            disabled={Proses}
                             onClick={() => append({ nama_indikator: "", targets: [{ target: "", satuan: "" }] })}
                         >
                             Tambah Indikator
@@ -1017,7 +1019,7 @@ export const FormEditRencanaKinerja = () => {
                                 "Simpan"
                             }
                         </ButtonGreen>
-                        <ButtonRed type="button" halaman_url="/rencanakinerja">
+                        <ButtonRed type="button" halaman_url="/rencanakinerja" disabled={Proses}>
                             Kembali
                         </ButtonRed>
                     </form>

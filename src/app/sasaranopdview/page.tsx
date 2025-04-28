@@ -2,8 +2,8 @@
 
 import { FiHome } from "react-icons/fi";
 import Table from "@/components/pages/sasaranopd/Table";
-import { getOpdTahun, getToken } from "@/components/lib/Cookie";
-import { useState, useEffect } from "react";
+import { getToken } from "@/components/lib/Cookie";
+import { useState } from "react";
 import Maintenance from "@/components/global/Maintenance";
 import Select from 'react-select';
 
@@ -17,25 +17,13 @@ interface Periode {
     tahun_list: string[];
 }
 
-const SasaranOpd = () => {
+const SasaranOpdView = () => {
 
-    const [Tahun, setTahun] = useState<any>(null);
     const token = getToken();
     const [Periode, setPeriode] = useState<Periode | null>(null);
     const [PeriodeOption, setPeriodeOption] = useState<Periode[]>([]);
 
     const [Loading, setLoading] = useState<boolean>(false);
-
-    useEffect(() => {
-        const data = getOpdTahun();
-        if (data.tahun) {
-            const tahun = {
-                value: data.tahun.value,
-                label: data.tahun.label,
-            }
-            setTahun(tahun);
-        }
-    }, []);
 
     const fetchPeriode = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -69,7 +57,8 @@ const SasaranOpd = () => {
         <>
             <div className="flex items-center">
                 <a href="/" className="mr-1"><FiHome /></a>
-                <p className="mr-1">/ Perencanaan OPD</p>
+                <p className="mr-1">/ Laporan</p>
+                <p className="mr-1">/ Renstra OPD</p>
                 <p className="mr-1">/ Sasaran OPD</p>
             </div>
             <div className="mt-3 rounded-xl shadow-lg border">
@@ -103,7 +92,7 @@ const SasaranOpd = () => {
                 </div>
                 {Periode ?
                     <Table
-                        tipe="opd"
+                        tipe="laporan"
                         id_periode={Periode?.value}
                         tahun_awal={Periode?.tahun_awal ? Periode?.tahun_awal : ""}
                         tahun_akhir={Periode?.tahun_akhir ? Periode?.tahun_akhir : ""}
@@ -123,4 +112,4 @@ const SasaranOpd = () => {
     )
 }
 
-export default SasaranOpd;
+export default SasaranOpdView;

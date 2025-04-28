@@ -9,8 +9,11 @@ import {
   TbBuildingEstate, TbFileChart, TbFileDots, TbFileCode, TbFileCode2, TbUsers, TbArrowUpFromArc,
   TbUser, TbHexagonLetterR, TbBinaryTree2, TbTarget, TbMapPin, TbChartBar, TbCalendarShare,
   TbMessageReport, TbCalendar, TbHexagonLetterV, TbHexagonLetterM, TbClipboardText, TbZoomExclamation,
-  TbFileAnalytics,
-  TbListDetails
+  TbFileAnalytics, TbListDetails, TbCalendarTime,
+  TbAlertTriangle,
+  TbAlertCircle,
+  TbDatabasePlus,
+  TbCalendarPlus
 } from "react-icons/tb";
 import Image from 'next/image';
 import { usePathname, useParams } from 'next/navigation';
@@ -34,8 +37,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
   //state menu, submenu, subsmenu
   const [Dashboard, setDashboard] = useState<boolean | null>(null);
   const [DataMaster, setDataMaster] = useState<boolean | null>(null);
+  const [DataMasterOpd, setDataMasterOpd] = useState<boolean | null>(null);
   // DATA MASTER
   const [MasterOPD, setMasterOPD] = useState<boolean | null>(null);
+  const [KelompokAnggaran, setKelompokAnggaran] = useState<boolean | null>(null);
   const [MasterPegawai, setMasterPegawai] = useState<boolean | null>(null);
   const [MasterPeriode, setMasterPeriode] = useState<boolean | null>(null);
   const [LevelPohon, setLevelPohon] = useState<boolean | null>(null);
@@ -50,6 +55,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
   const [MasterKegiatan, setMasterKegiatan] = useState<boolean | null>(null);
   const [MasterSubKegiatan, setMasterSubKegiatan] = useState<boolean | null>(null);
   const [MasterLembaga, setMasterLembaga] = useState<boolean | null>(null);
+  // DATA MASTER OPD
+  const [UserOpd, setUserOpd] = useState<boolean | null>(null);
+  const [SubKegiatanOpd, setSubKegiatanOpd] = useState<boolean | null>(null);
   // PERENCANAAN PEMDA
   const [PerencanaanKota, setPerencanaanKota] = useState<boolean | null>(null);
   const [TematikKota, setTematikKota] = useState<boolean | null>(null);
@@ -65,13 +73,14 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
   const [PerencanaanOPD, setPerencanaanOPD] = useState<boolean | null>(null);
   const [pohonKinerjaOpd, setPohonKinerjaOpd] = useState<boolean | null>(null);
   const [PohonCascadingOpd, setPohonCascadingOpd] = useState<boolean | null>(null);
-  const [UserOpd, setUserOpd] = useState<boolean | null>(null);
   const [Renstra, setRenstra] = useState<boolean | null>(null);
   const [TujuanOpd, setTujuanOpd] = useState<boolean | null>(null);
   const [SasaranOpd, setSasaranOpd] = useState<boolean | null>(null);
   const [IKUOpd, setIKUOpd] = useState<boolean | null>(null);
+  const [RencanaAksiOpd, setRencanaAksiOpd] = useState<boolean | null>(null);
   const [PermasalahanOpd, setPermasalahanOpd] = useState<boolean | null>(null);
-  const [SubKegiatanOpd, setSubKegiatanOpd] = useState<boolean | null>(null);
+  const [Permasalahan, setPermasalahan] = useState<boolean | null>(null);
+  const [IsuStrategis, setIsuStrategis] = useState<boolean | null>(null);
   const [MasterUsulanOpd, setMasterUsulanOpd] = useState<boolean | null>(null);
   const [MasterUsulanMusrenbang, setMasterUsulanMusrenbang] = useState<boolean | null>(null);
   const [MasterUsulanPokir, setMasterUsulanPokir] = useState<boolean | null>(null);
@@ -101,7 +110,14 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
   // LAPORAN REVIEW POKIN
   const [ReviewPemda, setReviewPemda] = useState<boolean | null>(null);
   const [ReviewOpd, setReviewOpd] = useState<boolean | null>(null);
+  // LABEL RENSTRA OPD
+  const [RenstraView, setRenstraView] = useState<boolean | null>(null);
+  // RENSTRA OPD
+  const [TujuanOpdView, setTujuanOpdView] = useState<boolean | null>(null);
+  const [SasaranOpdView, setSasaranOpdView] = useState<boolean | null>(null);
+  const [IkuOpdView, setIkuOpdView] = useState<boolean | null>(null);
   
+
   const [ManajemenResiko, setManajemenResiko] = useState<boolean | null>(null);
   const [Inovasi, setInovasi] = useState<boolean | null>(null);
   const [RencanaKinerjaKAK, setRencanaKinerjaKAK] = useState<boolean | null>(null);
@@ -122,6 +138,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      // setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -140,6 +157,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(true);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -166,12 +184,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -186,7 +207,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -218,6 +242,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(true);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -244,12 +269,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -264,7 +292,94 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
+      setManajemenResiko(false);
+      setInovasi(false);
+      setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
+      setLaporanRenstra(false);
+      setLaporanCascadingOpd(false);
+    }
+    if (url == "/DataMaster/kelompokanggaran") {
+      // SLIDE MENU
+      // super_admin
+      setDataMaster(true);
+      setMasterProgramKegiatan(false);
+      setPerencanaanKota(false);
+      setRPJMD(false);
+      // admin_opd
+      setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      setRenstra(false);
+      // asn
+      setPerencanaan(false);
+      setUsulanLaporan(false);
+      setLaporan(false);
+      setLaporanUsulan(false);
+      setReview(false);
+
+      // HALAMAN
+      setDashboard(false);
+      // data master
+      setMasterOPD(false);
+      setKelompokAnggaran(true);
+      setMasterPegawai(false);
+      setMasterPeriode(false);
+      setLevelPohon(false);
+      setMasterJabatan(false);
+      setMasterUsulanPemda(false);
+      // masterprogramkegiatan
+      setMasterUrusan(false);
+      setMasterBidangUrusan(false);
+      setMasterProgram(false);
+      setMasterKegiatan(false);
+      setMasterSubKegiatan(false);
+      setMasterLembaga(false);
+      setMasterUser(false);
+      setMasterRole(false);
+      // perencanaan pemda
+      setTematikKota(false);
+      setKotaPohonKinerjaKota(false);
+      // RPJMD
+      setVisi(false);
+      setMisi(false);
+      setTujuanPemda(false);
+      setSasaranPemda(false);
+      setIKU(false);
+      // perencanaan opd
+      setPohonKinerjaOpd(false);
+      setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
+      setUserOpd(false);
+      setRencanaAksiOpd(false);
+      //Renstra
+      setTujuanOpd(false);
+      setSasaranOpd(false);
+      setIKUOpd(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      //perencanaan asn
+      setRencanaKinerja(false);
+      setPohonCascading(false);
+      setRincianBelanja(false);
+      setPerencanaanManajemenResiko(false);
+      //laporan
+      setReviewPemda(false);
+      setReviewOpd(false);
+      setLaporanMusrenbang(false);
+      setLaporanPokokPikiran(false);
+      setLaporanMandatori(false);
+      setLaporanInisiatif(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -295,6 +410,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(true);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -321,12 +437,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -341,7 +460,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -372,6 +494,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(true);
       setLevelPohon(false);
@@ -398,12 +521,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -418,7 +544,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -449,6 +578,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(true);
@@ -475,12 +605,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -495,7 +628,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -527,6 +663,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -553,12 +690,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -573,7 +713,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -604,6 +747,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -630,12 +774,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -650,7 +797,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -681,6 +831,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -707,12 +858,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -727,7 +881,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -758,6 +915,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -784,12 +942,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -804,7 +965,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -835,6 +999,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -861,12 +1026,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -881,7 +1049,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -912,6 +1083,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -938,12 +1110,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -958,7 +1133,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -989,6 +1167,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1015,12 +1194,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1035,7 +1217,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1066,6 +1251,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1092,12 +1278,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1112,7 +1301,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1143,6 +1335,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1169,12 +1362,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1189,7 +1385,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1202,6 +1401,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(true);
       setRPJMD(false);
@@ -1221,6 +1421,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1247,12 +1448,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1267,7 +1471,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1279,6 +1486,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(true);
       setRPJMD(false);
@@ -1298,6 +1506,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1324,12 +1533,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1344,7 +1556,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1356,6 +1571,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(true);
       setRPJMD(true);
@@ -1375,6 +1591,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1401,12 +1618,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1421,7 +1641,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1433,6 +1656,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(true);
       setRPJMD(true);
@@ -1452,6 +1676,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1478,12 +1703,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1498,7 +1726,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1510,6 +1741,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(true);
       setRPJMD(true);
@@ -1529,6 +1761,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1555,12 +1788,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1575,7 +1811,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1587,6 +1826,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(true);
       setRPJMD(true);
@@ -1606,6 +1846,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1632,12 +1873,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1652,7 +1896,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1664,6 +1911,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(true);
       setRPJMD(true);
@@ -1683,6 +1931,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1709,12 +1958,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
       //Renstra
+      setRencanaAksiOpd(false);
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1729,7 +1981,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1742,6 +1997,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -1761,6 +2017,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1787,12 +2044,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(true);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1807,7 +2067,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1819,6 +2082,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -1838,6 +2102,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1864,12 +2129,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(true);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1884,7 +2152,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1896,6 +2167,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -1915,6 +2187,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -1941,12 +2214,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(true);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -1961,7 +2237,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -1969,10 +2248,11 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
-    if (url == "/subkegiatanopd") {
+    if (url == "/rencanaaksiopd") {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -1992,6 +2272,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2018,12 +2299,270 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(true);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      //perencanaan asn
+      setRencanaKinerja(false);
+      setPohonCascading(false);
+      setRincianBelanja(false);
+      setPerencanaanManajemenResiko(false);
+      //laporan
+      setReviewPemda(false);
+      setReviewOpd(false);
+      setLaporanMusrenbang(false);
+      setLaporanPokokPikiran(false);
+      setLaporanMandatori(false);
+      setLaporanInisiatif(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
+      setManajemenResiko(false);
+      setInovasi(false);
+      setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
+      setLaporanRenstra(false);
+      setLaporanCascadingOpd(false);
+    }
+    if (url == "/permasalahanopd") {
+      // SLIDE MENU
+      // super_admin
+      setDataMaster(false);
+      setDataMasterOpd(false);
+      setMasterProgramKegiatan(false);
+      setPerencanaanKota(false);
+      setRPJMD(false);
+      // admin_opd
+      setPerencanaanOPD(true);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      setRenstra(false);
+      // asn
+      setPerencanaan(false);
+      setUsulanLaporan(false);
+      setLaporan(false);
+      setLaporanUsulan(false);
+      setReview(false);
+
+      // HALAMAN
+      setDashboard(false);
+      // data master
+      setMasterOPD(false);
+      setKelompokAnggaran(false);
+      setMasterPegawai(false);
+      setMasterPeriode(false);
+      setLevelPohon(false);
+      setMasterJabatan(false);
+      setMasterUsulanPemda(false);
+      // masterprogramkegiatan
+      setMasterUrusan(false);
+      setMasterBidangUrusan(false);
+      setMasterProgram(false);
+      setMasterKegiatan(false);
+      setMasterSubKegiatan(false);
+      setMasterLembaga(false);
+      setMasterUser(false);
+      setMasterRole(false);
+      // perencanaan pemda
+      setTematikKota(false);
+      setKotaPohonKinerjaKota(false);
+      // RPJMD
+      setVisi(false);
+      setMisi(false);
+      setTujuanPemda(false);
+      setSasaranPemda(false);
+      setIKU(false);
+      // perencanaan opd
+      setPohonKinerjaOpd(false);
+      setPohonCascadingOpd(false);
+      setPermasalahanOpd(true);
+      setPermasalahan(true);
+      setIsuStrategis(false);
+      setUserOpd(false);
+      setRencanaAksiOpd(false);
+      //Renstra
+      setTujuanOpd(false);
+      setSasaranOpd(false);
+      setIKUOpd(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      //perencanaan asn
+      setRencanaKinerja(false);
+      setPohonCascading(false);
+      setRincianBelanja(false);
+      setPerencanaanManajemenResiko(false);
+      //laporan
+      setReviewPemda(false);
+      setReviewOpd(false);
+      setLaporanMusrenbang(false);
+      setLaporanPokokPikiran(false);
+      setLaporanMandatori(false);
+      setLaporanInisiatif(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
+      setManajemenResiko(false);
+      setInovasi(false);
+      setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
+      setLaporanRenstra(false);
+      setLaporanCascadingOpd(false);
+    }
+    if (url == "/isustrategis") {
+      // SLIDE MENU
+      // super_admin
+      setDataMaster(false);
+      setDataMasterOpd(false);
+      setMasterProgramKegiatan(false);
+      setPerencanaanKota(false);
+      setRPJMD(false);
+      // admin_opd
+      setPerencanaanOPD(true);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      setRenstra(false);
+      // asn
+      setPerencanaan(false);
+      setUsulanLaporan(false);
+      setLaporan(false);
+      setLaporanUsulan(false);
+      setReview(false);
+
+      // HALAMAN
+      setDashboard(false);
+      // data master
+      setMasterOPD(false);
+      setKelompokAnggaran(false);
+      setMasterPegawai(false);
+      setMasterPeriode(false);
+      setLevelPohon(false);
+      setMasterJabatan(false);
+      setMasterUsulanPemda(false);
+      // masterprogramkegiatan
+      setMasterUrusan(false);
+      setMasterBidangUrusan(false);
+      setMasterProgram(false);
+      setMasterKegiatan(false);
+      setMasterSubKegiatan(false);
+      setMasterLembaga(false);
+      setMasterUser(false);
+      setMasterRole(false);
+      // perencanaan pemda
+      setTematikKota(false);
+      setKotaPohonKinerjaKota(false);
+      // RPJMD
+      setVisi(false);
+      setMisi(false);
+      setTujuanPemda(false);
+      setSasaranPemda(false);
+      setIKU(false);
+      // perencanaan opd
+      setPohonKinerjaOpd(false);
+      setPohonCascadingOpd(false);
+      setPermasalahanOpd(true);
+      setPermasalahan(false);
+      setIsuStrategis(true);
+      setUserOpd(false);
+      setRencanaAksiOpd(false);
+      //Renstra
+      setTujuanOpd(false);
+      setSasaranOpd(false);
+      setIKUOpd(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      //perencanaan asn
+      setRencanaKinerja(false);
+      setPohonCascading(false);
+      setRincianBelanja(false);
+      setPerencanaanManajemenResiko(false);
+      //laporan
+      setReviewPemda(false);
+      setReviewOpd(false);
+      setLaporanMusrenbang(false);
+      setLaporanPokokPikiran(false);
+      setLaporanMandatori(false);
+      setLaporanInisiatif(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
+      setManajemenResiko(false);
+      setInovasi(false);
+      setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
+      setLaporanRenstra(false);
+      setLaporanCascadingOpd(false);
+    }
+    if (url == "/subkegiatanopd") {
+      // SLIDE MENU
+      // super_admin
+      setDataMaster(false);
+      setDataMasterOpd(true);
+      setMasterProgramKegiatan(false);
+      setPerencanaanKota(false);
+      setRPJMD(false);
+      // admin_opd
+      setPerencanaanOPD(false);
+      setSubKegiatanOpd(true);
+      setMasterUsulanOpd(false);
+      setRenstra(false);
+      // asn
+      setPerencanaan(false);
+      setUsulanLaporan(false);
+      setLaporan(false);
+      setLaporanUsulan(false);
+      setReview(false);
+
+      // HALAMAN
+      setDashboard(false);
+      // data master
+      setMasterOPD(false);
+      setKelompokAnggaran(false);
+      setMasterPegawai(false);
+      setMasterPeriode(false);
+      setLevelPohon(false);
+      setMasterJabatan(false);
+      setMasterUsulanPemda(false);
+      // masterprogramkegiatan
+      setMasterUrusan(false);
+      setMasterBidangUrusan(false);
+      setMasterProgram(false);
+      setMasterKegiatan(false);
+      setMasterSubKegiatan(false);
+      setMasterLembaga(false);
+      setMasterUser(false);
+      setMasterRole(false);
+      // perencanaan pemda
+      setTematikKota(false);
+      setKotaPohonKinerjaKota(false);
+      // RPJMD
+      setVisi(false);
+      setMisi(false);
+      setTujuanPemda(false);
+      setSasaranPemda(false);
+      setIKU(false);
+      // perencanaan opd
+      setPohonKinerjaOpd(false);
+      setPohonCascadingOpd(false);
       setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
+      setUserOpd(false);
+      setRencanaAksiOpd(false);
+      //Renstra
+      setTujuanOpd(false);
+      setSasaranOpd(false);
+      setIKUOpd(false);
       setSubKegiatanOpd(true);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -2038,7 +2577,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -2049,7 +2591,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     if (url == "/MasterUsulan/mastermusrenbang") {
       setDashboard(false);
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2094,7 +2638,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     if (url == "/MasterUsulan/masterpokokpikiran") {
       setDashboard(false);
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2139,7 +2685,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     if (url == "/MasterUsulan/mastermandatori") {
       setDashboard(false);
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2184,7 +2732,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     if (url == "/MasterUsulan/masterinisiatif") {
       setDashboard(false);
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2230,6 +2780,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -2249,6 +2800,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2275,12 +2827,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(true);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -2295,7 +2850,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -2307,6 +2865,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -2326,6 +2885,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2352,12 +2912,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(true);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -2372,7 +2935,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -2384,11 +2950,12 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(true);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
       // admin_opd
-      setPerencanaanOPD(true);
+      setPerencanaanOPD(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       setRenstra(false);
@@ -2403,6 +2970,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2429,12 +2997,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(true);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -2449,7 +3020,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -2467,6 +3041,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -2486,6 +3061,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2512,12 +3088,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -2532,7 +3111,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -2544,6 +3126,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -2563,6 +3146,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2589,12 +3173,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -2609,7 +3196,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -2620,7 +3210,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     if (url == "/musrenbang") {
       setDashboard(false);
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2667,7 +3259,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     if (url == "/pokokpikiran") {
       setDashboard(false);
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2713,7 +3307,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
     if (url == "/mandatori") {
       setDashboard(false);
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2756,56 +3352,12 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setManajemenResiko(false);
       setRencanaKinerja(false);
     }
-    if (url == "/inisiatif") {
-      setDashboard(false);
-      setDataMaster(false);
-      setMasterOPD(false);
-      setMasterPegawai(false);
-      setMasterPeriode(false);
-      setLevelPohon(false);
-      setMasterProgramKegiatan(false);
-      setMasterBidangUrusan(false);
-      setMasterKegiatan(false);
-      setMasterProgram(false);
-      setMasterSubKegiatan(false);
-      setMasterUrusan(false);
-      setMasterJabatan(false);
-      setMasterLembaga(false);
-      setMasterRole(false);
-      setMasterUser(false);
-      setTematikKota(false);
-      setSubTematik(false);
-      setPerencanaanKota(true);
-      setPerencanaanOPD(false);
-      setSubKegiatanOpd(false);
-      setMasterUsulanOpd(false);
-      setMasterUsulanMusrenbang(false);
-      setMasterUsulanMandatori(false);
-      setMasterUsulanPokir(false);
-      setMasterUsulanInisiatif(false);
-      setTujuanOpd(false);
-      setPohonKinerjaOpd(false);
-      setRincianBelanja(false);
-      setUserOpd(false);
-      setUsulanLaporan(true);
-      setPerencanaan(true);
-      setMusrenbang(false);
-      setPokokPikiran(false);
-      setMandatori(false);
-      setInisiatif(true);
-      setPohonCascading(false);
-      setPohonCascadingOpd(false);
-      setRencanaKinerjaKAK(false);
-      setLaporanRincianBelanja(false)
-      setLaporanRenstra(false);
-      setLaporanCascadingOpd(false);
-      setManajemenResiko(false);
-      setRencanaKinerja(false);
-    }
     if (url == "/manajemenresiko") {
       setDashboard(false);
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2850,6 +3402,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -2869,6 +3422,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2895,12 +3449,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -2915,7 +3472,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -2927,6 +3487,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -2946,6 +3507,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -2972,12 +3534,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -2992,7 +3557,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -3000,10 +3568,11 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanRenstra(false);
       setLaporanCascadingOpd(false);
     }
-    if (url == "/laporanrenstra") {
+    if (url == "/tujuanopdview") {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -3023,6 +3592,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -3049,12 +3619,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -3069,7 +3642,265 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(true);
+      setTujuanOpdView(true);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
+      setManajemenResiko(false);
+      setInovasi(false);
+      setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
+      setLaporanRenstra(false);
+      setLaporanCascadingOpd(false);
+    }
+    if (url == "/sasaranopdview") {
+      // SLIDE MENU
+      // super_admin
+      setDataMaster(false);
+      setDataMasterOpd(false);
+      setMasterProgramKegiatan(false);
+      setPerencanaanKota(false);
+      setRPJMD(false);
+      // admin_opd
+      setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      setRenstra(false);
+      // asn
+      setPerencanaan(false);
+      setUsulanLaporan(false);
+      setLaporan(true);
+      setLaporanUsulan(false);
+      setReview(false);
+
+      // HALAMAN
+      setDashboard(false);
+      // data master
+      setMasterOPD(false);
+      setKelompokAnggaran(false);
+      setMasterPegawai(false);
+      setMasterPeriode(false);
+      setLevelPohon(false);
+      setMasterJabatan(false);
+      setMasterUsulanPemda(false);
+      // masterprogramkegiatan
+      setMasterUrusan(false);
+      setMasterBidangUrusan(false);
+      setMasterProgram(false);
+      setMasterKegiatan(false);
+      setMasterSubKegiatan(false);
+      setMasterLembaga(false);
+      setMasterUser(false);
+      setMasterRole(false);
+      // perencanaan pemda
+      setTematikKota(false);
+      setKotaPohonKinerjaKota(false);
+      // RPJMD
+      setVisi(false);
+      setMisi(false);
+      setTujuanPemda(false);
+      setSasaranPemda(false);
+      setIKU(false);
+      // perencanaan opd
+      setPohonKinerjaOpd(false);
+      setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
+      setUserOpd(false);
+      setRencanaAksiOpd(false);
+      //Renstra
+      setTujuanOpd(false);
+      setSasaranOpd(false);
+      setIKUOpd(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      //perencanaan asn
+      setRencanaKinerja(false);
+      setPohonCascading(false);
+      setRincianBelanja(false);
+      setPerencanaanManajemenResiko(false);
+      //laporan
+      setReviewPemda(false);
+      setReviewOpd(false);
+      setLaporanMusrenbang(false);
+      setLaporanPokokPikiran(false);
+      setLaporanMandatori(false);
+      setLaporanInisiatif(false);
+      setRenstraView(true);
+      setTujuanOpdView(false);
+      setSasaranOpdView(true);
+      setIkuOpdView(false);
+      setManajemenResiko(false);
+      setInovasi(false);
+      setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
+      setLaporanRenstra(false);
+      setLaporanCascadingOpd(false);
+    }
+    if (url == "/ikuopdview") {
+      // SLIDE MENU
+      // super_admin
+      setDataMaster(false);
+      setDataMasterOpd(false);
+      setMasterProgramKegiatan(false);
+      setPerencanaanKota(false);
+      setRPJMD(false);
+      // admin_opd
+      setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      setRenstra(false);
+      // asn
+      setPerencanaan(false);
+      setUsulanLaporan(false);
+      setLaporan(true);
+      setLaporanUsulan(false);
+      setReview(false);
+
+      // HALAMAN
+      setDashboard(false);
+      // data master
+      setMasterOPD(false);
+      setKelompokAnggaran(false);
+      setMasterPegawai(false);
+      setMasterPeriode(false);
+      setLevelPohon(false);
+      setMasterJabatan(false);
+      setMasterUsulanPemda(false);
+      // masterprogramkegiatan
+      setMasterUrusan(false);
+      setMasterBidangUrusan(false);
+      setMasterProgram(false);
+      setMasterKegiatan(false);
+      setMasterSubKegiatan(false);
+      setMasterLembaga(false);
+      setMasterUser(false);
+      setMasterRole(false);
+      // perencanaan pemda
+      setTematikKota(false);
+      setKotaPohonKinerjaKota(false);
+      // RPJMD
+      setVisi(false);
+      setMisi(false);
+      setTujuanPemda(false);
+      setSasaranPemda(false);
+      setIKU(false);
+      // perencanaan opd
+      setPohonKinerjaOpd(false);
+      setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
+      setUserOpd(false);
+      setRencanaAksiOpd(false);
+      //Renstra
+      setTujuanOpd(false);
+      setSasaranOpd(false);
+      setIKUOpd(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      //perencanaan asn
+      setRencanaKinerja(false);
+      setPohonCascading(false);
+      setRincianBelanja(false);
+      setPerencanaanManajemenResiko(false);
+      //laporan
+      setReviewPemda(false);
+      setReviewOpd(false);
+      setLaporanMusrenbang(false);
+      setLaporanPokokPikiran(false);
+      setLaporanMandatori(false);
+      setLaporanInisiatif(false);
+      setRenstraView(true);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(true);
+      setManajemenResiko(false);
+      setInovasi(false);
+      setRencanaKinerjaKAK(false);
+      setLaporanRincianBelanja(false)
+      setLaporanRenstra(false);
+      setLaporanCascadingOpd(false);
+    }
+    if (url == "/laporanrenstra") {
+      // SLIDE MENU
+      // super_admin
+      setDataMaster(false);
+      setDataMasterOpd(false);
+      setMasterProgramKegiatan(false);
+      setPerencanaanKota(false);
+      setRPJMD(false);
+      // admin_opd
+      setPerencanaanOPD(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      setRenstra(false);
+      // asn
+      setPerencanaan(false);
+      setUsulanLaporan(false);
+      setLaporan(true);
+      setLaporanUsulan(false);
+      setReview(false);
+
+      // HALAMAN
+      setDashboard(false);
+      // data master
+      setMasterOPD(false);
+      setKelompokAnggaran(false);
+      setMasterPegawai(false);
+      setMasterPeriode(false);
+      setLevelPohon(false);
+      setMasterJabatan(false);
+      setMasterUsulanPemda(false);
+      // masterprogramkegiatan
+      setMasterUrusan(false);
+      setMasterBidangUrusan(false);
+      setMasterProgram(false);
+      setMasterKegiatan(false);
+      setMasterSubKegiatan(false);
+      setMasterLembaga(false);
+      setMasterUser(false);
+      setMasterRole(false);
+      // perencanaan pemda
+      setTematikKota(false);
+      setKotaPohonKinerjaKota(false);
+      // RPJMD
+      setVisi(false);
+      setMisi(false);
+      setTujuanPemda(false);
+      setSasaranPemda(false);
+      setIKU(false);
+      // perencanaan opd
+      setPohonKinerjaOpd(false);
+      setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
+      setUserOpd(false);
+      setRencanaAksiOpd(false);
+      //Renstra
+      setTujuanOpd(false);
+      setSasaranOpd(false);
+      setIKUOpd(false);
+      setSubKegiatanOpd(false);
+      setMasterUsulanOpd(false);
+      //perencanaan asn
+      setRencanaKinerja(false);
+      setPohonCascading(false);
+      setRincianBelanja(false);
+      setPerencanaanManajemenResiko(false);
+      //laporan
+      setReviewPemda(false);
+      setReviewOpd(false);
+      setLaporanMusrenbang(false);
+      setLaporanPokokPikiran(false);
+      setLaporanMandatori(false);
+      setLaporanInisiatif(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -3081,6 +3912,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -3100,6 +3932,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -3126,12 +3959,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -3146,7 +3982,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -3158,6 +3997,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -3177,6 +4017,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -3203,12 +4044,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -3223,7 +4067,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -3235,6 +4082,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // SLIDE MENU
       // super_admin
       setDataMaster(false);
+      setDataMasterOpd(false);
       setMasterProgramKegiatan(false);
       setPerencanaanKota(false);
       setRPJMD(false);
@@ -3254,6 +4102,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setDashboard(false);
       // data master
       setMasterOPD(false);
+      setKelompokAnggaran(false);
       setMasterPegawai(false);
       setMasterPeriode(false);
       setLevelPohon(false);
@@ -3280,12 +4129,15 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       // perencanaan opd
       setPohonKinerjaOpd(false);
       setPohonCascadingOpd(false);
+      setPermasalahanOpd(false);
+      setPermasalahan(false);
+      setIsuStrategis(false);
       setUserOpd(false);
+      setRencanaAksiOpd(false);
       //Renstra
       setTujuanOpd(false);
       setSasaranOpd(false);
       setIKUOpd(false);
-      setPermasalahanOpd(false);
       setSubKegiatanOpd(false);
       setMasterUsulanOpd(false);
       //perencanaan asn
@@ -3300,7 +4152,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
       setLaporanPokokPikiran(false);
       setLaporanMandatori(false);
       setLaporanInisiatif(false);
-      setSPIP(false);
+      setRenstraView(false);
+      setTujuanOpdView(false);
+      setSasaranOpdView(false);
+      setIkuOpdView(false);
       setManajemenResiko(false);
       setInovasi(false);
       setRencanaKinerjaKAK(false);
@@ -3361,6 +4216,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
               <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Dashboard</span>
             </li>
           </Link>
+
+
+
           {/* LABEL DATA MASTER */}
           {User?.roles == 'super_admin' &&
             <li
@@ -3371,7 +4229,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 <TbDatabaseCog className="text-xl" />
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Data Master</span>
               </div>
-              <TbChevronRight className={`transition-all duration-200 ease-in-out ${DataMaster ? "rotate-90" : ""}`}/>
+              <TbChevronRight className={`transition-all duration-200 ease-in-out ${DataMaster ? "rotate-90" : ""}`} />
             </li>
           }
           {/* SUB MENU DATA MASTER */}
@@ -3383,6 +4241,12 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master Lembaga</span>
                 </li>
               </Link>
+              {/* <Link href="/DataMaster/kelompokanggaran">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${KelompokAnggaran ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbCalendarTime className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} text-sm origin-left duration-200`}>Kelompok Anggaran</span>
+                </li>
+              </Link> */}
               <Link href="/DataMaster/masteropd">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl transition-all duration-300 ease-in-out ${MasterOPD ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                   <TbBuilding className="text-xl" />
@@ -3431,10 +4295,10 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 onClick={() => setMasterProgramKegiatan(MasterProgramKegiatan ? false : true)}
               >
                 <div className="flex items-center gap-2">
-                  <TbFile3D className="text-xl mt-1" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Master Program Kegiatan</span>
+                  <TbFile3D className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} text-sm origin-left duration-200`}>Program Kegiatan</span>
                 </div>
-                <TbChevronRight className={`transition-all duration-200 ease-in-out ${MasterProgramKegiatan ? "rotate-90" : ""}`}/>
+                <TbChevronRight className={`transition-all duration-200 ease-in-out ${MasterProgramKegiatan ? "rotate-90" : ""}`} />
               </li>
               {/* DATA MASTER PROGRAM KEGIATAN */}
               <div className={`transition-all duration-300 ease-in-out ${MasterProgramKegiatan ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
@@ -3471,6 +4335,41 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
               </div>
             </div>
           }
+
+
+          {/* LABEL DATA MASTER OPD */}
+          {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'reviewer') &&
+            <li
+              className={`flex justify-between items-center font-medium gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-slate-500 transition-all duration-300 ease-in-out`}
+              onClick={() => setDataMasterOpd(DataMasterOpd ? false : true)}
+            >
+              <div className="flex items-center gap-2">
+                <TbDatabasePlus className="text-xl" />
+                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Data Master OPD</span>
+              </div>
+              <TbChevronRight className={`transition-all duration-200 ease-in-out ${DataMasterOpd ? "rotate-90" : ""}`} />
+            </li>
+          }
+          {/* SUB MENU DATA MASTER OPD */}
+          {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'reviewer') &&
+            <div className={`transition-all duration-300 ease-in-out ${DataMasterOpd ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+              <Link href="/useropd">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${UserOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbUser className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>User OPD</span>
+                </li>
+              </Link>
+              <Link href="/subkegiatanopd">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${SubKegiatanOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbFileCode2 className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Sub Kegiatan OPD</span>
+                </li>
+              </Link>
+            </div>
+          }
+
+
+
           {/* LABEL PERENCANAAN PEMDA */}
           {(User?.roles == 'super_admin' || User?.roles == 'reviewer') &&
             <>
@@ -3482,7 +4381,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                   <TbBuildingFortress className="text-xl" />
                   <span className={`${!isOpen && 'hidden'} text-sm origin-left duration-200`}>Perencanaan Pemda</span>
                 </div>
-                <TbChevronRight className={`transition-all duration-200 ease-in-out ${PerencanaanKota ? "rotate-90" : ""}`}/>
+                <TbChevronRight className={`transition-all duration-200 ease-in-out ${PerencanaanKota ? "rotate-90" : ""}`} />
               </li>
               {/* SUB MENU PERENCANAAN PEMDA */}
               {User?.roles != 'reviewer' ?
@@ -3508,7 +4407,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                       <TbCalendarShare className="text-xl" />
                       <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>RPJMD</span>
                     </div>
-                    <TbChevronRight className={`transition-all duration-200 ease-in-out ${RPJMD ? "rotate-90" : ""}`}/>
+                    <TbChevronRight className={`transition-all duration-200 ease-in-out ${RPJMD ? "rotate-90" : ""}`} />
                   </li>
                   {/* SUB MENU RPJMD */}
                   <div className={`transition-all duration-300 ease-in-out ${RPJMD ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
@@ -3556,6 +4455,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
               }
             </>
           }
+
+
+
           {/* LABEL PERENCANAAN OPD */}
           {(User?.roles == 'super_admin' || User?.roles == 'admin_opd' || User?.roles == 'reviewer') &&
             <li
@@ -3566,7 +4468,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 <TbBuildingCommunity className="text-xl" />
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Perencanaan OPD</span>
               </div>
-              <TbChevronRight className={`transition-all duration-200 ease-in-out ${PerencanaanOPD ? "rotate-90" : ""}`}/>
+              <TbChevronRight className={`transition-all duration-200 ease-in-out ${PerencanaanOPD ? "rotate-90" : ""}`} />
             </li>
           }
           {/* SUB MENU PERENCANAAN OPD */}
@@ -3584,12 +4486,6 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Pohon Cascading</span>
                 </li>
               </Link>
-              <Link href="/useropd">
-                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${UserOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                  <TbUser className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>User OPD</span>
-                </li>
-              </Link>
               {/* LABEL RENSTRA */}
               <li
                 className={`flex justify-between font-medium items-center gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-slate-500 transition-all duration-300 ease-in-out`}
@@ -3599,7 +4495,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                   <TbBuildingCommunity className="text-xl" />
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Renstra</span>
                 </div>
-                <TbChevronRight className={`transition-all duration-200 ease-in-out ${Renstra ? "rotate-90" : ""}`}/>
+                <TbChevronRight className={`transition-all duration-200 ease-in-out ${Renstra ? "rotate-90" : ""}`} />
               </li>
               {/* SUBS MENU RENSTRA */}
               <div className={`transition-all duration-300 ease-in-out ${Renstra ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
@@ -3622,18 +4518,38 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                   </li>
                 </Link>
               </div>
-              <Link href="/subkegiatanopd">
-                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${SubKegiatanOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                  <TbFileCode2 className="text-xl" />
-                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Sub Kegiatan OPD</span>
+              <Link href="/rencanaaksiopd">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${RencanaAksiOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbCalendarPlus className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Rencana Aksi OPD</span>
                 </li>
               </Link>
-              <Link href="#">
-                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PermasalahanOpd ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                  <TbMessageReport className="text-xl" />
+              {/* LABEL PERMASALAHAN */}
+              <li
+                className={`flex justify-between font-medium items-center gap-x-2 cursor-pointer p-2 rounded-xl hover:bg-slate-500 transition-all duration-300 ease-in-out`}
+                onClick={() => setPermasalahanOpd(PermasalahanOpd ? false : true)}
+              >
+                <div className="flex items-center gap-2">
+                  <TbAlertCircle className="text-xl" />
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Permasalahan</span>
-                </li>
-              </Link>
+                </div>
+                <TbChevronRight className={`transition-all duration-200 ease-in-out ${Renstra ? "rotate-90" : ""}`} />
+              </li>
+              {/* SUBS MENU PERMASALAHAN */}
+              <div className={`transition-all duration-300 ease-in-out ${PermasalahanOpd ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+                <Link href="/permasalahanopd">
+                  <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${Permasalahan ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                    <TbAlertTriangle className="text-xl" />
+                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Permasalahan</span>
+                  </li>
+                </Link>
+                <Link href="/isustrategis">
+                  <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${IsuStrategis ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                    <TbTarget className="text-xl" />
+                    <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Isu Strategis</span>
+                  </li>
+                </Link>
+              </div>
               {/* LABEL MASTER USULAN OPD */}
               {/* <li 
                 className="flex items-center gap-x-2 cursor-pointer p-2 hover:bg-slate-500 rounded-xl transition-all duration-300 ease-in-out"
@@ -3680,6 +4596,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
               </Link>
             </div>
           }
+
+
+
           {/* LABEL PERENCANAAN ASN */}
           {(User?.roles == 'eselon_1' || User?.roles == 'eselon_2' || User?.roles == 'eselon_3' || User?.roles == 'eselon_4' || User?.roles == 'level_1' || User?.roles == 'level_2' || User?.roles == 'level_3' || User?.roles == 'level_4') &&
             <li
@@ -3690,7 +4609,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 <TbBuildingFortress className="text-xl" />
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Perencanaan</span>
               </div>
-              <TbChevronRight className={`transition-all duration-200 ease-in-out ${Perencanaan ? "rotate-90" : ""}`}/>
+              <TbChevronRight className={`transition-all duration-200 ease-in-out ${Perencanaan ? "rotate-90" : ""}`} />
             </li>
           }
           {/* SUB MENU PERENCANAAN ASN */}
@@ -3758,15 +4677,18 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 </li>
               </Link>
             }
-            {(User?.roles == 'level_2' || User?.roles == 'level_3') &&
+            {/* {(User?.roles == 'level_2' || User?.roles == 'level_3') &&
               <Link href="/manajemenresiko">
                 <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${PerencanaanManajemenResiko ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                   <TbRefreshAlert className="text-xl" />
                   <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Manajemen Resiko</span>
                 </li>
               </Link>
-            }
+            } */}
           </div>
+
+
+
           {/* LABEL LAPORAN */}
           <li
             onClick={() => setLaporan(Laporan ? false : true)}
@@ -3781,13 +4703,13 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
           {/* SUB MENU LAPORAN */}
           <div className={`transition-all duration-300 ease-in-out ${Laporan ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
             {/* LABEL LAPORAN USULAN */}
-            <li
+            {/* <li
               className="flex items-center gap-x-2 cursor-pointer p-2 hover:bg-slate-500 rounded-xl transition-all duration-300 ease-in-out"
               onClick={() => setLaporanUsulan(LaporanUsulan ? false : true)}
             >
               <TbApps className="text-xl" />
               <span className={`${!isOpen && 'hidden'} origin-left`}>Usulan</span>
-            </li>
+            </li> */}
             {/* subs menu LAPORAN USULAN */}
             <div className={`transition-all duration-300 ease-in-out ${LaporanUsulan ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
               <Link href="#">
@@ -3824,7 +4746,7 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 <TbClipboardText className="text-xl" />
                 <span className={`${!isOpen && 'hidden'} origin-left`}>Review Pokin</span>
               </div>
-              <TbChevronRight className={`transition-all duration-200 ease-in-out ${Review ? "rotate-90" : ""}`}/>
+              <TbChevronRight className={`transition-all duration-200 ease-in-out ${Review ? "rotate-90" : ""}`} />
             </li>
             {/* subs menu LAPORAN REVIEW */}
             <div className={`transition-all duration-300 ease-in-out ${Review ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
@@ -3841,33 +4763,47 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
                 </li>
               </Link>
             </div>
+            {/* LABEL LAPORAN RENAKSI OPD (view only) */}
+            <li
+              className="flex justify-between items-center gap-x-2 cursor-pointer p-2 hover:bg-slate-500 rounded-xl transition-all duration-300 ease-in-out"
+              onClick={() => setRenstraView(RenstraView ? false : true)}
+            >
+              <div className="flex items-center gap-2">
+                <TbBuildingCommunity className="text-xl" />
+                <span className={`${!isOpen && 'hidden'} origin-left`}>Renstra OPD</span>
+              </div>
+              <TbChevronRight className={`transition-all duration-200 ease-in-out ${RenstraView ? "rotate-90" : ""}`} />
+            </li>
+            {/* subs menu LAPORAN REVIEW */}
+            <div className={`transition-all duration-300 ease-in-out ${RenstraView ? 'px-3 py-2 flex flex-col border-l-2 border-white rounded-b-xl ml-2  max-h-screen opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
+              <Link href="/tujuanopdview">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${TujuanOpdView ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbMapPin className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Tujuan OPD</span>
+                </li>
+              </Link>
+              <Link href="/sasaranopdview">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${SasaranOpdView ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbTarget className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Sasaran OPD</span>
+                </li>
+              </Link>
+              <Link href="/ikuopdview">
+                <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${IkuOpdView ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                  <TbChartBar className="text-xl" />
+                  <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>IKU OPD</span>
+                </li>
+              </Link>
+            </div>
             <Link href="#">
               <li className={`flex items-center gap-x-2 text-sm cursor-pointer p-2 rounded-xl ${RencanaKinerjaKAK ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                 <TbChecklist className="text-xl" />
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Rencana Kinerja KAK</span>
               </li>
             </Link>
-            <Link href="/laporanrincianbelanja">
-              <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${LaporanRincianBelanja ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                <TbShoppingCartDollar className="text-xl" />
-                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Rincian Belanja</span>
-              </li>
-            </Link>
-            <Link href="/manajemenresiko">
-              <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${ManajemenResiko ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                <TbRefreshAlert className="text-xl" />
-                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Manajemen Resiko</span>
-              </li>
-            </Link>
-            <Link href="#">
-              <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${Inovasi ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                <TbRefreshAlert className="text-xl" />
-                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Inovasi</span>
-              </li>
-            </Link>
             <Link href="/laporanrenstra">
               <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${LaporanRenstra ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
-                <TbFileAnalytics className="text-xl" />
+                <TbShoppingCartDollar className="text-xl" />
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Matrix Renstra</span>
               </li>
             </Link>
@@ -3878,6 +4814,9 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
               </li>
             </Link>
           </div>
+
+
+
           {/* LOGOUT */}
           <li className="flex font-medium items-center gap-x-2 cursor-pointer p-2 hover:bg-slate-500 rounded-xl" onClick={() => logout()}>
             <TbLogout className="text-xl text-red-500" />

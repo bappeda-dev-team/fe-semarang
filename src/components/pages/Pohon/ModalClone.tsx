@@ -1,10 +1,12 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { TbDeviceFloppy, TbX } from "react-icons/tb";
 import { Controller, SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import { ButtonSky, ButtonRed } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion2 } from "@/components/global/Alert";
-import { getOpdTahun, getToken } from "@/components/lib/Cookie";
+import { getToken } from "@/components/lib/Cookie";
+import { LoadingButtonClip } from "@/components/global/Loading";
 import Select from 'react-select';
 
 interface OptionTypeString {
@@ -97,7 +99,7 @@ export const ModalClone: React.FC<modal> = ({ isOpen, onClose, onSuccess, id, ta
 
     const onSubmit: SubmitHandler<FormValue> = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        
+
         if (Number(tahun) === Number(TahunTarget?.value)) {
             AlertNotification("Tahun Sekarang sama dengan Tahun Tujuan", "", "warning", 2000);
         } else if (TahunTarget?.value === undefined) {
@@ -216,9 +218,20 @@ export const ModalClone: React.FC<modal> = ({ isOpen, onClose, onSuccess, id, ta
                             />
                         </div>
                         <ButtonSky type="submit" className="w-full my-3" disabled={Proses}>
-                            Simpan
+                            {Proses ?
+                                <>
+                                    <LoadingButtonClip />
+                                    <span>Cloning</span>
+                                </>
+                                :
+                                <>
+                                    <TbDeviceFloppy />
+                                    <span>Clone</span>
+                                </>
+                            }
                         </ButtonSky>
-                        <ButtonRed className="w-full my-3" onClick={handleClose} disabled={Proses}>
+                        <ButtonRed className="flex items-center gap-1 w-full my-3" onClick={handleClose} disabled={Proses}>
+                            <TbX />
                             Batal
                         </ButtonRed>
                     </form>

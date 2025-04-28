@@ -1,10 +1,9 @@
 'use client'
 
 import { FiHome } from "react-icons/fi";
-import Table from "@/components/pages/sasaranopd/Table";
-import { getOpdTahun, getToken } from "@/components/lib/Cookie";
-import { useState, useEffect } from "react";
-import Maintenance from "@/components/global/Maintenance";
+import Table from "@/components/pages/tujuanopd/Table";
+import { getToken } from "@/components/lib/Cookie";
+import { useState } from "react";
 import Select from 'react-select';
 
 interface Periode {
@@ -17,25 +16,13 @@ interface Periode {
     tahun_list: string[];
 }
 
-const SasaranOpd = () => {
+const TujuanOpdView = () => {
 
-    const [Tahun, setTahun] = useState<any>(null);
     const token = getToken();
     const [Periode, setPeriode] = useState<Periode | null>(null);
     const [PeriodeOption, setPeriodeOption] = useState<Periode[]>([]);
 
     const [Loading, setLoading] = useState<boolean>(false);
-
-    useEffect(() => {
-        const data = getOpdTahun();
-        if (data.tahun) {
-            const tahun = {
-                value: data.tahun.value,
-                label: data.tahun.label,
-            }
-            setTahun(tahun);
-        }
-    }, []);
 
     const fetchPeriode = async () => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -69,13 +56,14 @@ const SasaranOpd = () => {
         <>
             <div className="flex items-center">
                 <a href="/" className="mr-1"><FiHome /></a>
-                <p className="mr-1">/ Perencanaan OPD</p>
-                <p className="mr-1">/ Sasaran OPD</p>
+                <p className="mr-1">/ Laporan</p>
+                <p className="mr-1">/ Renstra</p>
+                <p className="mr-1">/ Tujuan OPD</p>
             </div>
             <div className="mt-3 rounded-xl shadow-lg border">
                 <div className="flex items-center justify-between border-b px-5 py-5">
                     <div className="flex flex-wrap items-end">
-                        <h1 className="uppercase font-bold">Sasaran OPD</h1>
+                        <h1 className="uppercase font-bold">Tujuan OPD</h1>
                         <h1 className="uppercase font-bold ml-1">(Periode {Periode?.tahun_awal} - {Periode?.tahun_akhir})</h1>
                     </div>
                     <Select
@@ -91,8 +79,8 @@ const SasaranOpd = () => {
                             setPeriode(option);
                         }}
                         options={PeriodeOption}
-                        isLoading={Loading}
                         isClearable
+                        isLoading={Loading}
                         placeholder="Pilih Periode ..."
                         value={Periode}
                         isSearchable
@@ -103,7 +91,7 @@ const SasaranOpd = () => {
                 </div>
                 {Periode ?
                     <Table
-                        tipe="opd"
+                        tipe="laporan"
                         id_periode={Periode?.value}
                         tahun_awal={Periode?.tahun_awal ? Periode?.tahun_awal : ""}
                         tahun_akhir={Periode?.tahun_akhir ? Periode?.tahun_akhir : ""}
@@ -115,12 +103,9 @@ const SasaranOpd = () => {
                         <h1>Pilih Periode terlebih dahulu</h1>
                     </div>
                 }
-                {/* <div className="mx-3 mb-3">
-                    <Maintenance />
-                </div> */}
-            </div>
+                </div>
         </>
     )
 }
 
-export default SasaranOpd;
+export default TujuanOpdView;

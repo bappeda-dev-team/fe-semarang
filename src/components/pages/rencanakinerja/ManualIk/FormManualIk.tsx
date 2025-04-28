@@ -84,16 +84,17 @@ const FormManualIk = () => {
 
     useEffect(() => {
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
-        let url = '';
-        if (User?.roles == 'level_1') {
-            url = `manual_ik/sasaran_opd/${id}/${Tahun?.value}`
-        } else {
-            url = `manual_ik/detail/${id}`
-        }
-        const fetchManual = async () => {
+        // let url = '';
+        // if (User?.roles == 'level_1') {
+        //     url = `manual_ik/sasaran_opd/${id}/${Tahun?.value}`
+        // } else {
+        //     url = `manual_ik/detail/${id}`
+        // }
+        const fetchManual = async (url: string) => {
             setLoading(true);
             try {
-                const response = await fetch(`${API_URL}/manual_ik/detail/${id}`, {
+                const response = await fetch(`${API_URL}/${url}`, {
+                // const response = await fetch(User?.roles == 'level_1' ? `${API_URL}/manual_ik/sasaran_opd/${id}/${Tahun?.value}` : `${API_URL}/manual_ik/detail/${id}`, {
                     headers: {
                         Authorization: `${token}`,
                         "Content-Type": "application/json",
@@ -105,7 +106,7 @@ const FormManualIk = () => {
                 const hasil = await response.json();
                 // console.log(data);
                 const detail = hasil.data;
-                if (hasil.data.output_data && Object.keys(hasil.data.output_data).length > 0) {
+                if (hasil.data.perspektif) {
                     setDataNew(false);
                     if (detail.rencana_kinerja) {
                         setRekin(detail.rencana_kinerja.Nama_rencana_kinerja);
@@ -196,12 +197,18 @@ const FormManualIk = () => {
                     }
                 }
             } catch (err) {
-                console.log("");
+                console.log(err);
             } finally {
                 setLoading(false);
             }
         }
-        fetchManual();
+        if(User?.roles != undefined || User?.roles != null){
+            if(User?.roles == 'level_1'){
+                fetchManual(`manual_ik/sasaran_opd/${id}/${Tahun?.value}`);
+            } else {
+                fetchManual(`manual_ik/detail/${id}`);
+            }
+        }
     }, [token, id, reset, Success, Tahun, User]);
 
     const onSubmit: SubmitHandler<FormValue> = async (data) => {
@@ -227,22 +234,27 @@ const FormManualIk = () => {
             periode_pelaporan: PeriodePelaporan?.value,
         }
         // console.log(formData);
+        // console.log('data baru :', DataNew);
         try {
             setProses(true);
             const response = await fetch(`${API_URL}/manual_ik/${DataNew ? 'create' : 'update'}/${id}`, {
                 // const response = await fetch(`${API_URL}/manual_ik/create/${id}`, {
                 method: DataNew ? "POST" : "PUT",
-                // method: "POST",
                 headers: {
                     Authorization: `${token}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(formData),
             });
-            if (response.ok) {
+            const result = await response.json();
+            if (result.code === 200 || result.code === 201) {
                 AlertNotification("Berhasil", "Manual Indikator Kinerja berhasil disimpan", "success", 2000);
                 setSuccess((prev) => !prev);
+                console.log(result);
                 router.push('/rencanakinerja');
+            } else {
+                AlertNotification("Gagal", `${result.data}`, "error", 2000);
+                console.log(result);
             }
         } catch (err) {
             AlertNotification("Gagal", "periksa koneksi internet / database server", "error", 2000);
@@ -397,7 +409,7 @@ const FormManualIk = () => {
                             <label htmlFor="target" className="text-gray-500 text-xs ml-1">Indikator</label>
                             <div className="border border-black px-4 py-2 rounded-lg w-full">{NamaIndikator ? NamaIndikator : "Otomatis Setelah mengisi Manual IK"}</div>
                             <label htmlFor="target" className="text-gray-500 text-xs ml-1 mt-2">Target / Satuan</label>
-                            <div className="border border-black px-4 py-2 rounded-lg w-full">{Target} / {Satuan}</div>
+                            <div className="border border-black px-4 py-2 rounded-lg w-full">{Target || "-"} / {Satuan || "-"}</div>
                         </div>
                     </div>
                     {/* DESKRIPSI INDIKATOR KINERJA INDIVIDU */}
@@ -470,7 +482,7 @@ const FormManualIk = () => {
                     <div className="flex w-full">
                         <div className="px-5 py-5 border-b border-l border-black w-[200px] bg-white">Satuan Pengukuran</div>
                         <div className="px-5 py-5 border-b border-x border-black flex flex-col w-full gap-2 bg-white">
-                            <div className="border border-black px-4 py-2 rounded-lg w-full">{Satuan}</div>
+                            <div className="border border-black px-4 py-2 rounded-lg w-full">{Satuan || "-"}</div>
                         </div>
                     </div>
                     {/* JENIS INDIKATOR KINERJA */}
@@ -752,7 +764,7 @@ const FormManualIk = () => {
                     <div className="flex w-full">
                         <div className="px-5 py-5 border-b border-l border-black w-[200px] bg-white">Budget</div>
                         <div className="px-5 py-5 border-b border-x border-black flex flex-col w-full gap-2 bg-white">
-                            <div className="border border-black px-4 py-2 rounded-lg w-full">Otomatis setelah menyusun Anggaran</div>
+                            <div className="border border-black px-4 py-2 rounded-lg w-full text-gray-400 italic">Otomatis setelah menyusun Anggaran</div>
                         </div>
                     </div>
 

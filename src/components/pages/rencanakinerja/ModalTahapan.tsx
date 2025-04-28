@@ -267,7 +267,7 @@ export const ModalTahapan: React.FC<modal> = ({ isOpen, onClose, renaksi_id, id,
                                 "Simpan"
                             }
                         </ButtonSky>
-                        <ButtonRed className="w-full my-3 flex gap-1" onClick={handleClose}>
+                        <ButtonRed className="w-full my-3 flex gap-1" onClick={handleClose} disabled={Proses}>
                             <TbXboxX />
                             Batal
                         </ButtonRed>

@@ -1,6 +1,7 @@
 'use client'
 
 import { FiHome } from 'react-icons/fi';
+import { ButtonGreen } from '@/components/global/Button';
 import Musrebang from '@/components/pages/rencanakinerja/Rincian/Usulan';
 import SubKegiatan from '@/components/pages/rencanakinerja/Rincian/SubKegiatan';
 import Sakip from '@/components/pages/rencanakinerja/Rincian/Sakip';
@@ -8,14 +9,17 @@ import Renaksi from '@/components/pages/rencanakinerja/Rincian/Renaksi';
 import DasarHukum from '@/components/pages/rencanakinerja/Rincian/DasarHukum';
 import GambaranUmum from '@/components/pages/rencanakinerja/Rincian/GambaranUmum';
 import Inovasi from '@/components/pages/rencanakinerja/Rincian/Inovasi';
+import { AlertNotification } from '@/components/global/Alert';
 import Permasalahan from '@/components/pages/rencanakinerja/Rincian/Permasalahan';
-import { useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getUser, getOpdTahun } from '@/components/lib/Cookie';
+import { TbDeviceFloppy } from 'react-icons/tb';
 
 const RincianRencanaKinerja = () => {
 
     const params = useParams();
+    const router = useRouter();
     const id_rekin = params.id as string;
     const [User, setUser] = useState<any>(null);
     const [Tahun, setTahun] = useState<any>(null);
@@ -23,19 +27,19 @@ const RincianRencanaKinerja = () => {
     useEffect(() => {
         const fetchUser = getUser();
         const data = getOpdTahun();
-        if(fetchUser){
+        if (fetchUser) {
             setUser(fetchUser.user);
         }
-        if(data.tahun){
+        if (data.tahun) {
             const tahun = {
                 value: data.tahun.value,
                 label: data.tahun.label,
             }
             setTahun(tahun);
         }
-    },[]);
+    }, []);
 
-    return(
+    return (
         <>
             <div className="flex items-center">
                 <a href="/" className="mr-1"><FiHome /></a>
@@ -52,7 +56,7 @@ const RincianRencanaKinerja = () => {
                     <button className="w-full uppercase bg-emerald-500 rounded-lg py-1 font-bold my-1">manrisk siap diverifikasi</button>
                     <div className="my-3 border"></div>
                 </div> */}
-                <Musrebang 
+                <Musrebang
                     id={id_rekin}
                     nip={User?.nip}
                 />
@@ -62,21 +66,33 @@ const RincianRencanaKinerja = () => {
                     nip={User?.nip}
                     kode_opd={User?.kode_opd}
                 />
-                <Sakip id={id_rekin}/>
-                <Renaksi id={id_rekin}/>
-                <DasarHukum 
+                <Sakip id={id_rekin} />
+                <Renaksi id={id_rekin} />
+                <DasarHukum
                     id={id_rekin}
                     nip={User?.nip}
                 />
-                <GambaranUmum 
+                <GambaranUmum
                     id={id_rekin}
                     nip={User?.nip}
                 />
-                <Permasalahan 
+                <Permasalahan
                     id={id_rekin}
                     nip={User?.nip}
                 />
                 {/* <Inovasi id={id_rekin}/> */}
+                <div className="w-full mt-4">
+                    <ButtonGreen
+                        onClick={() => {
+                            AlertNotification("Tersimpan", "Data rincian rencana kinerja berhasil disimpan", "success", 2000);
+                            router.push('/rencanakinerja');
+                        }}
+                        className='w-full flex items-center gap-1'
+                    >
+                        <TbDeviceFloppy />
+                        Selesai
+                    </ButtonGreen>
+                </div>
             </div>
         </>
     )

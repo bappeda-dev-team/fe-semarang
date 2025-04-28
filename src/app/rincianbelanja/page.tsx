@@ -4,21 +4,26 @@ import { TableAsn } from '@/components/pages/rincianbelanja/Table';
 import { FiHome } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { getOpdTahun, getUser } from '@/components/lib/Cookie';
+import { ButtonGreen } from '@/components/global/Button';
+import { AlertNotification } from '@/components/global/Alert';
+import { useRouter } from 'next/navigation';
+import { TbDeviceFloppy } from 'react-icons/tb';
 import Maintenance from '@/components/global/Maintenance';
 
 const RincianBelanja = () => {
 
     const [Tahun, setTahun] = useState<any>(null);
     const [User, setUser] = useState<any>(null);
+    const router = useRouter();
 
     useEffect(() => {
         const data = getOpdTahun();
         const fetchUser = getUser();
-        if(fetchUser){
+        if (fetchUser) {
             setUser(fetchUser.user);
         }
-        if(data){
-            if(data.tahun){
+        if (data) {
+            if (data.tahun) {
                 const tahun_value = {
                     value: data.tahun.value,
                     label: data.tahun.label,
@@ -26,9 +31,9 @@ const RincianBelanja = () => {
                 setTahun(tahun_value);
             }
         }
-    },[]);
+    }, []);
 
-    return(
+    return (
         <>
             <div className="flex items-center">
                 <a href="/" className="mr-1"><FiHome /></a>
@@ -48,7 +53,19 @@ const RincianBelanja = () => {
                     </div>
                 </div>
                 <div className="m-3">
-                    <TableAsn 
+                    <div className="w-full mt-4">
+                        <ButtonGreen
+                            onClick={() => {
+                                AlertNotification("Tersimpan", "Data rincian belanja berhasil disimpan", "success", 2000);
+                                router.push('/rencanakinerja');
+                            }}
+                            className='w-full flex items-center gap-1'
+                        >
+                            <TbDeviceFloppy />
+                            Selesai
+                        </ButtonGreen>
+                    </div>
+                    <TableAsn
                         tahun={Tahun?.value}
                         nip={User?.nip}
                     />

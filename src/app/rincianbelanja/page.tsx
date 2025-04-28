@@ -53,11 +53,15 @@ const RincianBelanja = () => {
                     </div>
                 </div>
                 <div className="m-3">
+                    <TableAsn
+                        tahun={Tahun?.value}
+                        nip={User?.nip}
+                    />
                     <div className="w-full mt-4">
                         <ButtonGreen
                             onClick={() => {
                                 AlertNotification("Tersimpan", "Data rincian belanja berhasil disimpan", "success", 2000);
-                                router.push('/rencanakinerja');
+                                router.push('/rincianbelanja');
                             }}
                             className='w-full flex items-center gap-1'
                         >
@@ -65,10 +69,6 @@ const RincianBelanja = () => {
                             Selesai
                         </ButtonGreen>
                     </div>
-                    <TableAsn
-                        tahun={Tahun?.value}
-                        nip={User?.nip}
-                    />
                 </div>
             </div>
         </>

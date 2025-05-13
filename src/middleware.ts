@@ -4,7 +4,7 @@ import * as jwtDecoded from "jwt-decode";
 export function middleware(req: NextRequest) {
 
     const tokenCookie = req.cookies.get('token');
-    
+
     if (tokenCookie) {
         const token = tokenCookie.value;
         try {
@@ -27,6 +27,6 @@ export function middleware(req: NextRequest) {
 
 export const config = {
     matcher: [
-      "/((?!api|_next/static|_next/image|favicon.ico|login|backgrounds).*)",
+        "/((?!api|_next/static|_next/image|favicon.ico|login|backgrounds|logo).*)",
     ],
-  };  
+};

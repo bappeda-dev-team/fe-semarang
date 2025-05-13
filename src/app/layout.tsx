@@ -1,14 +1,14 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import Header from "@/components/global/Header";
+import { Sidebar } from "@/components/global/Sidebar";
+import { getUser } from "@/components/lib/Cookie";
 import { AppProvider } from "@/context/AppContext";
 import { Poppins } from "next/font/google";
-import { Sidebar } from "@/components/global/Sidebar";
-import Header from "@/components/global/Header";
-import { usePathname } from "next/navigation";
-import { getUser } from "@/components/lib/Cookie";
-import NextTopLoader from "nextjs-toploader";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import NextTopLoader from "nextjs-toploader";
+import { useEffect, useState } from "react";
 import "./globals.css";
 
 const font = Poppins({
@@ -77,7 +77,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
           >
             <div className="flex flex-wrap justify-center items-center gap-5 m-5 rounded-lg border bg-gray-300 hover:bg-white border-white shadow-lg shadow-white">
               <div className="flex flex-col justify-center items-center gap-3 m-2">
-                <Image 
+                <Image
                   className="mx-[100px]"
                   src="/logo.png"
                   alt="logo"

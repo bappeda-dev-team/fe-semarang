@@ -119,7 +119,7 @@ const Header = () => {
     ];
 
     return (
-        <div className="flex flex-wrap gap-2 justify-between items-center rounded-2xl mx-2 mt-2 bg-gradient-to-r from-[#182C4E] to-[#17212D] py-4 pr-2 pl-3">
+        <div className="flex flex-wrap gap-2 justify-between items-center rounded-2xl mx-2 mt-2 bg-gradient-to-bl from-[#1b1c1c] to-[#212121] py-4 pr-2 pl-3">
             <div className="flex flex-col text-white max-w-[400px]">
                 {user?.roles == 'super_admin' ?
                     <h1 className="font-light text-sm">{Opd ? Opd?.label : "Pilih OPD"}</h1>

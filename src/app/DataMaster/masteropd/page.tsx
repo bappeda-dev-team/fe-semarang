@@ -16,7 +16,7 @@ const masteropd = () => {
             <div className="mt-3 rounded-xl shadow-lg border">
                 <div className="flex items-center justify-between border-b px-5 py-5">
                     <div className="flex flex-col items-end">
-                        <h1 className="uppercase font-bold">Daftar OPD kabupaten Madiun</h1>
+                        <h1 className="uppercase font-bold">Daftar OPD</h1>
                     </div>
                     <div className="flex flex-col">
                         <ButtonSky 

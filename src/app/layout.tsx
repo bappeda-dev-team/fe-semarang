@@ -70,7 +70,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
         <body>
           <div className="flex flex-wrap justify-center items-center h-screen"
             style={{
-              backgroundImage: "url('/backgrounds/login-bg-2.png')",
+              backgroundImage: "url('./backgrounds/login-bg-2.png')",
               backgroundSize: "cover",  // Fit the image inside the box
               backgroundPosition: "center",
             }}

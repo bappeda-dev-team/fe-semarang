@@ -33,3 +33,11 @@ export const LoadingButtonClip = (loading: any) => {
     </div>
   );
 };
+// color ikut parent
+export const LoadingButtonClip2 = (loading: any, color: string) => {
+  return (
+    <div className="mr-2 flex flex-col items-center justify-center z-50">
+      <ClipLoader color={`${color}`} loading={loading} size={15} />
+    </div>
+  );
+};

@@ -3,7 +3,7 @@
 import { TableLaporan } from '@/components/pages/rincianbelanja/TableLaporan';
 import { FiHome } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
-import { getOpdTahun, getUser } from '@/components/lib/Cookie';
+import { getOpdTahun, getUser, getToken } from '@/components/lib/Cookie';
 import Maintenance from '@/components/global/Maintenance';
 import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
 
@@ -50,17 +50,13 @@ const LaporanRincianBelanja = () => {
                     {(User?.roles == 'super_admin' || User?.roles == 'reviewer') ?
                         <h1 className="text-sm">{SelectedOpd?.label || ''}</h1>
                         :
-                        <h1 className="text-sm">{User?.kode_opd || ''}</h1>
+                        <h1 className="text-sm">{User?.nip || ''}</h1>
                     }
                 </div>
                 <div className="flex m-2">
-                    {(User?.roles == 'super_admin' || User?.roles == 'reviewer') ?
-                        (SelectedOpd?.value === undefined || Tahun?.value === undefined) ?
-                            <div className="w-full">
-                                <OpdTahunNull />
-                            </div>
-                            :
+                    {(User?.roles == 'super_admin' || User?.roles == 'reviewer' || User?.roles == 'admin_opd') ?
                             <TableLaporan
+                                role={User?.roles}
                                 tahun={Tahun?.value}
                                 kode_opd={(User?.roles == 'super_admin' || User?.roles == 'reviewer') ? SelectedOpd?.value : User?.kode_opd}
                             />
@@ -71,8 +67,10 @@ const LaporanRincianBelanja = () => {
                             </div>
                             :
                             <TableLaporan
+                                role={User?.roles}
+                                nip={User?.nip}
                                 tahun={Tahun?.value}
-                                kode_opd={(User?.roles == 'super_admin' || User?.roles == 'reviewer') ? SelectedOpd?.value : User?.kode_opd}
+                                kode_opd={User?.kode_opd}
                             />
                     }
                 </div>

@@ -4,7 +4,7 @@ import '@/components/pages/Pohon/treeflex.css'
 import React, { useState, useEffect, useRef } from 'react';
 import { TbPencil, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHandStop, TbPointer, TbSettings, TbHourglass, TbCopy, TbEye, TbPrinter } from 'react-icons/tb';
 import { ButtonGreenBorder, ButtonSkyBorder, ButtonRedBorder, ButtonBlackBorder, ButtonBlack, ButtonSky } from '@/components/global/Button';
-import { LoadingBeat, LoadingButtonClip } from '@/components/global/Loading';
+import { LoadingBeat, LoadingButtonClip, LoadingButtonClip2, LoadingClip, LoadingSync } from '@/components/global/Loading';
 import { OpdTahunNull, TahunNull } from '@/components/global/OpdTahunNull';
 import { PohonOpd } from '@/components/lib/Pohon/Opd/PohonOpd';
 import { FormPohonOpd } from '@/components/lib/Pohon/Opd/FormPohonOpd';
@@ -63,6 +63,7 @@ const PokinOpd = () => {
     const [OpenModalTujuanOpd, setOpenModalTujuanOpd] = useState<boolean>(false);
 
     //rekapitulasi jumlah pohon dari pemda
+    const [LoadingTotalPending, setLoadingTotalPending] = useState<boolean>(false);
     const [JumlahPemdaStrategic, setJumlahPemdaStrategic] = useState<PokinPemda[]>([]);
     const [JumlahPemdaTactical, setJumlahPemdaTactical] = useState<PokinPemda[]>([]);
     const [JumlahPemdaOperational, setJumlahPemdaOperational] = useState<PokinPemda[]>([]);
@@ -72,6 +73,7 @@ const PokinOpd = () => {
     const [TriggerAfterPokinOutside, setTriggerAfterPokinOutside] = useState<boolean>(false);
     const [LevelPemda, setLevelPemda] = useState<number>(0);
 
+    const [LoadingTotalPemda, setLoadingTotalPemda] = useState<boolean>(false);
     const [StrategicPemdaLength, setStrategicPemdaLenght] = useState<number>(0);
     const [TacticalPemdaLength, setTacticalPemdaLenght] = useState<number>(0);
     const [OperationalPemdaLength, setOperationalPemdaLenght] = useState<number>(0);
@@ -231,9 +233,9 @@ const PokinOpd = () => {
     useEffect(() => {
         const fetchPokinOpd = async (url: string) => {
             const API_URL = process.env.NEXT_PUBLIC_API_URL;
-            setLoading(true);
             //FETCH POKIN OPD
             try {
+                setLoading(true);
                 const response = await fetch(`${API_URL}/${url}`, {
                     headers: {
                         Authorization: `${token}`,
@@ -254,6 +256,7 @@ const PokinOpd = () => {
             }
             //FETCH STATUS POHON PEMDA
             try {
+                setLoadingTotalPemda(true);
                 const url = User?.roles == 'super_admin' ? `pohon_kinerja/status/${SelectedOpd?.value}/${Tahun?.value}` : `pohon_kinerja/status/${User?.kode_opd}/${Tahun?.value}`;
                 const response = await fetch(`${API_URL}/${url}`, {
                     headers: {
@@ -278,7 +281,7 @@ const PokinOpd = () => {
                 setError('gagal mendapatkan data status pohon pemda, terdapat kesalahan backend/server saat mengambil data pohon kinerja perangkat daerah');
                 console.error(err);
             } finally {
-                setLoading(false);
+                setLoadingTotalPemda(false);
             }
             //FETCH STATUS POHON CROSSCUTTING
             try {
@@ -308,6 +311,7 @@ const PokinOpd = () => {
             }
             //FETCH JUMLAH POHON PEMDA YANG DITERIMA
             try {
+                setLoadingTotalPending(true);
                 const url = User?.roles == 'super_admin' ? `pohon_kinerja_opd/count_pokin_pemda/${SelectedOpd?.value}/${Tahun?.value}` : `pohon_kinerja_opd/count_pokin_pemda/${User?.kode_opd}/${Tahun?.value}`;
                 const response = await fetch(`${API_URL}/${url}`, {
                     headers: {
@@ -321,10 +325,10 @@ const PokinOpd = () => {
                 const result = await response.json();
                 const data = result.data.detail_level || [];
                 if (data.length !== 0) {
-                        // console.log('strategic : ', data[0].jumlah_pemda, 'tactical : ', data[0].jumlah_pemda, 'operatiocal : ', data[0].jumlah_pemda);
-                        setStrategicPemdaLenght(data[0].jumlah_pemda);
-                        setTacticalPemdaLenght(data[1].jumlah_pemda);
-                        setOperationalPemdaLenght(data[2].jumlah_pemda);
+                    // console.log('strategic : ', data[0].jumlah_pemda, 'tactical : ', data[0].jumlah_pemda, 'operatiocal : ', data[0].jumlah_pemda);
+                    setStrategicPemdaLenght(data[0].jumlah_pemda);
+                    setTacticalPemdaLenght(data[1].jumlah_pemda);
+                    setOperationalPemdaLenght(data[2].jumlah_pemda);
                 } else {
                     return null;
                 }
@@ -332,7 +336,7 @@ const PokinOpd = () => {
                 setError('gagal mendapatkan data pohon pemda yang diterima, terdapat kesalahan backend/server saat mengambil data pohon kinerja perangkat daerah');
                 console.error(err);
             } finally {
-                setLoading(false);
+                setLoadingTotalPending(false);
             }
         }
         if (User?.roles == 'super_admin' || User?.roles == 'reviewer') {
@@ -440,7 +444,11 @@ const PokinOpd = () => {
                                             </td>
                                             <td className='flex justify-center px-2 py-1 text-center w-full'>
                                                 <h1 className="flex items-center gap-1 font-semibold">
-                                                    {JumlahPemdaStrategic?.length || 0}
+                                                    {LoadingTotalPemda ? 
+                                                        <LoadingButtonClip2 />
+                                                    :
+                                                        JumlahPemdaStrategic?.length || 0
+                                                    }
                                                     <TbHourglass />
                                                 </h1>
                                             </td>
@@ -451,7 +459,11 @@ const PokinOpd = () => {
                                             </td>
                                             <td className='flex justify-center px-2 py-1 text-center w-full'>
                                                 <h1 className="flex items-center gap-1 font-semibold">
-                                                    {StrategicPemdaLength || 0}
+                                                    {LoadingTotalPending ?
+                                                        <LoadingButtonClip2 />
+                                                        :
+                                                        StrategicPemdaLength || 0
+                                                    }
                                                     <TbCheck />
                                                 </h1>
                                             </td>
@@ -471,7 +483,11 @@ const PokinOpd = () => {
                                             </td>
                                             <td className='flex justify-center px-2 py-1 text-center w-full'>
                                                 <h1 className="flex items-center gap-1 font-semibold">
-                                                    {JumlahPemdaTactical?.length || 0}
+                                                    {LoadingTotalPemda ? 
+                                                            <LoadingButtonClip2 />
+                                                        :
+                                                            JumlahPemdaTactical?.length || 0
+                                                    }
                                                     <TbHourglass />
                                                 </h1>
                                             </td>
@@ -482,7 +498,11 @@ const PokinOpd = () => {
                                             </td>
                                             <td className='flex justify-center px-2 py-1 text-center w-full'>
                                                 <h1 className="flex items-center gap-1 font-semibold">
-                                                    {TacticalPemdaLength || 0}
+                                                    {LoadingTotalPending ?
+                                                        <LoadingButtonClip2 />
+                                                        :
+                                                        TacticalPemdaLength || 0
+                                                    }
                                                     <TbCheck />
                                                 </h1>
                                             </td>
@@ -502,7 +522,11 @@ const PokinOpd = () => {
                                             </td>
                                             <td className='flex justify-center px-2 py-1 text-center w-full'>
                                                 <h1 className="flex gap-1 items-center font-semibold">
-                                                    {JumlahPemdaOperational?.length || 0}
+                                                    {LoadingTotalPemda ? 
+                                                            <LoadingButtonClip2 />
+                                                        :
+                                                            JumlahPemdaOperational?.length || 0
+                                                    }
                                                     <TbHourglass />
                                                 </h1>
                                             </td>
@@ -513,7 +537,11 @@ const PokinOpd = () => {
                                             </td>
                                             <td className='flex justify-center px-2 py-1 text-center w-full'>
                                                 <h1 className="flex gap-1 items-center font-semibold">
-                                                    {OperationalPemdaLength || 0}
+                                                    {LoadingTotalPending ?
+                                                        <LoadingButtonClip2 />
+                                                        :
+                                                        OperationalPemdaLength || 0
+                                                    }
                                                     <TbCheck />
                                                 </h1>
                                             </td>
@@ -658,7 +686,7 @@ const PokinOpd = () => {
                                             onClick={() => {
                                                 setShowAllDetail(true);
                                                 AlertQuestion2("Sembunyikan Sidebar untuk hasil cetak penuh", "", "warning", "Cetak", "Batal").then((result) => {
-                                                    if(result.isConfirmed){
+                                                    if (result.isConfirmed) {
                                                         handleDownloadPdf();
                                                         console.log(containerRef.current);
                                                     }
@@ -726,16 +754,16 @@ const PokinOpd = () => {
                             ) : (
                                 <ul>
                                     {formList.map((formId) => (
-                                    <React.Fragment key={formId}>
-                                        <FormPohonOpd
-                                            level={3}
-                                            id={null}
-                                            key={formId}
-                                            formId={formId}
-                                            pokin={'opd'}
-                                            onCancel={() => setFormList(formList.filter((id) => id !== formId))}
-                                        />
-                                    </React.Fragment>
+                                        <React.Fragment key={formId}>
+                                            <FormPohonOpd
+                                                level={3}
+                                                id={null}
+                                                key={formId}
+                                                formId={formId}
+                                                pokin={'opd'}
+                                                onCancel={() => setFormList(formList.filter((id) => id !== formId))}
+                                            />
+                                        </React.Fragment>
                                     ))}
                                 </ul>
                             )}

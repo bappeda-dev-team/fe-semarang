@@ -208,11 +208,7 @@ const FormManualIk = () => {
             }
         }
         if(User?.roles != undefined || User?.roles != null){
-            if(User?.roles == 'level_1'){
-                fetchManual(`manual_ik/sasaran_opd/${id}/${Tahun?.value}`);
-            } else {
-                fetchManual(`manual_ik/detail/${id}`);
-            }
+            fetchManual(`manual_ik/detail/${id}`);
         }
     }, [token, id, reset, Success, Tahun, User]);
 

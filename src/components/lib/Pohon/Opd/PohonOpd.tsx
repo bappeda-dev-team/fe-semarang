@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TbPrinter, TbLayersLinked, TbBookmarkPlus, TbCheck, TbCircleLetterXFilled, TbCirclePlus, TbHourglass, TbPencil, TbTrash, TbEye, TbEyeClosed, TbArrowAutofitWidth, TbDeviceTabletSearch, TbZoom } from 'react-icons/tb';
 import { ButtonSky, ButtonSkyBorder, ButtonRedBorder, ButtonGreenBorder, ButtonBlackBorder } from '@/components/global/Button';
 import { AlertNotification, AlertQuestion } from '@/components/global/Alert';
@@ -1256,7 +1256,7 @@ export const TablePohon = (props: any) => {
                             {indikator ?
                                 indikator.length > 1 ?
                                     indikator.map((data: any, index: number) => (
-                                        <>
+                                        <React.Fragment key={index}>
                                             <tr key={data.id_indikator}>
                                                 <td
                                                     className={`min-w-[100px] border px-2 py-3 bg-white text-start
@@ -1334,11 +1334,11 @@ export const TablePohon = (props: any) => {
                                                     </td>
                                                 </tr>
                                             }
-                                        </>
+                                        </React.Fragment>
                                     ))
                                     :
-                                    indikator.map((data: any) => (
-                                        <>
+                                    indikator.map((data: any, index: number) => (
+                                        <React.Fragment key={index}>
                                             <tr key={data.id_indikator}>
                                                 <td
                                                     className={`min-w-[100px] border px-2 py-3 bg-white text-start
@@ -1416,7 +1416,7 @@ export const TablePohon = (props: any) => {
                                                     </td>
                                                 </tr>
                                             }
-                                        </>
+                                        </React.Fragment>
                                     ))
                                 :
                                 <>
@@ -1649,8 +1649,8 @@ export const TablePohon = (props: any) => {
                         :
                         <div className="flex mt-2">
                             <table className="w-full">
-                                {Review.map((item: Review) => (
-                                    <tbody key={item.id}>
+                                {Review.map((item: Review, index: number) => (
+                                    <tbody key={item.id || index}>
                                         <tr>
                                             <td
                                                 className={`min-w-[100px] border-r border-b px-2 py-3 bg-yellow-100 text-start rounded-tl-lg
@@ -1815,7 +1815,7 @@ export const TableCrosscuting = (props: any) => {
         <div className="flex flex-col w-full">
 
             {item.map((data: any, index: number) => (
-                <>
+                <React.Fragment key={index}>
                     <div className="flex flex-wrap w-full bg-white p-2 mt-2 justify-between items-center rounded-t-xl">
                         <h1 className='p-1'>Crosscutting ke {index + 1}</h1>
                         <ButtonRedBorder
@@ -1854,13 +1854,13 @@ export const TableCrosscuting = (props: any) => {
                             </tr>
                             {data.indikator ?
                                 data.indikator.length > 1 ?
-                                    data.indikator.map((data: any, index: number) => (
-                                        <>
+                                    data.indikator.map((data: any, index_i: number) => (
+                                        <React.Fragment key={data.id_indikator || index_i}>
                                             <tr key={data.id_indikator}>
                                                 <td
                                                     className={`min-w-[100px] border px-2 py-3 bg-white text-start`}
                                                 >
-                                                    Indikator {index + 1}
+                                                    Indikator {index_i + 1}
                                                 </td>
                                                 <td
                                                     className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
@@ -1874,7 +1874,7 @@ export const TableCrosscuting = (props: any) => {
                                                         <td
                                                             className={`min-w-[100px] border px-2 py-3 bg-white text-start`}
                                                         >
-                                                            Target/Satuan {index + 1}
+                                                            Target/Satuan {index_i + 1}
                                                         </td>
                                                         <td
                                                             className={`min-w-[300px] border px-2 py-3 bg-white text-start`}
@@ -1898,11 +1898,11 @@ export const TableCrosscuting = (props: any) => {
                                                     </td>
                                                 </tr>
                                             }
-                                        </>
+                                        </React.Fragment>
                                     ))
                                     :
-                                    data.indikator.map((data: any) => (
-                                        <>
+                                    data.indikator.map((data: any, index_i: number) => (
+                                        <React.Fragment key={data.id_indikator || index_i}>
                                             <tr key={data.id_indikator}>
                                                 <td
                                                     className={`min-w-[100px] border px-2 py-3 bg-white text-start`}
@@ -1944,7 +1944,7 @@ export const TableCrosscuting = (props: any) => {
                                                     </td>
                                                 </tr>
                                             }
-                                        </>
+                                        </React.Fragment>
                                     ))
                                 :
                                 <>
@@ -2059,7 +2059,7 @@ export const TableCrosscuting = (props: any) => {
                             }
                         </tbody>
                     </table>
-                </>
+                </React.Fragment>
             ))}
         </div>
     );
@@ -2231,7 +2231,7 @@ export const TablePohonEdited = (props: any) => {
                             {indikator ?
                                 indikator.length > 1 ?
                                     indikator.map((data: any, index: number) => (
-                                        <>
+                                        <React.Fragment key={data.id_indikator || index}>
                                             <tr key={data.id_indikator}>
                                                 <td
                                                     className={`min-w-[100px] border px-2 py-3 bg-white text-start
@@ -2282,11 +2282,11 @@ export const TablePohonEdited = (props: any) => {
                                                     </td>
                                                 </tr>
                                             ))}
-                                        </>
+                                        </React.Fragment>
                                     ))
                                     :
-                                    indikator.map((data: any) => (
-                                        <>
+                                    indikator.map((data: any, index_i: number) => (
+                                        <React.Fragment key={data.id_indikator || index_i}>
                                             <tr key={data.id_indikator}>
                                                 <td
                                                     className={`min-w-[100px] border px-2 py-3 bg-white text-start
@@ -2337,7 +2337,7 @@ export const TablePohonEdited = (props: any) => {
                                                     </td>
                                                 </tr>
                                             ))}
-                                        </>
+                                        </React.Fragment>
                                     ))
                                 :
                                 <>

@@ -76,10 +76,13 @@ export const Pohon: React.FC<pohon> = ({ tema, tahun, deleteTrigger, user, show_
         if (show_all) {
             setShow(true);
         }
-        if (show_all && (Show === false)) {
-            set_show_all();
+        // if (show_all && (Show === false)) {
+        //     setShow(true);
+        // }
+        if(!show_all){
+            setShow(false);
         }
-    }, [show_all, Show, set_show_all]);
+    }, [show_all, set_show_all]);
 
     const handleNewReview = () => {
         if (IsNewReview) {

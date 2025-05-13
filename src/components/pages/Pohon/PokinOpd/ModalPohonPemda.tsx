@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { AlertNotification } from "@/components/global/Alert";
+import { AlertNotification, AlertQuestion2 } from "@/components/global/Alert";
 import Select from 'react-select'
 import { TbCircleCheckFilled, TbCircleLetterXFilled, TbFileCheck, TbFilePlus, TbEye, TbEyeClosed } from 'react-icons/tb';
 import { ButtonRedBorder, ButtonSkyBorder, ButtonRed, ButtonBlackBorder } from "@/components/global/Button";
@@ -516,7 +516,11 @@ export const ModalPohonPemda: React.FC<modal> = ({isOpen, onClose, onSuccess, is
                             if (PohonPemda?.value == null || undefined) {
                                 AlertNotification("Pilih", "Pilih Pohon dari pemda terlebih dahulu", "warning", 1000);
                             } else {
-                                tolakPohonPemda(PohonPemda?.value);
+                                AlertQuestion2("Tolak?", "'koordinasikan ulang dengan BAPERIDA sebelum tolak, apakah anda yakin akan menghapus?", "warning", "Ya", "Tidak").then((result) => {
+                                    if(result.isConfirmed){
+                                        tolakPohonPemda(PohonPemda?.value);
+                                    }
+                                })
                             }
                         }}
                     >

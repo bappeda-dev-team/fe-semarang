@@ -198,9 +198,21 @@ const TematikKab = () => {
                     <h1 className="font-semibold">Pilih Tematik terlebih dahulu</h1>
                     :
                     <>
-                        <ButtonBlackBorder onClick={() => setShowAll(true)}>
+                        <ButtonBlackBorder
+                            onClick={() => {
+                                if (ShowAll) {
+                                    setShowAll(false);
+                                } else {
+                                    setShowAll(true);
+                                }
+                            }}
+                        >
                             <TbEye className='mr-1' />
-                            Tampilkan Semua Pohon
+                            {ShowAll ? 
+                                'Sembunyikan Semua Pohon'
+                            :
+                                'Tampilkan Semua Pohon'
+                            }
                         </ButtonBlackBorder>
                         <ButtonSky
                             onClick={() => {
@@ -227,7 +239,9 @@ const TematikKab = () => {
                             <PohonTematik
                                 id={Tematik?.value}
                                 show_all={ShowAll}
-                                set_show_all={() => setShowAll(false)}
+                                set_show_all={() => {
+                                    setShowAll(true)
+                                }}
                             />
                         </div>
                     </div>

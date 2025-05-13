@@ -132,7 +132,7 @@ const Table = () => {
 
     return(
         <>
-            <div className="flex flex-wrap gap-2 items-center justify-center px-3 py-2">
+            {/* <div className="flex flex-wrap gap-2 items-center justify-center px-3 py-2">
                 <div className="flex flex-wrap justify-center items-center gap-2">
                     {LevelUser == '' ? 
                         <button className="px-3 py-1 text-center bg-black rounded-lg text-white">Semua Level</button>
@@ -170,7 +170,7 @@ const Table = () => {
                         <ButtonGreenBorder onClick={() => {setLevelUser('level_4')}}>Level 4</ButtonGreenBorder>
                     }
                 </div>
-            </div>
+            </div> */}
             <div className="overflow-auto m-2 rounded-t-xl border">
                 <table className="w-full">
                     <thead>

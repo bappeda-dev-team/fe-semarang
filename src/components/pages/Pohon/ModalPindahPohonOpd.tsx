@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Controller, SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import { ButtonSky, ButtonRed } from '@/components/global/Button';
 import { AlertNotification } from "@/components/global/Alert";
@@ -419,8 +419,8 @@ export const TablePohon = ({item} : {item: pohon}) => {
                 {indikator ?
                     indikator.length > 1 ?
                         indikator.map((data: any, index: number) => (
-                            <>
-                                <tr key={data.id_indikator}>
+                            <React.Fragment key={data.id_indikator}>
+                                <tr>
                                     <td
                                         className={`min-w-[50px] border px-2 py-3 bg-white text-start
                                             ${jenis === "Strategic" && "border-red-700"}
@@ -497,12 +497,12 @@ export const TablePohon = ({item} : {item: pohon}) => {
                                             </td>
                                         </tr>
                                 }
-                            </>
+                            </React.Fragment>
                         ))
                         :
                         indikator.map((data: any) => (
-                            <>
-                                <tr key={data.id_indikator}>
+                            <React.Fragment key={data.id_indikator}>
+                                <tr>
                                     <td
                                         className={`min-w-[50px] border px-2 py-3 bg-white text-start
                                             ${jenis === "Strategic" && "border-red-700"}
@@ -579,7 +579,7 @@ export const TablePohon = ({item} : {item: pohon}) => {
                                             </td>
                                         </tr>
                                 }
-                            </>
+                            </React.Fragment>
                         ))
                     :
                     <>

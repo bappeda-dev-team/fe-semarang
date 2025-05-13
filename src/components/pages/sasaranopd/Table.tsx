@@ -24,10 +24,8 @@ interface Target {
 interface Indikator {
     id: string;
     indikator: string;
-    manual_ik: {
-        formula: string;
-        sumber_data: string;
-    }
+    rumus_perhitungan: string;
+    sumber_data: string;
     target: Target[];
 }
 
@@ -38,24 +36,23 @@ interface Pelaksana {
     nama_pegawai: string;
 }
 
-interface RencanaKinerja {
+interface SasaranOpd {
     id: string;
     tahun_awal: string;
     tahun_akhir: string;
     jenis_periode: string;
-    nama_rencana_kinerja: string;
+    nama_sasaran_opd: string;
     nip: string;
     indikator: Indikator[];
 }
 
 interface Sasaran {
-    id: number;
     id_pohon: number;
     nama_pohon: string;
     jenis_pohon: string;
     tahun_pohon: string;
     level_pohon: number;
-    rencana_kinerja: RencanaKinerja[];
+    sasaran_opd: SasaranOpd[];
     pelaksana: Pelaksana[];
 }
 
@@ -159,7 +156,7 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
         const API_URL = process.env.NEXT_PUBLIC_API_URL;
         // console.log(id);
         try {
-            const response = await fetch(`${API_URL}/rencana_kinerja/delete/${id}`, {
+            const response = await fetch(`${API_URL}/sasaran_opd/delete/${id}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `${token}`,
@@ -231,7 +228,7 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
         )
     } else if (Tahun?.value == undefined) {
         return <TahunNull />
-    } else if(User?.roles == 'super_admin'){
+    } else if (User?.roles == 'super_admin') {
         if (SelectedOpd?.value == undefined) {
             return (
                 <>
@@ -283,17 +280,17 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                             Sasaran.map((data: Sasaran, index: number) => {
                                 // Cek apakah data.tujuan_pemda ada
                                 const hasPelaksana = data.pelaksana.length != 0;
-                                const hasSasaran = data.rencana_kinerja.length != 0;
-                                const TotalRow = data.rencana_kinerja.reduce((total, item) => total + (item.indikator.length == 0 ? 1 : item.indikator.length), 0) + data.rencana_kinerja.length + 1;
+                                const hasSasaran = data.sasaran_opd.length != 0;
+                                const TotalRow = data.sasaran_opd.reduce((total, item) => total + (item.indikator.length == 0 ? 1 : item.indikator.length), 0) + data.sasaran_opd.length + 1;
 
                                 return (
                                     <React.Fragment key={index}>
                                         {/* Baris Utama */}
                                         <tr>
-                                            <td className="border-x border-b border-emerald-500 px-6 py-4 text-center" rowSpan={data.rencana_kinerja.length === 0 ? 2 : TotalRow}>
+                                            <td className="border-x border-b border-emerald-500 px-6 py-4 text-center" rowSpan={data.sasaran_opd.length === 0 ? 2 : TotalRow}>
                                                 {index + 1}
                                             </td>
-                                            <td className="border-r border-b border-emerald-500 px-6 py-4" rowSpan={data.rencana_kinerja.length === 0 ? 2 : TotalRow}>
+                                            <td className="border-r border-b border-emerald-500 px-6 py-4" rowSpan={data.sasaran_opd.length === 0 ? 2 : TotalRow}>
                                                 <div className="flex flex-col gap-2">
                                                     {data.nama_pohon || "-"}
                                                     {(hasPelaksana && tipe === "opd") &&
@@ -302,7 +299,7 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                                                                 <button
                                                                     className="flex justify-between gap-1 rounded-full p-1 bg-sky-500 text-white border border-sky-500 hover:bg-white hover:text-sky-500 hover:border hover:border-sky-500"
                                                                     onClick={() => {
-                                                                        handleModalNewSasaran(data.id, data.nama_pohon);
+                                                                        handleModalNewSasaran(data.id_pohon, data.nama_pohon);
                                                                         fetchOptionPelaksana(data.pelaksana);
                                                                     }}
                                                                 >
@@ -317,22 +314,22 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                                                     }
                                                 </div>
                                             </td>
-                                            <td className="border-r border-b border-emerald-500 px-6 py-4" rowSpan={data.rencana_kinerja.length === 0 ? 2 : TotalRow}>
+                                            <td className="border-r border-b border-emerald-500 px-6 py-4" rowSpan={data.sasaran_opd.length === 0 ? 2 : TotalRow}>
                                                 {data.pelaksana.length == 0 ?
                                                     <p className="text-red-500">Pelaksana Belum Di Pilih</p>
                                                     :
                                                     data.pelaksana.map((p: Pelaksana) => (
-                                                        <p key={p.id}>{p.nama_pegawai}</p>
+                                                        <p key={p.id} className="flex flex-col justify-center gap-1">{p.nama_pegawai} ({p.nip})</p>
                                                     ))
                                                 }
                                             </td>
                                         </tr>
                                         {hasSasaran ?
-                                            data.rencana_kinerja.map((item: RencanaKinerja) => (
+                                            data.sasaran_opd.map((item: SasaranOpd) => (
                                                 <React.Fragment key={item.id}>
                                                     <tr>
                                                         <td className="border-x border-b border-emerald-500 px-6 py-6 h-[150px]" rowSpan={item.indikator.length !== 0 ? item.indikator.length + 1 : 2}>
-                                                            {item.nama_rencana_kinerja || "-"} ({item.nip})
+                                                            {item.nama_sasaran_opd || "-"}
                                                         </td>
                                                         {tipe === "opd" &&
                                                             <td className="border-x border-b border-emerald-500 px-6 py-6" rowSpan={item.indikator.length !== 0 ? item.indikator.length + 1 : 2}>
@@ -340,7 +337,7 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                                                                     <ButtonGreen
                                                                         className="flex items-center gap-1 w-full"
                                                                         onClick={() => {
-                                                                            handleModalEditSasaran(item.id, data.id, data.nama_pohon);
+                                                                            handleModalEditSasaran(item.id, data.id_pohon, data.nama_pohon);
                                                                             fetchOptionPelaksana(data.pelaksana);
                                                                         }}
                                                                     >
@@ -372,8 +369,8 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                                                         item.indikator.map((i: Indikator) => (
                                                             <tr key={i.id}>
                                                                 <td className="border-x border-b border-emerald-500 px-6 py-6">{i.indikator || "-"}</td>
-                                                                <td className="border-x border-b border-emerald-500 px-6 py-6">{i.manual_ik != null ? i.manual_ik.formula : "-"}</td>
-                                                                <td className="border-x border-b border-emerald-500 px-6 py-6">{i.manual_ik != null ? i.manual_ik.sumber_data : "-"}</td>
+                                                                <td className="border-x border-b border-emerald-500 px-6 py-6">{i.rumus_perhitungan || "-"}</td>
+                                                                <td className="border-x border-b border-emerald-500 px-6 py-6">{i.sumber_data || "-"}</td>
                                                                 {i.target.map((t: Target) => (
                                                                     <React.Fragment key={t.id}>
                                                                         <td className="border-x border-b border-emerald-500 px-6 py-6 text-center">{t.target || "-"}</td>
@@ -386,9 +383,11 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                                                 </React.Fragment>
                                             ))
                                             :
-                                            <td className="border-r border-b border-emerald-500 px-6 py-4 bg-red-400 text-white" colSpan={30}>
-                                                Sasaran OPD belum di buat
-                                            </td>
+                                            <tr>
+                                                <td className="border-r border-b border-emerald-500 px-6 py-4 bg-red-400 text-white" colSpan={30}>
+                                                    Sasaran OPD belum di buat
+                                                </td>
+                                            </tr>
                                         }
                                     </React.Fragment>
                                 );
@@ -409,7 +408,6 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                     jenis_periode={jenis}
                     kode_opd={User?.roles == 'super_admin' ? SelectedOpd?.value : User?.kode_opd}
                     isOpen={isOpenNewSasaran}
-                    pelaksana={PelaksanaOption}
                     onClose={() => handleModalNewSasaran(0, '')}
                     onSuccess={() => setFetchTrigger((prev) => !prev)}
                 />
@@ -426,7 +424,6 @@ const Table: React.FC<table> = ({ tipe, id_periode, tahun_awal, tahun_akhir, jen
                     tahun_akhir={tahun_akhir}
                     kode_opd={User?.roles == 'super_admin' ? SelectedOpd?.value : User?.kode_opd}
                     jenis_periode={jenis}
-                    pelaksana={PelaksanaOption}
                     isOpen={isOpenEditSasaran}
                     onClose={() => handleModalEditSasaran('', 0, '')}
                     onSuccess={() => setFetchTrigger((prev) => !prev)}

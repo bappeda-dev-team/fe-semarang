@@ -13,7 +13,8 @@ import {
   TbAlertTriangle,
   TbAlertCircle,
   TbDatabasePlus,
-  TbCalendarPlus
+  TbCalendarPlus,
+  TbDeviceImacDollar
 } from "react-icons/tb";
 import Image from 'next/image';
 import { usePathname, useParams } from 'next/navigation';
@@ -4799,6 +4800,12 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
               <li className={`flex items-center gap-x-2 text-sm cursor-pointer p-2 rounded-xl ${RencanaKinerjaKAK ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
                 <TbChecklist className="text-xl" />
                 <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Rencana Kinerja KAK</span>
+              </li>
+            </Link>
+            <Link href="/laporanrincianbelanja">
+              <li className={`flex items-center gap-x-2 cursor-pointer p-2 rounded-xl ${LaporanRincianBelanja ? "bg-white text-gray-800" : "hover:bg-slate-500"}`}>
+                <TbDeviceImacDollar className="text-xl" />
+                <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Rincian Belanja</span>
               </li>
             </Link>
             <Link href="/laporanrenstra">

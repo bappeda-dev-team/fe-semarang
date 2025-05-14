@@ -84,7 +84,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                   width={90}
                   height={90}
                 />
-                <h1 className="uppercase font-bold text-xl">KOTA SEMARANG</h1>
+                <h1 className="uppercase font-bold text-xl">E-MANER</h1>
               </div>
               {/* LOGIN FORM */}
               <div className="bg-gradient-to-tl from-[#cfa86a] to-[#eed920] rounded-tr-lg rounded-br-lg flex items-center justify-center p-10">

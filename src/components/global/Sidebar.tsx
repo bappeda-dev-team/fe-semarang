@@ -4821,6 +4821,13 @@ export const Sidebar = ({ isZoomed, isOpen, toggleSidebar }: SidebarProps) => {
 
 
 
+          {/* KEMBALI KE DASHBOARD 5 MENU */}
+          <Link href="http://dashboardsemarang.kertaskerja.cc">
+            <li className="flex font-medium items-center gap-x-2 cursor-pointer p-2 hover:bg-slate-500 rounded-xl">
+              <TbLogout className="text-xl text-blue-500" />
+              <span className={`${!isOpen && 'hidden'} origin-left duration-200`}>Kembali</span>
+            </li>
+          </Link>
           {/* LOGOUT */}
           <li className="flex font-medium items-center gap-x-2 cursor-pointer p-2 hover:bg-slate-500 rounded-xl" onClick={() => logout()}>
             <TbLogout className="text-xl text-red-500" />
